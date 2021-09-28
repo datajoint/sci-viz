@@ -23,9 +23,9 @@ SciViz: # top level tab
                 def restriction(**args):
                   return dict()
               dj_query: > # assume all schemas that user has access will be VM loaded
-                def dj_query():
-                  chen_lab.spawn_missing_classes()
-                  return HomeCage * ModuleEvent * EventType, , dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
+                def dj_query(**vms):
+                  Employee, Computer = (vms['contributor_company'].Employee, vms['contributor_company'].Computer)
+                  return Employee * Computer, dict(order_by='employee_name ASC', format='frame')
               redirect_page: 'page2'
     page2:
       route: /session # dev, be careful of name collisions
@@ -48,9 +48,9 @@ SciViz: # top level tab
                 def restriction(**args):
                   return dict(**args)
               dj_query: >
-                def dj_query():
-                  chen_lab.spawn_missing_classes()
-                  return TrainingStats.proj(png='trial_mean_png'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
+                def dj_query(**vms):
+                  Employee, Computer = (vms['contributor_company'].Employee, vms['contributor_company'].Computer)
+                  return Employee * Computer, dict(order_by='employee_name ASC', format='frame')
             component2:
               row_span: 0
               column_span: 1
