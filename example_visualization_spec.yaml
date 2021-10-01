@@ -16,6 +16,7 @@ SciViz: # top level tab
           columns: 1
           components:
             component1:
+              route: /query1
               row_span: 0
               column_span: 0
               type: entry-browser # entry-browser|meta-info|plot:png|plot:plotly1|plot:plotly2|plot:hybrid|plot:table|raw-text
@@ -23,9 +24,9 @@ SciViz: # top level tab
                 def restriction(**args):
                   return dict()
               dj_query: > # assume all schemas that user has access will be VM loaded
-                def dj_query(**vms):
-                  Employee, Computer = (vms['contributor_company'].Employee, vms['contributor_company'].Computer)
-                  return Employee * Computer, dict(order_by='employee_name ASC', format='frame')
+                def dj_query(vms):
+                  HomeCage, ModuleEvent, EventType - (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
+                  return HomeCage * ModuleEvent * EventType, , dict(order_by=['KEY DESC', 'mouse_id'], limit=15
               redirect_page: 'page2'
     page2:
       route: /session # dev, be careful of name collisions
@@ -41,6 +42,7 @@ SciViz: # top level tab
           columns: 3
           components:
             component1:
+              route: /query2
               row_span: 0
               column_span: 0
               type: plot:png
@@ -48,10 +50,11 @@ SciViz: # top level tab
                 def restriction(**args):
                   return dict(**args)
               dj_query: >
-                def dj_query(**vms):
-                  Employee, Computer = (vms['contributor_company'].Employee, vms['contributor_company'].Computer)
-                  return Employee * Computer, dict(order_by='employee_name ASC', format='frame')
+                def dj_query(vms):
+                  TrainingStatsPlotly = vms['chen_lab']
+                  return TrainingStatsPlotly.proj(plotly1='trial_mean'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)  # (dj_query() & restriction()).fetch1('plotly1')
             component2:
+              route: /query3
               row_span: 0
               column_span: 1
               type: plot:plotly1
@@ -59,8 +62,8 @@ SciViz: # top level tab
                 def restriction(**args):
                   return dict(**args)
               dj_query: >
-                def dj_query():
-                  chen_lab.spawn_missing_classes()
+                def dj_query(vms):
+                  TrainingStatsPlotly = vms['chen_lab']
                   return TrainingStatsPlotly.proj(plotly1='trial_mean'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)  # (dj_query() & restriction()).fetch1('plotly1')
               diff_checker: >
                 def diff_checker(**args):
@@ -70,22 +73,22 @@ SciViz: # top level tab
           max_component_per_page: 20
           grid_width: 3
           grid_query: >
-            def grid_query():
-              chen_lab.spawn_missing_classes()
+            def grid_query(vms):
+              DailySession = vms['chen_lab'].DailySession
               return DailySession(), dict(order_by=['KEY DESC', 'mouse_id'], limit=15) # primary keys from the dj_query
           component_orientation: portrait # portrait|landscape
           component_templates:
             component_template_0:
               type: meta-info
               component_query: >
-                def component_query():
-                  chen_lab.spawn_missing_classes()
+                def component_query(vms):
+                  TrainingStats = vms['chen_lab'].TrainingStats
                   return TrainingStats(), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)  # (dj_query() & restriction()).fetch1() # restricted on records from restriction_query
             component_template_1:
               type: plot:plotly1
               component_query: >
-                def component_query():
-                  chen_lab.spawn_missing_classes()
+                def component_query(vms):
+                  TrainingStatsPlotly = vms['chen_lab'].TrainingStatsPlotly
                   return TrainingStatsPlotly.proj(plotly1='trial_mean'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)  # (dj_query() & restriction()).fetch1('plotly1')
               diff_checker: >
                 def diff_checker(**args):
@@ -93,8 +96,8 @@ SciViz: # top level tab
             component_template_2:
               type: plot:plotly1
               component_query: >
-                def component_query():
-                  chen_lab.spawn_missing_classes()
+                def component_query(vms):
+                  TrainingStatsPlotly = vms['chen_lab'].TrainingStatsPlotly
                   return TrainingStatsPlotly.proj(plotly1='trial_mean'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)  # (dj_query() & restriction()).fetch1('plotly1')
               diff_checker: >
                 def diff_checker(**args):
