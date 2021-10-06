@@ -1,5 +1,6 @@
 import React from 'react';
 import Table from './Table';
+import TableView from './TableView';
 
 // Component imports
 
@@ -20,7 +21,7 @@ export default class Home extends React.Component<HomeProps> {
     return (
       <div className="home-container">
         <div className="table-view-container">
-          <Table/>
+          <TableView token={this.props.jwtToken}/>
         </div>
       </div>
     )
