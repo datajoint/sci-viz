@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import Table from './Components/Table';
 import Login from './Components/Login/Login';
 import {Route, BrowserRouter as Router, Switch, Redirect} from 'react-router-dom';
+import Home from './Components/home';
 
 window.onbeforeunload = () => '';
 
@@ -44,6 +44,7 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
           <Switch>
             <Route exact path='/'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Redirect to='/login'/>}</Route>
             <Route path='/login'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Login setJWTTokenAndHostName={this.setJWTTokenAndHostName}></Login>}</Route>
+            <Route path='/home'>{this.state.jwtToken !== '' ? <Home jwtToken={this.state.jwtToken}></Home> : <Redirect to='/login'/>}</Route>
           </Switch>
         </div>
       </Router>
