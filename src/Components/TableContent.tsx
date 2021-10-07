@@ -1,7 +1,6 @@
 import React, {RefObject} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronRight, faChevronLeft, faStepBackward, faStepForward, faFilter, faPlusCircle, faEdit, faTrashAlt} from '@fortawesome/free-solid-svg-icons'
-import TableType from './TableTypeEnum/TableType'
 import Filter from './Filter/Filter'
 import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo';
 import TableAttributeType from './enums/TableAttributeType'
@@ -18,7 +17,6 @@ interface TableContentProps {
   token: string;
   selectedSchemaName: string;
   selectedTableName: string;
-  selectedTableType: TableType;
   contentData: Array<any>; // Array of tuples obtain from the fetch of a table. Type any used here as there are many possible types with all the available via fetching the actual tuples
   totalNumOfTuples: number;
   currentPageNumber: number;

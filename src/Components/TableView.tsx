@@ -1,7 +1,6 @@
 import React from 'react';
 
 // Component imports
-import TableType from './TableTypeEnum/TableType'
 import TableContent from './TableContent';
 import TableAttributeType from './enums/TableAttributeType';
 import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo';
@@ -21,14 +20,12 @@ interface TableViewProps {
   token: string;
   selectedSchemaName: string;
   selectedTableName: string;
-  selectedTableType: TableType;
 }
 
 interface TableViewState {
   tableAttributesInfo?: TableAttributesInfo; // TableAttributesInfo object that stores all info on current table attirbutes
   currentView: CurrentView; // Switcher between Content and Info view
   tableContentNeedRefresh: boolean; // Boolean trigger if the tableContent needs to be refreshed
-  tableDefinitionNeedRefresh: boolean; // Boolean tirgger if the table Definition needs to be refreshed
   numberOfTuplesPerPage: number; // Number of tuples to view per page
   setNumberOFTuplesPerPageTimeout: ReturnType<typeof setTimeout>; // Timeout for when to actaully apply the change in numberOfTuples per page
   totalNumOfTuples: number; // Total number of tuples for the given table
@@ -50,7 +47,6 @@ export default class TableView extends React.Component<TableViewProps, TableView
       tableAttributesInfo: undefined,
       currentView: CurrentView.TABLE_CONTENT,
       tableContentNeedRefresh: true,
-      tableDefinitionNeedRefresh: true,
       numberOfTuplesPerPage: 25,
       setNumberOFTuplesPerPageTimeout: setTimeout(() => {}, 1000),
       currentPageNumber: 1,
@@ -490,7 +486,6 @@ export default class TableView extends React.Component<TableViewProps, TableView
                 token = {this.props.token} 
                 selectedSchemaName = {this.props.selectedSchemaName} 
                 selectedTableName = {this.props.selectedTableName} 
-                selectedTableType = {this.props.selectedTableType}
                 contentData = {this.state.tableContentData} 
                 currentPageNumber = {this.state.currentPageNumber}
                 maxPageNumber = {this.state.maxPageNumber}
