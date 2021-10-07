@@ -1,10 +1,12 @@
 import React, {RefObject} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronRight, faChevronLeft, faStepBackward, faStepForward, faFilter, faPlusCircle, faEdit, faTrashAlt} from '@fortawesome/free-solid-svg-icons'
+import TableType from './TableTypeEnum/TableType'
 import Filter from './Filter/Filter'
 import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo';
 import TableAttribute from './DataStorageClasses/TableAttribute'
 import TableAttributeType from './enums/TableAttributeType'
+import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon';
 import Restriction from './DataStorageClasses/Restriction'
 
 enum TableActionType {
@@ -13,6 +15,9 @@ enum TableActionType {
 
 interface TableContentProps {
   token: string;
+  selectedSchemaName: string;
+  selectedTableName: string;
+  selectedTableType: TableType;
   contentData: Array<any>; // Array of tuples obtain from the fetch of a table. Type any used here as there are many possible types with all the available via fetching the actual tuples
   totalNumOfTuples: number;
   currentPageNumber: number;
@@ -30,9 +35,11 @@ interface TableContentState {
   hideTableActionMenu: boolean;
   selectedTupleIndex: number; // Index of selected tuple
   selectedTuple?: {}; // Has to be an object with each attribute name as key cause the way tuple_buffer is handle in the subcomponents
+  showWarning: boolean; // text warning when duplicate selection is made for delete/update, most likely to be take out once disable checkbox feature is finished
   isDisabledCheckbox: boolean; // tells the UI to disable any other checkboxes once there is already a selection in delete/update mode
   dragStart: number; // part of table column resizer feature
   resizeIndex?: number; // part of table column resizer feature
+  isWaiting: boolean; // tells the UI to display loading icon while insert/update/delete are in action
   newHeaderWidths: Array<number>; // list of table column header width after user resizes
   initialTableColWidths: Array<number>; // list of initial table column width on load
   headerRowReference: RefObject<HTMLTableRowElement>;
@@ -53,10 +60,12 @@ export default class TableContent extends React.Component<TableContentProps, Tab
       hideTableActionMenu: true,
       selectedTupleIndex: -1,
       selectedTuple: undefined,
+      showWarning: false,
       isDisabledCheckbox: false,
       newHeaderWidths: [],
       dragStart: 0,
       resizeIndex: undefined,
+      isWaiting: false,
       initialTableColWidths: [],
       headerRowReference: React.createRef(),
       tuplesReference: this.constructTupleReferenceArray()
@@ -80,6 +89,11 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     // Check if the tuplePerPage change, if so update tupleReferenceArray
     if (prevProps.tuplePerPage !== this.props.tuplePerPage) {
       this.setState({tuplesReference: this.constructTupleReferenceArray()});
+    }
+
+    // Break if the the selectedTable did not change
+    if (prevProps.selectedTableName === this.props.selectedTableName) {
+      return;
     }
 
     // Reset TableActionview
@@ -371,10 +385,21 @@ export default class TableContent extends React.Component<TableContentProps, Tab
   }
 
 
+
+  /**
+   * Call back for subcomponents to set loading animation
+   * @param isWaiting 
+   */
+  handleActionWaitTime(isWaiting: boolean) {
+    this.setState({isWaiting: isWaiting});
+  }
+  
   render() {
     return(
       <div className="table-content-viewer">
-        <div>
+        <div className={this.props.selectedTableType === TableType.COMPUTED ? 'content-view-header computed ' : this.props.selectedTableType === TableType.IMPORTED  ? 'content-view-header imported' : this.props.selectedTableType === TableType.LOOKUP ? 'content-view-header lookup' : this.props.selectedTableType === TableType.MANUAL ? 'content-view-header manual' : 'content-view-header part'}>
+          <div className={this.props.selectedTableType === TableType.COMPUTED ? 'computed table-type-tag' : this.props.selectedTableType === TableType.IMPORTED  ? 'imported table-type-tag' : this.props.selectedTableType === TableType.LOOKUP ? 'lookup table-type-tag' : this.props.selectedTableType === TableType.MANUAL ? 'manual table-type-tag' : 'part table-type-tag'}>{TableType[this.props.selectedTableType]}</div>
+          <h4 className="table-name">{this.props.selectedTableName}</h4>
           {this.getTableActionButtons()}
         </div>
         {this.state.hideTableActionMenu ? '' : <this.getCurrentTableActionMenuComponent/>}
@@ -440,6 +465,13 @@ export default class TableContent extends React.Component<TableContentProps, Tab
               }
             </div>
         </div>
+        {this.state.isWaiting ? (
+          <div className="loadingBackdrop">
+            <div className="loadingPopup">
+              <BasicLoadingIcon size={80} />
+            </div>
+          </div>
+        ) : ''}
       </div>
     )
   }

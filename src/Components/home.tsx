@@ -1,5 +1,6 @@
 import React from 'react';
 import Table from './Table';
+import TableType from './TableTypeEnum/TableType';
 import TableView from './TableView';
 
 // Component imports
@@ -21,7 +22,7 @@ export default class Home extends React.Component<HomeProps> {
     return (
       <div className="home-container">
         <div className="table-view-container">
-          <TableView token={this.props.jwtToken}/>
+        <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'  selectedTableType={TableType.MANUAL}/>
         </div>
       </div>
     )
