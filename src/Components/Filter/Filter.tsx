@@ -5,6 +5,8 @@ import FilterCard from './FilterCard'
 import TableAttribute from '../DataStorageClasses/TableAttribute'
 import TableAttributeType from '../enums/TableAttributeType';
 
+import './Filter.css'
+
 interface FilterProps {
   tableAttributesInfo?: TableAttributesInfo;
   setRestrictions: (restrictions: Array<Restriction>) => void;

@@ -7,6 +7,7 @@ import Restriction from '../DataStorageClasses/Restriction'
 import TableAttribute from '../DataStorageClasses/TableAttribute'
 import TableAttributeType from '../enums/TableAttributeType';
 
+import './FilterCard.css'
 
 interface FilterCardProps {
   index: number;

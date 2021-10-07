@@ -11,6 +11,7 @@ import SecondaryTableAttribute from './DataStorageClasses/SecondaryTableAttribut
 import TableAttribute from './DataStorageClasses/TableAttribute';
 import Restriction from './DataStorageClasses/Restriction';
 import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon';
+import './TableView.css'
 
 const NUMBER_OF_TUPLES_PER_PAGE_TIMEOUT: number = 500;
 

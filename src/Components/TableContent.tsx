@@ -9,6 +9,8 @@ import TableAttributeType from './enums/TableAttributeType'
 import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon';
 import Restriction from './DataStorageClasses/Restriction'
 
+import './TableContent.css'
+
 enum TableActionType {
   FILTER
 }

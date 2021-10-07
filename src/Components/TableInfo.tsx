@@ -1,4 +1,5 @@
 import React from 'react';
+import './TableInfo.css';
 
 interface TableInfoProps {
   tableDefintionString: string; // Table definition string
