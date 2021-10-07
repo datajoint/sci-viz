@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import './Login.css'
 
 // Assets
-// import logo from '../../images/logo_default.svg'
+import logo from '../../logo.svg'
 
 interface LoginProps {
   setJWTTokenAndHostName: (jwt: string, hostname: string) => void; // Call back function to setting the jwtToken
@@ -131,6 +131,7 @@ export default class Login extends Component<LoginProps, LoginState> {
     return (
       <div className='login-div'>
         <div className='login-container'>
+        <img className="login-top-logo" src={logo} alt="datajoint gui logo"/>
           <form className='login-form'>
             <label className='login-input-label'>Host/Database Address</label>
             <input className='login-input' type='text' id='database-server' value={this.state.databaseAddress} onChange={this.onDatabaseAddressChange}></input>
