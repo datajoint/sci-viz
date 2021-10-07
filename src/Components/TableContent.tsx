@@ -4,7 +4,6 @@ import {faChevronRight, faChevronLeft, faStepBackward, faStepForward, faFilter, 
 import TableType from './TableTypeEnum/TableType'
 import Filter from './Filter/Filter'
 import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo';
-import TableAttribute from './DataStorageClasses/TableAttribute'
 import TableAttributeType from './enums/TableAttributeType'
 import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon';
 import Restriction from './DataStorageClasses/Restriction'
@@ -35,8 +34,6 @@ interface TableContentProps {
 interface TableContentState {
   currentSelectedTableActionMenu: TableActionType;
   hideTableActionMenu: boolean;
-  selectedTupleIndex: number; // Index of selected tuple
-  selectedTuple?: {}; // Has to be an object with each attribute name as key cause the way tuple_buffer is handle in the subcomponents
   showWarning: boolean; // text warning when duplicate selection is made for delete/update, most likely to be take out once disable checkbox feature is finished
   isDisabledCheckbox: boolean; // tells the UI to disable any other checkboxes once there is already a selection in delete/update mode
   dragStart: number; // part of table column resizer feature
@@ -60,8 +57,6 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     this.state = {
       currentSelectedTableActionMenu: TableActionType.FILTER,
       hideTableActionMenu: true,
-      selectedTupleIndex: -1,
-      selectedTuple: undefined,
       showWarning: false,
       isDisabledCheckbox: false,
       newHeaderWidths: [],
@@ -79,7 +74,6 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     this.goForwardAPage = this.goForwardAPage.bind(this);
     this.goBackwardAPage = this.goBackwardAPage.bind(this);
     this.handleNumberOfTuplesPerPageChange = this.handleNumberOfTuplesPerPageChange.bind(this);
-    this.clearTupleSelection = this.clearTupleSelection.bind(this);
   }
 
   /**
@@ -99,7 +93,7 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     }
 
     // Reset TableActionview
-    this.setState({currentSelectedTableActionMenu: TableActionType.FILTER, hideTableActionMenu: true, selectedTuple: undefined});
+    this.setState({currentSelectedTableActionMenu: TableActionType.FILTER, hideTableActionMenu: true});
   }
 
   /**
@@ -185,13 +179,6 @@ export default class TableContent extends React.Component<TableContentProps, Tab
    */
   handleNumberOfTuplesPerPageChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.props.setNumberOfTuplesPerPage(parseInt(event.target.value));
-  }
-
-  /**
-   * Clears the staging once delete/update is successful and table content has been modified
-   */
-  clearTupleSelection() {
-    this.setState({selectedTupleIndex: -1, selectedTuple: undefined});
   }
 
   /**
@@ -333,15 +320,6 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     }
   }
 
-
-
-  /**
-   * Call back for subcomponents to set loading animation
-   * @param isWaiting 
-   */
-  handleActionWaitTime(isWaiting: boolean) {
-    this.setState({isWaiting: isWaiting});
-  }
   
   render() {
     return(

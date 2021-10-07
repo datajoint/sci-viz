@@ -1,5 +1,4 @@
 import React from 'react';
-import Table from './Table';
 import TableType from './TableTypeEnum/TableType';
 import TableView from './TableView';
 
