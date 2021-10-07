@@ -73,6 +73,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
     this.fetchTableAttribute = this.fetchTableAttribute.bind(this);
     this.fetchTableContent = this.fetchTableContent.bind(this);
     this.setRestrictions = this.setRestrictions.bind(this);
+    this.fetchTableAttributeAndContent();
   }
 
   /**
@@ -571,11 +572,6 @@ export default class TableView extends React.Component<TableViewProps, TableView
   render() {
     return (
       <div className="table-view">
-        <div className="nav-tabs">
-          <button className={this.state.currentView === CurrentView.TABLE_CONTENT ? "tab inView" : "tab"} onClick={() => this.switchCurrentView(CurrentView.TABLE_CONTENT)} disabled={this.props.selectedTableName === ''}>View Content</button>
-          <button className={this.state.currentView === CurrentView.TABLE_INFO ? "tab inView" : "tab"} onClick={() => this.switchCurrentView(CurrentView.TABLE_INFO)} disabled={this.props.selectedTableName === ''}>Table Information</button>
-        </div>
-
         <div className="view-area"> {this.getCurrentView()}
         </div>
       </div>
