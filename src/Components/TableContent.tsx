@@ -178,60 +178,7 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     )
   }
 
-  /**
-   * Function to stage the selected table entries for insert/update/delete process
-   * For insert, this will be used for the entry-copy-autofill feature requested.
-   * Datatype included in the selectedTableEntry but should we format datatype to 
-   * DJ style here or right before making the API call?
-   * @param event
-   * @param tableEntry // table row selection from the checkbox
-   */
-  handleCheckedEntry(event: React.ChangeEvent<HTMLInputElement>, tupleIndex: number) {
-    // Deal with tableAttributeInfo being undefined
-    if (this.props.tableAttributesInfo === undefined) {
-      return;
-    }
-
-    // If the tupleIndex is already selected, deselect it
-    if (tupleIndex === this.state.selectedTupleIndex) {
-      this.setState({selectedTupleIndex: -1, selectedTuple: undefined});
-      return;
-    }
-
-    // Obtain the array of all attributes types (Primary + Secondary)
-    const tableAttributesInfo: Array<TableAttribute> = (this.props.tableAttributesInfo.primaryAttributes as Array<TableAttribute>).concat(this.props.tableAttributesInfo.secondaryAttributes as Array<TableAttribute>);
-
-    // Get the tuple
-    let rawTupleValues = this.props.contentData[tupleIndex];
-    let tupleBuffer: any = {};
-
-    // Iterate though each one and handle speical cases
-    for (let i = 0; i < tableAttributesInfo.length; i++) {
-      // Deal with speical datatypes such as date, time, datetime, etc.
-      if (tableAttributesInfo[i].attributeType === TableAttributeType.DATE) {
-        // Covert date with covertRawDateToInputFieldFormat function from TableAttribute
-        tupleBuffer[tableAttributesInfo[i].attributeName] = TableAttribute.covertRawDateToInputFieldFormat(rawTupleValues[i]);
-      }
-      else if (tableAttributesInfo[i].attributeType === TableAttributeType.DATETIME || tableAttributesInfo[i].attributeType === TableAttributeType.TIMESTAMP) {
-        // Covert DateTime or TimeStamp to DATE,TIME
-        tupleBuffer[tableAttributesInfo[i].attributeName] = TableAttribute.convertRawDateTimeInputFieldFormat(rawTupleValues[i]);
-        const splitResult = tupleBuffer[tableAttributesInfo[i].attributeName].split(' ')
-        tupleBuffer[tableAttributesInfo[i].attributeName + '__date'] = splitResult[0];
-        tupleBuffer[tableAttributesInfo[i].attributeName + '__time'] = splitResult[1]; // YES I know this is dumb, will fix it later
-      }
-      else if (tableAttributesInfo[i].attributeType === TableAttributeType.BLOB) {
-        continue;
-      }
-      else {
-        tupleBuffer[tableAttributesInfo[i].attributeName] = rawTupleValues[i];
-      }
-    }
-
-    // Covert array into object
-
-    this.setState({selectedTupleIndex: tupleIndex, selectedTuple: tupleBuffer});
-  }
-
+  
   /**
    * Call back for when the user change the number of tupples to show per page
    * @param event Value should be the number in string format
@@ -399,8 +346,7 @@ export default class TableContent extends React.Component<TableContentProps, Tab
   render() {
     return(
       <div className="table-content-viewer">
-        <div className={this.props.selectedTableType === TableType.COMPUTED ? 'content-view-header computed ' : this.props.selectedTableType === TableType.IMPORTED  ? 'content-view-header imported' : this.props.selectedTableType === TableType.LOOKUP ? 'content-view-header lookup' : this.props.selectedTableType === TableType.MANUAL ? 'content-view-header manual' : 'content-view-header part'}>
-          <div className={this.props.selectedTableType === TableType.COMPUTED ? 'computed table-type-tag' : this.props.selectedTableType === TableType.IMPORTED  ? 'imported table-type-tag' : this.props.selectedTableType === TableType.LOOKUP ? 'lookup table-type-tag' : this.props.selectedTableType === TableType.MANUAL ? 'manual table-type-tag' : 'part table-type-tag'}>{TableType[this.props.selectedTableType]}</div>
+        <div className="content-view-header table-header">
           <h4 className="table-name">{this.props.selectedTableName}</h4>
           {this.getTableActionButtons()}
         </div>
@@ -410,7 +356,6 @@ export default class TableContent extends React.Component<TableContentProps, Tab
             <table className="table">
               <thead>
                 <tr className="headerRow" onMouseMove={(event) => {this.cellResizeMouseMove(event)}} onMouseUp={(event) => {this.cellResizeMouseUp(event)}}　ref={this.state.headerRowReference}>
-                  <th className="buffer"></th>
                   {this.getPrimaryKeys().map((attributeName, index) => {
                     return(
                       <th key={attributeName} className="headings">
@@ -432,13 +377,6 @@ export default class TableContent extends React.Component<TableContentProps, Tab
                 // creating reference for each body column to track the width
                 return (
                   <tr key={entry} className="tableRow" onMouseMove={(event) => {this.cellResizeMouseMove(event)}} onMouseUp={(event) => {this.cellResizeMouseUp(event)}}　ref={this.state.tuplesReference[tupleIndex]}>
-                    <td className="check-box-cell">
-                      <input type="checkbox" 
-                        // disable multiple check for insert mode as well until multiple insert is supported.
-                        disabled={this.state.selectedTupleIndex > -1 && this.state.selectedTupleIndex !== tupleIndex} 
-                        onChange={(event) => this.handleCheckedEntry(event, tupleIndex)} 
-                        checked={this.state.selectedTupleIndex === tupleIndex}/>
-                    </td>
                     {entry.map((column: any, index: number) => {
                       return (
                         <td key={`${column}-${index}`} className="tableCell">{column} 

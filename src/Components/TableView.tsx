@@ -3,21 +3,18 @@ import React from 'react';
 // Component imports
 import TableType from './TableTypeEnum/TableType'
 import TableContent from './TableContent';
-import TableInfo from './TableInfo';
 import TableAttributeType from './enums/TableAttributeType';
 import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo';
 import PrimaryTableAttribute from './DataStorageClasses/PrimaryTableAttribute';
 import SecondaryTableAttribute from './DataStorageClasses/SecondaryTableAttribute';
 import TableAttribute from './DataStorageClasses/TableAttribute';
 import Restriction from './DataStorageClasses/Restriction';
-import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon';
 import './TableView.css'
 
 const NUMBER_OF_TUPLES_PER_PAGE_TIMEOUT: number = 500;
 
 enum CurrentView {
-  TABLE_CONTENT,
-  TABLE_INFO
+  TABLE_CONTENT
 }
 
 interface TableViewProps {
@@ -38,7 +35,6 @@ interface TableViewState {
   currentPageNumber: number; // Current page number that is being rendered
   maxPageNumber: number; // The max page number which is computed upon fetching the table tuples
   tableContentData: Array<any>; // The tuples of the table stored in an array. Type any used here as there are many possible types with all the available input blocks
-  tableInfoData: string; // Table description obtain from backend
   errorMessage: string; // Error message buffer
   isLoading: boolean; // Boolean for loading animation
   restrictions: Array<Restriction>; // Storage for the last requested restrction to deal with case such as numberOfTuplesPerPage change
@@ -61,7 +57,6 @@ export default class TableView extends React.Component<TableViewProps, TableView
       maxPageNumber: 1,
       tableContentData: [],
       totalNumOfTuples: 0,
-      tableInfoData: '',
       errorMessage: '',
       isLoading: false,
       restrictions: []
@@ -132,11 +127,6 @@ export default class TableView extends React.Component<TableViewProps, TableView
         this.fetchTableAttributeAndContent();
         this.setState({tableContentNeedRefresh: false})
       }
-      else if (this.state.currentView === CurrentView.TABLE_INFO && this.state.tableDefinitionNeedRefresh) {
-        // Fetch data related to TableInfo
-        this.fetchTableDefinition();
-        this.setState({tableDefinitionNeedRefresh: false})
-      }
     }
     else if (this.state.currentPageNumber !== prevState.currentPageNumber) {
       this.fetchTableContent();
@@ -152,34 +142,6 @@ export default class TableView extends React.Component<TableViewProps, TableView
     else if (this.state.restrictions !== prevState.restrictions) {
       this.fetchTableContent();
     }
-  }
-
-  /**
-   * Method to fetch definition from back end and update the tableInfoData state
-   */
-  fetchTableDefinition() {
-    this.setState({isLoading: true})
-    fetch(`${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/schema/` + this.props.selectedSchemaName + '/table/' + this.props.selectedTableName + '/definition', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token}
-    })
-    .then(result => {
-      if (!result.ok) {
-        result.text()
-        .then(errorMessage => {
-          throw Error(`${result.status} - ${result.statusText}: (${errorMessage})`)
-        })
-        .catch(error => {
-          this.setState({tableInfoData: '', errorMessage: 'Problem fetching table information: ' + error})
-        })
-      }
-      return result.text()})
-    .then(result => {
-      this.setState({tableInfoData: result, errorMessage: '', isLoading: false})
-    })
-    .catch(error => {
-      this.setState({tableInfoData: '', errorMessage: 'Problem fetching table information: ' + error})
-    })
   }
 
   /**
@@ -519,22 +481,12 @@ export default class TableView extends React.Component<TableViewProps, TableView
     throw Error('Unsupported TableAttributeType: ' + tableTypeString + ' of type ' + tableTypeString);
   }
 
-  /**
-   * Helper function for rendering the content. Either return TableContent, TableInfo or a loading logo
-   * @returns TableContent || TableInfo || Loading logo
-   */
-  getCurrentView() {
-    if (!this.state.isLoading) {
-      if (this.props.selectedTableName === '') {
-        return <div className="errorMessage">Select a table to see contents</div>
-      } 
-      else if (this.state.errorMessage) {
-        return <div className="errorMessage">{this.state.errorMessage}</div>
-      }
-      else {
-        if (this.state.currentView === CurrentView.TABLE_CONTENT) {
-          return (
-            <TableContent 
+
+  render() {
+    return (
+      <div className="table-view">
+        <div className="view-area">
+        <TableContent 
                 token = {this.props.token} 
                 selectedSchemaName = {this.props.selectedSchemaName} 
                 selectedTableName = {this.props.selectedTableName} 
@@ -550,29 +502,6 @@ export default class TableView extends React.Component<TableViewProps, TableView
                 fetchTableContent = {this.fetchTableContent}
                 setRestrictions = {this.setRestrictions}
             />
-          )
-        }
-        else if (this.state.currentView === CurrentView.TABLE_INFO) {
-          return <TableInfo tableDefintionString = {this.state.tableInfoData}/>
-        }
-
-        // Error out cause the view selected is not valid
-        throw Error('Invalid View Selected');
-      }
-    } 
-    else {
-      return (
-        <div className="loadingArea">
-          <BasicLoadingIcon size={100} />
-        </div>
-      )
-    }
-  }
-
-  render() {
-    return (
-      <div className="table-view">
-        <div className="view-area"> {this.getCurrentView()}
         </div>
       </div>
     )

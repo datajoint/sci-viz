@@ -87,38 +87,14 @@
     margin-top: 1px;
   }
   
-  .table-content-viewer .content-view-header.computed {
-    border-color: #BC3B68;
-  }
-  .table-content-viewer .content-view-header.imported {
-    border-color: #3C57C7;
-  }
-  .table-content-viewer .content-view-header.lookup {
-    border-color: #000000;
-  }
-  .table-content-viewer .content-view-header.manual {
+  .table-content-viewer .content-view-header.table-header {
     border-color: #399E5A;
   }
-  .table-content-viewer .content-view-header.part {
-    border-color: #8A8A8A
-  }
-  
-  .table-content-viewer .table-type-tag.computed {
-    background-color: #BC3B68;
-  }
-  .table-content-viewer .table-type-tag.imported {
-    background-color: #3C57C7;
-  }
-  .table-content-viewer .table-type-tag.lookup {
-    background-color: #000000;
-  }
+
   .table-content-viewer .table-type-tag.manual {
     background-color: #399E5A;
   }
-  .table-content-viewer .table-type-tag.part {
-    background-color: #8A8A8A
-  }
-  
+ 
   .edit-zone {
     height: 320px;
     box-sizing: border-box;
