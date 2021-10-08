@@ -1,6 +1,6 @@
 import React, {RefObject} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faChevronRight, faChevronLeft, faStepBackward, faStepForward, faFilter, faPlusCircle, faEdit, faTrashAlt} from '@fortawesome/free-solid-svg-icons'
+import {faChevronRight, faChevronLeft, faStepBackward, faStepForward, faFilter} from '@fortawesome/free-solid-svg-icons'
 import Filter from './Filter/Filter'
 import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo';
 import TableAttributeType from './enums/TableAttributeType'
