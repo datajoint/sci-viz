@@ -7,46 +7,6 @@
     flex-direction: column;
   }
   
-  .table-view .nav-tabs {
-    display: flex;
-    margin-bottom: 0;
-  }
-  
-  .table-view .nav-tabs .tab {
-    position: relative;
-    padding: 8px 24px;
-    text-align: center;
-    color: #FBFBFB;
-    background-color: #399E5A;
-    font-weight: 600;
-    margin-top: -2px; /* Note: this is to adjust for the funky margin-top misalignment for .table-view */
-    margin-right: 8px;
-    border-radius: 2px 2px 0 0;
-    box-shadow: -1px -1px 2px #91938F;
-    border: none;
-  }
-  
-  .table-view .nav-tabs .tab:hover {
-    box-shadow: -1px -2px 3px #91938F;
-    background-color: #82D088; /* light alternative green */
-  }
-  
-  .table-view button {
-    cursor: pointer;
-  }
-  
-  .table-view .nav-tabs .tab:disabled {
-    color: #C8C9C7;
-    background-color: #609b74; /* muted main green */
-    cursor: not-allowed;
-  }
-  
-  .table-view .nav-tabs .tab.inView {
-    color: #262A22;
-    background-color: #FBFBFB;
-    box-shadow: -1px -2px 3px #91938F;
-  }
-  
   .actionMenuContainer {
     min-height: 300px;
     overflow: auto;
