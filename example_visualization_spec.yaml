@@ -25,8 +25,8 @@ SciViz: # top level tab
                   return dict()
               dj_query: > # assume all schemas that user has access will be VM loaded
                 def dj_query(vms):
-                  HomeCage, ModuleEvent, EventType - (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
-                  return HomeCage * ModuleEvent * EventType, , dict(order_by=['KEY DESC', 'mouse_id'], limit=15
+                  HomeCage, ModuleEvent, EventType = (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
+                  return HomeCage * ModuleEvent * EventType, dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
               redirect_page: 'page2'
     page2:
       route: /session # dev, be careful of name collisions
@@ -51,7 +51,7 @@ SciViz: # top level tab
                   return dict(**args)
               dj_query: >
                 def dj_query(vms):
-                  TrainingStatsPlotly = vms['chen_lab']
+                  TrainingStatsPlotly = vms['chen_lab'].TrainingStatsPlotly
                   return TrainingStatsPlotly.proj(plotly1='trial_mean'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)  # (dj_query() & restriction()).fetch1('plotly1')
             component2:
               route: /query3
@@ -63,7 +63,7 @@ SciViz: # top level tab
                   return dict(**args)
               dj_query: >
                 def dj_query(vms):
-                  TrainingStatsPlotly = vms['chen_lab']
+                  TrainingStatsPlotly = vms['chen_lab'].TrainingStatsPlotly
                   return TrainingStatsPlotly.proj(plotly1='trial_mean'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)  # (dj_query() & restriction()).fetch1('plotly1')
               diff_checker: >
                 def diff_checker(**args):
