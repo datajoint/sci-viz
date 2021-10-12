@@ -156,7 +156,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
    * Function to query the back end to get infomation about the table attributes
    */
   fetchTableAttribute() {
-    fetch(`${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/schema/` + this.props.selectedSchemaName + '/table/' + this.props.selectedTableName + '/attribute', {
+    fetch(`${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/query1/attributes`, {
       method: 'GET',
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token},
     })
@@ -213,7 +213,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
     }
 
     // Build the url with params
-    let apiUrl = `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/schema/` + this.props.selectedSchemaName + '/table/' + this.props.selectedTableName + '/record';
+    let apiUrl = `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/query1`;
     if (urlParams.length > 0) {
       apiUrl += '?';
 
