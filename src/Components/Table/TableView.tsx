@@ -18,8 +18,7 @@ enum CurrentView {
 
 interface TableViewProps {
   token: string;
-  selectedSchemaName: string;
-  selectedTableName: string;
+  route: string;
 }
 
 interface TableViewState {
@@ -156,7 +155,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
    * Function to query the back end to get infomation about the table attributes
    */
   fetchTableAttribute() {
-    fetch(`${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/query1/attributes`, {
+    fetch(`${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route + '/attributes', {
       method: 'GET',
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token},
     })
@@ -213,7 +212,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
     }
 
     // Build the url with params
-    let apiUrl = `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/query1`;
+    let apiUrl = `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route;
     if (urlParams.length > 0) {
       apiUrl += '?';
 
@@ -484,8 +483,8 @@ export default class TableView extends React.Component<TableViewProps, TableView
         <div className="view-area">
         <TableContent 
                 token = {this.props.token} 
-                selectedSchemaName = {this.props.selectedSchemaName} 
-                selectedTableName = {this.props.selectedTableName} 
+                selectedSchemaName = {''} 
+                selectedTableName = {this.props.route} 
                 contentData = {this.state.tableContentData} 
                 currentPageNumber = {this.state.currentPageNumber}
                 maxPageNumber = {this.state.maxPageNumber}

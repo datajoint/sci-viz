@@ -22,25 +22,17 @@ export default class Home extends React.Component<HomeProps> {
           <Row>
             <Col md={4}>
               <div>
-              <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'/>
+              <TableView token={this.props.jwtToken} route='/query1'/>
               </div>
             </Col>
             <Col md={4}>
               <div>
-              <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'/>
+              <TableView token={this.props.jwtToken} route='/query1'/>
               </div>
             </Col>
             <Col md={4}>
               <div>
-              <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'/>
-              </div>
-            </Col>
-          </Row>
-          <br />
-          <Row>
-            <Col md={4}>
-              <div>
-              <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'/>
+              <TableView token={this.props.jwtToken} route='/query5'/>
               </div>
             </Col>
           </Row>
