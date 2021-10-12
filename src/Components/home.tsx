@@ -1,5 +1,6 @@
 import React from 'react';
-import TableView from './TableView';
+import { Container, Row, Col, setConfiguration } from 'react-grid-system';
+import TableView from './Table/TableView';
 
 // Component imports
 
@@ -7,6 +8,7 @@ interface HomeProps {
   jwtToken: string;
 }
 
+setConfiguration({ defaultScreenClass: 'md', gridColumns: 12 });
 
 /**
  * Main view for DJGUI App
@@ -15,10 +17,34 @@ export default class Home extends React.Component<HomeProps> {
 
   render() {
     return (
-      <div className="home-container">
-        <div className="table-view-container">
-        <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'/>
-        </div>
+      <div>
+        <Container>
+          <Row>
+            <Col md={4}>
+              <div>
+              <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'/>
+              </div>
+            </Col>
+            <Col md={4}>
+              <div>
+              <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'/>
+              </div>
+            </Col>
+            <Col md={4}>
+              <div>
+              <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'/>
+              </div>
+            </Col>
+          </Row>
+          <br />
+          <Row>
+            <Col md={4}>
+              <div>
+              <TableView token={this.props.jwtToken} selectedSchemaName='alpha_company' selectedTableName='Computer'/>
+              </div>
+            </Col>
+          </Row>
+        </Container>
       </div>
     )
   }
