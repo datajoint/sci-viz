@@ -37,6 +37,9 @@ services:
     networks:
     - main
   pharus:
+    depends_on:
+      localdb:
+        condition: service_healthy
     extends:
       file: ./pharus/docker-compose-build.yaml
       service: pharus
@@ -45,7 +48,13 @@ services:
       - API_SPEC_PATH=tests/init/test_dynamic_api_spec.yaml # for dynamic api spec
     volumes:
       - ./pharus/pharus:/opt/conda/lib/python3.8/site-packages/pharus
-    command: pharus
+      - ./test:/tmp/test
+    command:
+    - sh
+    - -lc
+    - |
+      python /tmp/test/populate.py
+      pharus
     networks:
     - main
 networks:
