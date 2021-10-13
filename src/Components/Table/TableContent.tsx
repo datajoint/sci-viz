@@ -15,7 +15,6 @@ enum TableActionType {
 
 interface TableContentProps {
   token: string;
-  selectedSchemaName: string;
   selectedTableName: string;
   contentData: Array<any>; // Array of tuples obtain from the fetch of a table. Type any used here as there are many possible types with all the available via fetching the actual tuples
   totalNumOfTuples: number;

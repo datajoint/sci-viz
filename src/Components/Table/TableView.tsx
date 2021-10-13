@@ -19,6 +19,7 @@ enum CurrentView {
 interface TableViewProps {
   token: string;
   route: string;
+  tableName: string;
 }
 
 interface TableViewState {
@@ -483,8 +484,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
         <div className="view-area">
         <TableContent 
                 token = {this.props.token} 
-                selectedSchemaName = {''} 
-                selectedTableName = {this.props.route} 
+                selectedTableName = {this.props.tableName} 
                 contentData = {this.state.tableContentData} 
                 currentPageNumber = {this.state.currentPageNumber}
                 maxPageNumber = {this.state.maxPageNumber}
