@@ -22,7 +22,7 @@
     margin: 0 0 auto;
     background-color: #FBFBFB;
     width: 100%;
-    overflow-y: hidden;
+    overflow-y: scroll;
     flex-grow: 1;
     box-shadow: -1px 0px 3px #91938F;
   }
