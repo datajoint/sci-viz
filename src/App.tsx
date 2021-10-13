@@ -3,6 +3,8 @@ import './App.css';
 import Login from './Components/Login/Login';
 import {Route, BrowserRouter as Router, Switch, Redirect} from 'react-router-dom';
 import Home from './Components/home';
+import Footer from './Components/Footer/Footer'
+import Header from './Components/Header/Header'
 
 window.onbeforeunload = () => '';
 
@@ -39,15 +41,19 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
 
   render() {
     return (
-      <Router>
-        <div className='content'>
-          <Switch>
-            <Route exact path='/'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Redirect to='/login'/>}</Route>
-            <Route path='/login'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Login setJWTTokenAndHostName={this.setJWTTokenAndHostName}></Login>}</Route>
-            <Route path='/home'>{this.state.jwtToken !== '' ? <Home jwtToken={this.state.jwtToken}></Home> : <Redirect to='/login'/>}</Route>
-          </Switch>
-        </div>
-      </Router>
+      <div>
+        <Header></Header>
+        <Router>
+          <div className='content'>
+            <Switch>
+              <Route exact path='/'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Redirect to='/login'/>}</Route>
+              <Route path='/login'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Login setJWTTokenAndHostName={this.setJWTTokenAndHostName}></Login>}</Route>
+              <Route path='/home'>{this.state.jwtToken !== '' ? <Home jwtToken={this.state.jwtToken}></Home> : <Redirect to='/login'/>}</Route>
+            </Switch>
+          </div>
+        </Router>
+        <Footer></Footer>
+      </div>
     );
   }
 }
