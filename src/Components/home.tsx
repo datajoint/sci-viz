@@ -1,6 +1,5 @@
 import React from 'react';
-import TableView from './Table/TableView';
-import GridLayout from 'react-grid-layout';
+import SideBar from './SideBar/SideBar';
 // Component imports
 import './home.css'
 
@@ -24,17 +23,8 @@ export default class Home extends React.Component<HomeProps> {
     return (
       <div>
         <div className='grid-container'>
-          <GridLayout className="mygrid" layout={layout} cols={3} rowHeight={400} width={1600}>
-            <div key='table1'>
-            <TableView token={this.props.jwtToken} route='/query1' tableName='test1'/>
-            </div>
-            <div key='table2'>
-            <TableView token={this.props.jwtToken} route='/query1' tableName='test2'/>
-            </div>
-            <div key='table3'>
-            <TableView token={this.props.jwtToken} route='/query5' tableName='test3'/>
-            </div>
-          </GridLayout>
+          <SideBar />
+          <p>Welcome to Sci-Viz!</p>
         </div>
       </div>
     )

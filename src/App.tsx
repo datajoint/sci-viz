@@ -5,7 +5,8 @@ import {Route, BrowserRouter as Router, Switch, Redirect} from 'react-router-dom
 import Home from './Components/home';
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
-
+import Page1 from './Components/Pages/Page1'
+import NotFound from './Components/Errors/NotFound'
 window.onbeforeunload = () => '';
 
 interface DJGUIAppProps {
@@ -49,6 +50,8 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
               <Route exact path='/'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Redirect to='/login'/>}</Route>
               <Route path='/login'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Login setJWTTokenAndHostName={this.setJWTTokenAndHostName}></Login>}</Route>
               <Route path='/home'>{this.state.jwtToken !== '' ? <Home jwtToken={this.state.jwtToken}></Home> : <Redirect to='/login'/>}</Route>
+              <Route path='/page1'>{this.state.jwtToken !== '' ? <Page1 jwtToken={this.state.jwtToken}></Page1> : <Redirect to='/login'/>}</Route>
+              <Route path="*" component={NotFound} />
             </Switch>
           </div>
         </Router>
