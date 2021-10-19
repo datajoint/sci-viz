@@ -6,12 +6,12 @@ export const SideBarData = [
         cName: 'nav-text'
     },
     {
-        title: 'Page1',
+        title: 'Session',
         path: '/session1',
         cName: 'nav-text'
     },
     {
-        title: 'Page2',
+        title: 'Mouse',
         path: '/session2',
         cName: 'nav-text'
     },

@@ -4,7 +4,7 @@ SciViz: # top level tab
   auth:
     mode: database # reuse from DJ LabBook
   pages: # individual pages
-    Page1: # name reference of the page
+    Session: # name reference of the page
       route: /session1 # dev, be careful of name collisions
       args: null
       hidden: false
@@ -31,7 +31,7 @@ SciViz: # top level tab
                   chen_lab.spawn_missing_classes()
                   return HomeCage * ModuleEvent * EventType, , dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
               redirect_page: 'page2'
-    Page2:
+    Mouse:
       route: /session2 # dev, be careful of name collisions
       args:
         - subject_name
