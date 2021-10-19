@@ -20,8 +20,8 @@ SciViz: # top level tab
               route: /query1
               x: 0 # component indexes at top left corner
               y: 0
-              height: 1
-              width: 1
+              height: 2
+              width: 3
               type: entry-browser # entry-browser|meta-info|plot:png|plot:plotly1|plot:plotly2|plot:hybrid|plot:table|raw-text
               restriction: >
                 def restriction(**args):
@@ -39,6 +39,8 @@ SciViz: # top level tab
       hidden: true
       grids:
         grid1:
+          row_height: 400
+          row_width: 1600
           type: fixed
           max_component_per_page: 20
           columns: 3
@@ -58,7 +60,7 @@ SciViz: # top level tab
                   TrainingStatsPlotly = vms['chen_lab'].TrainingStatsPlotly
                   return TrainingStatsPlotly.proj(plotly1='trial_mean'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)  # (dj_query() & restriction()).fetch1('plotly1')
             component2:
-              x: 0
+              x: 1
               y: 0
               Height: 1
               Width: 1

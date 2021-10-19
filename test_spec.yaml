@@ -20,16 +20,16 @@ SciViz: # top level tab
               route: /query1
               x: 0 # component indexes at top left corner
               y: 0
-              height: 1
+              height: 2
               width: 1
               type: entry-browser # entry-browser|meta-info|plot:png|plot:plotly1|plot:plotly2|plot:hybrid|plot:table|raw-text
               restriction: >
                 def restriction(**args):
                   return dict()
               dj_query: > # assume all schemas that user has access will be VM loaded
-                def dj_query():
-                  chen_lab.spawn_missing_classes()
-                  return HomeCage * ModuleEvent * EventType, , dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
+                def dj_query(vms):
+                  HomeCage, ModuleEvent, EventType = (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
+                  return HomeCage * ModuleEvent * EventType, dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
               redirect_page: 'page2'
     Mouse:
       route: /session2 # dev, be careful of name collisions
@@ -54,11 +54,11 @@ SciViz: # top level tab
               type: plot:png
               restriction: >
                 def restriction(**args):
-                  return dict(**args)
-              dj_query: >
-                def dj_query():
-                  chen_lab.spawn_missing_classes()
-                  return TrainingStats.proj(png='trial_mean_png'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
+                  return dict()
+              dj_query: > # assume all schemas that user has access will be VM loaded
+                def dj_query(vms):
+                  HomeCage, ModuleEvent, EventType = (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
+                  return HomeCage * ModuleEvent * EventType, dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
             component2:
               route: /query3
               x: 1
@@ -68,11 +68,11 @@ SciViz: # top level tab
               type: plot:plotly1
               restriction: >
                 def restriction(**args):
-                  return dict(**args)
-              dj_query: >
-                def dj_query():
-                  chen_lab.spawn_missing_classes()
-                  return TrainingStatsPlotly.proj(plotly1='trial_mean'), dict(order_by=['KEY DESC', 'mouse_id'], limit=15)  # (dj_query() & restriction()).fetch1('plotly1')
+                  return dict()
+              dj_query: > # assume all schemas that user has access will be VM loaded
+                def dj_query(vms):
+                  HomeCage, ModuleEvent, EventType = (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
+                  return HomeCage * ModuleEvent * EventType, dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
               diff_checker: >
                 def diff_checker(**args):
                   return TrainingStatsPlotly.proj(hash='trial_mean_hash')
