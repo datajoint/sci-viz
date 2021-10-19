@@ -1,3 +1,4 @@
+
 import React from 'react';
 import './App.css';
 import Login from './Components/Login/Login';
@@ -5,9 +6,10 @@ import {Route, BrowserRouter as Router, Switch, Redirect} from 'react-router-dom
 import Home from './Components/home';
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
-import Page1 from './Components/Pages/Page1'
-import Page2 from './Components/Pages/Page2'
-import NotFound from './Components/Errors/NotFound'
+import NotFound from './Components/Errors/NotFound' 
+import Page1 from './Components/Pages/Page1' 
+import Page2 from './Components/Pages/Page2' 
+
 window.onbeforeunload = () => '';
 
 interface DJGUIAppProps {
@@ -51,8 +53,8 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
               <Route exact path='/'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Redirect to='/login'/>}</Route>
               <Route path='/login'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Login setJWTTokenAndHostName={this.setJWTTokenAndHostName}></Login>}</Route>
               <Route path='/home'>{this.state.jwtToken !== '' ? <Home jwtToken={this.state.jwtToken}></Home> : <Redirect to='/login'/>}</Route>
-              <Route path='/page1'>{this.state.jwtToken !== '' ? <Page1 jwtToken={this.state.jwtToken}></Page1> : <Redirect to='/login'/>}</Route>
-              <Route path='/page2'>{this.state.jwtToken !== '' ? <Page2 jwtToken={this.state.jwtToken}></Page2> : <Redirect to='/login'/>}</Route>
+              <Route path='/session1'>{this.state.jwtToken !== '' ? <Page1 jwtToken={this.state.jwtToken}></Page1> : <Redirect to='/login'/>}</Route>
+              <Route path='/session2'>{this.state.jwtToken !== '' ? <Page2 jwtToken={this.state.jwtToken}></Page2> : <Redirect to='/login'/>}</Route>
               <Route path="*" component={NotFound} />
             </Switch>
           </div>

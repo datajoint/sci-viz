@@ -20,7 +20,12 @@
 .env.test.local
 .env.production.local
 .env
+.vscode
+src/Components/Pages/*.tsx
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#-------------------------------
+!src/Components/Pages/template_page.tsx

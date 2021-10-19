@@ -1,5 +1,4 @@
-// This is some example data to populate the SideBar
-// Eventually this entire file will be created programmatically from the spec
+
 export const SideBarData = [
     {
         title: 'Home',
@@ -7,18 +6,13 @@ export const SideBarData = [
         cName: 'nav-text'
     },
     {
-        title: 'Page 1',
-        path: '/page1',
+        title: 'Page1',
+        path: '/session1',
         cName: 'nav-text'
     },
     {
-        title: 'Page 2',
-        path: '/page2',
+        title: 'Page2',
+        path: '/session2',
         cName: 'nav-text'
     },
-    {
-        title: 'Page 3',
-        path: '/page3',
-        cName: 'nav-text'
-    }
 ]
