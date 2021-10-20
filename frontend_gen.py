@@ -23,7 +23,7 @@ export_header = '''
             <ul>'''
 grid_header = '''
               <li style={{{{display: 'block'}}}}>
-                <GridLayout className="mygrid" cols={{ {num_cols} }}    rowHeight={{400}} width={{1600}}>'''
+                <GridLayout className="mygrid" cols={{{num_cols}}}    rowHeight={{{row_height}}} width={{{row_width}}}>'''
 component_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                   <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}'/>

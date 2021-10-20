@@ -13,7 +13,7 @@ SciViz: # top level tab
           type: fixed
           max_component_per_page: 1
           columns: 1
-          row_height: 400
+          row_height: 450
           row_width: 1600
           components:
             component3:
