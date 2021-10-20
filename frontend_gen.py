@@ -20,7 +20,7 @@ export_header = '''
         <div>
           <div className='grid-container'>
             <SideBar />
-            <ul>'''
+            <ul className='grid-list'>'''
 grid_header = '''
               <li style={{{{display: 'block'}}}}>
                 <GridLayout className="mygrid" cols={{{num_cols}}}    rowHeight={{{row_height}}} width={{{row_width}}}>'''

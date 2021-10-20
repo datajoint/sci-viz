@@ -30,8 +30,10 @@
   .nav-menu {
     background-color: rgb(183, 247, 181);
     width: 7%;
-    height: 100vh;
+    height: fit-content;
     justify-content: left;
-    position: relative;
-
+    position: fixed;
+    top: 50%;
+    transform: translate(0%, -50%);
+    border-radius: 25px;
   }

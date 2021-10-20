@@ -1,4 +1,9 @@
     .grid-container {
         margin-bottom: .25in;
         display: flex;
+        background-color: #f1f1f1;
+        height: 67vw;
+    }
+    .grid-list{
+        padding-left: 7%;
     }
