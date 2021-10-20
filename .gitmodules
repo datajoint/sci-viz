@@ -1,0 +1,4 @@
+[submodule "pharus"]
+	path = pharus
+	url = https://github.com/jverswijver/pharus.git
+	branch = update_dynamic_api
