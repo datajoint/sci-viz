@@ -1,6 +1,6 @@
 
   .nav-text {
-    display: flex;
+    display: relative;
     justify-content: start;
     align-items: center;
     padding: 8px 0px 8px 8px;
@@ -8,8 +8,10 @@
     height: 60px;
   }
   
-  .nav-text a {
+  .nav-text a{
     text-decoration: none;
+    text-align: center;
+    justify-content: center;
     color: black;
     font-size: 18px;
     width: 95%;
@@ -22,7 +24,7 @@
     background-color: #ffffff;
   }
   .nav-menu-items {
-      margin-left: -16px;
+      margin-left: -40px;
   }
   
   .nav-menu {
