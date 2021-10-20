@@ -22,11 +22,11 @@ export_header = '''
             <SideBar />
             <ul>'''
 grid_header = '''
-              <li style={{{{display: 'block'}}}}> 
+              <li style={{{{display: 'block'}}}}>
                 <GridLayout className="mygrid" cols={{ {num_cols} }}    rowHeight={{400}} width={{1600}}>'''
 component_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{route}'/>
+                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}'/>
                   </div>'''
 grid_footer = '''
                 </GridLayout>

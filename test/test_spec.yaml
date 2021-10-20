@@ -16,7 +16,7 @@ SciViz: # top level tab
           row_height: 400
           row_width: 1600
           components:
-            component1:
+            component3:
               route: /query1
               x: 0 # component indexes at top left corner
               y: 0
