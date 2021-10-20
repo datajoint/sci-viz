@@ -28,5 +28,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-#-------------------------------
+#--------------------------FILES_TO_NOT_IGNORE--------------------------
 !src/Components/Pages/template_page.tsx

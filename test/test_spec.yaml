@@ -20,17 +20,16 @@ SciViz: # top level tab
               route: /query1
               x: 0 # component indexes at top left corner
               y: 0
-              height: 2
+              height: 1
               width: 1
               type: entry-browser # entry-browser|meta-info|plot:png|plot:plotly1|plot:plotly2|plot:hybrid|plot:table|raw-text
               restriction: >
-                def restriction(**args):
-                  return dict()
-              dj_query: > # assume all schemas that user has access will be VM loaded
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
                 def dj_query(vms):
-                  HomeCage, ModuleEvent, EventType = (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
-                  return HomeCage * ModuleEvent * EventType, dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
-              redirect_page: 'page2'
+                    TableA, TableB = (vms['test_group1_simple'].TableA, vms['test_group1_simple'].TableB)
+                    return TableA * TableB, dict(order_by='b_number')
     Mouse:
       route: /session2 # dev, be careful of name collisions
       args:
@@ -53,12 +52,12 @@ SciViz: # top level tab
               width: 1
               type: plot:png
               restriction: >
-                def restriction(**args):
-                  return dict()
-              dj_query: > # assume all schemas that user has access will be VM loaded
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
                 def dj_query(vms):
-                  HomeCage, ModuleEvent, EventType = (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
-                  return HomeCage * ModuleEvent * EventType, dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
+                    TableA, TableB = (vms['test_group1_simple'].TableA, vms['test_group1_simple'].TableB)
+                    return TableA * TableB, dict(order_by='b_number')
             component2:
               route: /query3
               x: 1
@@ -67,12 +66,12 @@ SciViz: # top level tab
               width: 1
               type: plot:plotly1
               restriction: >
-                def restriction(**args):
-                  return dict()
-              dj_query: > # assume all schemas that user has access will be VM loaded
+                def restriction(**kwargs):
+                    return dict(a_id=0, **kwargs)
+              dj_query: >
                 def dj_query(vms):
-                  HomeCage, ModuleEvent, EventType = (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
-                  return HomeCage * ModuleEvent * EventType, dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
+                    TableA, TableB = (vms['test_group1_simple'].TableA, vms['test_group1_simple'].TableB)
+                    return TableA * TableB, dict(order_by='b_number')
               diff_checker: >
                 def diff_checker(**args):
                   return TrainingStatsPlotly.proj(hash='trial_mean_hash')

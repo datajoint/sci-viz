@@ -137,7 +137,7 @@ app_render_footer = '''
 '''
 
 # spec_path = os.environ.get('API_SPEC_PATH')
-spec_path = 'test_spec.yaml'
+spec_path = 'test/test_spec.yaml'
 side_bar_path = 'src/Components/SideBar/SideBarData.tsx'
 page_path = 'src/Components/Pages/{page_name}.tsx'
 app_path = 'src/App.tsx'
