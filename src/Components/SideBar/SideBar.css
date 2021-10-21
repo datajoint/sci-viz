@@ -3,7 +3,7 @@
     display: relative;
     justify-content: start;
     align-items: center;
-    padding: 8px 0px 8px 8px;
+    padding: 8px 8px 8px 8px;
     list-style: none;
     height: 60px;
   }
@@ -26,14 +26,40 @@
   .nav-menu-items {
       margin-left: -40px;
   }
-  
+  .menu-bars {
+    padding: 10px;
+    justify-content: center;
+    color: black;
+    display: flex;
+  }
+  .nav-menu-items.active{
+    display: none;
+  }
+  .nav-menu.active + .grid-list{
+    padding-left: 21px;
+  }
+
   .nav-menu {
+    display: block;
     background-color: rgb(183, 247, 181);
     width: 7%;
     height: fit-content;
     justify-content: left;
     position: fixed;
-    top: 50%;
+    top: 30%;
+    transform: translate(0%, -50%);
+    border-radius: 25px;
+  }
+
+  .nav-menu.active {
+    display: block;
+    background-color: rgb(183, 247, 181);
+    width: fit-content;
+    height: fit-content;
+    justify-content: left;
+    position: fixed;
+    padding-left: 2px;
+    top: 15%;
     transform: translate(0%, -50%);
     border-radius: 25px;
   }
