@@ -2,14 +2,22 @@
 ![demo image failed](src/logo.svg)
 
 Generic visualization framework for building dashboarding capabilities for DataJoint pipelines.
+## Installation
 
-## Running the application
+If you have not done so already, please install the following dependencies:
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+## Prerequisites
 Before running the application through docker, make sure to run the command:
-```
+```bash
 python frontend_gen.py
 ```
 This will compile the necessary typescript files for the frontend.
-you can also run this at any time during a dev deployment to hot-load the frontend, however this is not always guaranteed to work as some changes may require the entire react server to restart.
+you can also run this at any time during a dev deployment to hot-load the frontend, however this is not always guaranteed to work as some changes may require the entire react server to restart. Anything related to the back end api is not hot-loadable but for example the component locations and sizes can be modified and hot-loaded.
+
+## Running the application
 
 To start the application in dev mode, use the command:
 ```bash
@@ -22,18 +30,26 @@ PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version
 ```
 
 ## Dynamic spec sheet
-Sci-Vis is used to build visualization dashboards, this is done through a single spec sheet.
+Sci-Vis is used to build visualization dashboards, this is done through a single spec sheet. An example spec sheet is included named `example_visualization_spec.yaml`
 
 Important notes about restrictions in the spec sheet:
-- page names under pages must have a unique name without spaces
-- page routes must be unique
-- grid names under grids must be unique
-- component names under components must be unique
-- the routes of individual components must be unique
-- routes must start with a `/`
-- every query needs a restriction, below is the default one.
-    - ```python
+- Page names under pages must have a unique name without spaces
+- Page routes must be unique
+- Grid names under grids must be unique without spaces
+- Component names under components must be unique without spaces
+- The routes of individual components must be unique
+- Routes must start with a `/`
+- Every query needs a restriction, below is the default one.
+  - ```python
         def restriction(**kwargs):
-        return dict(**kwargs)
+            return dict(**kwargs)
     ```
-- 
+- Overlapping components at the same (x, y) does not work, the grid system will not allow overlapping components it will wrap them horizontally if there is enough space or bump them down to the next row.
+
+If the website does not work after running frontend generation script check this list to make sure that spec sheet is constructed properly, in the future we may include a script that lints the spec sheet for you see issue [#20](https://github.com/datajoint/sci-viz/issues/20)
+## References
+
+- DataJoint
+  - https://datajoint.io
+- Pharus (a DataJoint REST API backend):
+  - https://github.com/datajoint/pharus
