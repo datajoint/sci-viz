@@ -35,6 +35,7 @@ interface TableViewState {
   errorMessage: string; // Error message buffer
   isLoading: boolean; // Boolean for loading animation
   restrictions: Array<Restriction>; // Storage for the last requested restrction to deal with case such as numberOfTuplesPerPage change
+  orders: Array<string>; //Storage for the sorting, currently type any but could change to a custom type
 }
 
 /**
@@ -55,7 +56,8 @@ export default class TableView extends React.Component<TableViewProps, TableView
       totalNumOfTuples: 0,
       errorMessage: '',
       isLoading: false,
-      restrictions: []
+      restrictions: [],
+      orders: []
     }
 
     this.fetchTableAttributeAndContent = this.fetchTableAttributeAndContent.bind(this);
@@ -64,6 +66,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
     this.fetchTableAttribute = this.fetchTableAttribute.bind(this);
     this.fetchTableContent = this.fetchTableContent.bind(this);
     this.setRestrictions = this.setRestrictions.bind(this);
+    this.setOrders = this.setOrders.bind(this);
     this.fetchTableAttributeAndContent();
   }
 
@@ -98,6 +101,32 @@ export default class TableView extends React.Component<TableViewProps, TableView
     this.setState({restrictions: restrictions});
   }
 
+
+
+  setOrders(newOrder: string) {
+    var orderExists = false
+    var newOrderList = []
+    for(let order of this.state.orders){
+      //if the attribute name matches one in the order array, overwrite it.
+      if((newOrder.split(' '))[0] === (order.split(' '))[0]){
+        console.log(order, "before assigning")
+        order=newOrder;
+        console.log(order, "after assigning")
+        orderExists=true;
+      }
+      newOrderList.push(order)
+    }
+    if(orderExists===false){
+      newOrderList.push(newOrder);
+      console.log(newOrder);
+      this.setState({orders: newOrderList});
+      // this.fetchTableContent();
+    }
+    console.log(newOrderList);    
+    console.log(this.state.orders);
+    this.setState({orders: newOrderList});
+  }
+
   /**
    * Switch current view given to viewChoice
    * @param viewChoice 
@@ -125,6 +154,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
       }
     }
     else if (this.state.currentPageNumber !== prevState.currentPageNumber) {
+      console.log("hello?")
       this.fetchTableContent();
     }
     else if (this.state.numberOfTuplesPerPage !== prevState.numberOfTuplesPerPage) {
@@ -134,8 +164,13 @@ export default class TableView extends React.Component<TableViewProps, TableView
         this.setState({currentPageNumber: 1});
       }, NUMBER_OF_TUPLES_PER_PAGE_TIMEOUT)
       this.setState({setNumberOFTuplesPerPageTimeout: setNumberOFTuplesPerPageTimeout});
+      console.log("hello?")
     }
     else if (this.state.restrictions !== prevState.restrictions) {
+      this.fetchTableContent();
+    }
+    else if (this.state.orders !== prevState.orders) {
+      console.log("hello?")
       this.fetchTableContent();
     }
   }
@@ -210,6 +245,12 @@ export default class TableView extends React.Component<TableViewProps, TableView
 
       // Covert the restrictions to json string then base64 it
       urlParams.push('restriction=' + encodeURIComponent(btoa(JSON.stringify(restrictionsInAPIFormat))));
+    }
+
+    if (this.state.orders.length !== 0) {
+      for (let order of this.state.orders){
+        urlParams.push('order=' + order)
+      }
     }
 
     // Build the url with params
@@ -495,6 +536,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
                 setNumberOfTuplesPerPage = {this.setNumberOfTuplesPerPage}
                 fetchTableContent = {this.fetchTableContent}
                 setRestrictions = {this.setRestrictions}
+                setOrders = {this.setOrders}
             />
         </div>
       </div>

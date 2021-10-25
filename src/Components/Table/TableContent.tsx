@@ -6,7 +6,7 @@ import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo';
 import TableAttributeType from './enums/TableAttributeType'
 import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon';
 import Restriction from './DataStorageClasses/Restriction'
-
+import SortButton from './Sort/SortButton';
 import './TableContent.css'
 
 enum TableActionType {
@@ -26,6 +26,7 @@ interface TableContentProps {
   setNumberOfTuplesPerPage: (numberOfTuplesPerPage: number) => void;
   fetchTableContent: () => void; // Callback function to tell the parent component to update the contentData
   setRestrictions: (restrictions: Array<Restriction>) => void;
+  setOrders: (Order: string) => void
 }
 
 interface TableContentState {
@@ -334,14 +335,14 @@ export default class TableContent extends React.Component<TableContentProps, Tab
                   {this.getPrimaryKeys().map((attributeName, index) => {
                     return(
                       <th key={attributeName} className="headings">
-                        <div className="headerContent primary">{attributeName}</div>
+                        <SortButton attributeName={attributeName} setOrders={this.props.setOrders}/>
                       </th>
                     )
                   })}
                   {this.getSecondaryKeys().map((attributeName, index) => {
                     return(
                       <th key={attributeName} className="headings">
-                        <div className="headerContent secondary" style={{color: 'inherit'}}>{attributeName}</div>
+                        <SortButton attributeName={attributeName} setOrders={this.props.setOrders}/>
                       </th>
                     )
                   })}
