@@ -335,14 +335,14 @@ export default class TableContent extends React.Component<TableContentProps, Tab
                   {this.getPrimaryKeys().map((attributeName, index) => {
                     return(
                       <th key={attributeName} className="headings">
-                        <SortButton attributeName={attributeName} setOrders={this.props.setOrders}/>
+                        <SortButton buttonName='headerContent primary' attributeName={attributeName} setOrders={this.props.setOrders}/>
                       </th>
                     )
                   })}
                   {this.getSecondaryKeys().map((attributeName, index) => {
                     return(
                       <th key={attributeName} className="headings">
-                        <SortButton attributeName={attributeName} setOrders={this.props.setOrders}/>
+                        <SortButton buttonName='headerContent secondary' attributeName={attributeName} setOrders={this.props.setOrders}/>
                       </th>
                     )
                   })}

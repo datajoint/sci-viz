@@ -2,6 +2,7 @@ import React from 'react';
 
 interface SortButtonProps {
   attributeName: string ;
+  buttonName: string ;
   setOrders: (Order: string) => void
 }
 
@@ -24,7 +25,7 @@ export default class SortButton extends React.Component<SortButtonProps, SortBut
 
   changeSort(){
     if(this.state.sort%3 === 0){
-      this.props.setOrders(this.props.attributeName + '')
+      this.props.setOrders(this.props.attributeName + ' del')
       this.setState({mode: ''})
     }
     else if(this.state.sort%3 === 1){
@@ -41,7 +42,7 @@ export default class SortButton extends React.Component<SortButtonProps, SortBut
 
   render() {
     return (
-      <button onClick={() =>this.changeSort()}>{this.props.attributeName} {this.state.mode}</button>
+      <button className={this.props.buttonName} onClick={() =>this.changeSort()}>{this.props.attributeName} {this.state.mode}</button>
     );
     }
   }

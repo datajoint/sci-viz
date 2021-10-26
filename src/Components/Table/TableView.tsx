@@ -104,26 +104,23 @@ export default class TableView extends React.Component<TableViewProps, TableView
 
 
   setOrders(newOrder: string) {
-    var orderExists = false
+    var orderDelete = false
     var newOrderList = []
     for(let order of this.state.orders){
       //if the attribute name matches one in the order array, overwrite it.
       if((newOrder.split(' '))[0] === (order.split(' '))[0]){
-        console.log(order, "before assigning")
-        order=newOrder;
-        console.log(order, "after assigning")
-        orderExists=true;
+        if((newOrder.split(' '))[1] === 'del'){
+          orderDelete=true;
+          continue;
+        }
+        continue;
       }
       newOrderList.push(order)
     }
-    if(orderExists===false){
-      newOrderList.push(newOrder);
-      console.log(newOrder);
+    if(orderDelete===false){
+      newOrderList.unshift(newOrder);
       this.setState({orders: newOrderList});
-      // this.fetchTableContent();
     }
-    console.log(newOrderList);    
-    console.log(this.state.orders);
     this.setState({orders: newOrderList});
   }
 
@@ -154,7 +151,6 @@ export default class TableView extends React.Component<TableViewProps, TableView
       }
     }
     else if (this.state.currentPageNumber !== prevState.currentPageNumber) {
-      console.log("hello?")
       this.fetchTableContent();
     }
     else if (this.state.numberOfTuplesPerPage !== prevState.numberOfTuplesPerPage) {
@@ -164,13 +160,11 @@ export default class TableView extends React.Component<TableViewProps, TableView
         this.setState({currentPageNumber: 1});
       }, NUMBER_OF_TUPLES_PER_PAGE_TIMEOUT)
       this.setState({setNumberOFTuplesPerPageTimeout: setNumberOFTuplesPerPageTimeout});
-      console.log("hello?")
     }
     else if (this.state.restrictions !== prevState.restrictions) {
       this.fetchTableContent();
     }
     else if (this.state.orders !== prevState.orders) {
-      console.log("hello?")
       this.fetchTableContent();
     }
   }
