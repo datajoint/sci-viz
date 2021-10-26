@@ -118,7 +118,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
       newOrderList.push(order)
     }
     if(orderDelete===false){
-      newOrderList.unshift(newOrder);
+      newOrderList.push(newOrder);
       this.setState({orders: newOrderList});
     }
     this.setState({orders: newOrderList});
