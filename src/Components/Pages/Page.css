@@ -6,4 +6,6 @@
     }
     .grid-list{
         padding-left: 7%;
+        width: 100%;
+        list-style: none;
     }

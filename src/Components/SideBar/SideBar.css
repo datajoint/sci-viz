@@ -37,6 +37,7 @@
   }
   .nav-menu.active + .grid-list{
     padding-left: 21px;
+    width: 107%;
   }
 
   .nav-menu {

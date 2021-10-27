@@ -21,7 +21,6 @@
     height: 48px;
     align-items: center;
     z-index: 500;
-    min-width: 420px;
   }
   
   .table-type-tag {

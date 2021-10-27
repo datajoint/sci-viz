@@ -14,8 +14,8 @@ export default class Home extends React.Component<HomeProps> {
   render() {
     return (
       <div>
-        <div className='grid-container'>
-          <SideBar />
+        <SideBar />
+        <div className='home-container'>
           <p>Welcome to Sci-Viz!</p>
         </div>
       </div>

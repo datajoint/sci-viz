@@ -62,7 +62,7 @@ SciViz: # top level tab
               route: /query3
               x: 1
               y: 0
-              height: 1
+              height: 2
               width: 1
               type: plot:plotly1
               restriction: >

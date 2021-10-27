@@ -68,7 +68,11 @@ import {Route, BrowserRouter as Router, Switch, Redirect} from 'react-router-dom
 import Home from './Components/home';
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
-import NotFound from './Components/Errors/NotFound' '''
+import NotFound from './Components/Errors/NotFound'
+import '../node_modules/react-grid-layout/css/styles.css'
+import '../node_modules/react-resizable/css/styles.css'
+'''
+
 
 app_import_template = '''
 import {page_name} from './Components/Pages/{page_name}' '''
