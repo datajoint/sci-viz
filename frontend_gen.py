@@ -4,14 +4,15 @@ import yaml
 # Page String Components
 page_header = '''
 import React from 'react';
+import { Responsive, WidthProvider } from 'react-grid-layout';
 import TableView from '../Table/TableView';
-import GridLayout from 'react-grid-layout';
 import SideBar from '../SideBar/SideBar';
 import './Page.css'
 
 interface Page1Props {
   jwtToken: string;
 }
+const ResponsiveGridLayout = WidthProvider(Responsive);
 '''
 export_header = '''
   export default class Page1 extends React.Component<Page1Props> {
@@ -22,14 +23,18 @@ export_header = '''
             <SideBar />
             <ul className='grid-list'>'''
 grid_header = '''
-              <li style={{{{display: 'block'}}}}>
-                <GridLayout className="mygrid" cols={{{num_cols}}}    rowHeight={{{row_height}}} width={{{row_width}}}>'''
+              <li>
+                <ResponsiveGridLayout className="mygrid" rowHeight={{{row_height}}}
+                  measureBeforeMount={{false}}
+                  breakpoints={{{{lg: 1200, sm: 768}}}}
+                  cols={{{{lg: {num_cols}, sm: 1}}}}
+                  useCSSTransforms={{true}}>'''
 component_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                   <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}'/>
                   </div>'''
 grid_footer = '''
-                </GridLayout>
+                </ResponsiveGridLayout>
               </li>'''
 export_footer = '''
             </ul>
@@ -163,8 +168,7 @@ with open(Path(spec_path), 'r') as y, \
             app.write(app_render_route.format(page_route=page['route'], page_name=page_name))
             for grid in page['grids'].values():
                 p.write(grid_header.format(num_cols=grid['columns'],
-                                           row_height=grid['row_height'],
-                                           row_width=grid['row_width']))
+                                           row_height=grid['row_height']))
                 for component_name, component in grid['components'].items():
                     p.write(component_template.format(component_name=component_name,
                                                       x=component['x'],
