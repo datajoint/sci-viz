@@ -333,6 +333,9 @@ export default class TableContent extends React.Component<TableContentProps, Tab
               <thead>
                 <tr className="headerRow" onMouseMove={(event) => {this.cellResizeMouseMove(event)}} onMouseUp={(event) => {this.cellResizeMouseUp(event)}}　ref={this.state.headerRowReference}>
                   {this.getPrimaryKeys().map((attributeName, index) => {
+                    if(attributeName.includes('_sciviz')){
+                      return;
+                    }
                     return(
                       <th key={attributeName} className="headings">
                         <SortButton buttonName='headerContent primary' attributeName={attributeName} setOrders={this.props.setOrders}/>
@@ -340,6 +343,9 @@ export default class TableContent extends React.Component<TableContentProps, Tab
                     )
                   })}
                   {this.getSecondaryKeys().map((attributeName, index) => {
+                    if(attributeName.includes('_sciviz')){
+                      return;
+                    }
                     return(
                       <th key={attributeName} className="headings">
                         <SortButton buttonName='headerContent secondary' attributeName={attributeName} setOrders={this.props.setOrders}/>
@@ -349,13 +355,28 @@ export default class TableContent extends React.Component<TableContentProps, Tab
                 </tr>
               </thead>
               <tbody>
+              {console.log(this.props.contentData)}
               {this.props.contentData.map((entry: any, tupleIndex: number) => {
                 // creating reference for each body column to track the width
+                let headers = this.getPrimaryKeys().concat(this.getSecondaryKeys())
+                let bgColor = ''
+                let textColor = ''
+                console.log('table headers: ', headers)
+                for(let index in headers){
+                  if(headers[index].includes('_sciviz_background')){
+                    bgColor = entry[index]
+                    delete entry[index]
+                  }
+                  if(headers[index].includes('_sciviz_font')){
+                    textColor = entry[index]
+                    delete entry[index]
+                  }
+                }
                 return (
                   <tr key={entry} className="tableRow" onMouseMove={(event) => {this.cellResizeMouseMove(event)}} onMouseUp={(event) => {this.cellResizeMouseUp(event)}}　ref={this.state.tuplesReference[tupleIndex]}>
                     {entry.map((column: any, index: number) => {
                       return (
-                        <td key={`${column}-${index}`} className="tableCell">{column} 
+                        <td style={{backgroundColor: bgColor, color: textColor}} key={`${column}-${index}`} className="tableCell">{column} 
                         </td>)
                     })
                     }</tr>)

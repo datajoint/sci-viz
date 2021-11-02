@@ -45,7 +45,24 @@ Important notes about restrictions in the spec sheet:
     ```
 - Overlapping components at the same (x, y) does not work, the grid system will not allow overlapping components it will wrap them horizontally if there is enough space or bump them down to the next row.
 
+
 If the website does not work after running frontend generation script check this list to make sure that spec sheet is constructed properly, in the future we may include a script that lints the spec sheet for you see issue [#20](https://github.com/datajoint/sci-viz/issues/20)
+### Adding color to your tables using projections
+```python
+def dj_query(vms):
+    TableA, TableB = (vms['test_group1_simple'].TableA, vms['test_group1_simple'].TableB)
+    return ((TableA * TableB).proj(...,
+                                   _sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
+                                   _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", NULL)',)
+                                  ), dict(order_by='b_number')
+```
+This is an example of a table query that has a projection that applys a text color as well as a background color.
+It does so through the use of 2 protected column names:
+- `_sciviz_font` for the font color
+- `_sciviz_background` for the background color
+these two fields will accept any color format that css does.
+
+In the example we do a join of two tables and then do a projection where we create 2 new columns with the protected names and if a condition is met we set their field to a css-compatable color else we have it be `NULL`. In the example above we use rgb when we do not need transparency and rgba when we do.
 ## DEV
 There are a couple issues to address if you are collaborating on this project
 - devs will have have to point the submodule to their own fork of pharus if they need to edit pharus to support new features for sci-viz.
