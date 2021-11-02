@@ -197,6 +197,9 @@ export default class TableAttribute {
     else if (tableAttribute.attributeType === TableAttributeType.ENUM) {
       typeString = "enum";
     }
+    else if (tableAttribute.attributeType === TableAttributeType.EXPRESSION){
+      typeString = "expression"
+    }
 
     return typeString;
   }

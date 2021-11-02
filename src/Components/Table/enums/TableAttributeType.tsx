@@ -24,7 +24,8 @@ enum TableAttributeType {
     TIME,
     TIMESTAMP,
     ENUM,
-    BLOB 
+    BLOB,
+    EXPRESSION 
   }
 
 export default TableAttributeType;

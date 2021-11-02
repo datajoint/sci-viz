@@ -55,7 +55,9 @@ SciViz: # top level tab
               dj_query: >
                 def dj_query(vms):
                     TableA, TableB = (vms['test_group1_simple'].TableA, vms['test_group1_simple'].TableB)
-                    return TableA * TableB, dict(order_by='b_number')
+                    return ((TableA * TableB).proj(...,
+                                                   _sciviz_font='IF(a_name = "Raphael", "255:255:255:255", NULL)',
+                                                   _sciviz_background='IF(a_name = "Raphael", "255:255:255:255", NULL)',)), dict(order_by='b_number')
             component2:
               route: /query3
               x: 1

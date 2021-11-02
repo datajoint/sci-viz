@@ -508,6 +508,9 @@ export default class TableView extends React.Component<TableViewProps, TableView
     else if (tableTypeString === 'blob' || tableTypeString === 'longblob') {
       return TableAttributeType.BLOB;
     }
+    else if (tableTypeString === 'expression'){
+      return TableAttributeType.EXPRESSION
+    }
     
     throw Error('Unsupported TableAttributeType: ' + tableTypeString + ' of type ' + tableTypeString);
   }

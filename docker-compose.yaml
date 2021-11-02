@@ -45,7 +45,7 @@ services:
       service: pharus
     environment:
       - FLASK_ENV=development # enables logging to console from Flask
-      - API_SPEC_PATH=specs/spec.yaml # for dynamic api spec
+      - API_SPEC_PATH=specs/test_spec.yaml # for dynamic api spec
     volumes:
       - ./test:/tmp/test
       - ./test/:/main/specs/
