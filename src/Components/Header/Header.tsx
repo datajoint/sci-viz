@@ -16,7 +16,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
       <header>
         <img className='header-img' src={logo} alt='Sci-viz logo'/>
         <div className='header-content'>
-          <p>DataJoint SciViz</p>
+          <p><i style={{paddingLeft: '20px'}}>Powered by DataJoint</i></p>
         </div>
       </header>
     );

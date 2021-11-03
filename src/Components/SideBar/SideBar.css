@@ -47,8 +47,7 @@
     height: fit-content;
     justify-content: left;
     position: fixed;
-    top: 30%;
-    transform: translate(0%, -50%);
+    top: 1.1in;
     border-radius: 25px;
   }
 

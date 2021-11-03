@@ -21,7 +21,6 @@ header {
     color: rgb(139, 243, 79);
   }
   .header-img {
-    border: 3px solid #262A22;
-    background-color: #d8d8d8;
-    margin: 0.5%;
+    border-right: 5px solid;
+    border-color: rgb(183, 247, 181);
   }

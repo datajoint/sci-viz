@@ -23,19 +23,46 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="950"
+     inkscape:window-width="3440"
+     inkscape:window-height="1403"
      id="namedview19"
      showgrid="false"
      inkscape:zoom="1.265"
-     inkscape:cx="400"
+     inkscape:cx="247.82609"
      inkscape:cy="304.89027"
-     inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="SVGRoot" />
+     inkscape:current-layer="SVGRoot"
+     inkscape:document-rotation="0" />
   <defs
-     id="defs10" />
+     id="defs10">
+    <rect
+       x="160.37665"
+       y="370.91465"
+       width="238.27778"
+       height="95.013886"
+       id="rect28" />
+    <rect
+       x="237.82964"
+       y="199.3936"
+       width="213.06702"
+       height="111.39239"
+       id="rect22" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter2017"
+       x="-0.0016420998"
+       width="1.0032842"
+       y="-0.0084129025"
+       height="1.0168258">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.28550257"
+         id="feGaussianBlur2019" />
+    </filter>
+  </defs>
   <metadata
      id="metadata13">
     <rdf:RDF>
@@ -48,38 +75,16 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g
-     id="layer1"
-     transform="matrix(2.9759207,0,0,3.8086419,-700.25634,-847.56038)">
-    <text
-       xml:space="preserve"
-       style="font-size:90.0357px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';stroke-width:2.2509"
-       x="404.3671"
-       y="354.56952"
-       id="text1239"
-       transform="scale(0.94326897,1.060143)"><tspan
-         id="tspan1237"
-         x="404.3671"
-         y="354.56952"
-         style="stroke-width:2.2509">Viz</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:87.0303px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';stroke-width:2.17576"
-       x="249.00363"
-       y="274.35092"
-       id="text1243"
-       transform="scale(0.93368241,1.071028)"><tspan
-         id="tspan1241"
-         x="249.00363"
-         y="274.35092"
-         style="stroke-width:2.17576">Sci</tspan></text>
-    <rect
-       style="fill:none;fill-opacity:1;stroke:#87de87"
-       id="rect1309"
-       width="8.2005224"
-       height="158.40352"
-       x="269.66037"
-       y="306.20322"
-       transform="rotate(-15.021746)" />
-  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:109.911px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';opacity:1;stroke:#00ff00;stroke-width:2.74778;filter:url(#filter2017)"
+     x="204.6687"
+     y="420.12338"
+     id="text38"
+     transform="matrix(1.5699472,0,0,2.0717487,-258.34918,-492.54678)"><tspan
+       sodipodi:role="line"
+       id="tspan36"
+       x="204.6687"
+       y="420.12338"
+       style="stroke:#00ff00;stroke-width:2.74778">SCI⚛VIZ</tspan></text>
 </svg>

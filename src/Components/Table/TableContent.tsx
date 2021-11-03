@@ -331,7 +331,7 @@ export default class TableContent extends React.Component<TableContentProps, Tab
           <div className="table-container">
             <table className="table">
               <thead>
-                <tr className="headerRow" onMouseMove={(event) => {this.cellResizeMouseMove(event)}} onMouseUp={(event) => {this.cellResizeMouseUp(event)}}　ref={this.state.headerRowReference}>
+                <tr className="headerRow" ref={this.state.headerRowReference}>
                   {this.getPrimaryKeys().map((attributeName, index) => {
                     if(attributeName.includes('_sciviz')){
                       return;
@@ -373,7 +373,7 @@ export default class TableContent extends React.Component<TableContentProps, Tab
                   }
                 }
                 return (
-                  <tr key={entry} className="tableRow" onMouseMove={(event) => {this.cellResizeMouseMove(event)}} onMouseUp={(event) => {this.cellResizeMouseUp(event)}}　ref={this.state.tuplesReference[tupleIndex]}>
+                  <tr key={entry} className="tableRow"　ref={this.state.tuplesReference[tupleIndex]}>
                     {entry.map((column: any, index: number) => {
                       return (
                         <td style={{backgroundColor: bgColor, color: textColor}} key={`${column}-${index}`} className="tableCell">{column} 
