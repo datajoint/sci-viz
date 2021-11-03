@@ -46,7 +46,7 @@ Important notes about restrictions in the spec sheet:
 - Overlapping components at the same (x, y) does not work, the grid system will not allow overlapping components it will wrap them horizontally if there is enough space or bump them down to the next row.
 
 
-If the website does not work after running frontend generation script check this list to make sure that spec sheet is constructed properly, in the future we may include a script that lints the spec sheet for you see issue [#20](https://github.com/datajoint/sci-viz/issues/20)
+If the website does not work after running the frontend generation script check this list to make sure that spec sheet is constructed properly, in the future we may include a script that lints the spec sheet for you. see issue [#20](https://github.com/datajoint/sci-viz/issues/20)
 ### Adding color to your tables using projections
 ```python
 def dj_query(vms):
@@ -63,6 +63,7 @@ It does so through the use of 2 protected column names:
 these two fields will accept any color format that css does.
 
 In the example we do a join of two tables and then do a projection where we create 2 new columns with the protected names and if a condition is met we set their field to a css-compatable color else we have it be `NULL`. In the example above we use rgb when we do not need transparency and rgba when we do.
+[here is a good tool for picking css colors.](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Colors/Color_picker_tool)
 ## DEV
 There are a couple issues to address if you are collaborating on this project
 - devs will have have to point the submodule to their own fork of pharus if they need to edit pharus to support new features for sci-viz.

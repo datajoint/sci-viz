@@ -48,12 +48,13 @@ services:
       - API_SPEC_PATH=specs/test_spec.yaml # for dynamic api spec
     volumes:
       - ./test:/tmp/test
-      - ./test/:/main/specs/
+      - ./test/test_spec.yaml:/main/specs/test_spec.yaml
     command:
     - sh
     - -lc
     - |
       python /tmp/test/populate.py
+      python -c 'from pharus.dynamic_api_gen import *; populate_api()'
       pharus
     networks:
     - main

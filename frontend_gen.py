@@ -1,5 +1,6 @@
 from pathlib import Path
 import yaml
+from pharus.pharus.dynamic_api_gen import populate_api
 
 # Page String Components
 page_header = '''
@@ -180,3 +181,4 @@ with open(Path(spec_path), 'r') as y, \
             p.write(export_footer)
     s.write(sidebar_footer)
     app.write(app_render_footer)
+populate_api()
