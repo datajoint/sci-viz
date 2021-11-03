@@ -14,7 +14,7 @@ Before running the application through docker, make sure to run the command:
 ```bash
 python frontend_gen.py
 ```
-This will compile the necessary typescript files for the frontend.
+This will compile the necessary typescript files for the frontend and the necessary python files for the backend.
 you can also run this at any time during a dev deployment to hot-load the frontend, however this is not always guaranteed to work as some changes may require the entire react server to restart. Anything related to the back end api is not hot-loadable but for example the component locations and sizes can be modified and hot-loaded.
 
 ## Running the application
