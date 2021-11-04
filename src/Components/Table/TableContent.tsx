@@ -359,10 +359,9 @@ export default class TableContent extends React.Component<TableContentProps, Tab
                 let headers = this.getPrimaryKeys().concat(this.getSecondaryKeys())
                 let bgColor = ''
                 let textColor = ''
-
                 // this copies the entry over so we can delete from it without affecting the original value
                 // when you do let modifiedEntry = entry if seems to pass a pointer to modifiedEntry not a copy of the data.
-                let modifiedEntry = JSON.parse(JSON.stringify(entry))
+                let modifiedEntry = [...entry]
 
                 for(let index in headers){
                   if(headers[index].includes('_sciviz_background')){
