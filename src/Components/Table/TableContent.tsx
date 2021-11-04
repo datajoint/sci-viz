@@ -355,26 +355,32 @@ export default class TableContent extends React.Component<TableContentProps, Tab
                 </tr>
               </thead>
               <tbody>
-              {console.log(this.props.contentData)}
               {this.props.contentData.map((entry: any, tupleIndex: number) => {
-                // creating reference for each body column to track the width
                 let headers = this.getPrimaryKeys().concat(this.getSecondaryKeys())
                 let bgColor = ''
                 let textColor = ''
-                console.log('table headers: ', headers)
+
+                // this copies the entry over so we can delete from it without affecting the original value
+                // when you do let modifiedEntry = entry if seems to pass a pointer to modifiedEntry not a copy of the data.
+                let modifiedEntry = JSON.parse(JSON.stringify(entry))
+
                 for(let index in headers){
                   if(headers[index].includes('_sciviz_background')){
-                    bgColor = entry[index]
-                    delete entry[index]
+                    bgColor = modifiedEntry[index]
+                    delete modifiedEntry[index]
                   }
-                  if(headers[index].includes('_sciviz_font')){
+                  else if(headers[index].includes('_sciviz_font')){
                     textColor = entry[index]
-                    delete entry[index]
+                    delete modifiedEntry[index]
+                  }
+                  else if(headers[index].includes('_sciviz')){
+                    // hide any index that has _sciviz that we do not handle
+                    delete modifiedEntry[index]
                   }
                 }
                 return (
                   <tr key={entry} className="tableRow"　ref={this.state.tuplesReference[tupleIndex]}>
-                    {entry.map((column: any, index: number) => {
+                    {modifiedEntry.map((column: any, index: number) => {
                       return (
                         <td style={{backgroundColor: bgColor, color: textColor}} key={`${column}-${index}`} className="tableCell">{column} 
                         </td>)
