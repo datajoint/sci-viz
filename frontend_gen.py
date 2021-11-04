@@ -12,7 +12,7 @@ import SideBar from '../SideBar/SideBar';
 import './Page.css'
 import remarkGfm from 'remark-gfm'
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
-import {dark} from 'react-syntax-highlighter/dist/esm/styles/prism'
+import {materialLight} from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface Page1Props {
   jwtToken: string;
@@ -40,7 +40,25 @@ table_template = '''
                   </div>'''
 mkdown_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                  <ReactMarkdown remarkPlugins={{[remarkGfm]}} children={{`{markdown}`}}/>
+                  <ReactMarkdown remarkPlugins={{[remarkGfm]}} children={{`{markdown}`}}
+                  components={{{{
+                    code({{node, inline, className, children, ...props}}) {{
+                        const match = /language-(\\w+)/.exec(className || '')
+                        return !inline && match ? (
+                        <SyntaxHighlighter
+                            children={{String(children).replace(/\\n$/, '')}}
+                            style={{materialLight}}
+                            language={{match[1]}}
+                            PreTag="div"
+                        />
+                        ) : (
+                        <code className={{className}} {{...props}}>
+                            {{children}}
+                        </code>
+                        )
+                    }}
+                    }}}}
+                  />
                   </div>'''
 
 grid_footer = '''
