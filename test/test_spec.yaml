@@ -21,7 +21,7 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              type: entry-browser # entry-browser|meta-info|plot:png|plot:plotly1|plot:plotly2|plot:hybrid|plot:table|raw-text
+              type: entry-browser 
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -29,8 +29,30 @@ SciViz: # top level tab
                 def dj_query(vms):
                     TableA, TableB = (vms['test_group1_simple'].TableA, vms['test_group1_simple'].TableB)
                     return TableA * TableB, dict(order_by='b_number')
+    MKdownTEST:
+      route: /mkdown # dev, be careful of name collisions
+      grids:
+        grid1:
+          type: fixed
+          max_component_per_page: 20
+          columns: 1
+          row_height: 800
+          components:
+            component1:
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: markdown
+              text: >-
+                # Splashpage \n
+                ### Hello! \n
+                this is a test for markdown support \n
+                ~~~python \n
+                print('Nice! Codeblock support!') \n
+                ~~~
     Mouse:
-      route: /session2 # dev, be careful of name collisions
+      route: /mouse
       args:
         - subject_name
         - session_number
@@ -39,8 +61,8 @@ SciViz: # top level tab
         grid1:
           type: fixed
           max_component_per_page: 20
-          columns: 3
-          row_height: 400
+          columns: 2
+          row_height: 450
           components:
             component1:
               route: /query2
@@ -64,7 +86,7 @@ SciViz: # top level tab
               route: /query3
               x: 1
               y: 0
-              height: 2
+              height: 1
               width: 1
               type: plot:plotly1
               restriction: >

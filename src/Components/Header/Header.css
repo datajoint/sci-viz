@@ -15,9 +15,9 @@ header {
   
   .header-content p {
     width: fit-content;
-    font-size: 2rem;
+    font-size: 1.5rem;
     text-align: center;
-    color: rgb(139, 243, 79);
+    color: rgb(0, 0, 0);
   }
   .header-img {
     border-right: 5px solid;

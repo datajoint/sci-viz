@@ -11,8 +11,13 @@ export const SideBarData = [
         cName: 'nav-text'
     },
     {
+        title: 'MKdownTEST',
+        path: '/mkdown',
+        cName: 'nav-text'
+    },
+    {
         title: 'Mouse',
-        path: '/session2',
+        path: '/mouse',
         cName: 'nav-text'
     },
 ]

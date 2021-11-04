@@ -7,8 +7,12 @@ page_header = '''
 import React from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import TableView from '../Table/TableView';
+import ReactMarkdown from 'react-markdown';
 import SideBar from '../SideBar/SideBar';
 import './Page.css'
+import remarkGfm from 'remark-gfm'
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
+import {dark} from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface Page1Props {
   jwtToken: string;
@@ -30,10 +34,15 @@ grid_header = '''
                   breakpoints={{{{lg: 1200, sm: 768}}}}
                   cols={{{{lg: {num_cols}, sm: 1}}}}
                   useCSSTransforms={{true}}>'''
-component_template = '''
+table_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                   <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}'/>
                   </div>'''
+mkdown_template = '''
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                  <ReactMarkdown remarkPlugins={{[remarkGfm]}} children={{`{markdown}`}}/>
+                  </div>'''
+
 grid_footer = '''
                 </ResponsiveGridLayout>
               </li>'''
@@ -171,12 +180,20 @@ with open(Path(spec_path), 'r') as y, \
                 p.write(grid_header.format(num_cols=grid['columns'],
                                            row_height=grid['row_height']))
                 for component_name, component in grid['components'].items():
-                    p.write(component_template.format(component_name=component_name,
-                                                      x=component['x'],
-                                                      y=component['y'],
-                                                      height=component['height'],
-                                                      width=component['width'],
-                                                      route=component['route']))
+                    if component['type'] == 'markdown':
+                        p.write(mkdown_template.format(component_name=component_name,
+                                                       markdown=component['text'],
+                                                       x=component['x'],
+                                                       y=component['y'],
+                                                       height=component['height'],
+                                                       width=component['width']))
+                        continue
+                    p.write(table_template.format(component_name=component_name,
+                                                  x=component['x'],
+                                                  y=component['y'],
+                                                  height=component['height'],
+                                                  width=component['width'],
+                                                  route=component['route']))
                 p.write(grid_footer)
             p.write(export_footer)
     s.write(sidebar_footer)
