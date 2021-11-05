@@ -4,32 +4,30 @@ SciViz: # top level tab
   auth:
     mode: database # reuse from DJ LabBook
   pages: # individual pages
-    Session: # name reference of the page
-      route: /session1 # dev, be careful of name collisions
-      args: null
-      hidden: false
+    # The first page in the list of pages is the splash page after login
+    # By convention this should be a home page with a markdown component
+    Home: 
+      route: /home
       grids:
-        grid1:
-          type: fixed
-          max_component_per_page: 1
+        grid5:
           columns: 1
-          row_height: 450
+          row_height: 700
           components:
-            component3:
-              route: /query1
-              x: 0 # component indexes at top left corner
+            comp:
+              x: 0
               y: 0
               height: 1
               width: 1
-              type: entry-browser 
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(vms):
-                    TableA, TableB = (vms['test_group1_simple'].TableA, vms['test_group1_simple'].TableB)
-                    return TableA * TableB, dict(order_by='b_number')
-    MKdownTEST:
+              type: markdown
+              text: |
+                # Welcome!
+
+                This is a basic homepage created entirely through the config file.
+
+                It is comprised of a single markdown component that supports the [github markdown spec.](https://guides.github.com/features/mastering-markdown/)
+
+                For more examples of the markdown component go the the markdown page.
+    Markdown:
       route: /mkdown # dev, be careful of name collisions
       grids:
         grid1:
@@ -45,18 +43,50 @@ SciViz: # top level tab
               width: 1
               type: markdown
               text: |
-                # Splashpage  
+                ![Image](https://www.datajoint.org/static/images/djopen-color-dark.png)
+                # Markdown support  
                 ### Hello!  
-                this is a test for markdown support  
+                this is an example of the markdown component  
                 ~~~python  
                 print('Nice! Codeblock support!')  
                 ~~~  
                 list: 
-                  - apple
-                  - pear
-                  - melon
-    Mouse:
-      route: /mouse
+                  * apple
+                  * pear
+                  * melon
+                
+                ordered list:
+                1. one
+                2. two
+                3. three
+
+                \`Inline code highlight! \`
+
+                [Hyperlinks!](https://www.google.com/)
+                # h1
+                ## h2
+                ### h3
+                #### h4
+                ##### h5
+                ###### h6
+
+                nested lists:
+                  * parent
+                    * child
+                
+                task lists:
+                  * [x] apples
+                  * [x] pizza
+                  * [ ] chicken
+                
+                tables:
+
+                first header | second header
+                ------------ | -------------
+                Content cell 1 | content cell 2
+                Content cell 3 | content cell 4
+    Table:
+      route: /tableExample
       args:
         - subject_name
         - session_number
@@ -68,7 +98,7 @@ SciViz: # top level tab
           columns: 2
           row_height: 700
           components:
-            component1:
+            Example table (conditional row coloring): # yaml allows keys with spaces!
               route: /query2
               x: 0
               y: 0
@@ -86,7 +116,7 @@ SciViz: # top level tab
                         #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
                         _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "rgba(255, 0, 0, 0.16)")',
                         )), dict(order_by='b_number')
-            component2:
+            example table 1 markdown:
               x: 1
               y: 0
               height: 1
@@ -107,8 +137,61 @@ SciViz: # top level tab
                         "rgba(255, 0, 0, 0.16)")
                         ''',)), dict(order_by='b_number') 
                 ~~~
-                *Sci-Viz* speaks datajoint natively, isnt that neat!  
+                # *Sci-Viz* speaks datajoint natively, isnt that neat!  
                 
-                Notice that this query has a projection that produces an additional column,  
+                ### About the coloring in the table:
+                Notice that this query has a projection that produces an additional column.
                 The column \`_sciviz_background\` accepts any css compatable color,
-                so if you want custom coloring based off of a condition in your query result all you have to do is make a projection with a condition that inserts a color into the _sciviz_background column
+                so if you want custom coloring based off of a condition in your query result 
+                all you have to do is make a projection with a condition that inserts a color into the \`_sciviz_background\` column.
+
+                If the \`_sciviz_background\` column exists, the frontend automatically hides the column and applys its css colors to each row.
+                The onlt thing that the \`_sciviz_background\` column cares about is that it has a valid css color or NULL in it,
+                so you can enforce as many color conditions as you want.
+
+                This same functionality also exists for the text using the column \`_sciviz_font\`
+                [here is a good tool for picking css colors.](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Colors/Color_picker_tool)
+            Example table 2 (restriction):
+              route: /exampletable2
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs, a_id=1)
+              dj_query: >
+                def dj_query(vms):
+                    TableA, TableB = (vms['test_group1_simple'].TableA,
+                                      vms['test_group1_simple'].TableB)
+                    return (TableA * TableB), dict()
+            example table 2 markdown:
+              x: 1
+              y: 1
+              height: 1
+              width: 1
+              type: markdown
+              text: |
+                # DJ table with restriction:
+                
+                This is a datajoint table from the following query:
+                ~~~python
+                  def dj_query(vms):
+                    TableA, TableB = (vms['test_group1_simple'].TableA,
+                                      vms['test_group1_simple'].TableB)
+                    return (TableA * TableB)
+                ~~~
+
+                But it also has the following restriction applied to it:
+                ~~~python
+                  def restriction(**kwargs):
+                    return dict(**kwargs, a_id=1)
+                ~~~
+
+                What this does is it injects the additional restriction into the query.
+                
+                This is useful because you can use anchoring and aliasing in the config to
+                copy one query to many components and only have to change the restriction on the
+                component
+

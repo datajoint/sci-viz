@@ -78,13 +78,7 @@ export_footer = '''
 
 # Side Bar string components
 sidebar_header = '''
-export const SideBarData = [
-    {
-        title: 'Home',
-        path: '/home',
-        cName: 'nav-text'
-    },'''
-
+export const SideBarData = ['''
 sidebar_data = '''
     {{
         title: '{page_name}',
@@ -101,7 +95,6 @@ import React from 'react';
 import './App.css';
 import Login from './Components/Login/Login';
 import {Route, BrowserRouter as Router, Switch, Redirect} from 'react-router-dom';
-import Home from './Components/home';
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
 import NotFound from './Components/Errors/NotFound'
@@ -150,16 +143,15 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
 '''
 
 app_render_header = '''
-  render() {
+  render() {{
     return (
       <div>
         <Header></Header>
         <Router>
           <div className='content'>
             <Switch>
-              <Route exact path='/'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Redirect to='/login'/>}</Route>
-              <Route path='/login'>{this.state.jwtToken !== '' ? <Redirect to='/home'/> : <Login setJWTTokenAndHostName={this.setJWTTokenAndHostName}></Login>}</Route>
-              <Route path='/home'>{this.state.jwtToken !== '' ? <Home jwtToken={this.state.jwtToken}></Home> : <Redirect to='/login'/>}</Route>'''
+              <Route exact path='/'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Redirect to='/login'/>}}</Route>
+              <Route path='/login'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Login setJWTTokenAndHostName={{this.setJWTTokenAndHostName}}></Login>}}</Route>'''
 
 app_render_route = '''
               <Route path='{page_route}'>{{this.state.jwtToken !== '' ? <{page_name} jwtToken={{this.state.jwtToken}}></{page_name}> : <Redirect to='/login'/>}}</Route>'''
@@ -191,7 +183,7 @@ with open(Path(spec_path), 'r') as y, \
     app.write(app_header)
     for page in pages.keys():
         app.write(app_import_template.format(page_name=page))
-    app.write(app_export + app_render_header)
+    app.write(app_export + app_render_header.format(first_page_route=list(pages.values())[0]['route']))
     for page_name, page in pages.items():
         with open(Path(page_path.format(page_name=page_name)), 'w') as p:
             p.write(page_header + export_header)

@@ -20,3 +20,27 @@
     .markdown{
         margin: 15px;
     }
+
+    .markdown table{
+        border: 1px solid black;
+    }
+
+    .markdown th{
+        border: 1px solid black;
+    }
+
+    .markdown tr{
+        border: 1px solid black;
+    }
+
+    .markdown td{
+        border: 1px solid black;
+    }
+
+    .markdown img{
+        max-width: 100%;
+    }
+    
+    .contains-task-list{
+        list-style-type: none;
+    }
