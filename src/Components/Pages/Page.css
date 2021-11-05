@@ -9,3 +9,14 @@
         width: 100%;
         list-style: none;
     }
+    .markdownContainer{
+        background-color: #FBFBFB;
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+        flex-grow: 1;
+        box-shadow: -1px 0px 3px #91938f;
+    }
+    .markdown{
+        margin: 15px;
+    }

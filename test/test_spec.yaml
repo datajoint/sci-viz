@@ -35,8 +35,8 @@ SciViz: # top level tab
         grid1:
           type: fixed
           max_component_per_page: 20
-          columns: 1
-          row_height: 800
+          columns: 2
+          row_height: 700
           components:
             component1:
               x: 0
@@ -44,13 +44,17 @@ SciViz: # top level tab
               height: 1
               width: 1
               type: markdown
-              text: >-
-                # Splashpage \n
-                ### Hello! \n
-                this is a test for markdown support \n
-                ~~~python \n
-                print('Nice! Codeblock support!') \n
-                ~~~
+              text: |
+                # Splashpage  
+                ### Hello!  
+                this is a test for markdown support  
+                ~~~python  
+                print('Nice! Codeblock support!')  
+                ~~~  
+                list: 
+                  - apple
+                  - pear
+                  - melon
     Mouse:
       route: /mouse
       args:
@@ -62,7 +66,7 @@ SciViz: # top level tab
           type: fixed
           max_component_per_page: 20
           columns: 2
-          row_height: 450
+          row_height: 700
           components:
             component1:
               route: /query2
@@ -83,20 +87,28 @@ SciViz: # top level tab
                         _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "rgba(255, 0, 0, 0.16)")',
                         )), dict(order_by='b_number')
             component2:
-              route: /query3
               x: 1
               y: 0
               height: 1
               width: 1
-              type: plot:plotly1
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(a_id=0, **kwargs)
-              dj_query: >
+              type: markdown
+              text: |
+                # Hello! 
+                This is a Datajoint table component populated by the codeblock:
+                ~~~python  
                 def dj_query(vms):
-                    TableA, TableB = (vms['test_group1_simple'].TableA, vms['test_group1_simple'].TableB)
-                    return TableA * TableB, dict(order_by='b_number')
-              diff_checker: >
-                def diff_checker(**args):
-                  return TrainingStatsPlotly.proj(hash='trial_mean_hash')
-
+                    TableA, TableB = (vms['test_group1_simple'].TableA,
+                                      vms['test_group1_simple'].TableB)
+                    return ((TableA * TableB).proj(
+                        ...,
+                        _sciviz_background='''
+                        IF(a_name = "Raphael",
+                        "rgba(50, 255, 0, 0.16)",
+                        "rgba(255, 0, 0, 0.16)")
+                        ''',)), dict(order_by='b_number') 
+                ~~~
+                *Sci-Viz* speaks datajoint natively, isnt that neat!  
+                
+                Notice that this query has a projection that produces an additional column,  
+                The column \`_sciviz_background\` accepts any css compatable color,
+                so if you want custom coloring based off of a condition in your query result all you have to do is make a projection with a condition that inserts a color into the _sciviz_background column
