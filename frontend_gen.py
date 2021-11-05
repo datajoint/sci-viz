@@ -195,7 +195,7 @@ with open(Path(spec_path), 'r') as y, \
                 for component_name, component in grid['components'].items():
                     if component['type'] == 'markdown':
                         p.write(mkdown_template.format(component_name=component_name,
-                                                       markdown=component['text'],
+                                                       markdown=component['text'].replace('`', '\`'),
                                                        x=component['x'],
                                                        y=component['y'],
                                                        height=component['height'],

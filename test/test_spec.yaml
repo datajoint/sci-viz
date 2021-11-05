@@ -60,7 +60,7 @@ SciViz: # top level tab
                 2. two
                 3. three
 
-                \`Inline code highlight! \`
+                `Inline code highlight! `
 
                 [Hyperlinks!](https://www.google.com/)
                 # h1
@@ -141,15 +141,15 @@ SciViz: # top level tab
                 
                 ### About the coloring in the table:
                 Notice that this query has a projection that produces an additional column.
-                The column \`_sciviz_background\` accepts any css compatable color,
+                The column `_sciviz_background` accepts any css compatable color,
                 so if you want custom coloring based off of a condition in your query result 
-                all you have to do is make a projection with a condition that inserts a color into the \`_sciviz_background\` column.
+                all you have to do is make a projection with a condition that inserts a color into the `_sciviz_background` column.
 
-                If the \`_sciviz_background\` column exists, the frontend automatically hides the column and applys its css colors to each row.
-                The onlt thing that the \`_sciviz_background\` column cares about is that it has a valid css color or NULL in it,
+                If the `_sciviz_background` column exists, the frontend automatically hides the column and applys its css colors to each row.
+                The onlt thing that the `_sciviz_background` column cares about is that it has a valid css color or NULL in it,
                 so you can enforce as many color conditions as you want.
 
-                This same functionality also exists for the text using the column \`_sciviz_font\`
+                This same functionality also exists for the text using the column `_sciviz_font`
                 [here is a good tool for picking css colors.](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Colors/Color_picker_tool)
             Example table 2 (restriction):
               route: /exampletable2
@@ -188,6 +188,7 @@ SciViz: # top level tab
                   def restriction(**kwargs):
                     return dict(**kwargs, a_id=1)
                 ~~~
+                ## Why is this useful?
 
                 What this does is it injects the additional restriction into the query.
                 
