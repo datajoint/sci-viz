@@ -215,3 +215,4 @@ with open(Path(spec_path), 'r') as y, \
     s.write(sidebar_footer)
     app.write(app_render_footer)
 populate_api()
+print('using FRONTEND_SPEC_PATH')
