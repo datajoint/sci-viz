@@ -1,6 +1,9 @@
 from pathlib import Path
-import yaml
 from pharus.pharus.dynamic_api_gen import populate_api
+from dotenv import load_dotenv
+import yaml
+import os
+load_dotenv()
 
 # Page String Components
 page_header = '''
@@ -169,7 +172,7 @@ app_render_footer = '''
 '''
 
 # spec_path = os.environ.get('API_SPEC_PATH')
-spec_path = 'test/test_spec.yaml'
+spec_path = os.environ.get('FRONTEND_SPEC_PATH')
 side_bar_path = 'src/Components/SideBar/SideBarData.tsx'
 page_path = 'src/Components/Pages/{page_name}.tsx'
 app_path = 'src/App.tsx'
