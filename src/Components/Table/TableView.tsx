@@ -511,6 +511,8 @@ export default class TableView extends React.Component<TableViewProps, TableView
     else if (tableTypeString === 'expression'){
       return TableAttributeType.EXPRESSION
     }
+    else if (tableTypeString.includes('datetime('))
+      return TableAttributeType.DATETIMESTR
     
     throw Error('Unsupported TableAttributeType: ' + tableTypeString + ' of type ' + tableTypeString);
   }

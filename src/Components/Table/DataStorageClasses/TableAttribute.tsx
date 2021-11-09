@@ -200,6 +200,9 @@ export default class TableAttribute {
     else if (tableAttribute.attributeType === TableAttributeType.EXPRESSION){
       typeString = "expression"
     }
+    else if (tableAttribute.attributeType === TableAttributeType.DATETIMESTR){
+      typeString = "datetimestr"
+    }
 
     return typeString;
   }

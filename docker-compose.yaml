@@ -54,7 +54,6 @@ services:
     - -lc
     - |
       python /tmp/test/populate.py
-      python -c 'from pharus.dynamic_api_gen import *; populate_api()'
       pharus
     networks:
     - main

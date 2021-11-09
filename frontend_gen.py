@@ -1,5 +1,4 @@
 from pathlib import Path
-from pharus.pharus.dynamic_api_gen import populate_api
 from dotenv import load_dotenv
 import yaml
 import os
@@ -214,5 +213,4 @@ with open(Path(spec_path), 'r') as y, \
             p.write(export_footer)
     s.write(sidebar_footer)
     app.write(app_render_footer)
-populate_api()
 print('using FRONTEND_SPEC_PATH')

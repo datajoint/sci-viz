@@ -104,7 +104,7 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              type: plot:png
+              type: table
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
