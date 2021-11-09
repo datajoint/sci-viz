@@ -1,8 +1,6 @@
 from pathlib import Path
-from dotenv import load_dotenv
 import yaml
 import os
-load_dotenv()
 
 # Page String Components
 page_header = '''

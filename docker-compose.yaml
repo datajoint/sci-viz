@@ -2,17 +2,25 @@
 version: '2.4'
 services:
   sci-viz:
-    build: ./
+    build: .
+    image: datajoint/sci-viz:0.1.0
     environment:
       CHOKIDAR_USEPOLLING: "true"
       REACT_APP_DJLABBOOK_BACKEND_PREFIX: '/api'
-    image: web:v0.0.0
+      FRONTEND_SPEC_PATH: ./test/test_spec.yaml
     volumes:
       - .:/app
     # ports:
     #   - "3000:3000"
     networks:
       - main
+    working_dir: /app
+    command:
+      - sh
+      - -lc
+      - |
+        python frontend_gen.py
+        npm start
   localdb:
     image: datajoint/mysql:5.7
     environment:
