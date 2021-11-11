@@ -109,8 +109,8 @@ SciViz: # top level tab
                 def restriction(**kwargs):
                     return dict(**kwargs)
               dj_query: >
-                def dj_query(vms):
-                    TableA, TableB = (vms['test_group1_simple'].TableA, vms['test_group1_simple'].TableB)
+                def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)
                     return ((TableA * TableB).proj(
                         ...,
                         #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
@@ -162,9 +162,9 @@ SciViz: # top level tab
                 def restriction(**kwargs):
                     return dict(**kwargs, a_id=1)
               dj_query: >
-                def dj_query(vms):
-                    TableA, TableB = (vms['test_group1_simple'].TableA,
-                                      vms['test_group1_simple'].TableB)
+                def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA,
+                                      test_group1_simple.TableB)
                     return (TableA * TableB), dict()
             example table 2 markdown:
               x: 1
@@ -177,10 +177,10 @@ SciViz: # top level tab
                 
                 This is a datajoint table from the following query:
                 ~~~python
-                  def dj_query(vms):
-                    TableA, TableB = (vms['test_group1_simple'].TableA,
-                                      vms['test_group1_simple'].TableB)
-                    return (TableA * TableB)
+                  def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA,
+                                      test_group1_simple.TableB)
+                    return (TableA * TableB), dict()
                 ~~~
 
                 But it also has the following restriction applied to it:

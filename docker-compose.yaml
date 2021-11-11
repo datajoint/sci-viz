@@ -3,7 +3,6 @@ version: '2.4'
 services:
   sci-viz:
     build: .
-    image: datajoint/sci-viz:0.1.0
     environment:
       CHOKIDAR_USEPOLLING: "true"
       REACT_APP_DJLABBOOK_BACKEND_PREFIX: '/api'

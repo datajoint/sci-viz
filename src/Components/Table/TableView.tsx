@@ -106,7 +106,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
   setOrders(newOrder: string) {
     var orderDelete = false
     var newOrderList = []
-    for(let order of this.state.orders){
+    for(let order of this.state.orders.reverse()){
       //if the attribute name matches one in the order array, overwrite it.
       if((newOrder.split(' '))[0] === (order.split(' '))[0]){
         if((newOrder.split(' '))[1] === 'del'){
@@ -115,10 +115,10 @@ export default class TableView extends React.Component<TableViewProps, TableView
         }
         continue;
       }
-      newOrderList.push(order)
+      newOrderList.unshift(order)
     }
     if(orderDelete===false){
-      newOrderList.push(newOrder);
+      newOrderList.unshift(newOrder);
       this.setState({orders: newOrderList});
     }
     this.setState({orders: newOrderList});
