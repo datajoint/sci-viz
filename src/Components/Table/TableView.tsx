@@ -242,9 +242,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
     }
 
     if (this.state.orders.length !== 0) {
-      for (let order of this.state.orders){
-        urlParams.push('order=' + order)
-      }
+      urlParams.push('order=' + this.state.orders)
     }
 
     // Build the url with params
