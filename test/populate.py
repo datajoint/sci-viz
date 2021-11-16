@@ -60,7 +60,7 @@ class PlotlyTable(dj.Lookup):
     ---
     plot: longblob
     """
-    contents = [(1, dict(data=[dict(x=[1, 2, 3],
+    contents = [(2, dict(data=[dict(x=[1, 2, 3],
                                     y=[2, 6, 3],
                                     type='scatter',
                                     mode='lines+markers',

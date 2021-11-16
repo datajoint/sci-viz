@@ -205,13 +205,19 @@ SciViz: # top level tab
           row_height: 700
           components:
             component1:
-              type: markdown
+              route: /plot1
+              type: full-plot
               x: 0
               y: 0
               height: 1
               width: 1
-              text: |
-                # Test
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs, p_id=2)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    PlotlyTable = test_group1_simple.PlotlyTable
+                    return PlotlyTable, ['plot']
             component2:
               type: markdown
               x: 1

@@ -13,6 +13,7 @@ import './Page.css'
 import remarkGfm from 'remark-gfm'
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 import {solarizedlight} from 'react-syntax-highlighter/dist/esm/styles/prism'
+import FullPlotly from '../Plots/FullPlotly'
 
 interface Page1Props {
   jwtToken: string;
@@ -38,6 +39,13 @@ table_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                   <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}'/>
                   </div>'''
+fullplotly_template = '''
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <div className='plotContainer'>
+                      <FullPlotly route='{route}' token={{this.props.jwtToken}}/>
+                    </div>
+                  </div>
+'''
 mkdown_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                   <div className='markdownContainer'>
@@ -200,6 +208,14 @@ with open(Path(spec_path), 'r') as y, \
                                                        y=component['y'],
                                                        height=component['height'],
                                                        width=component['width']))
+                        continue
+                    if component['type'] == 'full-plot':
+                        p.write(fullplotly_template.format(component_name=component_name,
+                                                           x=component['x'],
+                                                           y=component['y'],
+                                                           height=component['height'],
+                                                           width=component['width'],
+                                                           route=component['route']))
                         continue
                     p.write(table_template.format(component_name=component_name,
                                                   x=component['x'],
