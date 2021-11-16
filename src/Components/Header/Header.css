@@ -8,9 +8,7 @@ header {
   }
   .header-content {
     position: static;
-    height: center;
     align-self: center;
-    width: 80%;
   }
   
   .header-content p {

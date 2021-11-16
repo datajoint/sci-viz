@@ -195,4 +195,35 @@ SciViz: # top level tab
                 This is useful because you can use anchoring and aliasing in the config to
                 copy one query to many components and only have to change the restriction on the
                 component
+    Plots:
+      route: /plots
+      grids:
+        grid1:
+          type: fixed
+          max_component_per_page: 20
+          columns: 2
+          row_height: 700
+          components:
+            component1:
+              type: markdown
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              text: |
+                # Test
+            component2:
+              type: markdown
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              text: |
+                # This is a plotly plot
+
+                *Nice*
+
+                🤔 yaml apparently allows emojis
+          
+      
 

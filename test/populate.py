@@ -51,3 +51,21 @@ class TableC(dj.Lookup):
     c_int: int
     """
     contents = [(0, 10, 100, -8), (0, 11, 200, -9,), (0, 11, 300, -7,)]
+
+
+@group1_simple
+class PlotlyTable(dj.Lookup):
+    definition = """
+    p_id: int
+    ---
+    plot: longblob
+    """
+    contents = [(1, dict(data=[dict(x=[1, 2, 3],
+                                    y=[2, 6, 3],
+                                    type='scatter',
+                                    mode='lines+markers',
+                                    marker=dict(color='red')),
+                               dict(type='bar',
+                                    x=[1, 2, 3],
+                                    y=[2, 5, 3])],
+                         layout=dict(title='A Fancy Plot')))]

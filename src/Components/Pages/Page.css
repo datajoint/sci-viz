@@ -2,10 +2,9 @@
         margin-bottom: .25in;
         display: flex;
         background-color: #f1f1f1;
-        min-height: calc(100vh - 1.35in);
+        min-height: calc(calc(100vh - 1.35in) - 46px);
     }
     .grid-list{
-        padding-left: 7%;
         width: 100%;
         list-style: none;
     }
@@ -45,3 +44,7 @@
     .contains-task-list{
         list-style-type: none;
     }
+    .js-plotly-plot, .plot-container {
+          height: 100%;
+          width: 100%;
+}

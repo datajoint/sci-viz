@@ -24,8 +24,8 @@ export_header = '''
     render() {
       return (
         <div>
+          <SideBar />
           <div className='grid-container'>
-            <SideBar />
             <ul className='grid-list'>'''
 grid_header = '''
               <li>

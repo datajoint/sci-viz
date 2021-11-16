@@ -1,9 +1,9 @@
-#PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\' '{print $2}') HOST_UID=$(id -u) docker-compose up --build
+#HOST_UID="$(id -u)" HOST_GID="$(id -g)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\' '{print $2}') docker-compose up --build
 version: '2.4'
 services:
   sci-viz:
     build: .
-    image: jverswijver/sciviz:0.1.1
+    # image: datajoint/sciviz:0.1.0-beta.0
     environment:
       CHOKIDAR_USEPOLLING: "true"
       REACT_APP_DJLABBOOK_BACKEND_PREFIX: '/api'
@@ -15,6 +15,7 @@ services:
     networks:
       - main
     working_dir: /app
+    user: "${HOST_UID}:${HOST_GID}"
     command:
       - sh
       - -lc
