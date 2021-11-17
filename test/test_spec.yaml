@@ -208,7 +208,7 @@ SciViz: # top level tab
           components:
             component1:
               route: /plot1
-              type: full-plot
+              type: plot:plotly:stored_json
               x: 0
               y: 0
               height: 1

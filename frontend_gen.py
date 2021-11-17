@@ -209,7 +209,7 @@ with open(Path(spec_path), 'r') as y, \
                                                        height=component['height'],
                                                        width=component['width']))
                         continue
-                    if component['type'] == 'full-plot':
+                    if component['type'] == 'plot:plotly:stored_json':
                         p.write(fullplotly_template.format(component_name=component_name,
                                                            x=component['x'],
                                                            y=component['y'],
