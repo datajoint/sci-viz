@@ -43,10 +43,10 @@
     height: 60px;
   }
   .menu-bars {
-    top: 50%;
-    justify-content: left;
+    justify-content: center;
     text-align: center;
     color: black;
-    display: flex;
+    min-height: 23px;
+    width: 23px;
     margin: 15px;
   }

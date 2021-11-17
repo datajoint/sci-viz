@@ -111,11 +111,12 @@ SciViz: # top level tab
               dj_query: >
                 def dj_query(test_group1_simple):
                     TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)
-                    return ((TableA * TableB).proj(
+                    q = ((TableA * TableB).proj(
                         ...,
                         #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
                         _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "rgba(255, 0, 0, 0.16)")',
-                        )), dict(order_by='b_number')
+                        ))
+                    return dict(query=q, fetch_args=[])
             example table 1 markdown:
               x: 1
               y: 0
@@ -129,13 +130,14 @@ SciViz: # top level tab
                 def dj_query(vms):
                     TableA, TableB = (vms['test_group1_simple'].TableA,
                                       vms['test_group1_simple'].TableB)
-                    return ((TableA * TableB).proj(
+                    q = ((TableA * TableB).proj(
                         ...,
                         _sciviz_background='''
                         IF(a_name = "Raphael",
                         "rgba(50, 255, 0, 0.16)",
                         "rgba(255, 0, 0, 0.16)")
-                        ''',)), dict(order_by='b_number') 
+                        ''',))
+                    return dict(query=q, fetch_args=[])
                 ~~~
                 # *Sci-Viz* speaks datajoint natively, isnt that neat!  
                 
@@ -165,7 +167,7 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     TableA, TableB = (test_group1_simple.TableA,
                                       test_group1_simple.TableB)
-                    return (TableA * TableB), dict()
+                    return dict(query=(TableA * TableB), fetch_args=[])
             example table 2 markdown:
               x: 1
               y: 1
@@ -180,7 +182,7 @@ SciViz: # top level tab
                   def dj_query(test_group1_simple):
                     TableA, TableB = (test_group1_simple.TableA,
                                       test_group1_simple.TableB)
-                    return (TableA * TableB), dict()
+                    return dict(query=(TableA * TableB), fetch_args=[])
                 ~~~
 
                 But it also has the following restriction applied to it:
@@ -217,7 +219,7 @@ SciViz: # top level tab
               dj_query: >
                 def dj_query(test_group1_simple):
                     PlotlyTable = test_group1_simple.PlotlyTable
-                    return PlotlyTable, ['plot']
+                    return dict(query=PlotlyTable, fetch_args=['plot'])
             component2:
               type: markdown
               x: 1
