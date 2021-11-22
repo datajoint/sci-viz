@@ -232,6 +232,38 @@ SciViz: # top level tab
                 *Nice*
 
                 🤔 yaml apparently allows emojis
-          
-      
+    Metadata:
+      route: /metadata
+      grids:
+        grid2:
+          type: fixed
+          columns:  6
+          row_height: 233
+          components:
+            comp:
+              type: metadata
+              route: /metadata1
+              x: 1
+              y: 1
+              height: 1
+              width: 1
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs, b_id=19)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA,
+                                      test_group1_simple.TableB)
+                    return dict(query=(TableA * TableB), fetch_args=[])
+            desc:
+              type: markdown
+              x: 3
+              y: 0
+              height: 3
+              width: 3
+              text: |
+                # This is a metadata component
+                it is not very useful by itself but when combined with the dynamic
+                component generator it can provide a useful description of what the other
+                components are.
 

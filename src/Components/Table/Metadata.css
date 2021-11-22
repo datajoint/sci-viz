@@ -1,0 +1,13 @@
+.metadata{
+  margin: 15px;
+  display: table;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.metadata-name{
+  column-span: all;
+}
+.metadata th, tr, td {
+  border: 1px solid black;
+  padding: 5px;
+}

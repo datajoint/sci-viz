@@ -14,6 +14,7 @@ import remarkGfm from 'remark-gfm'
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 import {solarizedlight} from 'react-syntax-highlighter/dist/esm/styles/prism'
 import FullPlotly from '../Plots/FullPlotly'
+import Metadata from '../Table/Metadata'
 
 interface Page1Props {
   jwtToken: string;
@@ -46,6 +47,12 @@ fullplotly_template = '''
                     </div>
                   </div>
 '''
+metadata_template = '''
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <div className='metadataContainer'>
+                      <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}'/>
+                    </div>
+                  </div>'''
 mkdown_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                   <div className='markdownContainer'>
@@ -216,6 +223,14 @@ with open(Path(spec_path), 'r') as y, \
                                                            height=component['height'],
                                                            width=component['width'],
                                                            route=component['route']))
+                        continue
+                    if component['type'] == 'metadata':
+                        p.write(metadata_template.format(component_name=component_name,
+                                                         x=component['x'],
+                                                         y=component['y'],
+                                                         height=component['height'],
+                                                         width=component['width'],
+                                                         route=component['route']))
                         continue
                     p.write(table_template.format(component_name=component_name,
                                                   x=component['x'],
