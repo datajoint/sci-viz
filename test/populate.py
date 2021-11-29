@@ -6,6 +6,36 @@ connection = dj.conn(host='localdb', user='root', password='pharus')
 group1_simple = dj.Schema('test_group1_simple', connection=connection)
 group2_simple = dj.Schema('test_group2_simple', connection=connection)
 
+plot1 = dict(data=[dict(x=[1, 2, 3],
+                        y=[2, 6, 3],
+                        type='scatter',
+                        mode='lines+markers',
+                        marker=dict(color='red')),
+                   dict(type='bar',
+                        x=[1, 2, 3],
+                        y=[2, 5, 3])],
+             layout=dict(title='A Fancy Plot'))
+
+plot2 = dict(data=[dict(x=[1, 2, 3],
+                        y=[7, 6, 2],
+                        type='scatter',
+                        mode='lines+markers',
+                        marker=dict(color='purple')),
+                   dict(type='bar',
+                        x=[1, 2, 3],
+                        y=[2, 1, 3])],
+             layout=dict(title='A Second Fancy Plot'))
+
+plot3 = dict(data=[dict(x=[1, 2, 3],
+                        y=[2, 9, 3],
+                        type='scatter',
+                        mode='lines+markers',
+                        marker=dict(color='blue')),
+                   dict(type='bar',
+                        x=[1, 2, 3],
+                        y=[4, 2, 4])],
+             layout=dict(title='A Very Fancy Plot'))
+
 
 @group1_simple
 class TableA(dj.Lookup):
@@ -31,26 +61,25 @@ class TableB(dj.Lookup):
                 (0, 31, 7.15,), (0, 33, -9.77,), (1, 37, 44.33,)]
 
 
-@group2_simple
-class DiffTableB(dj.Lookup):
+@group1_simple
+class Mouse(dj.Lookup):
     definition = """
-    -> TableA
-    bs_id: int
+    m_id: int
     ---
-    bs_number: float
+    m_name: varchar(30)
     """
-    contents = [(0, -10, -99.99), (0, -11, 287.11,)]
+    contents = [(0, 'jeff'), (1, 'splinter'), (2, 'ratman')]
 
 
 @group1_simple
-class TableC(dj.Lookup):
+class MousePlots(dj.Lookup):
     definition = """
-    -> TableB
-    c_id: int
+    -> Mouse
+    plot_id: int
     ---
-    c_int: int
+    plot: longblob
     """
-    contents = [(0, 10, 100, -8), (0, 11, 200, -9,), (0, 11, 300, -7,)]
+    contents = [(1, 1, plot2), (2, 2, plot3), (0, 0, plot1)]
 
 
 @group1_simple
@@ -60,12 +89,4 @@ class PlotlyTable(dj.Lookup):
     ---
     plot: longblob
     """
-    contents = [(2, dict(data=[dict(x=[1, 2, 3],
-                                    y=[2, 6, 3],
-                                    type='scatter',
-                                    mode='lines+markers',
-                                    marker=dict(color='red')),
-                               dict(type='bar',
-                                    x=[1, 2, 3],
-                                    y=[2, 5, 3])],
-                         layout=dict(title='A Fancy Plot')))]
+    contents = [(2, plot1)]

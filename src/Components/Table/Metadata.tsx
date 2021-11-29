@@ -4,6 +4,7 @@ interface MetadataProps {
   token: string;
   route: string;
   name: string;
+  restrictionList: Array<string>;
 }
 
 interface MetadataState {
@@ -24,6 +25,16 @@ export default class Metadata extends React.Component<MetadataProps, MetadataSta
 
   componentDidMount(){
     let apiUrl = `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route;
+    if (this.props.restrictionList.length > 0){
+      apiUrl = apiUrl + '?';
+      apiUrl = apiUrl + this.props.restrictionList.shift()
+      while (this.props.restrictionList.length > 0){
+        apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
+      }
+
+      console.log('restrictionlist: ', this.props.restrictionList)
+      console.log('restrictionlist str: ', this.props.restrictionList.toString())
+    }
     fetch(apiUrl, {
       method: 'GET',
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token},

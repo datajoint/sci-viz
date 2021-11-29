@@ -13,11 +13,12 @@ interface DynamicGridProps {
   token: string ;
   columns: number;
   rowHeight: number;
-  componentList: []
-  routeList: [];
+  componentList: Array<string>;
+  routeList: Array<string>;
 }
 
 interface DynamicGridState {
+  data: any;
 }
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -29,6 +30,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
   constructor(props: DynamicGridProps) {
     super(props);
     this.state = {
+      data: {recordHeader: [], records: [], totalCount: 0},
     }
   }
 
@@ -40,9 +42,9 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
     })
     .then(result => {
       return result.json()}).then(result => {
-        this.setState({plotlyJson: {data: result.data, layout: result.layout}})
+        this.setState({data: {recordHeader: result.recordHeader, records: result.records, totalCount: result.totalCount}})
     });
-    }
+  }
 
   render() {
     return (
@@ -50,9 +52,38 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
       rowHeight={this.props.rowHeight}
       measureBeforeMount={false}
       breakpoints={{lg: 1200, sm: 768}}
-      cols={{lg: this.props.rowHeight, sm: 1}}
+      cols={{lg: this.props.columns, sm: 1}}
       useCSSTransforms={true}>
-
+        {this.state.data.records.map((record: any, index: number) => {
+          let restrictionList: Array<string>
+          restrictionList = []
+          for(const i in this.state.data.recordHeader){
+            restrictionList.push(
+              this.state.data.recordHeader[i].toString() + '=' + record[i].toString()
+            )
+          }
+          console.log('restriction list:', restrictionList)
+          return(
+            <div key={index} data-grid={{x: index, y: 0, w: 1, h: 1, static: true}}>
+              <div className='plotContainer'>
+              {this.props.componentList.map((componentType: string, compListIndex: number) => {
+                let restrictionListCopy = [...restrictionList]
+                if(componentType == 'plot:plotly:stored_json'){
+                  return(
+                    <FullPlotly route={this.props.routeList[compListIndex]} token={this.props.token} restrictionList={restrictionListCopy}/>
+                  )
+                }
+                if(componentType == 'metadata'){
+                  return(
+                    <Metadata name='Metadata' route={this.props.routeList[compListIndex]} token={this.props.token} restrictionList={restrictionListCopy}/>
+                  )
+                }
+                
+              })}
+              </div>
+            </div>
+          )
+        })}
       </ResponsiveGridLayout>
     );
     }

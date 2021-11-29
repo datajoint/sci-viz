@@ -15,6 +15,7 @@ import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 import {solarizedlight} from 'react-syntax-highlighter/dist/esm/styles/prism'
 import FullPlotly from '../Plots/FullPlotly'
 import Metadata from '../Table/Metadata'
+import DynamicGrid from '../DynamicGrid'
 
 interface Page1Props {
   jwtToken: string;
@@ -43,14 +44,14 @@ table_template = '''
 fullplotly_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='plotContainer'>
-                      <FullPlotly route='{route}' token={{this.props.jwtToken}}/>
+                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{[]}}/>
                     </div>
                   </div>
 '''
 metadata_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='metadataContainer'>
-                      <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}'/>
+                      <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}' restrictionList={{[]}}/>
                     </div>
                   </div>'''
 mkdown_template = '''
@@ -81,6 +82,15 @@ mkdown_template = '''
 
 grid_footer = '''
                 </ResponsiveGridLayout>
+              </li>'''
+dynamic_grid = '''
+              <li>
+                <DynamicGrid route={{'{route}'}}
+                             token={{this.props.jwtToken}}
+                             columns={{{columns}}}
+                             rowHeight={{{rowHeight}}}
+                             componentList={{{componentList}}}
+                             routeList={{{routeList}}}/>
               </li>'''
 export_footer = '''
             </ul>
@@ -205,6 +215,18 @@ with open(Path(spec_path), 'r') as y, \
             s.write(sidebar_data.format(page_name=page_name, page_route=page['route']))
             app.write(app_render_route.format(page_route=page['route'], page_name=page_name))
             for grid in page['grids'].values():
+                if grid['type'] == 'dynamic':
+                    component_list = []
+                    route_list = []
+                    for component_name, component in grid['component_templates'].items():
+                        component_list.append(component['type'])
+                        route_list.append(component['route'])
+                    p.write(dynamic_grid.format(route=grid['route'],
+                                                columns=grid['columns'],
+                                                rowHeight=grid['row_height'],
+                                                componentList=component_list,
+                                                routeList=route_list))
+                    continue
                 p.write(grid_header.format(num_cols=grid['columns'],
                                            row_height=grid['row_height']))
                 for component_name, component in grid['components'].items():

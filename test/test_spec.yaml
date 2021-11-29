@@ -10,6 +10,7 @@ SciViz: # top level tab
       route: /home
       grids:
         grid5:
+          type: fixed
           columns: 1
           row_height: 700
           components:
@@ -266,4 +267,39 @@ SciViz: # top level tab
                 it is not very useful by itself but when combined with the dynamic
                 component generator it can provide a useful description of what the other
                 components are.
-
+    DynamicGrid:
+      route: /dynamicGrid
+      grids: 
+        dgrid:
+          route: /dgrid
+          type: dynamic
+          columns: 3
+          row_height: 700
+          restriction: >
+            def restriction(**kwargs):
+                return dict(**kwargs)
+          dj_query: >
+            def dj_query(test_group1_simple):
+                Mouse = test_group1_simple.Mouse
+                return dict(query=(Mouse), fetch_args=[])
+          component_templates:
+            comp2:
+              route: /myMeta
+              type: metadata
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=(Mouse), fetch_args=[])
+            comp1:
+              route: /myPlot
+              type: plot:plotly:stored_json
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=(MousePlots), fetch_args=['plot'])
