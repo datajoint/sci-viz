@@ -31,9 +31,6 @@ export default class Metadata extends React.Component<MetadataProps, MetadataSta
       while (this.props.restrictionList.length > 0){
         apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
       }
-
-      console.log('restrictionlist: ', this.props.restrictionList)
-      console.log('restrictionlist str: ', this.props.restrictionList.toString())
     }
     fetch(apiUrl, {
       method: 'GET',

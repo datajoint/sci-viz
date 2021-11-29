@@ -62,7 +62,6 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
               this.state.data.recordHeader[i].toString() + '=' + record[i].toString()
             )
           }
-          console.log('restriction list:', restrictionList)
           return(
             <div key={index} data-grid={{x: index, y: 0, w: 1, h: 1, static: true}}>
               <div className='plotContainer'>

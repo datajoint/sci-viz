@@ -21,7 +21,6 @@ export default class FullPlotly extends React.Component<FullPlotlyProps, FullPlo
     this.state = {
       plotlyJson: {data: [], layout: {}}
     }
-    console.log(this.state.plotlyJson)
   }
 
   componentDidMount(){
@@ -32,9 +31,6 @@ export default class FullPlotly extends React.Component<FullPlotlyProps, FullPlo
       while (this.props.restrictionList.length > 0){
         apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
       }
-
-      console.log('restrictionlist: ', this.props.restrictionList)
-      console.log('restrictionlist str: ', this.props.restrictionList.toString())
     }
     fetch(apiUrl, {
       method: 'GET',
