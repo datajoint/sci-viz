@@ -64,9 +64,9 @@ class TableB(dj.Lookup):
 @group1_simple
 class Mouse(dj.Lookup):
     definition = """
-    m_id: int
+    mouse_id: int
     ---
-    m_name: varchar(30)
+    mouse_name: varchar(30)
     """
     contents = [(0, 'jeff'), (1, 'splinter'), (2, 'ratman')]
 

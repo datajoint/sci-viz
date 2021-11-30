@@ -48,6 +48,52 @@ Important notes about restrictions in the spec sheet:
 
 
 If the website does not work after running the frontend generation script check this list to make sure that spec sheet is constructed properly, in the future we may include a script that lints the spec sheet for you. see issue [#20](https://github.com/datajoint/sci-viz/issues/20)
+# Grids
+Sci-viz produces custom visualizations by putting `grids` on `pages` and then filling them with visualization `components`. Currently there are two types of grids **Fixed** and **Dynamic**
+## Fixed mode grid
+A fixed mode grid requires all components to explicitly give their position and size on the grid.
+
+A fixed `grid` takes 4 arguments:
+- `type:` indicates the type of grid, in this case `type: fixed`
+- `columns:` the number of columns that the grid will have
+- `row_height:` the height of each row in pixels
+- `components:` a yaml dictionary of components to be spawned in the grid
+## Dynamic grid mode
+A dynamic grid takes a datajoint query and then uses each record and applies that record as a restriction to a template of components. It then spawns a single or group of components for each record of that parent query but the components query is restricted by the entire record that has been passed in from the parent query.
+
+An example of this would be as follows:
+- You have one table that represents all identifying data of a subject, lets use Mouse as an example for the subject and the table name
+- You also have a table that contains a single plot per Mouse primary key, lets call this table MousePlots
+- You have no idea how many plots are in MousePlots but you want to display a live view of all of them
+- What you can do is create a dynamic grid with the parent query being for the Mouse table and a plot component with a query for the MousePlot table. This will produce all of the plots that are avalable without knowing how many there are in the database.
+
+A dynamic `grid` takes 7 arguments:
+- `type:` indicates the type of grid, in this case `type: fixed`
+- `columns:` the number of columns that the grid will have
+- `row_height:` the height of each row in pixels
+- `restriction:` a restriction for the datajoint query
+- `dj_query:` the parent datajoint query that will provide the restriction records
+- `route:` backend api route for the parent query
+- `component_templates:` a yaml dictionary of components that serve as a template
+
+Additionally any components in the dynamic grid do not need `x`, `y` , `height`, and `width` fields.
+# Components
+All components need minimally these fields:
+- `type:` indicates the type of component you are trying to generate
+- `x:` x position on the grid starting at 0
+- `y:` y position on the grid starting at 0
+- `height:` the amount of grid squares tall a component can be, minimum 1
+- `width:` the amount of grid square wide a compoentnt can be, minimum 1
+## Table component
+`type:` table
+
+The Table component takes a few additional fields:
+- `route:` the backend route for the rest api query, must start with a `/`
+- `restriction:` the restriction for the datajoint query
+- `dj_query:` the datajoint query for for the table data
+
+If setup correctly the component will render the result of the query in a table that supports paging, sorting, and filtering.
+
 ### Adding color to your tables using projections
 ```python
 def dj_query(vms):
@@ -65,9 +111,32 @@ these two fields will accept any color format that css does.
 
 In the example we do a join of two tables and then do a projection where we create 2 new columns with the protected names and if a condition is met we set their field to a css-compatable color else we have it be `NULL`. In the example above we use rgb when we do not need transparency and rgba when we do.
 [here is a good tool for picking css colors.](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Colors/Color_picker_tool)
-### Markdown component
-The markdown component is selected by setting `type: markdown` in the spec sheet component. It takes all the grid values as well as a `text: |` key with the markdown as a yaml text block.
-## DEV
+## Markdown component
+`type:` markdown
+
+The markdown component takes one additional field `text: |`
+underneath the `|` operator you can place any markdown text block that you want.
+## Plot component from stored Plotly JSON
+`type:` plot:plotly:stored_json
+
+The plot component takes 3 additional arguments:
+- `route:` the backend route for the rest api query, must start with a `/`
+- `restriction:` the restriction for the datajoint query
+- `dj_query:` the datajoint query for for the table data.
+
+Additionally for the plot to render properly the result of your query must be a single entry with one element that is a plotly JSON.
+An easy way to do this is to set the `fetch_args=[]` in your `dj_query` to be only the column that contains a plotly JSON and additionaly set your restriction to be the index of the plot you are looking for
+## Metadata component
+`type:` metadata
+
+The Metadata component takes 3 additional arguments:
+- `route:` the backend route for the rest api query, must start with a `/`
+- `restriction:` the restriction for the datajoint query
+- `dj_query:` the datajoint query for for the table data.
+
+Additionally the metadata component only takes a single row from a table as its input so the `dj_query` and `restriction` need to be properly set to produce a single record. This component is not very useful by itself but when combined with other components as part of a template in a `Dynamic grid` it can provide useful information on what the other components are showing.
+
+# DEV
 There are a couple issues to address if you are collaborating on this project
 - devs will have have to point the submodule to their own fork of pharus if they need to edit pharus to support new features for sci-viz.
 - That change to pharus would need to be pr'd and then merged into pharus before we can pr and merge their change to sci-viz as we probably dont want unreviewed code linked to sci-viz nor do we want the submodule pointing to their fork of pharus.
@@ -76,7 +145,7 @@ for running frontend_gen.py you need this variable in your .env file
 ```bash
 FRONTEND_SPEC_PATH=test/test_spec.yaml
 ```
-## References
+# References
 - DataJoint
   - https://datajoint.io
 - Pharus (a DataJoint REST API backend):
