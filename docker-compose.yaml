@@ -83,6 +83,6 @@ services:
     user: ${HOST_UID}:anaconda  # Necessary to allow GUI to route to Docker host
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # Necessary to allow GUI to route to Docker host
-      # - /path/to/README.md:/home/anaconda/README.md  # Display on login
+      - ../jupyter notebooks/:/home/anaconda/notebooks # Display on login
 networks:
   main:

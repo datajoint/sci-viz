@@ -274,7 +274,7 @@ SciViz: # top level tab
           route: /dgrid
           type: dynamic
           columns: 3
-          row_height: 700
+          row_height: 600
           restriction: >
             def restriction(**kwargs):
                 return dict(**kwargs)
