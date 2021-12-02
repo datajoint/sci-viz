@@ -1,19 +1,19 @@
-import React from 'react';
+import React from "react";
 
 // Component imports
-import TableContent from './TableContent';
-import TableAttributeType from './enums/TableAttributeType';
-import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo';
-import PrimaryTableAttribute from './DataStorageClasses/PrimaryTableAttribute';
-import SecondaryTableAttribute from './DataStorageClasses/SecondaryTableAttribute';
-import TableAttribute from './DataStorageClasses/TableAttribute';
-import Restriction from './DataStorageClasses/Restriction';
-import './TableView.css'
+import TableContent from "./TableContent";
+import TableAttributeType from "./enums/TableAttributeType";
+import TableAttributesInfo from "./DataStorageClasses/TableAttributesInfo";
+import PrimaryTableAttribute from "./DataStorageClasses/PrimaryTableAttribute";
+import SecondaryTableAttribute from "./DataStorageClasses/SecondaryTableAttribute";
+import TableAttribute from "./DataStorageClasses/TableAttribute";
+import Restriction from "./DataStorageClasses/Restriction";
+import "./TableView.css";
 
 const NUMBER_OF_TUPLES_PER_PAGE_TIMEOUT: number = 500;
 
 enum CurrentView {
-  TABLE_CONTENT
+  TABLE_CONTENT,
 }
 
 interface TableViewProps {
@@ -41,7 +41,10 @@ interface TableViewState {
 /**
  * Parent component for handling displaying TableContent and TableInfo
  */
-export default class TableView extends React.Component<TableViewProps, TableViewState> {
+export default class TableView extends React.Component<
+  TableViewProps,
+  TableViewState
+> {
   constructor(props: TableViewProps) {
     super(props);
     this.state = {
@@ -54,13 +57,14 @@ export default class TableView extends React.Component<TableViewProps, TableView
       maxPageNumber: 1,
       tableContentData: [],
       totalNumOfTuples: 0,
-      errorMessage: '',
+      errorMessage: "",
       isLoading: false,
       restrictions: [],
-      orders: []
-    }
+      orders: [],
+    };
 
-    this.fetchTableAttributeAndContent = this.fetchTableAttributeAndContent.bind(this);
+    this.fetchTableAttributeAndContent =
+      this.fetchTableAttributeAndContent.bind(this);
     this.setPageNumber = this.setPageNumber.bind(this);
     this.setNumberOfTuplesPerPage = this.setNumberOfTuplesPerPage.bind(this);
     this.fetchTableAttribute = this.fetchTableAttribute.bind(this);
@@ -76,10 +80,10 @@ export default class TableView extends React.Component<TableViewProps, TableView
    */
   setPageNumber(pageNumber: number) {
     if (pageNumber < 1 || pageNumber > this.state.maxPageNumber) {
-      throw Error('Invalid pageNumber ' + pageNumber + ' requested');
+      throw Error("Invalid pageNumber " + pageNumber + " requested");
     }
 
-    this.setState({currentPageNumber: pageNumber});
+    this.setState({ currentPageNumber: pageNumber });
   }
 
   /**
@@ -88,9 +92,9 @@ export default class TableView extends React.Component<TableViewProps, TableView
    */
   setNumberOfTuplesPerPage(numberOfTuplesPerPage: number) {
     if (numberOfTuplesPerPage < 0) {
-      throw Error('Number of Tuples per page cannnot be less then 0');
+      throw Error("Number of Tuples per page cannnot be less then 0");
     }
-    this.setState({numberOfTuplesPerPage: numberOfTuplesPerPage});
+    this.setState({ numberOfTuplesPerPage: numberOfTuplesPerPage });
   }
 
   /**
@@ -98,38 +102,36 @@ export default class TableView extends React.Component<TableViewProps, TableView
    * @param restrictions Array of vaild Restrictions
    */
   setRestrictions(restrictions: Array<Restriction>) {
-    this.setState({restrictions: restrictions});
+    this.setState({ restrictions: restrictions });
   }
 
-
-
   setOrders(newOrder: string) {
-    var orderDelete = false
-    var newOrderList = []
-    for(let order of this.state.orders.reverse()){
+    var orderDelete = false;
+    var newOrderList = [];
+    for (let order of this.state.orders.reverse()) {
       //if the attribute name matches one in the order array, overwrite it.
-      if((newOrder.split(' '))[0] === (order.split(' '))[0]){
-        if((newOrder.split(' '))[1] === 'del'){
-          orderDelete=true;
+      if (newOrder.split(" ")[0] === order.split(" ")[0]) {
+        if (newOrder.split(" ")[1] === "del") {
+          orderDelete = true;
           continue;
         }
         continue;
       }
-      newOrderList.unshift(order)
+      newOrderList.unshift(order);
     }
-    if(orderDelete===false){
+    if (orderDelete === false) {
       newOrderList.unshift(newOrder);
-      this.setState({orders: newOrderList});
+      this.setState({ orders: newOrderList });
     }
-    this.setState({orders: newOrderList});
+    this.setState({ orders: newOrderList });
   }
 
   /**
    * Switch current view given to viewChoice
-   * @param viewChoice 
+   * @param viewChoice
    */
   switchCurrentView(viewChoice: CurrentView) {
-    this.setState({currentView: viewChoice});
+    this.setState({ currentView: viewChoice });
   }
 
   /**
@@ -138,33 +140,36 @@ export default class TableView extends React.Component<TableViewProps, TableView
    * - currentView changes => Fetch if data refresh is needed, if not just switch
    * - currentPageNumber changes => Refetch the tuples with the given page and current set of restrictions
    * - restrictions changes => Refetch tuples with updated restrictions
-   * @param prevProps 
-   * @param prevState 
+   * @param prevProps
+   * @param prevState
    */
   componentDidUpdate(prevProps: TableViewProps, prevState: TableViewState) {
     if (this.state.currentView !== prevState.currentView) {
       // The view change thus update accordingly if refresh is needed
-      if (this.state.currentView === CurrentView.TABLE_CONTENT && this.state.tableContentNeedRefresh) {
+      if (
+        this.state.currentView === CurrentView.TABLE_CONTENT &&
+        this.state.tableContentNeedRefresh
+      ) {
         // Fetch data realted to TableContent
         this.fetchTableAttributeAndContent();
-        this.setState({tableContentNeedRefresh: false})
+        this.setState({ tableContentNeedRefresh: false });
       }
-    }
-    else if (this.state.currentPageNumber !== prevState.currentPageNumber) {
+    } else if (this.state.currentPageNumber !== prevState.currentPageNumber) {
       this.fetchTableContent();
-    }
-    else if (this.state.numberOfTuplesPerPage !== prevState.numberOfTuplesPerPage) {
+    } else if (
+      this.state.numberOfTuplesPerPage !== prevState.numberOfTuplesPerPage
+    ) {
       clearTimeout(this.state.setNumberOFTuplesPerPageTimeout);
       const setNumberOFTuplesPerPageTimeout = setTimeout(() => {
         this.fetchTableContent();
-        this.setState({currentPageNumber: 1});
-      }, NUMBER_OF_TUPLES_PER_PAGE_TIMEOUT)
-      this.setState({setNumberOFTuplesPerPageTimeout: setNumberOFTuplesPerPageTimeout});
-    }
-    else if (this.state.restrictions !== prevState.restrictions) {
+        this.setState({ currentPageNumber: 1 });
+      }, NUMBER_OF_TUPLES_PER_PAGE_TIMEOUT);
+      this.setState({
+        setNumberOFTuplesPerPageTimeout: setNumberOFTuplesPerPageTimeout,
+      });
+    } else if (this.state.restrictions !== prevState.restrictions) {
       this.fetchTableContent();
-    }
-    else if (this.state.orders !== prevState.orders) {
+    } else if (this.state.orders !== prevState.orders) {
       this.fetchTableContent();
     }
   }
@@ -173,7 +178,7 @@ export default class TableView extends React.Component<TableViewProps, TableView
    * Combination method for fetching table attribute and content. Typically use when the selected table changes
    */
   async fetchTableAttributeAndContent() {
-    this.setState({isLoading: true})
+    this.setState({ isLoading: true });
     // retrieve table headers
     await this.fetchTableAttribute();
     await this.fetchTableContent();
@@ -185,24 +190,43 @@ export default class TableView extends React.Component<TableViewProps, TableView
    * Function to query the back end to get infomation about the table attributes
    */
   fetchTableAttribute() {
-    fetch(`${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route + '/attributes', {
-      method: 'GET',
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token},
-    })
-    .then(result => {
-      if (!result.ok) {
-        result.text()
-        .then(errorMessage => {
-          throw Error(`${result.status} - ${result.statusText}: (${errorMessage})`)
-        })
-        .catch(error => {
-          this.setState({tableAttributesInfo: undefined, errorMessage: 'Problem fetching table attributes: ' + error, isLoading: false})
-        })
+    fetch(
+      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` +
+        this.props.route +
+        "/attributes",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.props.token,
+        },
       }
-      return result.json()})
-    .then(result => {
-      this.setState({tableAttributesInfo: this.parseTableAttributes(result), errorMessage: ''})
-    })
+    )
+      .then((result) => {
+        if (!result.ok) {
+          result
+            .text()
+            .then((errorMessage) => {
+              throw Error(
+                `${result.status} - ${result.statusText}: (${errorMessage})`
+              );
+            })
+            .catch((error) => {
+              this.setState({
+                tableAttributesInfo: undefined,
+                errorMessage: "Problem fetching table attributes: " + error,
+                isLoading: false,
+              });
+            });
+        }
+        return result.json();
+      })
+      .then((result) => {
+        this.setState({
+          tableAttributesInfo: this.parseTableAttributes(result),
+          errorMessage: "",
+        });
+      });
   }
 
   /**
@@ -210,105 +234,144 @@ export default class TableView extends React.Component<TableViewProps, TableView
    */
   fetchTableContent() {
     // Buffer to store restrictions
-    let urlParams: Array<string> = []
+    let urlParams: Array<string> = [];
 
     // Add limit to url
-    urlParams.push('limit=' + this.state.numberOfTuplesPerPage);
+    urlParams.push("limit=" + this.state.numberOfTuplesPerPage);
 
     // Add page param
-    urlParams.push('page=' + this.state.currentPageNumber);
+    urlParams.push("page=" + this.state.currentPageNumber);
 
     if (this.state.restrictions.length !== 0) {
-      let restrictionsInAPIFormat = []
+      let restrictionsInAPIFormat = [];
       for (let restriction of this.state.restrictions) {
-        if (restriction.tableAttribute?.attributeType === TableAttributeType.DATETIME) {
+        if (
+          restriction.tableAttribute?.attributeType ===
+          TableAttributeType.DATETIME
+        ) {
           restrictionsInAPIFormat.push({
             attributeName: restriction.tableAttribute?.attributeName,
-            operation: Restriction.getRestrictionTypeString(restriction.restrictionType),
-            value: restriction.value[0] + ' ' + restriction.value[1]
-          })
-        }
-        else {
+            operation: Restriction.getRestrictionTypeString(
+              restriction.restrictionType
+            ),
+            value: restriction.value[0] + " " + restriction.value[1],
+          });
+        } else {
           restrictionsInAPIFormat.push({
             attributeName: restriction.tableAttribute?.attributeName,
-            operation: Restriction.getRestrictionTypeString(restriction.restrictionType),
-            value: restriction.value
-          })
+            operation: Restriction.getRestrictionTypeString(
+              restriction.restrictionType
+            ),
+            value: restriction.value,
+          });
         }
       }
 
       // Covert the restrictions to json string then base64 it
-      urlParams.push('restriction=' + encodeURIComponent(btoa(JSON.stringify(restrictionsInAPIFormat))));
+      urlParams.push(
+        "restriction=" +
+          encodeURIComponent(btoa(JSON.stringify(restrictionsInAPIFormat)))
+      );
     }
 
     if (this.state.orders.length !== 0) {
-      urlParams.push('order=' + this.state.orders)
+      urlParams.push("order=" + this.state.orders);
     }
 
     // Build the url with params
-    let apiUrl = `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route;
+    let apiUrl =
+      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route;
     if (urlParams.length > 0) {
-      apiUrl += '?';
+      apiUrl += "?";
 
       // Add the first param
       apiUrl += urlParams[0];
 
       for (let i = 1; i < urlParams.length; i++) {
-        apiUrl += '&' + urlParams[i];
+        apiUrl += "&" + urlParams[i];
       }
     }
-    
+
     // Call get fetch_tuple with params
     fetch(apiUrl, {
-      method: 'GET',
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token},
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.props.token,
+      },
     })
-    .then(result => {
-      if (!result.ok) {
-        result.text()
-        .then(errorMessage => {
-          throw Error(`${result.status} - ${result.statusText}: (${errorMessage})`)
-        })
-        .catch(error => {
-          this.setState({tableContentData: [], errorMessage: 'Problem fetching table content: ' + error, isLoading: false})
-        })
-      }
-      return result.json();
-    })
-    .then(result => {
-      // Deal with coverting time back to datajoint format
-      let tableAttributes: Array<TableAttribute> = this.state.tableAttributesInfo?.primaryAttributes as Array<TableAttribute>;
-      tableAttributes = tableAttributes.concat(this.state.tableAttributesInfo?.secondaryAttributes as Array<TableAttribute>);
+      .then((result) => {
+        if (!result.ok) {
+          result
+            .text()
+            .then((errorMessage) => {
+              throw Error(
+                `${result.status} - ${result.statusText}: (${errorMessage})`
+              );
+            })
+            .catch((error) => {
+              this.setState({
+                tableContentData: [],
+                errorMessage: "Problem fetching table content: " + error,
+                isLoading: false,
+              });
+            });
+        }
+        return result.json();
+      })
+      .then((result) => {
+        // Deal with coverting time back to datajoint format
+        let tableAttributes: Array<TableAttribute> = this.state
+          .tableAttributesInfo?.primaryAttributes as Array<TableAttribute>;
+        tableAttributes = tableAttributes.concat(
+          this.state.tableAttributesInfo
+            ?.secondaryAttributes as Array<TableAttribute>
+        );
 
-      // Iterate though each tableAttribute and deal with TEMPORAL types
-      for (let i = 0; i < tableAttributes.length; i++) {
-        if (tableAttributes[i].attributeType === TableAttributeType.TIME) {
-          for (let tuple of result.records) {
-            tuple[i] = TableAttribute.parseTimeString(tuple[i]);
+        // Iterate though each tableAttribute and deal with TEMPORAL types
+        for (let i = 0; i < tableAttributes.length; i++) {
+          if (tableAttributes[i].attributeType === TableAttributeType.TIME) {
+            for (let tuple of result.records) {
+              tuple[i] = TableAttribute.parseTimeString(tuple[i]);
+            }
+          } else if (
+            tableAttributes[i].attributeType === TableAttributeType.TIMESTAMP ||
+            tableAttributes[i].attributeType === TableAttributeType.DATETIME
+          ) {
+            for (let tuple of result.records) {
+              tuple[i] = TableAttribute.parseDateTime(tuple[i]);
+            }
+          } else if (
+            tableAttributes[i].attributeType === TableAttributeType.DATE
+          ) {
+            for (let tuple of result.records) {
+              tuple[i] = TableAttribute.parseDate(tuple[i]);
+            }
           }
         }
-        else if (tableAttributes[i].attributeType === TableAttributeType.TIMESTAMP || tableAttributes[i].attributeType === TableAttributeType.DATETIME) {
-          for (let tuple of result.records) {
-            tuple[i] = TableAttribute.parseDateTime(tuple[i]);
-          }
-        }
-        else if (tableAttributes[i].attributeType === TableAttributeType.DATE) {
-          for (let tuple of result.records) {
-            tuple[i] = TableAttribute.parseDate(tuple[i]);
-          }
-        }
-      }
 
-      this.setState({tableContentData: result.records, totalNumOfTuples: result.totalCount, errorMessage: '', maxPageNumber:  Math.ceil(result.totalCount / this.state.numberOfTuplesPerPage), isLoading: false})
-    })
-    .catch(error => {
-      this.setState({tableContentData: [], errorMessage: 'Problem fetching table content: ' + error, isLoading: false})
-    })
+        this.setState({
+          tableContentData: result.records,
+          totalNumOfTuples: result.totalCount,
+          errorMessage: "",
+          maxPageNumber: Math.ceil(
+            result.totalCount / this.state.numberOfTuplesPerPage
+          ),
+          isLoading: false,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          tableContentData: [],
+          errorMessage: "Problem fetching table content: " + error,
+          isLoading: false,
+        });
+      });
   }
- 
+
   /**
    * Function to convert the api return json to produce a TableAttributeInfo
-   * @param jsonResult 
+   * @param jsonResult
    */
   parseTableAttributes(jsonResult: any): TableAttributesInfo {
     // Create object for the return
@@ -316,110 +379,159 @@ export default class TableView extends React.Component<TableViewProps, TableView
 
     // Deal with primary attributes
     for (let primaryAttributeInfoArray of jsonResult.attributes.primary) {
-      let tableAttributeType: TableAttributeType = this.parseTableTypeString(primaryAttributeInfoArray[1]);
+      let tableAttributeType: TableAttributeType = this.parseTableTypeString(
+        primaryAttributeInfoArray[1]
+      );
 
       // If the datatype is of type VarChar or Char record the limit or range of it
       if (tableAttributeType === TableAttributeType.VAR_CHAR) {
-        tableAttributesInfo.primaryAttributes.push(new PrimaryTableAttribute(
-          primaryAttributeInfoArray[0], 
-          tableAttributeType, 
-          primaryAttributeInfoArray[4],
-          parseInt(primaryAttributeInfoArray[1].substring(8, primaryAttributeInfoArray[1].length - 1))
-          ));
-      }
-      else if (tableAttributeType === TableAttributeType.CHAR) {
-        tableAttributesInfo.primaryAttributes.push(new PrimaryTableAttribute(
-          primaryAttributeInfoArray[0], 
-          tableAttributeType, 
-          primaryAttributeInfoArray[4],
-          parseInt(primaryAttributeInfoArray[1].substring(5, primaryAttributeInfoArray[1].length - 1))
-          ));
-      }
-      else if (tableAttributeType === TableAttributeType.ENUM) {
-        tableAttributesInfo.primaryAttributes.push(new PrimaryTableAttribute(
-          primaryAttributeInfoArray[0], 
-          tableAttributeType, 
-          primaryAttributeInfoArray[4],
-          undefined,
-          primaryAttributeInfoArray[1].substring(5, primaryAttributeInfoArray[1].length - 1).replace(/'/g, '').split(',')
-          ));
-      }
-      else if (tableAttributeType === TableAttributeType.DECIMAL) {
-        let decimalAttributes = primaryAttributeInfoArray[1].substring(7).replace(/[{()}]/g, '').split(',');
+        tableAttributesInfo.primaryAttributes.push(
+          new PrimaryTableAttribute(
+            primaryAttributeInfoArray[0],
+            tableAttributeType,
+            primaryAttributeInfoArray[4],
+            parseInt(
+              primaryAttributeInfoArray[1].substring(
+                8,
+                primaryAttributeInfoArray[1].length - 1
+              )
+            )
+          )
+        );
+      } else if (tableAttributeType === TableAttributeType.CHAR) {
+        tableAttributesInfo.primaryAttributes.push(
+          new PrimaryTableAttribute(
+            primaryAttributeInfoArray[0],
+            tableAttributeType,
+            primaryAttributeInfoArray[4],
+            parseInt(
+              primaryAttributeInfoArray[1].substring(
+                5,
+                primaryAttributeInfoArray[1].length - 1
+              )
+            )
+          )
+        );
+      } else if (tableAttributeType === TableAttributeType.ENUM) {
+        tableAttributesInfo.primaryAttributes.push(
+          new PrimaryTableAttribute(
+            primaryAttributeInfoArray[0],
+            tableAttributeType,
+            primaryAttributeInfoArray[4],
+            undefined,
+            primaryAttributeInfoArray[1]
+              .substring(5, primaryAttributeInfoArray[1].length - 1)
+              .replace(/'/g, "")
+              .split(",")
+          )
+        );
+      } else if (tableAttributeType === TableAttributeType.DECIMAL) {
+        let decimalAttributes = primaryAttributeInfoArray[1]
+          .substring(7)
+          .replace(/[{()}]/g, "")
+          .split(",");
 
-        tableAttributesInfo.primaryAttributes.push(new PrimaryTableAttribute(
-          primaryAttributeInfoArray[0], 
-          tableAttributeType, 
-          primaryAttributeInfoArray[4],
-          undefined,
-          undefined,
-          parseInt(decimalAttributes[0]),
-          parseInt(decimalAttributes[1])
-          ));
-      }
-      else {
-        tableAttributesInfo.primaryAttributes.push(new PrimaryTableAttribute(
-          primaryAttributeInfoArray[0], 
-          tableAttributeType, 
-          primaryAttributeInfoArray[4]));
+        tableAttributesInfo.primaryAttributes.push(
+          new PrimaryTableAttribute(
+            primaryAttributeInfoArray[0],
+            tableAttributeType,
+            primaryAttributeInfoArray[4],
+            undefined,
+            undefined,
+            parseInt(decimalAttributes[0]),
+            parseInt(decimalAttributes[1])
+          )
+        );
+      } else {
+        tableAttributesInfo.primaryAttributes.push(
+          new PrimaryTableAttribute(
+            primaryAttributeInfoArray[0],
+            tableAttributeType,
+            primaryAttributeInfoArray[4]
+          )
+        );
       }
     }
 
     // Deal with secondary attributes
     for (let secondaryAttributesInfoArray of jsonResult.attributes.secondary) {
-      let tableAttributeType: TableAttributeType = this.parseTableTypeString(secondaryAttributesInfoArray[1]);
+      let tableAttributeType: TableAttributeType = this.parseTableTypeString(
+        secondaryAttributesInfoArray[1]
+      );
 
       // If the datatype is of type VarChar or Char record the limit or range of it
       if (tableAttributeType === TableAttributeType.VAR_CHAR) {
-        tableAttributesInfo.secondaryAttributes.push(new SecondaryTableAttribute(
-          secondaryAttributesInfoArray[0],
-          this.parseTableTypeString(secondaryAttributesInfoArray[1]),
-          secondaryAttributesInfoArray[2],
-          secondaryAttributesInfoArray[3],
-          parseInt(secondaryAttributesInfoArray[1].substring(8, secondaryAttributesInfoArray[1].length - 1))
-          ));
-      }
-      else if (tableAttributeType === TableAttributeType.CHAR) {
-        tableAttributesInfo.secondaryAttributes.push(new SecondaryTableAttribute(
-          secondaryAttributesInfoArray[0],
-          this.parseTableTypeString(secondaryAttributesInfoArray[1]),
-          secondaryAttributesInfoArray[2],
-          secondaryAttributesInfoArray[3],
-          parseInt(secondaryAttributesInfoArray[1].substring(5, secondaryAttributesInfoArray[1].length - 1))
-          ));
-      }
-      else if (tableAttributeType === TableAttributeType.ENUM) {
+        tableAttributesInfo.secondaryAttributes.push(
+          new SecondaryTableAttribute(
+            secondaryAttributesInfoArray[0],
+            this.parseTableTypeString(secondaryAttributesInfoArray[1]),
+            secondaryAttributesInfoArray[2],
+            secondaryAttributesInfoArray[3],
+            parseInt(
+              secondaryAttributesInfoArray[1].substring(
+                8,
+                secondaryAttributesInfoArray[1].length - 1
+              )
+            )
+          )
+        );
+      } else if (tableAttributeType === TableAttributeType.CHAR) {
+        tableAttributesInfo.secondaryAttributes.push(
+          new SecondaryTableAttribute(
+            secondaryAttributesInfoArray[0],
+            this.parseTableTypeString(secondaryAttributesInfoArray[1]),
+            secondaryAttributesInfoArray[2],
+            secondaryAttributesInfoArray[3],
+            parseInt(
+              secondaryAttributesInfoArray[1].substring(
+                5,
+                secondaryAttributesInfoArray[1].length - 1
+              )
+            )
+          )
+        );
+      } else if (tableAttributeType === TableAttributeType.ENUM) {
         // Get each enum option and save it under enumOptions
-        tableAttributesInfo.secondaryAttributes.push(new SecondaryTableAttribute(
-          secondaryAttributesInfoArray[0],
-          this.parseTableTypeString(secondaryAttributesInfoArray[1]),
-          secondaryAttributesInfoArray[2],
-          secondaryAttributesInfoArray[3],
-          undefined,
-          secondaryAttributesInfoArray[1].substring(5, secondaryAttributesInfoArray[1].length - 1).replace(/'/g, '').split(',')
-          ));
-      }
-      else if (tableAttributeType === TableAttributeType.DECIMAL) {
-        let decimalAttributes = secondaryAttributesInfoArray[1].substring(7).replace(/[{()}]/g, '').split(',');
+        tableAttributesInfo.secondaryAttributes.push(
+          new SecondaryTableAttribute(
+            secondaryAttributesInfoArray[0],
+            this.parseTableTypeString(secondaryAttributesInfoArray[1]),
+            secondaryAttributesInfoArray[2],
+            secondaryAttributesInfoArray[3],
+            undefined,
+            secondaryAttributesInfoArray[1]
+              .substring(5, secondaryAttributesInfoArray[1].length - 1)
+              .replace(/'/g, "")
+              .split(",")
+          )
+        );
+      } else if (tableAttributeType === TableAttributeType.DECIMAL) {
+        let decimalAttributes = secondaryAttributesInfoArray[1]
+          .substring(7)
+          .replace(/[{()}]/g, "")
+          .split(",");
         // Get each enum option and save it under enumOptions
-        tableAttributesInfo.secondaryAttributes.push(new SecondaryTableAttribute(
-          secondaryAttributesInfoArray[0],
-          this.parseTableTypeString(secondaryAttributesInfoArray[1]),
-          secondaryAttributesInfoArray[2],
-          secondaryAttributesInfoArray[3],
-          undefined,
-          undefined,
-          parseInt(decimalAttributes[0]),
-          parseInt(decimalAttributes[1])
-          ));
-      }
-      else {
-        tableAttributesInfo.secondaryAttributes.push(new SecondaryTableAttribute(
-          secondaryAttributesInfoArray[0],
-          this.parseTableTypeString(secondaryAttributesInfoArray[1]),
-          secondaryAttributesInfoArray[2],
-          secondaryAttributesInfoArray[3]
-          ));
+        tableAttributesInfo.secondaryAttributes.push(
+          new SecondaryTableAttribute(
+            secondaryAttributesInfoArray[0],
+            this.parseTableTypeString(secondaryAttributesInfoArray[1]),
+            secondaryAttributesInfoArray[2],
+            secondaryAttributesInfoArray[3],
+            undefined,
+            undefined,
+            parseInt(decimalAttributes[0]),
+            parseInt(decimalAttributes[1])
+          )
+        );
+      } else {
+        tableAttributesInfo.secondaryAttributes.push(
+          new SecondaryTableAttribute(
+            secondaryAttributesInfoArray[0],
+            this.parseTableTypeString(secondaryAttributesInfoArray[1]),
+            secondaryAttributesInfoArray[2],
+            secondaryAttributesInfoArray[3]
+          )
+        );
       }
     }
     return tableAttributesInfo;
@@ -430,113 +542,91 @@ export default class TableView extends React.Component<TableViewProps, TableView
    * @param tableTypeString The table type in string that was return from the api call
    */
   parseTableTypeString(tableTypeString: string): TableAttributeType {
-    if (tableTypeString === 'tinyint') {
+    if (tableTypeString === "tinyint") {
       return TableAttributeType.TINY;
-    }
-    else if (tableTypeString === 'tinyint unsigned') {
+    } else if (tableTypeString === "tinyint unsigned") {
       return TableAttributeType.TINY_UNSIGNED;
-    }
-    else if (tableTypeString === 'smallint') {
+    } else if (tableTypeString === "smallint") {
       return TableAttributeType.SMALL;
-    }
-    else if (tableTypeString === 'smallint unsigned') {
+    } else if (tableTypeString === "smallint unsigned") {
       return TableAttributeType.SMALL_UNSIGNED;
-    }
-    else if (tableTypeString === 'medium') {
+    } else if (tableTypeString === "medium") {
       return TableAttributeType.MEDIUM;
-    }
-    else if (tableTypeString === 'medium unsigned') {
+    } else if (tableTypeString === "medium unsigned") {
       return TableAttributeType.MEDIUM_UNSIGNED;
-    }
-    else if (tableTypeString === 'big') {
+    } else if (tableTypeString === "big") {
       return TableAttributeType.BIG_UNSIGNED;
-    }
-    else if (tableTypeString === 'big unsigned') {
+    } else if (tableTypeString === "big unsigned") {
       return TableAttributeType.BIG_UNSIGNED;
-    }
-    else if (tableTypeString === 'int') {
+    } else if (tableTypeString === "int") {
       return TableAttributeType.INT;
-    }
-    else if (tableTypeString === 'int unsigned') {
+    } else if (tableTypeString === "int unsigned") {
       return TableAttributeType.INT_UNSIGNED;
-    }
-    else if (tableTypeString.substr(0, 7) === 'decimal') {
+    } else if (tableTypeString.substr(0, 7) === "decimal") {
       return TableAttributeType.DECIMAL;
-    }
-    else if (tableTypeString === 'decimal unsigned') { 
+    } else if (tableTypeString === "decimal unsigned") {
       // Depricated in SQL 8.0
       return TableAttributeType.DECIMAL_UNSIGNED;
-    }
-    else if (tableTypeString === 'float') {
-      return  TableAttributeType.FLOAT;
-    }
-    else if (tableTypeString === 'float unsigned') {
+    } else if (tableTypeString === "float") {
+      return TableAttributeType.FLOAT;
+    } else if (tableTypeString === "float unsigned") {
       return TableAttributeType.FLOAT_UNSIGNED;
-    }
-    else if (tableTypeString === 'double') {
+    } else if (tableTypeString === "double") {
       return TableAttributeType.DOUBLE;
-    }
-    else if (tableTypeString === 'bool') {
+    } else if (tableTypeString === "bool") {
       return TableAttributeType.BOOL;
-    }
-    else if (tableTypeString.substring(0, 4) ==='char') {
+    } else if (tableTypeString.substring(0, 4) === "char") {
       return TableAttributeType.CHAR;
-    }
-    else if (tableTypeString.substring(0, 7) ==='varchar') {
+    } else if (tableTypeString.substring(0, 7) === "varchar") {
       return TableAttributeType.VAR_CHAR;
-    }
-    else if (tableTypeString === 'uuid') {
+    } else if (tableTypeString === "uuid") {
       return TableAttributeType.UUID;
-    }
-    else if (tableTypeString === 'date') {
+    } else if (tableTypeString === "date") {
       return TableAttributeType.DATE;
-    }
-    else if (tableTypeString === 'datetime') {
+    } else if (tableTypeString === "datetime") {
       return TableAttributeType.DATETIME;
-    }
-    else if (tableTypeString === 'time') {
+    } else if (tableTypeString === "time") {
       return TableAttributeType.TIME;
-    }
-    else if (tableTypeString === 'timestamp') {
+    } else if (tableTypeString === "timestamp") {
       return TableAttributeType.TIMESTAMP;
-    }
-    else if (tableTypeString.substring(0, 4) === 'enum') {
+    } else if (tableTypeString.substring(0, 4) === "enum") {
       return TableAttributeType.ENUM;
-    }
-    else if (tableTypeString === 'blob' || tableTypeString === 'longblob') {
+    } else if (tableTypeString === "blob" || tableTypeString === "longblob") {
       return TableAttributeType.BLOB;
-    }
-    else if (tableTypeString === 'expression'){
-      return TableAttributeType.EXPRESSION
-    }
-    else if (tableTypeString.includes('datetime('))
-      return TableAttributeType.DATETIMESTR
-    
-    throw Error('Unsupported TableAttributeType: ' + tableTypeString + ' of type ' + tableTypeString);
-  }
+    } else if (tableTypeString === "expression") {
+      return TableAttributeType.EXPRESSION;
+    } else if (tableTypeString.includes("datetime("))
+      return TableAttributeType.DATETIMESTR;
 
+    throw Error(
+      "Unsupported TableAttributeType: " +
+        tableTypeString +
+        " of type " +
+        tableTypeString
+    );
+  }
 
   render() {
     return (
       <div className="table-view">
         <div className="view-area">
-        <TableContent 
-                token = {this.props.token} 
-                selectedTableName = {this.props.tableName} 
-                contentData = {this.state.tableContentData} 
-                currentPageNumber = {this.state.currentPageNumber}
-                maxPageNumber = {this.state.maxPageNumber}
-                totalNumOfTuples = {this.state.totalNumOfTuples}
-                tuplePerPage = {this.state.numberOfTuplesPerPage}
-                tableAttributesInfo = {this.state.tableAttributesInfo}
-                setPageNumber = {this.setPageNumber}
-                setNumberOfTuplesPerPage = {this.setNumberOfTuplesPerPage}
-                fetchTableContent = {this.fetchTableContent}
-                setRestrictions = {this.setRestrictions}
-                setOrders = {this.setOrders}
-            />
+          <TableContent
+            token={this.props.token}
+            selectedTableName={this.props.tableName}
+            contentData={this.state.tableContentData}
+            currentPageNumber={this.state.currentPageNumber}
+            maxPageNumber={this.state.maxPageNumber}
+            totalNumOfTuples={this.state.totalNumOfTuples}
+            tuplePerPage={this.state.numberOfTuplesPerPage}
+            tableAttributesInfo={this.state.tableAttributesInfo}
+            setPageNumber={this.setPageNumber}
+            setNumberOfTuplesPerPage={this.setNumberOfTuplesPerPage}
+            fetchTableContent={this.fetchTableContent}
+            setRestrictions={this.setRestrictions}
+            setOrders={this.setOrders}
+          />
         </div>
       </div>
-    )
+    );
   }
 }

@@ -1,16 +1,16 @@
-import React from 'react';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import TableView from './Table/TableView';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm'
-import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
-import {solarizedlight} from 'react-syntax-highlighter/dist/esm/styles/prism'
-import FullPlotly from './Plots/FullPlotly'
-import Metadata from './Table/Metadata'
+import React from "react";
+import { Responsive, WidthProvider } from "react-grid-layout";
+import TableView from "./Table/TableView";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import FullPlotly from "./Plots/FullPlotly";
+import Metadata from "./Table/Metadata";
 
 interface DynamicGridProps {
-  route: string ;
-  token: string ;
+  route: string;
+  token: string;
   columns: number;
   rowHeight: number;
   componentList: Array<string>;
@@ -26,65 +26,103 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 /**
  * DynamicGrid component
  */
-export default class DynamicGrid extends React.Component<DynamicGridProps, DynamicGridState> {  
+export default class DynamicGrid extends React.Component<
+  DynamicGridProps,
+  DynamicGridState
+> {
   constructor(props: DynamicGridProps) {
     super(props);
     this.state = {
-      data: {recordHeader: [], records: [], totalCount: 0},
-    }
+      data: { recordHeader: [], records: [], totalCount: 0 },
+    };
   }
 
-  componentDidMount(){
-    let apiUrl = `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route;
+  componentDidMount() {
+    let apiUrl =
+      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route;
     fetch(apiUrl, {
-      method: 'GET',
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token},
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.props.token,
+      },
     })
-    .then(result => {
-      return result.json()}).then(result => {
-        this.setState({data: {recordHeader: result.recordHeader, records: result.records, totalCount: result.totalCount}})
-    });
+      .then((result) => {
+        return result.json();
+      })
+      .then((result) => {
+        this.setState({
+          data: {
+            recordHeader: result.recordHeader,
+            records: result.records,
+            totalCount: result.totalCount,
+          },
+        });
+      });
   }
 
   render() {
     return (
-      <ResponsiveGridLayout className="mygrid" 
-      rowHeight={this.props.rowHeight}
-      measureBeforeMount={false}
-      breakpoints={{lg: 1200, sm: 768}}
-      cols={{lg: this.props.columns, sm: 1}}
-      useCSSTransforms={true}>
+      <ResponsiveGridLayout
+        className="mygrid"
+        rowHeight={this.props.rowHeight}
+        measureBeforeMount={false}
+        breakpoints={{ lg: 1200, sm: 768 }}
+        cols={{ lg: this.props.columns, sm: 1 }}
+        useCSSTransforms={true}
+      >
         {this.state.data.records.map((record: any, index: number) => {
-          let restrictionList: Array<string>
-          restrictionList = []
-          for(const i in this.state.data.recordHeader){
+          let restrictionList: Array<string>;
+          restrictionList = [];
+          for (const i in this.state.data.recordHeader) {
             restrictionList.push(
-              this.state.data.recordHeader[i].toString() + '=' + record[i].toString()
-            )
+              this.state.data.recordHeader[i].toString() +
+                "=" +
+                record[i].toString()
+            );
           }
-          console.log(this.state.data.records)
-          return(
-            <div key={index} data-grid={{x: (index%this.props.columns), y: (Math.floor(index/this.props.columns)), w: 1, h: 1, static: true}}>
-              <div className='plotContainer'>
-              {this.props.componentList.map((componentType: string, compListIndex: number) => {
-                let restrictionListCopy = [...restrictionList]
-                if(componentType == 'plot:plotly:stored_json'){
-                  return(
-                    <FullPlotly route={this.props.routeList[compListIndex]} token={this.props.token} restrictionList={restrictionListCopy}/>
-                  )
-                }
-                if(componentType == 'metadata'){
-                  return(
-                    <Metadata name='Metadata' route={this.props.routeList[compListIndex]} token={this.props.token} restrictionList={restrictionListCopy}/>
-                  )
-                }
-                
-              })}
+          console.log(this.state.data.records);
+          return (
+            <div
+              key={index}
+              data-grid={{
+                x: index % this.props.columns,
+                y: Math.floor(index / this.props.columns),
+                w: 1,
+                h: 1,
+                static: true,
+              }}
+            >
+              <div className="plotContainer">
+                {this.props.componentList.map(
+                  (componentType: string, compListIndex: number) => {
+                    let restrictionListCopy = [...restrictionList];
+                    if (componentType == "plot:plotly:stored_json") {
+                      return (
+                        <FullPlotly
+                          route={this.props.routeList[compListIndex]}
+                          token={this.props.token}
+                          restrictionList={restrictionListCopy}
+                        />
+                      );
+                    }
+                    if (componentType == "metadata") {
+                      return (
+                        <Metadata
+                          name="Metadata"
+                          route={this.props.routeList[compListIndex]}
+                          token={this.props.token}
+                          restrictionList={restrictionListCopy}
+                        />
+                      );
+                    }
+                  }
+                )}
               </div>
             </div>
-          )
+          );
         })}
       </ResponsiveGridLayout>
     );
-    }
   }
+}

@@ -1,4 +1,4 @@
-version: 'v0.0.0'
+version: "v0.0.0"
 LabBook: null
 SciViz: # top level tab
   auth:
@@ -6,7 +6,7 @@ SciViz: # top level tab
   pages: # individual pages
     # The first page in the list of pages is the splash page after login
     # By convention this should be a home page with a markdown component
-    Home: 
+    Home:
       route: /home
       grids:
         grid5:
@@ -55,7 +55,7 @@ SciViz: # top level tab
                   * apple
                   * pear
                   * melon
-                
+
                 ordered list:
                 1. one
                 2. two
@@ -74,12 +74,12 @@ SciViz: # top level tab
                 nested lists:
                   * parent
                     * child
-                
+
                 task lists:
                   * [x] apples
                   * [x] pizza
                   * [ ] chicken
-                
+
                 tables:
 
                 first header | second header
@@ -141,7 +141,7 @@ SciViz: # top level tab
                     return dict(query=q, fetch_args=[])
                 ~~~
                 # *Sci-Viz* speaks datajoint natively, isnt that neat!  
-                
+
                 ### About the coloring in the table:
                 Notice that this query has a projection that produces an additional column.
                 The column `_sciviz_background` accepts any css compatable color,
@@ -177,7 +177,7 @@ SciViz: # top level tab
               type: markdown
               text: |
                 # DJ table with restriction:
-                
+
                 This is a datajoint table from the following query:
                 ~~~python
                   def dj_query(test_group1_simple):
@@ -194,7 +194,7 @@ SciViz: # top level tab
                 ## Why is this useful?
 
                 What this does is it injects the additional restriction into the query.
-                
+
                 This is useful because you can use anchoring and aliasing in the config to
                 copy one query to many components and only have to change the restriction on the
                 component
@@ -238,7 +238,7 @@ SciViz: # top level tab
       grids:
         grid2:
           type: fixed
-          columns:  6
+          columns: 6
           row_height: 233
           components:
             comp:
@@ -269,7 +269,7 @@ SciViz: # top level tab
                 components are.
     DynamicGrid:
       route: /dynamicGrid
-      grids: 
+      grids:
         dgrid:
           route: /dgrid
           type: dynamic
@@ -303,3 +303,13 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=(MousePlots), fetch_args=['plot'])
+            comp3:
+              route: /myTableD
+              type: table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=(MousePlots), fetch_args=[])

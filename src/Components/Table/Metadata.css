@@ -1,13 +1,15 @@
-.metadata{
+.metadata {
   margin: 15px auto;
   display: table;
   border: 1px solid black;
   border-collapse: collapse;
 }
-.metadata-name{
+.metadata-name {
   column-span: all;
 }
-.metadata th, tr, td {
+.metadata th,
+tr,
+td {
   border: 1px solid black;
   padding: 5px;
 }

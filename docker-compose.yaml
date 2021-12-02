@@ -1,12 +1,12 @@
 #HOST_UID="$(id -u)" HOST_GID="$(id -g)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\' '{print $2}') docker-compose up --build
-version: '2.4'
+version: "2.4"
 services:
   sci-viz:
     build: .
     # image: datajoint/sciviz:0.1.0-beta.0
     environment:
       CHOKIDAR_USEPOLLING: "true"
-      REACT_APP_DJLABBOOK_BACKEND_PREFIX: '/api'
+      REACT_APP_DJLABBOOK_BACKEND_PREFIX: "/api"
       FRONTEND_SPEC_PATH: ./test/test_spec.yaml
     volumes:
       - .:/app
@@ -44,7 +44,7 @@ services:
       - "443:443"
       - "80:80"
     networks:
-    - main
+      - main
   pharus:
     depends_on:
       localdb:
@@ -59,30 +59,30 @@ services:
       - ./test:/tmp/test
       - ./test/test_spec.yaml:/main/specs/test_spec.yaml
     command:
-    - sh
-    - -lc
-    - |
-      python /tmp/test/populate.py
-      pharus
+      - sh
+      - -lc
+      - |
+        python /tmp/test/populate.py
+        pharus
     networks:
-    - main
+      - main
   jnotebook:
     image: datajoint/djlab:py3.7-alpine-b3bbe1c
     networks:
-    - main
+      - main
     ports:
       - 8888:8888
     environment:
-      - DISPLAY  # Necessary to allow GUI to route to Docker host
-      - Djlab_JupyterServer_Password=datajoint  # Jupyter login password
+      - DISPLAY # Necessary to allow GUI to route to Docker host
+      - Djlab_JupyterServer_Password=datajoint # Jupyter login password
       # - Djlab_JupyterServer_DisplayFilepath=/home/anaconda/README.md  # Display on login
       # - Djlab_JupyterServer_SaveOutput=FALSE  # Set if notebook save includes output
-      - DJ_HOST=localdb  # Specify DataJoint database host
-      - DJ_USER=root  # Specify DataJoint database user
-      - DJ_PASS=pharus  # Specify DataJoint database password
-    user: ${HOST_UID}:anaconda  # Necessary to allow GUI to route to Docker host
+      - DJ_HOST=localdb # Specify DataJoint database host
+      - DJ_USER=root # Specify DataJoint database user
+      - DJ_PASS=pharus # Specify DataJoint database password
+    user: ${HOST_UID}:anaconda # Necessary to allow GUI to route to Docker host
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw  # Necessary to allow GUI to route to Docker host
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw # Necessary to allow GUI to route to Docker host
       - ../jupyter notebooks/:/home/anaconda/notebooks # Display on login
 networks:
   main:

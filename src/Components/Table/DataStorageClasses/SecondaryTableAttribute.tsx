@@ -1,7 +1,7 @@
-import TableAttribute from './TableAttribute';
-import TableAttributeType from '../enums/TableAttributeType'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faRedoAlt} from '@fortawesome/free-solid-svg-icons'
+import TableAttribute from "./TableAttribute";
+import TableAttributeType from "../enums/TableAttributeType";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRedoAlt } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Class for secondary attributes of a table, deals with cases of it being nullable, defaultValue
@@ -21,7 +21,8 @@ export default class SecondaryTableAttribute extends TableAttribute {
    * @param decimalNumDigits Valid when type is decimal otherwise undefined
    * @param decimalNumDecimalDigits Valid when type is decimal otherwise undefined
    */
-  constructor(attributeName: string,
+  constructor(
+    attributeName: string,
     attributeType: TableAttributeType,
     nullable: boolean,
     defaultValue?: string,
@@ -29,44 +30,83 @@ export default class SecondaryTableAttribute extends TableAttribute {
     enumOptions?: Array<string>,
     decimalNumDigits?: number,
     decimalNumDecimalDigits?: number
-    ) {
-    super(attributeName, attributeType, stringTypeAttributeLengthInfo, enumOptions, decimalNumDigits, decimalNumDecimalDigits);
+  ) {
+    super(
+      attributeName,
+      attributeType,
+      stringTypeAttributeLengthInfo,
+      enumOptions,
+      decimalNumDigits,
+      decimalNumDecimalDigits
+    );
     this.nullable = nullable;
-    this.defaultValue = defaultValue === null || defaultValue === 'null' ? undefined : defaultValue;
+    this.defaultValue =
+      defaultValue === null || defaultValue === "null"
+        ? undefined
+        : defaultValue;
   }
 
   /**
    * Function to generate html label block for a given sedcondary attribute
    * NOTE: Currently disabled reset to null, will add support for it at some other point.
-   * @param secondaryTableAttribute 
+   * @param secondaryTableAttribute
    * @param resetToNullCallback Call back function for reset it back to null
-   * @returns 
+   * @returns
    */
-  static getAttributeLabelBlock(secondaryTableAttribute: SecondaryTableAttribute, resetToNullCallback: (tableAttribute: SecondaryTableAttribute) => void) {
+  static getAttributeLabelBlock(
+    secondaryTableAttribute: SecondaryTableAttribute,
+    resetToNullCallback: (tableAttribute: SecondaryTableAttribute) => void
+  ) {
     const typeString = super.getTypeString(secondaryTableAttribute);
-    
-    return(
+
+    return (
       <div className="attributeHead">
-        <label className="secondary-attribute-label" htmlFor={secondaryTableAttribute.attributeName}>{secondaryTableAttribute.attributeName + ' (' + typeString + ')'}</label>
-        { 
-          secondaryTableAttribute.defaultValue !== undefined ? 
+        <label
+          className="secondary-attribute-label"
+          htmlFor={secondaryTableAttribute.attributeName}
+        >
+          {secondaryTableAttribute.attributeName + " (" + typeString + ")"}
+        </label>
+        {secondaryTableAttribute.defaultValue !== undefined ? (
           <div className="nullableControls">
-            <div className="nullableTag">{'default'}</div>
-            <FontAwesomeIcon className="resetIcon" icon={faRedoAlt} onClick={() => {resetToNullCallback(secondaryTableAttribute)}} />
-          </div> : ''
-        }
+            <div className="nullableTag">{"default"}</div>
+            <FontAwesomeIcon
+              className="resetIcon"
+              icon={faRedoAlt}
+              onClick={() => {
+                resetToNullCallback(secondaryTableAttribute);
+              }}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
-    )
+    );
   }
 
   /**
    * Construct input block based on secondaryTableAttribute by extracting it type and other information
-   * @param secondaryTableAttribute 
+   * @param secondaryTableAttribute
    * @param currentValue CurrentValue of the input block for binding. Type any used here as there are many possible types with all the available input blocks
    * @param handleChange Call back function for when the value of the input block changes
-   * @returns 
+   * @returns
    */
-  static getSecondaryAttributeInputBlock(secondaryTableAttribute: SecondaryTableAttribute, currentValue: any, handleChange: (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, attributeName: string) => void) {
-    return super.getAttributeInputBlock(secondaryTableAttribute, currentValue, secondaryTableAttribute.defaultValue, handleChange);
+  static getSecondaryAttributeInputBlock(
+    secondaryTableAttribute: SecondaryTableAttribute,
+    currentValue: any,
+    handleChange: (
+      event:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLSelectElement>,
+      attributeName: string
+    ) => void
+  ) {
+    return super.getAttributeInputBlock(
+      secondaryTableAttribute,
+      currentValue,
+      secondaryTableAttribute.defaultValue,
+      handleChange
+    );
   }
 }

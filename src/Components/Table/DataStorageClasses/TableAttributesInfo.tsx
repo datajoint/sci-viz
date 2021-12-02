@@ -1,5 +1,5 @@
-import PrimaryTableAttribute from './PrimaryTableAttribute';
-import SecondaryTableAttribute from './SecondaryTableAttribute';
+import PrimaryTableAttribute from "./PrimaryTableAttribute";
+import SecondaryTableAttribute from "./SecondaryTableAttribute";
 
 /**
  * Datastorage class for grouping up and storing all the primary and secondary attributes infos of a given table
@@ -13,7 +13,10 @@ export default class TableAttributesInfo {
    * @param primaryAttributes Array of primary attributes of the given table
    * @param secondaryAttributes Array of secondary attribute of the given table
    */
-  constructor(primaryAttributes: Array<PrimaryTableAttribute>, secondaryAttributes: Array<SecondaryTableAttribute>) {
+  constructor(
+    primaryAttributes: Array<PrimaryTableAttribute>,
+    secondaryAttributes: Array<SecondaryTableAttribute>
+  ) {
     this.primaryAttributes = primaryAttributes;
     this.secondaryAttributes = secondaryAttributes;
   }

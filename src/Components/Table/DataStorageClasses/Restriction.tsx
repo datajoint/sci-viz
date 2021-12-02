@@ -1,16 +1,15 @@
-
-import RestrictionType from '../enums/RestrictionType'
-import TableAttribute from './TableAttribute'
+import RestrictionType from "../enums/RestrictionType";
+import TableAttribute from "./TableAttribute";
 
 /**
  * Class to handle the datastorage of restrctions FilterCards
  */
 export default class Restriction {
-  id: number
-  tableAttribute?: TableAttribute
-  restrictionType?: RestrictionType
-  value?: any // Type any used here as there are many possible types with all the available input blocks
-  isEnable: boolean
+  id: number;
+  tableAttribute?: TableAttribute;
+  restrictionType?: RestrictionType;
+  value?: any; // Type any used here as there are many possible types with all the available input blocks
+  isEnable: boolean;
 
   /**
    * @param id Unique indentify to be use for react keys so react can keep track of who is who
@@ -19,7 +18,13 @@ export default class Restriction {
    * @param value Value of wanted restriction
    * @param isEnable For toggling if the user wants to enable restriction or not
    */
-  constructor(id:number, tableAttribute?: TableAttribute, restrictionType?: RestrictionType, value?: any, isEnable: boolean = true) {
+  constructor(
+    id: number,
+    tableAttribute?: TableAttribute,
+    restrictionType?: RestrictionType,
+    value?: any,
+    isEnable: boolean = true
+  ) {
     this.id = id;
     this.tableAttribute = tableAttribute;
     this.restrictionType = restrictionType;
@@ -33,27 +38,21 @@ export default class Restriction {
    */
   static getRestrictionTypeString(restrictionType?: RestrictionType) {
     if (restrictionType === undefined) {
-      return '';
-    }
-    else if (restrictionType === RestrictionType.EQUAL) {
-      return '=';
-    }
-    else if (restrictionType === RestrictionType.NOT_EQUAL) {
-      return '!='
-    }
-    else if (restrictionType === RestrictionType.LESS_THAN) {
-      return '<';
-    }
-    else if (restrictionType === RestrictionType.LESS_THAN_AND_EQUAL_TO) {
-      return '<='
-    }
-    else if (restrictionType === RestrictionType.GREATER_THAN) {
-      return '>'
-    }
-    else if (restrictionType === RestrictionType.GREATER_THAN_AND_EQUAL_TO) {
-      return '>='
+      return "";
+    } else if (restrictionType === RestrictionType.EQUAL) {
+      return "=";
+    } else if (restrictionType === RestrictionType.NOT_EQUAL) {
+      return "!=";
+    } else if (restrictionType === RestrictionType.LESS_THAN) {
+      return "<";
+    } else if (restrictionType === RestrictionType.LESS_THAN_AND_EQUAL_TO) {
+      return "<=";
+    } else if (restrictionType === RestrictionType.GREATER_THAN) {
+      return ">";
+    } else if (restrictionType === RestrictionType.GREATER_THAN_AND_EQUAL_TO) {
+      return ">=";
     }
 
-    throw Error('Unsupported Restriction Type for translation')
+    throw Error("Unsupported Restriction Type for translation");
   }
 }

@@ -1,23 +1,23 @@
 header {
-    display: flex;
-    position: static;
-    height: 1in;
-    background-color: #ffffff;
-    box-shadow: 0px -3px 3px #C8C9C7;
-    padding: 4px 0;
-  }
-  .header-content {
-    position: static;
-    align-self: center;
-  }
-  
-  .header-content p {
-    width: fit-content;
-    font-size: 1.5rem;
-    text-align: center;
-    color: rgb(0, 0, 0);
-  }
-  .header-img {
-    border-right: 5px solid;
-    border-color: rgb(183, 247, 181);
-  }
+  display: flex;
+  position: static;
+  height: 1in;
+  background-color: #ffffff;
+  box-shadow: 0px -3px 3px #c8c9c7;
+  padding: 4px 0;
+}
+.header-content {
+  position: static;
+  align-self: center;
+}
+
+.header-content p {
+  width: fit-content;
+  font-size: 1.5rem;
+  text-align: center;
+  color: rgb(0, 0, 0);
+}
+.header-img {
+  border-right: 5px solid;
+  border-color: rgb(183, 247, 181);
+}

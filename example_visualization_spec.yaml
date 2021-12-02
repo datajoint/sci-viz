@@ -1,4 +1,4 @@
-version: 'v0.0.0'
+version: "v0.0.0"
 LabBook: null
 SciViz: # top level tab
   auth:
@@ -26,11 +26,12 @@ SciViz: # top level tab
               restriction: >
                 def restriction(**args):
                   return dict()
-              dj_query: > # assume all schemas that user has access will be VM loaded
+              dj_query:
+                > # assume all schemas that user has access will be VM loaded
                 def dj_query(vms):
                   HomeCage, ModuleEvent, EventType = (vms['chen_lab'].HomeCage, vms['chen_lab'].ModuleEvent, vms['chen_lab'].EventType)
                   return HomeCage * ModuleEvent * EventType, dict(order_by=['KEY DESC', 'mouse_id'], limit=15)
-              redirect_page: 'page2'
+              redirect_page: "page2"
     page2:
       route: /session # dev, be careful of name collisions
       args:

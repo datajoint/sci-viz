@@ -1,5 +1,5 @@
-import TableAttribute from './TableAttribute';
-import TableAttributeType from '../enums/TableAttributeType'
+import TableAttribute from "./TableAttribute";
+import TableAttributeType from "../enums/TableAttributeType";
 
 /**
  * Class for Primary attributes of a table, only has the additional field of autoIncrement for int type keys
@@ -19,52 +19,83 @@ export default class PrimaryTableAttribute extends TableAttribute {
    * @param decimalNumDecimalDigits Valid when type is decimal otherwise undefined
    */
   constructor(
-    attributeName: string, 
+    attributeName: string,
     attributeType: TableAttributeType,
     autoIncrement: boolean,
     stringTypeAttributeLengthInfo?: number,
     enumOptions?: Array<string>,
     decimalNumDigits?: number,
     decimalNumDecimalDigits?: number
-    ) {
-    super(attributeName, attributeType, stringTypeAttributeLengthInfo, enumOptions, decimalNumDigits, decimalNumDecimalDigits);
+  ) {
+    super(
+      attributeName,
+      attributeType,
+      stringTypeAttributeLengthInfo,
+      enumOptions,
+      decimalNumDigits,
+      decimalNumDecimalDigits
+    );
     this.autoIncrement = autoIncrement;
   }
 
   /**
    * Function to generate html label block for a given primary attribute
-   * @param primaryTableAttribute 
+   * @param primaryTableAttribute
    * @returns HTML <label> block
    */
   static getAttributeLabelBlock(primaryTableAttribute: PrimaryTableAttribute) {
     if (primaryTableAttribute.autoIncrement) {
-      return(
+      return (
         <th className="attributeHead">
-          <label className="primary-attribute-label" htmlFor={primaryTableAttribute.attributeName}>Auto Increment</label>
+          <label
+            className="primary-attribute-label"
+            htmlFor={primaryTableAttribute.attributeName}
+          >
+            Auto Increment
+          </label>
         </th>
-      )
+      );
     }
-    
+
     const typeString = super.getTypeString(primaryTableAttribute);
-    return(
+    return (
       <th className="attributeHead">
-        <label className="primary-attribute-label" htmlFor={primaryTableAttribute.attributeName}>{primaryTableAttribute.attributeName + ' (' + typeString + ')'}</label>
+        <label
+          className="primary-attribute-label"
+          htmlFor={primaryTableAttribute.attributeName}
+        >
+          {primaryTableAttribute.attributeName + " (" + typeString + ")"}
+        </label>
       </th>
-    )
+    );
   }
 
   /**
    * Construct input block based on primaryTableAttribute by extracting it type and other information
-   * @param tableAttribute 
+   * @param tableAttribute
    * @param currentValue CurrentValue of the input block for binding. Type any used here as there are many possible types with all the available input blocks
    * @param handleChange Call back function for when the value of the input block changes
-   * @returns 
+   * @returns
    */
-  static getPrimaryAttributeInputBlock(tableAttribute: PrimaryTableAttribute, currentValue: any, handleChange: (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, attributeName: string) => void) {
+  static getPrimaryAttributeInputBlock(
+    tableAttribute: PrimaryTableAttribute,
+    currentValue: any,
+    handleChange: (
+      event:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLSelectElement>,
+      attributeName: string
+    ) => void
+  ) {
     if (tableAttribute.autoIncrement) {
-      return <input disabled></input>
+      return <input disabled></input>;
     }
-    
-    return super.getAttributeInputBlock(tableAttribute, currentValue, undefined, handleChange)
+
+    return super.getAttributeInputBlock(
+      tableAttribute,
+      currentValue,
+      undefined,
+      handleChange
+    );
   }
 }

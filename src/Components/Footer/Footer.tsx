@@ -1,10 +1,9 @@
-import React from 'react';
-import {version} from '../../../package.json';
+import React from "react";
+import { version } from "../../../package.json";
 
-import './Footer.css'
+import "./Footer.css";
 
-interface FooterProps {
-}
+interface FooterProps {}
 
 interface FooterState {
   backendVersion: string;
@@ -18,8 +17,8 @@ export default class Footer extends React.Component<FooterProps, FooterState> {
     super(props);
 
     this.state = {
-      backendVersion: ''
-    }
+      backendVersion: "",
+    };
   }
 
   /**
@@ -27,36 +26,39 @@ export default class Footer extends React.Component<FooterProps, FooterState> {
    */
   componentDidMount() {
     fetch(`${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/version`, {
-      method: 'GET',
-      headers: {'Content-Type': 'application/json'}
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
     })
-    .then(result => {
-      // Check for error mesage 500, if so throw and error
-      if (result.status === 500) {
-        throw new Error('Unable to get version number');
-      }
+      .then((result) => {
+        // Check for error mesage 500, if so throw and error
+        if (result.status === 500) {
+          throw new Error("Unable to get version number");
+        }
 
-      return result.json();
-    })
-    .then(result => {
-      if (result.version) {
-        this.setState({backendVersion: result.version});
-      }
-    })
-    .catch(error => {
-      this.setState({backendVersion: 'Unable to get version number'});
-      console.log(error);
-    })
+        return result.json();
+      })
+      .then((result) => {
+        if (result.version) {
+          this.setState({ backendVersion: result.version });
+        }
+      })
+      .catch((error) => {
+        this.setState({ backendVersion: "Unable to get version number" });
+        console.log(error);
+      });
   }
-  
+
   render() {
     return (
       <footer>
-        <div className='footer-content'>
+        <div className="footer-content">
           <p>© 2021, DataJoint SciViz</p>
+        </div>
+        <div className="version-info-div">
+          <div className="version-number">
+            <b>Front End Version:</b> {version} <b>Back End Version:</b>{" "}
+            {this.state.backendVersion}
           </div>
-        <div className='version-info-div'>
-          <div className='version-number'><b>Front End Version:</b> {version}  <b>Back End Version:</b> {this.state.backendVersion}</div>
         </div>
       </footer>
     );

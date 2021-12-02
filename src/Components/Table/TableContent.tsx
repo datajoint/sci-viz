@@ -1,16 +1,22 @@
-import React, {RefObject} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faChevronRight, faChevronLeft, faStepBackward, faStepForward, faFilter} from '@fortawesome/free-solid-svg-icons'
-import Filter from './Filter/Filter'
-import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo';
-import TableAttributeType from './enums/TableAttributeType'
-import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon';
-import Restriction from './DataStorageClasses/Restriction'
-import SortButton from './Sort/SortButton';
-import './TableContent.css'
+import React, { RefObject } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronRight,
+  faChevronLeft,
+  faStepBackward,
+  faStepForward,
+  faFilter,
+} from "@fortawesome/free-solid-svg-icons";
+import Filter from "./Filter/Filter";
+import TableAttributesInfo from "./DataStorageClasses/TableAttributesInfo";
+import TableAttributeType from "./enums/TableAttributeType";
+import BasicLoadingIcon from "./LoadingAnimation/BasicLoadingIcon";
+import Restriction from "./DataStorageClasses/Restriction";
+import SortButton from "./Sort/SortButton";
+import "./TableContent.css";
 
 enum TableActionType {
-  FILTER
+  FILTER,
 }
 
 interface TableContentProps {
@@ -26,7 +32,7 @@ interface TableContentProps {
   setNumberOfTuplesPerPage: (numberOfTuplesPerPage: number) => void;
   fetchTableContent: () => void; // Callback function to tell the parent component to update the contentData
   setRestrictions: (restrictions: Array<Restriction>) => void;
-  setOrders: (Order: string) => void
+  setOrders: (Order: string) => void;
 }
 
 interface TableContentState {
@@ -45,12 +51,16 @@ interface TableContentState {
 
 /**
  * Component to handle rendering of the tuples as well as Filter, Insert, Update, and Delete subcomponents
- * 
+ *
  */
-export default class TableContent extends React.Component<TableContentProps, TableContentState> {  
+export default class TableContent extends React.Component<
+  TableContentProps,
+  TableContentState
+> {
   constructor(props: TableContentProps) {
     super(props);
-    this.constructTupleReferenceArray = this.constructTupleReferenceArray.bind(this);
+    this.constructTupleReferenceArray =
+      this.constructTupleReferenceArray.bind(this);
 
     this.state = {
       currentSelectedTableActionMenu: TableActionType.FILTER,
@@ -63,26 +73,31 @@ export default class TableContent extends React.Component<TableContentProps, Tab
       isWaiting: false,
       initialTableColWidths: [],
       headerRowReference: React.createRef(),
-      tuplesReference: this.constructTupleReferenceArray()
-    }
+      tuplesReference: this.constructTupleReferenceArray(),
+    };
 
-    this.getCurrentTableActionMenuComponent = this.getCurrentTableActionMenuComponent.bind(this);
+    this.getCurrentTableActionMenuComponent =
+      this.getCurrentTableActionMenuComponent.bind(this);
     this.goToFirstPage = this.goToFirstPage.bind(this);
     this.goToLastPage = this.goToLastPage.bind(this);
     this.goForwardAPage = this.goForwardAPage.bind(this);
     this.goBackwardAPage = this.goBackwardAPage.bind(this);
-    this.handleNumberOfTuplesPerPageChange = this.handleNumberOfTuplesPerPageChange.bind(this);
+    this.handleNumberOfTuplesPerPageChange =
+      this.handleNumberOfTuplesPerPageChange.bind(this);
   }
 
   /**
    * Reset the table action sub menu selection upon a new table selection
-   * @param prevProps 
-   * @param prevState 
+   * @param prevProps
+   * @param prevState
    */
-  componentDidUpdate(prevProps: TableContentProps, prevState: TableContentState) {
+  componentDidUpdate(
+    prevProps: TableContentProps,
+    prevState: TableContentState
+  ) {
     // Check if the tuplePerPage change, if so update tupleReferenceArray
     if (prevProps.tuplePerPage !== this.props.tuplePerPage) {
-      this.setState({tuplesReference: this.constructTupleReferenceArray()});
+      this.setState({ tuplesReference: this.constructTupleReferenceArray() });
     }
 
     // Break if the the selectedTable did not change
@@ -91,7 +106,10 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     }
 
     // Reset TableActionview
-    this.setState({currentSelectedTableActionMenu: TableActionType.FILTER, hideTableActionMenu: true});
+    this.setState({
+      currentSelectedTableActionMenu: TableActionType.FILTER,
+      hideTableActionMenu: true,
+    });
   }
 
   /**
@@ -114,11 +132,13 @@ export default class TableContent extends React.Component<TableContentProps, Tab
   setCurrentTableActionMenu(tableActionMenu: TableActionType) {
     if (this.state.currentSelectedTableActionMenu === tableActionMenu) {
       // Toggle hiding and showing
-      this.setState({hideTableActionMenu: !this.state.hideTableActionMenu});
-    } 
-    else {
+      this.setState({ hideTableActionMenu: !this.state.hideTableActionMenu });
+    } else {
       // Switch to the new tableActionMenu
-      this.setState({hideTableActionMenu: false, currentSelectedTableActionMenu: tableActionMenu});
+      this.setState({
+        hideTableActionMenu: false,
+        currentSelectedTableActionMenu: tableActionMenu,
+      });
     }
   }
 
@@ -151,31 +171,38 @@ export default class TableContent extends React.Component<TableContentProps, Tab
   goBackwardAPage() {
     if (this.props.currentPageNumber !== 1) {
       this.props.setPageNumber(this.props.currentPageNumber - 1);
-    } 
+    }
   }
 
   /**
    * Switching return code based this.state.currentSelectedTableActionMenu. Mainly used in the render() function below
    */
   getCurrentTableActionMenuComponent() {
-    return(
+    return (
       <div className="actionMenuContainer">
-        <div className={this.state.currentSelectedTableActionMenu === TableActionType.FILTER ? 'visable-action-menu-container' : 'hidden-action-menu-container'}>
-          <Filter 
+        <div
+          className={
+            this.state.currentSelectedTableActionMenu === TableActionType.FILTER
+              ? "visable-action-menu-container"
+              : "hidden-action-menu-container"
+          }
+        >
+          <Filter
             tableAttributesInfo={this.props.tableAttributesInfo}
             setRestrictions={this.props.setRestrictions}
           />
         </div>
       </div>
-    )
+    );
   }
 
-  
   /**
    * Call back for when the user change the number of tupples to show per page
    * @param event Value should be the number in string format
    */
-  handleNumberOfTuplesPerPageChange(event: React.ChangeEvent<HTMLInputElement>) {
+  handleNumberOfTuplesPerPageChange(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
     this.props.setNumberOfTuplesPerPage(parseInt(event.target.value));
   }
 
@@ -188,7 +215,8 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     if (this.props.tableAttributesInfo === undefined) {
       return primaryKeyList;
     }
-    for (let primaryAttribute of this.props.tableAttributesInfo.primaryAttributes) {
+    for (let primaryAttribute of this.props.tableAttributesInfo
+      .primaryAttributes) {
       primaryKeyList.push(primaryAttribute.attributeName);
     }
 
@@ -204,7 +232,8 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     if (this.props.tableAttributesInfo === undefined) {
       return secondaryKeyList;
     }
-    for (let secondaryAttribute of this.props.tableAttributesInfo.secondaryAttributes) {
+    for (let secondaryAttribute of this.props.tableAttributesInfo
+      .secondaryAttributes) {
       secondaryKeyList.push(secondaryAttribute.attributeName);
     }
 
@@ -218,16 +247,21 @@ export default class TableContent extends React.Component<TableContentProps, Tab
     if (this.props.tableAttributesInfo === undefined) {
       return false;
     }
-    
-    for (let tableAttribute of this.props.tableAttributesInfo?.primaryAttributes) {
+
+    for (let tableAttribute of this.props.tableAttributesInfo
+      ?.primaryAttributes) {
       if (tableAttribute.attributeType === TableAttributeType.BLOB) {
         return true;
       }
     }
 
     // Check secondary attributes
-    for (let tableAttribute of this.props.tableAttributesInfo?.secondaryAttributes) {
-      if (tableAttribute.attributeType === TableAttributeType.BLOB && tableAttribute.nullable) {
+    for (let tableAttribute of this.props.tableAttributesInfo
+      ?.secondaryAttributes) {
+      if (
+        tableAttribute.attributeType === TableAttributeType.BLOB &&
+        tableAttribute.nullable
+      ) {
         return true;
       }
     }
@@ -239,11 +273,22 @@ export default class TableContent extends React.Component<TableContentProps, Tab
    * Handle button rednering with disable feature for Insert Update or Delete based on the table type and return the buttons accordingly
    */
   getTableActionButtons() {
-    return(
+    return (
       <div className="content-controllers">
-        <button onClick={() => this.setCurrentTableActionMenu(TableActionType.FILTER)} className={this.state.currentSelectedTableActionMenu === TableActionType.FILTER && !this.state.hideTableActionMenu ? 'selectedButton' : ''}><FontAwesomeIcon className="menuIcon filter" icon={faFilter} /><span>Filter</span></button>
+        <button
+          onClick={() => this.setCurrentTableActionMenu(TableActionType.FILTER)}
+          className={
+            this.state.currentSelectedTableActionMenu ===
+              TableActionType.FILTER && !this.state.hideTableActionMenu
+              ? "selectedButton"
+              : ""
+          }
+        >
+          <FontAwesomeIcon className="menuIcon filter" icon={faFilter} />
+          <span>Filter</span>
+        </button>
       </div>
-    )
+    );
   }
 
   /**
@@ -252,160 +297,223 @@ export default class TableContent extends React.Component<TableContentProps, Tab
    */
   setNewHeaderWidths(difference: number) {
     if (this.state.newHeaderWidths.length > 0 && difference !== 0) {
-      let newWidthsCopy = this.state.newHeaderWidths
+      let newWidthsCopy = this.state.newHeaderWidths;
       if (this.state.resizeIndex !== undefined) {
-        newWidthsCopy[this.state.resizeIndex] = this.state.newHeaderWidths[this.state.resizeIndex] + difference
-        this.setState({newHeaderWidths: newWidthsCopy});
+        newWidthsCopy[this.state.resizeIndex] =
+          this.state.newHeaderWidths[this.state.resizeIndex] + difference;
+        this.setState({ newHeaderWidths: newWidthsCopy });
       }
-    }
-    else {
-      this.setState({newHeaderWidths: this.state.initialTableColWidths})
+    } else {
+      this.setState({ newHeaderWidths: this.state.initialTableColWidths });
     }
   }
 
   /**
    * Listens for when cell border is selected and stores the index of the column and mouse start position
    * @param event
-   * @param colIndex 
+   * @param colIndex
    */
-  cellResizeMouseDown(event: React.MouseEvent<HTMLDivElement, MouseEvent>, colIndex: number) {
-    this.setState({dragStart: event.clientX, resizeIndex: colIndex})
+  cellResizeMouseDown(
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    colIndex: number
+  ) {
+    this.setState({ dragStart: event.clientX, resizeIndex: colIndex });
   }
 
   /**
    * Updates the distance the user drags the table column divider
-   * @param event 
+   * @param event
    */
   cellResizeMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (this.state.dragStart) {
       // use the drag distance to calculate the new width
-      let dragDistance = event.pageX - this.state.dragStart
+      let dragDistance = event.pageX - this.state.dragStart;
       this.setNewHeaderWidths(dragDistance);
 
       // update the new start
-      this.setState({dragStart: event.clientX})
+      this.setState({ dragStart: event.clientX });
     }
   }
 
   /**
    * Listens for when user is done resizing the column, resets drag position stats
-   * @param event 
+   * @param event
    */
   cellResizeMouseUp(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     // reset column drag stats
-    this.setState({dragStart: 0, resizeIndex: undefined})
+    this.setState({ dragStart: 0, resizeIndex: undefined });
   }
-  
+
   /**
    * Tells the element how to style width of the given table column index
-   * @param colIndex 
+   * @param colIndex
    */
   getCellWidth(colIndex: number) {
-    if (this.state.resizeIndex === colIndex && this.state.newHeaderWidths[colIndex]) {
+    if (
+      this.state.resizeIndex === colIndex &&
+      this.state.newHeaderWidths[colIndex]
+    ) {
       return {
-        width: this.state.newHeaderWidths[colIndex] + 'px'
-      }
-    }
-    else if (this.state.resizeIndex !== colIndex && this.state.newHeaderWidths[colIndex]) {
+        width: this.state.newHeaderWidths[colIndex] + "px",
+      };
+    } else if (
+      this.state.resizeIndex !== colIndex &&
+      this.state.newHeaderWidths[colIndex]
+    ) {
       return {
-        width: this.state.newHeaderWidths[colIndex] + 'px'
-      }
-    } 
-    else {
+        width: this.state.newHeaderWidths[colIndex] + "px",
+      };
+    } else {
       return {
-        width: this.state.initialTableColWidths[colIndex] // default
-      }
+        width: this.state.initialTableColWidths[colIndex], // default
+      };
     }
   }
 
-  
   render() {
-    return(
+    return (
       <div className="table-content-viewer">
         <div className="content-view-header table-header">
           <h4 className="table-name">{this.props.selectedTableName}</h4>
           {this.getTableActionButtons()}
         </div>
-        {this.state.hideTableActionMenu ? '' : <this.getCurrentTableActionMenuComponent/>}
+        {this.state.hideTableActionMenu ? (
+          ""
+        ) : (
+          <this.getCurrentTableActionMenuComponent />
+        )}
         <div className="content-view-area">
           <div className="table-container">
             <table className="table">
               <thead>
                 <tr className="headerRow" ref={this.state.headerRowReference}>
                   {this.getPrimaryKeys().map((attributeName, index) => {
-                    if(attributeName.includes('_sciviz')){
+                    if (attributeName.includes("_sciviz")) {
                       return;
                     }
-                    return(
+                    return (
                       <th key={attributeName} className="headings">
-                        <SortButton buttonName='headerContent primary' attributeName={attributeName} setOrders={this.props.setOrders}/>
+                        <SortButton
+                          buttonName="headerContent primary"
+                          attributeName={attributeName}
+                          setOrders={this.props.setOrders}
+                        />
                       </th>
-                    )
+                    );
                   })}
                   {this.getSecondaryKeys().map((attributeName, index) => {
-                    if(attributeName.includes('_sciviz')){
+                    if (attributeName.includes("_sciviz")) {
                       return;
                     }
-                    return(
+                    return (
                       <th key={attributeName} className="headings">
-                        <SortButton buttonName='headerContent secondary' attributeName={attributeName} setOrders={this.props.setOrders}/>
+                        <SortButton
+                          buttonName="headerContent secondary"
+                          attributeName={attributeName}
+                          setOrders={this.props.setOrders}
+                        />
                       </th>
-                    )
+                    );
                   })}
                 </tr>
               </thead>
               <tbody>
-              {this.props.contentData.map((entry: any, tupleIndex: number) => {
-                let headers = this.getPrimaryKeys().concat(this.getSecondaryKeys())
-                let bgColor = ''
-                let textColor = ''
-                // this copies the entry over so we can delete from it without affecting the original value
-                // when you do let modifiedEntry = entry if seems to pass a pointer to modifiedEntry not a copy of the data.
-                let modifiedEntry = [...entry]
+                {this.props.contentData.map(
+                  (entry: any, tupleIndex: number) => {
+                    let headers = this.getPrimaryKeys().concat(
+                      this.getSecondaryKeys()
+                    );
+                    let bgColor = "";
+                    let textColor = "";
+                    // this copies the entry over so we can delete from it without affecting the original value
+                    // when you do let modifiedEntry = entry if seems to pass a pointer to modifiedEntry not a copy of the data.
+                    let modifiedEntry = [...entry];
 
-                for(let index in headers){
-                  if(headers[index].includes('_sciviz_background')){
-                    bgColor = modifiedEntry[index]
-                    delete modifiedEntry[index]
+                    for (let index in headers) {
+                      if (headers[index].includes("_sciviz_background")) {
+                        bgColor = modifiedEntry[index];
+                        delete modifiedEntry[index];
+                      } else if (headers[index].includes("_sciviz_font")) {
+                        textColor = entry[index];
+                        delete modifiedEntry[index];
+                      } else if (headers[index].includes("_sciviz")) {
+                        // hide any index that has _sciviz that we do not handle
+                        delete modifiedEntry[index];
+                      }
+                    }
+                    return (
+                      <tr
+                        key={entry}
+                        className="tableRow"
+                        ref={this.state.tuplesReference[tupleIndex]}
+                      >
+                        {modifiedEntry.map((column: any, index: number) => {
+                          return (
+                            <td
+                              style={{
+                                backgroundColor: bgColor,
+                                color: textColor,
+                              }}
+                              key={`${column}-${index}`}
+                              className="tableCell"
+                            >
+                              {column}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
                   }
-                  else if(headers[index].includes('_sciviz_font')){
-                    textColor = entry[index]
-                    delete modifiedEntry[index]
-                  }
-                  else if(headers[index].includes('_sciviz')){
-                    // hide any index that has _sciviz that we do not handle
-                    delete modifiedEntry[index]
-                  }
-                }
-                return (
-                  <tr key={entry} className="tableRow"　ref={this.state.tuplesReference[tupleIndex]}>
-                    {modifiedEntry.map((column: any, index: number) => {
-                      return (
-                        <td style={{backgroundColor: bgColor, color: textColor}} key={`${column}-${index}`} className="tableCell">{column} 
-                        </td>)
-                    })
-                    }</tr>)
-                })}
+                )}
               </tbody>
             </table>
           </div>
-            <div className="paginator">
-              <p>Total Table Entries: {this.props.totalNumOfTuples}</p>
-              <div className="number-of-rows-per-page-input">
-                <p>Number of row per page</p>
-                <input type='number' value={this.props.tuplePerPage} onChange={this.handleNumberOfTuplesPerPageChange}></input>
-              </div>
-              {Object.entries(this.props.contentData).length ?
-                <div className="controls">
-                  <FontAwesomeIcon className={true ? "backAll icon" : "backAll icon disabled"} icon={faStepBackward} onClick={() => this.goToFirstPage()} />
-                  <FontAwesomeIcon className={true  ? "backOne icon" : "backOne icon disabled"} icon={faChevronLeft} onClick={() => this.goBackwardAPage()} />
-                  Page: ({this.props.currentPageNumber + ' / ' + this.props.maxPageNumber})
-                  <FontAwesomeIcon className={true  ? "forwardOne icon" : "forwardOne icon disabled"} icon={faChevronRight} onClick={() => this.goForwardAPage()} />
-                  <FontAwesomeIcon className={true  ? "forwardAll icon" : "forwardAll icon disabled"} icon={faStepForward} onClick={() => this.goToLastPage()} />
-                </div>
-                : ''
-              }
+          <div className="paginator">
+            <p>Total Table Entries: {this.props.totalNumOfTuples}</p>
+            <div className="number-of-rows-per-page-input">
+              <p>Number of row per page</p>
+              <input
+                type="number"
+                value={this.props.tuplePerPage}
+                onChange={this.handleNumberOfTuplesPerPageChange}
+              ></input>
             </div>
+            {Object.entries(this.props.contentData).length ? (
+              <div className="controls">
+                <FontAwesomeIcon
+                  className={true ? "backAll icon" : "backAll icon disabled"}
+                  icon={faStepBackward}
+                  onClick={() => this.goToFirstPage()}
+                />
+                <FontAwesomeIcon
+                  className={true ? "backOne icon" : "backOne icon disabled"}
+                  icon={faChevronLeft}
+                  onClick={() => this.goBackwardAPage()}
+                />
+                Page: (
+                {this.props.currentPageNumber +
+                  " / " +
+                  this.props.maxPageNumber}
+                )
+                <FontAwesomeIcon
+                  className={
+                    true ? "forwardOne icon" : "forwardOne icon disabled"
+                  }
+                  icon={faChevronRight}
+                  onClick={() => this.goForwardAPage()}
+                />
+                <FontAwesomeIcon
+                  className={
+                    true ? "forwardAll icon" : "forwardAll icon disabled"
+                  }
+                  icon={faStepForward}
+                  onClick={() => this.goToLastPage()}
+                />
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
         {this.state.isWaiting ? (
           <div className="loadingBackdrop">
@@ -413,8 +521,10 @@ export default class TableContent extends React.Component<TableContentProps, Tab
               <BasicLoadingIcon size={80} />
             </div>
           </div>
-        ) : ''}
+        ) : (
+          ""
+        )}
       </div>
-    )
+    );
   }
 }
