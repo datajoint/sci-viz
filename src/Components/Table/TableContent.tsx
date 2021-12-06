@@ -1,52 +1,52 @@
-import React, { RefObject } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { RefObject } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChevronRight,
   faChevronLeft,
   faStepBackward,
   faStepForward,
   faFilter,
-} from "@fortawesome/free-solid-svg-icons";
-import Filter from "./Filter/Filter";
-import TableAttributesInfo from "./DataStorageClasses/TableAttributesInfo";
-import TableAttributeType from "./enums/TableAttributeType";
-import BasicLoadingIcon from "./LoadingAnimation/BasicLoadingIcon";
-import Restriction from "./DataStorageClasses/Restriction";
-import SortButton from "./Sort/SortButton";
-import "./TableContent.css";
+} from '@fortawesome/free-solid-svg-icons'
+import Filter from './Filter/Filter'
+import TableAttributesInfo from './DataStorageClasses/TableAttributesInfo'
+import TableAttributeType from './enums/TableAttributeType'
+import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon'
+import Restriction from './DataStorageClasses/Restriction'
+import SortButton from './Sort/SortButton'
+import './TableContent.css'
 
 enum TableActionType {
   FILTER,
 }
 
 interface TableContentProps {
-  token: string;
-  selectedTableName: string;
-  contentData: Array<any>; // Array of tuples obtain from the fetch of a table. Type any used here as there are many possible types with all the available via fetching the actual tuples
-  totalNumOfTuples: number;
-  currentPageNumber: number;
-  maxPageNumber: number;
-  tuplePerPage: number;
-  tableAttributesInfo?: TableAttributesInfo; // A TableAttributeInfo object that contains everything about both primary and secondary attributes of the table
-  setPageNumber: (pageNumber: number) => void;
-  setNumberOfTuplesPerPage: (numberOfTuplesPerPage: number) => void;
-  fetchTableContent: () => void; // Callback function to tell the parent component to update the contentData
-  setRestrictions: (restrictions: Array<Restriction>) => void;
-  setOrders: (Order: string) => void;
+  token: string
+  selectedTableName: string
+  contentData: Array<any> // Array of tuples obtain from the fetch of a table. Type any used here as there are many possible types with all the available via fetching the actual tuples
+  totalNumOfTuples: number
+  currentPageNumber: number
+  maxPageNumber: number
+  tuplePerPage: number
+  tableAttributesInfo?: TableAttributesInfo // A TableAttributeInfo object that contains everything about both primary and secondary attributes of the table
+  setPageNumber: (pageNumber: number) => void
+  setNumberOfTuplesPerPage: (numberOfTuplesPerPage: number) => void
+  fetchTableContent: () => void // Callback function to tell the parent component to update the contentData
+  setRestrictions: (restrictions: Array<Restriction>) => void
+  setOrders: (Order: string) => void
 }
 
 interface TableContentState {
-  currentSelectedTableActionMenu: TableActionType;
-  hideTableActionMenu: boolean;
-  showWarning: boolean; // text warning when duplicate selection is made for delete/update, most likely to be take out once disable checkbox feature is finished
-  isDisabledCheckbox: boolean; // tells the UI to disable any other checkboxes once there is already a selection in delete/update mode
-  dragStart: number; // part of table column resizer feature
-  resizeIndex?: number; // part of table column resizer feature
-  isWaiting: boolean; // tells the UI to display loading icon while insert/update/delete are in action
-  newHeaderWidths: Array<number>; // list of table column header width after user resizes
-  initialTableColWidths: Array<number>; // list of initial table column width on load
-  headerRowReference: RefObject<HTMLTableRowElement>;
-  tuplesReference: Array<RefObject<HTMLTableRowElement>>;
+  currentSelectedTableActionMenu: TableActionType
+  hideTableActionMenu: boolean
+  showWarning: boolean // text warning when duplicate selection is made for delete/update, most likely to be take out once disable checkbox feature is finished
+  isDisabledCheckbox: boolean // tells the UI to disable any other checkboxes once there is already a selection in delete/update mode
+  dragStart: number // part of table column resizer feature
+  resizeIndex?: number // part of table column resizer feature
+  isWaiting: boolean // tells the UI to display loading icon while insert/update/delete are in action
+  newHeaderWidths: Array<number> // list of table column header width after user resizes
+  initialTableColWidths: Array<number> // list of initial table column width on load
+  headerRowReference: RefObject<HTMLTableRowElement>
+  tuplesReference: Array<RefObject<HTMLTableRowElement>>
 }
 
 /**
@@ -58,9 +58,9 @@ export default class TableContent extends React.Component<
   TableContentState
 > {
   constructor(props: TableContentProps) {
-    super(props);
+    super(props)
     this.constructTupleReferenceArray =
-      this.constructTupleReferenceArray.bind(this);
+      this.constructTupleReferenceArray.bind(this)
 
     this.state = {
       currentSelectedTableActionMenu: TableActionType.FILTER,
@@ -74,16 +74,16 @@ export default class TableContent extends React.Component<
       initialTableColWidths: [],
       headerRowReference: React.createRef(),
       tuplesReference: this.constructTupleReferenceArray(),
-    };
+    }
 
     this.getCurrentTableActionMenuComponent =
-      this.getCurrentTableActionMenuComponent.bind(this);
-    this.goToFirstPage = this.goToFirstPage.bind(this);
-    this.goToLastPage = this.goToLastPage.bind(this);
-    this.goForwardAPage = this.goForwardAPage.bind(this);
-    this.goBackwardAPage = this.goBackwardAPage.bind(this);
+      this.getCurrentTableActionMenuComponent.bind(this)
+    this.goToFirstPage = this.goToFirstPage.bind(this)
+    this.goToLastPage = this.goToLastPage.bind(this)
+    this.goForwardAPage = this.goForwardAPage.bind(this)
+    this.goBackwardAPage = this.goBackwardAPage.bind(this)
     this.handleNumberOfTuplesPerPageChange =
-      this.handleNumberOfTuplesPerPageChange.bind(this);
+      this.handleNumberOfTuplesPerPageChange.bind(this)
   }
 
   /**
@@ -97,19 +97,19 @@ export default class TableContent extends React.Component<
   ) {
     // Check if the tuplePerPage change, if so update tupleReferenceArray
     if (prevProps.tuplePerPage !== this.props.tuplePerPage) {
-      this.setState({ tuplesReference: this.constructTupleReferenceArray() });
+      this.setState({ tuplesReference: this.constructTupleReferenceArray() })
     }
 
     // Break if the the selectedTable did not change
     if (prevProps.selectedTableName === this.props.selectedTableName) {
-      return;
+      return
     }
 
     // Reset TableActionview
     this.setState({
       currentSelectedTableActionMenu: TableActionType.FILTER,
       hideTableActionMenu: true,
-    });
+    })
   }
 
   /**
@@ -117,12 +117,12 @@ export default class TableContent extends React.Component<
    * @returns an Array of RefObject for each of the entry in the table on the current page
    */
   constructTupleReferenceArray() {
-    let tuplesReference: Array<RefObject<HTMLTableRowElement>> = [];
+    let tuplesReference: Array<RefObject<HTMLTableRowElement>> = []
     for (let i = 0; i < this.props.tuplePerPage; i++) {
-      tuplesReference.push(React.createRef());
+      tuplesReference.push(React.createRef())
     }
 
-    return tuplesReference;
+    return tuplesReference
   }
 
   /**
@@ -132,13 +132,13 @@ export default class TableContent extends React.Component<
   setCurrentTableActionMenu(tableActionMenu: TableActionType) {
     if (this.state.currentSelectedTableActionMenu === tableActionMenu) {
       // Toggle hiding and showing
-      this.setState({ hideTableActionMenu: !this.state.hideTableActionMenu });
+      this.setState({ hideTableActionMenu: !this.state.hideTableActionMenu })
     } else {
       // Switch to the new tableActionMenu
       this.setState({
         hideTableActionMenu: false,
         currentSelectedTableActionMenu: tableActionMenu,
-      });
+      })
     }
   }
 
@@ -146,14 +146,14 @@ export default class TableContent extends React.Component<
    * Call back function for goToFirstPage button
    */
   goToFirstPage() {
-    this.props.setPageNumber(1);
+    this.props.setPageNumber(1)
   }
 
   /**
    * Call back function for goToLastPage button
    */
   goToLastPage() {
-    this.props.setPageNumber(this.props.maxPageNumber);
+    this.props.setPageNumber(this.props.maxPageNumber)
   }
 
   /**
@@ -161,7 +161,7 @@ export default class TableContent extends React.Component<
    */
   goForwardAPage() {
     if (this.props.currentPageNumber !== this.props.maxPageNumber) {
-      this.props.setPageNumber(this.props.currentPageNumber + 1);
+      this.props.setPageNumber(this.props.currentPageNumber + 1)
     }
   }
 
@@ -170,7 +170,7 @@ export default class TableContent extends React.Component<
    */
   goBackwardAPage() {
     if (this.props.currentPageNumber !== 1) {
-      this.props.setPageNumber(this.props.currentPageNumber - 1);
+      this.props.setPageNumber(this.props.currentPageNumber - 1)
     }
   }
 
@@ -183,8 +183,8 @@ export default class TableContent extends React.Component<
         <div
           className={
             this.state.currentSelectedTableActionMenu === TableActionType.FILTER
-              ? "visable-action-menu-container"
-              : "hidden-action-menu-container"
+              ? 'visable-action-menu-container'
+              : 'hidden-action-menu-container'
           }
         >
           <Filter
@@ -193,7 +193,7 @@ export default class TableContent extends React.Component<
           />
         </div>
       </div>
-    );
+    )
   }
 
   /**
@@ -203,41 +203,41 @@ export default class TableContent extends React.Component<
   handleNumberOfTuplesPerPageChange(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    this.props.setNumberOfTuplesPerPage(parseInt(event.target.value));
+    this.props.setNumberOfTuplesPerPage(parseInt(event.target.value))
   }
 
   /**
    * Function to get the list of primary attributes for rendering
    */
   getPrimaryKeys(): Array<string> {
-    let primaryKeyList: Array<string> = [];
+    let primaryKeyList: Array<string> = []
 
     if (this.props.tableAttributesInfo === undefined) {
-      return primaryKeyList;
+      return primaryKeyList
     }
     for (let primaryAttribute of this.props.tableAttributesInfo
       .primaryAttributes) {
-      primaryKeyList.push(primaryAttribute.attributeName);
+      primaryKeyList.push(primaryAttribute.attributeName)
     }
 
-    return primaryKeyList;
+    return primaryKeyList
   }
 
   /**
    * Function to get the list of secondary attributes for rendering
    */
   getSecondaryKeys(): Array<string> {
-    let secondaryKeyList: Array<string> = [];
+    let secondaryKeyList: Array<string> = []
 
     if (this.props.tableAttributesInfo === undefined) {
-      return secondaryKeyList;
+      return secondaryKeyList
     }
     for (let secondaryAttribute of this.props.tableAttributesInfo
       .secondaryAttributes) {
-      secondaryKeyList.push(secondaryAttribute.attributeName);
+      secondaryKeyList.push(secondaryAttribute.attributeName)
     }
 
-    return secondaryKeyList;
+    return secondaryKeyList
   }
 
   /**
@@ -245,13 +245,13 @@ export default class TableContent extends React.Component<
    */
   checkIfTableHasNonNullableBlobs(): boolean {
     if (this.props.tableAttributesInfo === undefined) {
-      return false;
+      return false
     }
 
     for (let tableAttribute of this.props.tableAttributesInfo
       ?.primaryAttributes) {
       if (tableAttribute.attributeType === TableAttributeType.BLOB) {
-        return true;
+        return true
       }
     }
 
@@ -262,11 +262,11 @@ export default class TableContent extends React.Component<
         tableAttribute.attributeType === TableAttributeType.BLOB &&
         tableAttribute.nullable
       ) {
-        return true;
+        return true
       }
     }
 
-    return false;
+    return false
   }
 
   /**
@@ -280,15 +280,15 @@ export default class TableContent extends React.Component<
           className={
             this.state.currentSelectedTableActionMenu ===
               TableActionType.FILTER && !this.state.hideTableActionMenu
-              ? "selectedButton"
-              : ""
+              ? 'selectedButton'
+              : ''
           }
         >
           <FontAwesomeIcon className="menuIcon filter" icon={faFilter} />
           <span>Filter</span>
         </button>
       </div>
-    );
+    )
   }
 
   /**
@@ -297,14 +297,14 @@ export default class TableContent extends React.Component<
    */
   setNewHeaderWidths(difference: number) {
     if (this.state.newHeaderWidths.length > 0 && difference !== 0) {
-      let newWidthsCopy = this.state.newHeaderWidths;
+      let newWidthsCopy = this.state.newHeaderWidths
       if (this.state.resizeIndex !== undefined) {
         newWidthsCopy[this.state.resizeIndex] =
-          this.state.newHeaderWidths[this.state.resizeIndex] + difference;
-        this.setState({ newHeaderWidths: newWidthsCopy });
+          this.state.newHeaderWidths[this.state.resizeIndex] + difference
+        this.setState({ newHeaderWidths: newWidthsCopy })
       }
     } else {
-      this.setState({ newHeaderWidths: this.state.initialTableColWidths });
+      this.setState({ newHeaderWidths: this.state.initialTableColWidths })
     }
   }
 
@@ -317,7 +317,7 @@ export default class TableContent extends React.Component<
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     colIndex: number
   ) {
-    this.setState({ dragStart: event.clientX, resizeIndex: colIndex });
+    this.setState({ dragStart: event.clientX, resizeIndex: colIndex })
   }
 
   /**
@@ -327,11 +327,11 @@ export default class TableContent extends React.Component<
   cellResizeMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (this.state.dragStart) {
       // use the drag distance to calculate the new width
-      let dragDistance = event.pageX - this.state.dragStart;
-      this.setNewHeaderWidths(dragDistance);
+      let dragDistance = event.pageX - this.state.dragStart
+      this.setNewHeaderWidths(dragDistance)
 
       // update the new start
-      this.setState({ dragStart: event.clientX });
+      this.setState({ dragStart: event.clientX })
     }
   }
 
@@ -341,7 +341,7 @@ export default class TableContent extends React.Component<
    */
   cellResizeMouseUp(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     // reset column drag stats
-    this.setState({ dragStart: 0, resizeIndex: undefined });
+    this.setState({ dragStart: 0, resizeIndex: undefined })
   }
 
   /**
@@ -354,19 +354,19 @@ export default class TableContent extends React.Component<
       this.state.newHeaderWidths[colIndex]
     ) {
       return {
-        width: this.state.newHeaderWidths[colIndex] + "px",
-      };
+        width: this.state.newHeaderWidths[colIndex] + 'px',
+      }
     } else if (
       this.state.resizeIndex !== colIndex &&
       this.state.newHeaderWidths[colIndex]
     ) {
       return {
-        width: this.state.newHeaderWidths[colIndex] + "px",
-      };
+        width: this.state.newHeaderWidths[colIndex] + 'px',
+      }
     } else {
       return {
         width: this.state.initialTableColWidths[colIndex], // default
-      };
+      }
     }
   }
 
@@ -378,7 +378,7 @@ export default class TableContent extends React.Component<
           {this.getTableActionButtons()}
         </div>
         {this.state.hideTableActionMenu ? (
-          ""
+          ''
         ) : (
           <this.getCurrentTableActionMenuComponent />
         )}
@@ -388,8 +388,8 @@ export default class TableContent extends React.Component<
               <thead>
                 <tr className="headerRow" ref={this.state.headerRowReference}>
                   {this.getPrimaryKeys().map((attributeName, index) => {
-                    if (attributeName.includes("_sciviz")) {
-                      return;
+                    if (attributeName.includes('_sciviz')) {
+                      return
                     }
                     return (
                       <th key={attributeName} className="headings">
@@ -399,11 +399,11 @@ export default class TableContent extends React.Component<
                           setOrders={this.props.setOrders}
                         />
                       </th>
-                    );
+                    )
                   })}
                   {this.getSecondaryKeys().map((attributeName, index) => {
-                    if (attributeName.includes("_sciviz")) {
-                      return;
+                    if (attributeName.includes('_sciviz')) {
+                      return
                     }
                     return (
                       <th key={attributeName} className="headings">
@@ -413,7 +413,7 @@ export default class TableContent extends React.Component<
                           setOrders={this.props.setOrders}
                         />
                       </th>
-                    );
+                    )
                   })}
                 </tr>
               </thead>
@@ -422,23 +422,23 @@ export default class TableContent extends React.Component<
                   (entry: any, tupleIndex: number) => {
                     let headers = this.getPrimaryKeys().concat(
                       this.getSecondaryKeys()
-                    );
-                    let bgColor = "";
-                    let textColor = "";
+                    )
+                    let bgColor = ''
+                    let textColor = ''
                     // this copies the entry over so we can delete from it without affecting the original value
                     // when you do let modifiedEntry = entry if seems to pass a pointer to modifiedEntry not a copy of the data.
-                    let modifiedEntry = [...entry];
+                    let modifiedEntry = [...entry]
 
                     for (let index in headers) {
-                      if (headers[index].includes("_sciviz_background")) {
-                        bgColor = modifiedEntry[index];
-                        delete modifiedEntry[index];
-                      } else if (headers[index].includes("_sciviz_font")) {
-                        textColor = entry[index];
-                        delete modifiedEntry[index];
-                      } else if (headers[index].includes("_sciviz")) {
+                      if (headers[index].includes('_sciviz_background')) {
+                        bgColor = modifiedEntry[index]
+                        delete modifiedEntry[index]
+                      } else if (headers[index].includes('_sciviz_font')) {
+                        textColor = entry[index]
+                        delete modifiedEntry[index]
+                      } else if (headers[index].includes('_sciviz')) {
                         // hide any index that has _sciviz that we do not handle
-                        delete modifiedEntry[index];
+                        delete modifiedEntry[index]
                       }
                     }
                     return (
@@ -459,10 +459,10 @@ export default class TableContent extends React.Component<
                             >
                               {column}
                             </td>
-                          );
+                          )
                         })}
                       </tr>
-                    );
+                    )
                   }
                 )}
               </tbody>
@@ -481,37 +481,37 @@ export default class TableContent extends React.Component<
             {Object.entries(this.props.contentData).length ? (
               <div className="controls">
                 <FontAwesomeIcon
-                  className={true ? "backAll icon" : "backAll icon disabled"}
+                  className={true ? 'backAll icon' : 'backAll icon disabled'}
                   icon={faStepBackward}
                   onClick={() => this.goToFirstPage()}
                 />
                 <FontAwesomeIcon
-                  className={true ? "backOne icon" : "backOne icon disabled"}
+                  className={true ? 'backOne icon' : 'backOne icon disabled'}
                   icon={faChevronLeft}
                   onClick={() => this.goBackwardAPage()}
                 />
                 Page: (
                 {this.props.currentPageNumber +
-                  " / " +
+                  ' / ' +
                   this.props.maxPageNumber}
                 )
                 <FontAwesomeIcon
                   className={
-                    true ? "forwardOne icon" : "forwardOne icon disabled"
+                    true ? 'forwardOne icon' : 'forwardOne icon disabled'
                   }
                   icon={faChevronRight}
                   onClick={() => this.goForwardAPage()}
                 />
                 <FontAwesomeIcon
                   className={
-                    true ? "forwardAll icon" : "forwardAll icon disabled"
+                    true ? 'forwardAll icon' : 'forwardAll icon disabled'
                   }
                   icon={faStepForward}
                   onClick={() => this.goToLastPage()}
                 />
               </div>
             ) : (
-              ""
+              ''
             )}
           </div>
         </div>
@@ -522,9 +522,9 @@ export default class TableContent extends React.Component<
             </div>
           </div>
         ) : (
-          ""
+          ''
         )}
       </div>
-    );
+    )
   }
 }

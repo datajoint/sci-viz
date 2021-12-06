@@ -1,11 +1,11 @@
-import TableAttribute from "./TableAttribute";
-import TableAttributeType from "../enums/TableAttributeType";
+import TableAttribute from './TableAttribute'
+import TableAttributeType from '../enums/TableAttributeType'
 
 /**
  * Class for Primary attributes of a table, only has the additional field of autoIncrement for int type keys
  */
 export default class PrimaryTableAttribute extends TableAttribute {
-  autoIncrement: boolean; // Note this is only valid if the attributeType is int type
+  autoIncrement: boolean // Note this is only valid if the attributeType is int type
 
   /**
    * Constructor for Primary Table
@@ -34,8 +34,8 @@ export default class PrimaryTableAttribute extends TableAttribute {
       enumOptions,
       decimalNumDigits,
       decimalNumDecimalDigits
-    );
-    this.autoIncrement = autoIncrement;
+    )
+    this.autoIncrement = autoIncrement
   }
 
   /**
@@ -54,20 +54,20 @@ export default class PrimaryTableAttribute extends TableAttribute {
             Auto Increment
           </label>
         </th>
-      );
+      )
     }
 
-    const typeString = super.getTypeString(primaryTableAttribute);
+    const typeString = super.getTypeString(primaryTableAttribute)
     return (
       <th className="attributeHead">
         <label
           className="primary-attribute-label"
           htmlFor={primaryTableAttribute.attributeName}
         >
-          {primaryTableAttribute.attributeName + " (" + typeString + ")"}
+          {primaryTableAttribute.attributeName + ' (' + typeString + ')'}
         </label>
       </th>
-    );
+    )
   }
 
   /**
@@ -88,7 +88,7 @@ export default class PrimaryTableAttribute extends TableAttribute {
     ) => void
   ) {
     if (tableAttribute.autoIncrement) {
-      return <input disabled></input>;
+      return <input disabled></input>
     }
 
     return super.getAttributeInputBlock(
@@ -96,6 +96,6 @@ export default class PrimaryTableAttribute extends TableAttribute {
       currentValue,
       undefined,
       handleChange
-    );
+    )
   }
 }

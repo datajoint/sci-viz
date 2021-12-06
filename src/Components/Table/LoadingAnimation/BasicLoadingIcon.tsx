@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react'
 
 interface BasicLoadingIconProps {
-  size: number;
+  size: number
 }
 
 /**
@@ -9,16 +9,16 @@ interface BasicLoadingIconProps {
  */
 export default class BasicLoadingIcon extends React.Component<BasicLoadingIconProps> {
   iconStyle = {
-    width: this.props.size + "px",
-    height: this.props.size + "px",
-    marginTop: -(this.props.size / 2) + "px",
-  };
+    width: this.props.size + 'px',
+    height: this.props.size + 'px',
+    marginTop: -(this.props.size / 2) + 'px',
+  }
 
   render() {
     return (
       <div className="loadingOverlay">
         <div className="basicLoadingIcon" style={this.iconStyle}></div>
       </div>
-    );
+    )
   }
 }

@@ -1,6 +1,6 @@
-import React from "react";
-import "./Header.css";
-import logo from "../../logo.svg";
+import React from 'react'
+import './Header.css'
+import logo from '../../logo.svg'
 interface HeaderProps {}
 
 interface HeaderState {}
@@ -15,10 +15,10 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
         <img className="header-img" src={logo} alt="Sci-viz logo" />
         <div className="header-content">
           <p>
-            <i style={{ paddingLeft: "20px" }}>Powered by DataJoint</i>
+            <i style={{ paddingLeft: '20px' }}>Powered by DataJoint</i>
           </p>
         </div>
       </header>
-    );
+    )
   }
 }

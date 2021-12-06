@@ -1,27 +1,27 @@
-import React from "react";
-import { Responsive, WidthProvider } from "react-grid-layout";
-import TableView from "./Table/TableView";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
-import FullPlotly from "./Plots/FullPlotly";
-import Metadata from "./Table/Metadata";
+import React from 'react'
+import { Responsive, WidthProvider } from 'react-grid-layout'
+import TableView from './Table/TableView'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import FullPlotly from './Plots/FullPlotly'
+import Metadata from './Table/Metadata'
 
 interface DynamicGridProps {
-  route: string;
-  token: string;
-  columns: number;
-  rowHeight: number;
-  componentList: Array<string>;
-  routeList: Array<string>;
+  route: string
+  token: string
+  columns: number
+  rowHeight: number
+  componentList: Array<string>
+  routeList: Array<string>
 }
 
 interface DynamicGridState {
-  data: any;
+  data: any
 }
 
-const ResponsiveGridLayout = WidthProvider(Responsive);
+const ResponsiveGridLayout = WidthProvider(Responsive)
 
 /**
  * DynamicGrid component
@@ -31,24 +31,24 @@ export default class DynamicGrid extends React.Component<
   DynamicGridState
 > {
   constructor(props: DynamicGridProps) {
-    super(props);
+    super(props)
     this.state = {
       data: { recordHeader: [], records: [], totalCount: 0 },
-    };
+    }
   }
 
   componentDidMount() {
     let apiUrl =
-      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route;
+      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route
     fetch(apiUrl, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + this.props.token,
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + this.props.token,
       },
     })
       .then((result) => {
-        return result.json();
+        return result.json()
       })
       .then((result) => {
         this.setState({
@@ -57,8 +57,8 @@ export default class DynamicGrid extends React.Component<
             records: result.records,
             totalCount: result.totalCount,
           },
-        });
-      });
+        })
+      })
   }
 
   render() {
@@ -72,16 +72,16 @@ export default class DynamicGrid extends React.Component<
         useCSSTransforms={true}
       >
         {this.state.data.records.map((record: any, index: number) => {
-          let restrictionList: Array<string>;
-          restrictionList = [];
+          let restrictionList: Array<string>
+          restrictionList = []
           for (const i in this.state.data.recordHeader) {
             restrictionList.push(
               this.state.data.recordHeader[i].toString() +
-                "=" +
+                '=' +
                 record[i].toString()
-            );
+            )
           }
-          console.log(this.state.data.records);
+          console.log(this.state.data.records)
           return (
             <div
               key={index}
@@ -96,17 +96,17 @@ export default class DynamicGrid extends React.Component<
               <div className="plotContainer">
                 {this.props.componentList.map(
                   (componentType: string, compListIndex: number) => {
-                    let restrictionListCopy = [...restrictionList];
-                    if (componentType == "plot:plotly:stored_json") {
+                    let restrictionListCopy = [...restrictionList]
+                    if (componentType == 'plot:plotly:stored_json') {
                       return (
                         <FullPlotly
                           route={this.props.routeList[compListIndex]}
                           token={this.props.token}
                           restrictionList={restrictionListCopy}
                         />
-                      );
+                      )
                     }
-                    if (componentType == "metadata") {
+                    if (componentType == 'metadata') {
                       return (
                         <Metadata
                           name="Metadata"
@@ -114,15 +114,15 @@ export default class DynamicGrid extends React.Component<
                           token={this.props.token}
                           restrictionList={restrictionListCopy}
                         />
-                      );
+                      )
                     }
                   }
                 )}
               </div>
             </div>
-          );
+          )
         })}
       </ResponsiveGridLayout>
-    );
+    )
   }
 }

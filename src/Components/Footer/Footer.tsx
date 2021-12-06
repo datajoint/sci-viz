@@ -1,12 +1,12 @@
-import React from "react";
-import { version } from "../../../package.json";
+import React from 'react'
+import { version } from '../../../package.json'
 
-import "./Footer.css";
+import './Footer.css'
 
 interface FooterProps {}
 
 interface FooterState {
-  backendVersion: string;
+  backendVersion: string
 }
 
 /**
@@ -14,11 +14,11 @@ interface FooterState {
  */
 export default class Footer extends React.Component<FooterProps, FooterState> {
   constructor(props: FooterProps) {
-    super(props);
+    super(props)
 
     this.state = {
-      backendVersion: "",
-    };
+      backendVersion: '',
+    }
   }
 
   /**
@@ -26,26 +26,26 @@ export default class Footer extends React.Component<FooterProps, FooterState> {
    */
   componentDidMount() {
     fetch(`${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/version`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
     })
       .then((result) => {
         // Check for error mesage 500, if so throw and error
         if (result.status === 500) {
-          throw new Error("Unable to get version number");
+          throw new Error('Unable to get version number')
         }
 
-        return result.json();
+        return result.json()
       })
       .then((result) => {
         if (result.version) {
-          this.setState({ backendVersion: result.version });
+          this.setState({ backendVersion: result.version })
         }
       })
       .catch((error) => {
-        this.setState({ backendVersion: "Unable to get version number" });
-        console.log(error);
-      });
+        this.setState({ backendVersion: 'Unable to get version number' })
+        console.log(error)
+      })
   }
 
   render() {
@@ -56,11 +56,11 @@ export default class Footer extends React.Component<FooterProps, FooterState> {
         </div>
         <div className="version-info-div">
           <div className="version-number">
-            <b>Front End Version:</b> {version} <b>Back End Version:</b>{" "}
+            <b>Front End Version:</b> {version} <b>Back End Version:</b>{' '}
             {this.state.backendVersion}
           </div>
         </div>
       </footer>
-    );
+    )
   }
 }

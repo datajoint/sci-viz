@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import Cookies from "js-cookie";
-import "./Login.css";
+import React, { Component } from 'react'
+import Cookies from 'js-cookie'
+import './Login.css'
 
 // Assets
-import logo from "../../logo.svg";
+import logo from '../../logo.svg'
 
 interface LoginProps {
-  setJWTTokenAndHostName: (jwt: string, hostname: string) => void; // Call back function to setting the jwtToken
+  setJWTTokenAndHostName: (jwt: string, hostname: string) => void // Call back function to setting the jwtToken
 }
 
 interface LoginState {
-  databaseAddress: string; // Buffer object to store databaseAddress
-  username: string; // Buffer object to store username
-  password: string; // Buffer object to store password
-  rememberMe: boolean; // For storing the state if the user wants to remeber login info or not
-  returnMessage: string; // Buffer for error message from the server
+  databaseAddress: string // Buffer object to store databaseAddress
+  username: string // Buffer object to store username
+  password: string // Buffer object to store password
+  rememberMe: boolean // For storing the state if the user wants to remeber login info or not
+  returnMessage: string // Buffer for error message from the server
 }
 
 /**
@@ -22,23 +22,23 @@ interface LoginState {
  */
 export default class Login extends Component<LoginProps, LoginState> {
   constructor(props: LoginProps) {
-    super(props);
+    super(props)
 
     // Default values
     this.state = {
-      databaseAddress: "",
-      username: "",
-      password: "",
+      databaseAddress: '',
+      username: '',
+      password: '',
       rememberMe: false,
-      returnMessage: "",
-    };
+      returnMessage: '',
+    }
 
     // Bind on change functions
-    this.onUsernameChange = this.onUsernameChange.bind(this);
-    this.onPasswordChange = this.onPasswordChange.bind(this);
-    this.onDatabaseAddressChange = this.onDatabaseAddressChange.bind(this);
-    this.onRememberMeChange = this.onRememberMeChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onUsernameChange = this.onUsernameChange.bind(this)
+    this.onPasswordChange = this.onPasswordChange.bind(this)
+    this.onDatabaseAddressChange = this.onDatabaseAddressChange.bind(this)
+    this.onRememberMeChange = this.onRememberMeChange.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
   /**
@@ -46,14 +46,14 @@ export default class Login extends Component<LoginProps, LoginState> {
    */
   componentDidMount() {
     // Load databaseAddress and usernameCookie from cookies
-    var databaseAddressCookie = Cookies.get("databaseAddress");
-    var usernameCookie = Cookies.get("username");
+    var databaseAddressCookie = Cookies.get('databaseAddress')
+    var usernameCookie = Cookies.get('username')
 
     this.setState({
       databaseAddress:
-        databaseAddressCookie === undefined ? "" : databaseAddressCookie,
-      username: usernameCookie === undefined ? "" : usernameCookie,
-    });
+        databaseAddressCookie === undefined ? '' : databaseAddressCookie,
+      username: usernameCookie === undefined ? '' : usernameCookie,
+    })
   }
 
   /**
@@ -61,7 +61,7 @@ export default class Login extends Component<LoginProps, LoginState> {
    * @param event HTML Input OnChange event
    */
   onDatabaseAddressChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ databaseAddress: event.target.value });
+    this.setState({ databaseAddress: event.target.value })
   }
 
   /**
@@ -69,7 +69,7 @@ export default class Login extends Component<LoginProps, LoginState> {
    * @param event HTML Input OnChange event
    */
   onUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ username: event.target.value });
+    this.setState({ username: event.target.value })
   }
 
   /**
@@ -77,7 +77,7 @@ export default class Login extends Component<LoginProps, LoginState> {
    * @param event HTML Input OnChange event
    */
   onPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ password: event.target.value });
+    this.setState({ password: event.target.value })
   }
 
   /**
@@ -85,7 +85,7 @@ export default class Login extends Component<LoginProps, LoginState> {
    * @param event HTML Input OnChange event
    */
   onRememberMeChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ rememberMe: event.target.checked });
+    this.setState({ rememberMe: event.target.checked })
   }
 
   /**
@@ -94,35 +94,35 @@ export default class Login extends Component<LoginProps, LoginState> {
    */
   async onSubmit() {
     if (this.state.rememberMe) {
-      Cookies.set("databaseAddress", this.state.databaseAddress);
-      Cookies.set("username", this.state.username);
+      Cookies.set('databaseAddress', this.state.databaseAddress)
+      Cookies.set('username', this.state.username)
     }
 
     // Attempt to authenticate
     const response = await fetch(
       `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/login`,
       {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           databaseAddress: this.state.databaseAddress,
           username: this.state.username,
           password: this.state.password,
         }),
       }
-    );
+    )
 
     if (response.status === 500) {
-      const errorMessage = await response.text();
-      this.setState({ returnMessage: errorMessage.toString() });
-      return;
+      const errorMessage = await response.text()
+      this.setState({ returnMessage: errorMessage.toString() })
+      return
     }
 
-    const jsonObject = await response.json();
+    const jsonObject = await response.json()
     this.props.setJWTTokenAndHostName(
       jsonObject.jwt,
       this.state.databaseAddress
-    );
+    )
   }
 
   /**
@@ -134,7 +134,7 @@ export default class Login extends Component<LoginProps, LoginState> {
       this.state.username &&
       this.state.password
       ? true
-      : false;
+      : false
   }
 
   render() {
@@ -186,8 +186,8 @@ export default class Login extends Component<LoginProps, LoginState> {
               <button
                 className={
                   this.isFormReady()
-                    ? "login-input-button ready"
-                    : "login-input-button"
+                    ? 'login-input-button ready'
+                    : 'login-input-button'
                 }
                 disabled={!this.isFormReady()}
                 onClick={this.onSubmit}
@@ -200,6 +200,6 @@ export default class Login extends Component<LoginProps, LoginState> {
           </form>
         </div>
       </div>
-    );
+    )
   }
 }

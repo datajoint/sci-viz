@@ -1,14 +1,14 @@
-import TableAttribute from "./TableAttribute";
-import TableAttributeType from "../enums/TableAttributeType";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRedoAlt } from "@fortawesome/free-solid-svg-icons";
+import TableAttribute from './TableAttribute'
+import TableAttributeType from '../enums/TableAttributeType'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRedoAlt } from '@fortawesome/free-solid-svg-icons'
 
 /**
  * Class for secondary attributes of a table, deals with cases of it being nullable, defaultValue
  */
 export default class SecondaryTableAttribute extends TableAttribute {
-  nullable: boolean;
-  defaultValue?: string;
+  nullable: boolean
+  defaultValue?: string
 
   /**
    * Constructor for Secondary Table
@@ -38,12 +38,12 @@ export default class SecondaryTableAttribute extends TableAttribute {
       enumOptions,
       decimalNumDigits,
       decimalNumDecimalDigits
-    );
-    this.nullable = nullable;
+    )
+    this.nullable = nullable
     this.defaultValue =
-      defaultValue === null || defaultValue === "null"
+      defaultValue === null || defaultValue === 'null'
         ? undefined
-        : defaultValue;
+        : defaultValue
   }
 
   /**
@@ -57,7 +57,7 @@ export default class SecondaryTableAttribute extends TableAttribute {
     secondaryTableAttribute: SecondaryTableAttribute,
     resetToNullCallback: (tableAttribute: SecondaryTableAttribute) => void
   ) {
-    const typeString = super.getTypeString(secondaryTableAttribute);
+    const typeString = super.getTypeString(secondaryTableAttribute)
 
     return (
       <div className="attributeHead">
@@ -65,24 +65,24 @@ export default class SecondaryTableAttribute extends TableAttribute {
           className="secondary-attribute-label"
           htmlFor={secondaryTableAttribute.attributeName}
         >
-          {secondaryTableAttribute.attributeName + " (" + typeString + ")"}
+          {secondaryTableAttribute.attributeName + ' (' + typeString + ')'}
         </label>
         {secondaryTableAttribute.defaultValue !== undefined ? (
           <div className="nullableControls">
-            <div className="nullableTag">{"default"}</div>
+            <div className="nullableTag">{'default'}</div>
             <FontAwesomeIcon
               className="resetIcon"
               icon={faRedoAlt}
               onClick={() => {
-                resetToNullCallback(secondaryTableAttribute);
+                resetToNullCallback(secondaryTableAttribute)
               }}
             />
           </div>
         ) : (
-          ""
+          ''
         )}
       </div>
-    );
+    )
   }
 
   /**
@@ -107,6 +107,6 @@ export default class SecondaryTableAttribute extends TableAttribute {
       currentValue,
       secondaryTableAttribute.defaultValue,
       handleChange
-    );
+    )
   }
 }

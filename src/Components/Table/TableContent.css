@@ -161,11 +161,11 @@ div.cellDivider {
   bottom: 0;
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   cursor: pointer;
 }
 
-input[type="checkbox"][disabled] {
+input[type='checkbox'][disabled] {
   cursor: not-allowed;
 }
 

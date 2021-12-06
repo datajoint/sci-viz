@@ -29,4 +29,4 @@ enum TableAttributeType {
   DATETIMESTR,
 }
 
-export default TableAttributeType;
+export default TableAttributeType

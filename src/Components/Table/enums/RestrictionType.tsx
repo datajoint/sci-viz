@@ -8,4 +8,4 @@ enum RestrictionType {
   GREATER_THAN_AND_EQUAL_TO,
 }
 
-export default RestrictionType;
+export default RestrictionType
