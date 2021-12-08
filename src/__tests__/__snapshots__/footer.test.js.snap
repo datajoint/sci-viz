@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot of Footer component 1`] = `
+<footer>
+  <div
+    className="footer-content"
+  >
+    <p>
+      © 2021, DataJoint SciViz
+    </p>
+  </div>
+  <div
+    className="version-info-div"
+  >
+    <div
+      className="version-number"
+    >
+      <b>
+        Front End Version:
+      </b>
+       
+      0.1.0
+       
+      <b>
+        Back End Version:
+      </b>
+       
+      
+    </div>
+  </div>
+</footer>
+`;

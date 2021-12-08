@@ -2,7 +2,7 @@ FROM node:16-alpine3.14
 
 WORKDIR /main
 COPY ./package.json /main
-RUN npm install
+RUN yarn install
 
 RUN apk update
 RUN apk add nginx

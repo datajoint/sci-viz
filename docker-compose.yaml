@@ -21,7 +21,7 @@ services:
       - -lc
       - |
         python frontend_gen.py
-        npm start
+        yarn start
   localdb:
     image: datajoint/mysql:5.7
     environment:
