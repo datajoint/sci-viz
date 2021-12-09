@@ -281,7 +281,7 @@ SciViz: # top level tab
           dj_query: >
             def dj_query(test_group1_simple):
                 Mouse = test_group1_simple.Mouse
-                return dict(query=(Mouse), fetch_args=[])
+                return dict(query=(Mouse.proj()), fetch_args=[])
           component_templates:
             comp2:
               route: /myMeta
