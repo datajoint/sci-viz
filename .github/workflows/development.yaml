@@ -21,6 +21,9 @@ jobs:
     environment: docker
     needs: test
     runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: ${{secrets.docker_username}}
+      DOCKER_PASSWORD: ${{secrets.docker_password}}
     steps:
       - uses: actions/checkout@v2
       - name: Publish image
