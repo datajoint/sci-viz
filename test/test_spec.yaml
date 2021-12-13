@@ -267,7 +267,7 @@ SciViz: # top level tab
                 it is not very useful by itself but when combined with the dynamic
                 component generator it can provide a useful description of what the other
                 components are.
-    DynamicGrid:
+    Dynamic Grid:
       route: /dynamicGrid
       grids:
         dgrid:

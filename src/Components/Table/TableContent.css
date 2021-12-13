@@ -128,6 +128,10 @@
   padding: 2px 2px 2px 7px;
 }
 
+.table tr:nth-child(even) {
+  background-color: #e2e2e2;
+}
+
 .check-box-cell {
   width: 1%;
   height: 1%;

@@ -13,3 +13,6 @@ td {
   border: 1px solid black;
   padding: 5px;
 }
+.metadata tr:nth-child(odd) {
+  background-color: #e2e2e2;
+}

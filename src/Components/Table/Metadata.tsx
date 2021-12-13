@@ -109,7 +109,6 @@ export default class Metadata extends React.Component<
     this.parseTimestr()
     return (
       <tbody className="metadata">
-        <th className="metadata-name">{this.props.name}</th>
         {this.state.data.records.map((record: any, index: number) => {
           return (
             <tr>

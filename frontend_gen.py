@@ -199,21 +199,24 @@ side_bar_path = 'src/Components/SideBar/SideBarData.tsx'
 page_path = 'src/Components/Pages/{page_name}.tsx'
 app_path = 'src/App.tsx'
 with open(Path(spec_path), 'r') as y, \
-     open(Path(side_bar_path), 'w') as s, \
-     open(Path(app_path), 'w') as app:
+        open(Path(side_bar_path), 'w') as s, \
+        open(Path(app_path), 'w') as app:
     values_yaml = yaml.load(y, Loader=yaml.FullLoader)
     pages = values_yaml['SciViz']['pages']
     s.write(sidebar_header)
     # Crawl through the yaml file
     app.write(app_header)
     for page in pages.keys():
-        app.write(app_import_template.format(page_name=page))
-    app.write(app_export + app_render_header.format(first_page_route=list(pages.values())[0]['route']))
+        app.write(app_import_template.format(page_name=page.replace(' ', '_')))
+    app.write(
+        app_export + app_render_header.format(first_page_route=list(pages.values())[0]['route']))
     for page_name, page in pages.items():
-        with open(Path(page_path.format(page_name=page_name)), 'w') as p:
+        with open(Path(page_path.format(page_name=page_name.replace(' ', '_'))), 'w') as p:
             p.write(page_header + export_header)
-            s.write(sidebar_data.format(page_name=page_name, page_route=page['route']))
-            app.write(app_render_route.format(page_route=page['route'], page_name=page_name))
+            s.write(sidebar_data.format(
+                page_name=page_name, page_route=page['route']))
+            app.write(app_render_route.format(
+                page_route=page['route'], page_name=page_name.replace(' ', '_')))
             for grid in page['grids'].values():
                 if grid['type'] == 'dynamic':
                     component_list = []
@@ -232,7 +235,8 @@ with open(Path(spec_path), 'r') as y, \
                 for component_name, component in grid['components'].items():
                     if component['type'] == 'markdown':
                         p.write(mkdown_template.format(component_name=component_name,
-                                                       markdown=component['text'].replace('`', '\`'),
+                                                       markdown=component['text'].replace(
+                                                           '`', '\`'),
                                                        x=component['x'],
                                                        y=component['y'],
                                                        height=component['height'],

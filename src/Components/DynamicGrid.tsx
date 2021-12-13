@@ -81,7 +81,6 @@ export default class DynamicGrid extends React.Component<
                 record[i].toString()
             )
           }
-          console.log(this.state.data.records)
           return (
             <div
               key={index}
