@@ -1,5 +1,6 @@
 name: Development
 on:
+  pull_request:
   push:
 jobs:
   test:
@@ -15,3 +16,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn install
       - run: yarn test
+  publish-images:
+    if: github.event_name == 'push'
+    environment: docker
+    needs: test
+    runs-on: ubuntu-latest
+    - uses: actions/checkout@v2
+    - name: Publish image
+      run: |
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        docker build -t sciviz:test
+        docker push sciviz:test
