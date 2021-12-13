@@ -67,8 +67,11 @@ class Mouse(dj.Lookup):
     mouse_id: int
     ---
     mouse_name: varchar(30)
+    mouse_bday: datetime
     """
-    contents = [(0, 'jeff'), (1, 'splinter'), (2, 'ratman')]
+    contents = [(0, 'jeff', '1998-07-13 00:11:23'),
+                (1, 'splinter', '1998-07-13 00:11:23'),
+                (2, 'ratman', '1998-07-13 00:11:23')]
 
 
 @group1_simple
