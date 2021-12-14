@@ -20,8 +20,7 @@ services:
       - sh
       - -lc
       - |
-        python frontend_gen.py
-        yarn start
+        sh sci-viz-hotreload-dev.sh
   localdb:
     image: datajoint/mysql:5.7
     environment:
@@ -63,7 +62,7 @@ services:
       - -lc
       - |
         python /tmp/test/populate.py
-        pharus
+        sh pharus-hotreload.sh
     networks:
       - main
   jnotebook:

@@ -19,5 +19,7 @@ COPY ./src /main/src
 COPY ./public /main/public
 COPY ./default.conf /etc/nginx/http.d/
 COPY ./default.conf /etc/nginx/conf.d/
+COPY ./sci-viz-hotreload-dev.sh .
+COPY ./sci-viz-hotreload-prod.sh .
 
 CMD ["nginx", "-g", "daemon off;"]
