@@ -24,9 +24,6 @@ jobs:
     environment: docker
     needs: test
     runs-on: ubuntu-latest
-    env:
-      DOCKER_USERNAME: ${{secrets.docker_username}}
-      DOCKER_PASSWORD: ${{secrets.docker_password}}
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
