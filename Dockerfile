@@ -2,6 +2,7 @@ FROM node:16-alpine3.14
 
 WORKDIR /main
 COPY ./package.json /main
+COPY ./yarn.lock /main
 RUN yarn install
 
 RUN apk update
