@@ -16,6 +16,7 @@ services:
       - main
     working_dir: /app
     user: '${HOST_UID}:${HOST_GID}'
+    # use sci-viz-hotreload-prod.sh for production nginx deploment
     command:
       - sh
       - -lc
