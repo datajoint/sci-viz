@@ -24,8 +24,8 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 '''
 export_header = '''
   export default class Page1 extends React.Component<Page1Props> {
-    var restrictionList: Array<string> = new URLSearchParams(window.location.search).toString().split('&')
     render() {
+      var restrictionList: Array<string> = new URLSearchParams(window.location.search).toString().split('&')
       return (
         <div>
           <SideBar />
