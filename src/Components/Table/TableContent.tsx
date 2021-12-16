@@ -14,6 +14,7 @@ import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon'
 import Restriction from './DataStorageClasses/Restriction'
 import SortButton from './Sort/SortButton'
 import './TableContent.css'
+import { Link } from 'react-router-dom'
 
 enum TableActionType {
   FILTER,
@@ -27,6 +28,7 @@ interface TableContentProps {
   currentPageNumber: number
   maxPageNumber: number
   tuplePerPage: number
+  link?: string // Link to page for custom view from table
   tableAttributesInfo?: TableAttributesInfo // A TableAttributeInfo object that contains everything about both primary and secondary attributes of the table
   setPageNumber: (pageNumber: number) => void
   setNumberOfTuplesPerPage: (numberOfTuplesPerPage: number) => void
@@ -84,6 +86,7 @@ export default class TableContent extends React.Component<
     this.goBackwardAPage = this.goBackwardAPage.bind(this)
     this.handleNumberOfTuplesPerPageChange =
       this.handleNumberOfTuplesPerPageChange.bind(this)
+    this.rowToQueryParams = this.rowToQueryParams.bind(this)
   }
 
   /**
@@ -141,7 +144,29 @@ export default class TableContent extends React.Component<
       })
     }
   }
-
+  rowToQueryParams(arr: Array<any>) {
+    let queryParams: string
+    let restrictionList: Array<String>
+    restrictionList = []
+    queryParams = ''
+    let headers = this.getPrimaryKeys().concat(this.getSecondaryKeys())
+    for (let i in arr) {
+      restrictionList.push(headers[i].toString() + '=' + arr[i].toString())
+    }
+    for (let i in restrictionList) {
+      if (restrictionList[i].includes('sciviz')) {
+        restrictionList.splice(+i)
+      }
+    }
+    if (restrictionList.length > 0) {
+      queryParams = queryParams + '?'
+      queryParams = queryParams + restrictionList.shift()
+      while (restrictionList.length > 0) {
+        queryParams = queryParams + '&' + restrictionList.shift()
+      }
+    }
+    return queryParams
+  }
   /**
    * Call back function for goToFirstPage button
    */
@@ -432,13 +457,13 @@ export default class TableContent extends React.Component<
                     for (let index in headers) {
                       if (headers[index].includes('_sciviz_background')) {
                         bgColor = modifiedEntry[index]
-                        delete modifiedEntry[index]
+                        modifiedEntry.splice(+index)
                       } else if (headers[index].includes('_sciviz_font')) {
                         textColor = entry[index]
-                        delete modifiedEntry[index]
+                        modifiedEntry.splice(+index)
                       } else if (headers[index].includes('_sciviz')) {
                         // hide any index that has _sciviz that we do not handle
-                        delete modifiedEntry[index]
+                        modifiedEntry.splice(+index)
                       }
                     }
                     return (
@@ -448,18 +473,46 @@ export default class TableContent extends React.Component<
                         ref={this.state.tuplesReference[tupleIndex]}
                       >
                         {modifiedEntry.map((column: any, index: number) => {
-                          return (
-                            <td
-                              style={{
-                                backgroundColor: bgColor,
-                                color: textColor,
-                              }}
-                              key={`${column}-${index}`}
-                              className="tableCell"
-                            >
-                              {column}
-                            </td>
-                          )
+                          if (this.props.link == undefined) {
+                            return (
+                              <td
+                                style={{
+                                  backgroundColor: bgColor,
+                                  color: textColor,
+                                }}
+                                key={`${column}-${index}`}
+                                className="tableCell"
+                              >
+                                {column}
+                              </td>
+                            )
+                          } else {
+                            return (
+                              <td
+                                style={{
+                                  backgroundColor: bgColor,
+                                  color: textColor,
+                                }}
+                                key={`${column}-${index}`}
+                                className="tableCell"
+                              >
+                                <Link
+                                  to={{
+                                    pathname:
+                                      this.props.link +
+                                      this.rowToQueryParams([...entry]),
+                                    state: [...modifiedEntry],
+                                  }}
+                                  style={{
+                                    color: 'inherit',
+                                    textDecoration: 'inherit',
+                                  }}
+                                >
+                                  {column}
+                                </Link>
+                              </td>
+                            )
+                          }
                         })}
                       </tr>
                     )

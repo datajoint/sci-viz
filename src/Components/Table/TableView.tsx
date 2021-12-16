@@ -20,6 +20,7 @@ interface TableViewProps {
   token: string
   route: string
   tableName: string
+  link?: string
 }
 
 interface TableViewState {
@@ -619,6 +620,7 @@ export default class TableView extends React.Component<
             totalNumOfTuples={this.state.totalNumOfTuples}
             tuplePerPage={this.state.numberOfTuplesPerPage}
             tableAttributesInfo={this.state.tableAttributesInfo}
+            link={this.props.link}
             setPageNumber={this.setPageNumber}
             setNumberOfTuplesPerPage={this.setNumberOfTuplesPerPage}
             fetchTableContent={this.fetchTableContent}

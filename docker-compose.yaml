@@ -58,12 +58,13 @@ services:
     volumes:
       - ./test:/tmp/test
       - ./test/test_spec.yaml:/main/specs/test_spec.yaml
+    # use pharus-hotreload-prod.sh for production gunicorn deploment
     command:
       - sh
       - -lc
       - |
         python /tmp/test/populate.py
-        sh pharus-hotreload.sh
+        sh pharus-hotreload-dev.sh
     networks:
       - main
   jnotebook:
