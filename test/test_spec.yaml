@@ -91,7 +91,6 @@ SciViz: # top level tab
       args:
         - subject_name
         - session_number
-      hidden: true
       grids:
         grid1:
           type: fixed
@@ -161,6 +160,7 @@ SciViz: # top level tab
               height: 1
               width: 1
               type: table
+              link: /hiddenpage
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs, a_id=1)
@@ -198,6 +198,21 @@ SciViz: # top level tab
                 This is useful because you can use anchoring and aliasing in the config to
                 copy one query to many components and only have to change the restriction on the
                 component
+            Mouse table with linking:
+              route: /dawdgargaefdaefa
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: table
+              link: /hiddenpage
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=(Mouse), fetch_args=[])
     Plots:
       route: /plots
       grids:
@@ -313,3 +328,26 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=(MousePlots), fetch_args=[])
+    Hidden Page:
+      route: /hiddenpage
+      hidden: True
+      grids:
+        mygrid:
+          type: fixed
+          columns: 3
+          row_height: 600
+          components:
+            testplot:
+              type: plot:plotly:stored_json
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              route: /someplotroute
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=(MousePlots), fetch_args=['plot'])

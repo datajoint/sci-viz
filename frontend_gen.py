@@ -24,6 +24,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 '''
 export_header = '''
   export default class Page1 extends React.Component<Page1Props> {
+    var restrictionList: Array<string> = new URLSearchParams(window.location.search).toString().split('&')
     render() {
       return (
         <div>
@@ -39,12 +40,12 @@ grid_header = '''
                   useCSSTransforms={{true}}>'''
 table_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}'/>
+                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}' {link}/>
                   </div>'''
 fullplotly_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='plotContainer'>
-                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{[]}}/>
+                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{restrictionList}}/>
                     </div>
                   </div>
 '''
@@ -179,7 +180,7 @@ app_render_header = '''
               <Route path='/login'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Login setJWTTokenAndHostName={{this.setJWTTokenAndHostName}}></Login>}}</Route>'''
 
 app_render_route = '''
-              <Route path='{page_route}'>{{this.state.jwtToken !== '' ? <{page_name} jwtToken={{this.state.jwtToken}}></{page_name}> : <Redirect to='/login'/>}}</Route>'''
+              <Route path='{page_route}*'>{{this.state.jwtToken !== '' ? <{page_name} jwtToken={{this.state.jwtToken}}></{page_name}> : <Redirect to='/login'/>}}</Route>'''
 
 app_render_footer = '''
               <Route path="*" component={NotFound} />
@@ -213,8 +214,13 @@ with open(Path(spec_path), 'r') as y, \
     for page_name, page in pages.items():
         with open(Path(page_path.format(page_name=page_name.replace(' ', '_'))), 'w') as p:
             p.write(page_header + export_header)
-            s.write(sidebar_data.format(
-                page_name=page_name, page_route=page['route']))
+            try:
+                if not page['hidden']:
+                    s.write(sidebar_data.format(
+                            page_name=page_name, page_route=page['route']))
+            except KeyError:
+                s.write(sidebar_data.format(
+                        page_name=page_name, page_route=page['route']))
             app.write(app_render_route.format(
                 page_route=page['route'], page_name=page_name.replace(' ', '_')))
             for grid in page['grids'].values():
@@ -258,12 +264,17 @@ with open(Path(spec_path), 'r') as y, \
                                                          width=component['width'],
                                                          route=component['route']))
                         continue
+                    try:
+                        link = f"link='{component['link']}'"
+                    except KeyError:
+                        link = ''
                     p.write(table_template.format(component_name=component_name,
                                                   x=component['x'],
                                                   y=component['y'],
                                                   height=component['height'],
                                                   width=component['width'],
-                                                  route=component['route']))
+                                                  route=component['route'],
+                                                  link=link))
                 p.write(grid_footer)
             p.write(export_footer)
     s.write(sidebar_footer)

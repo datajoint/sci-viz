@@ -149,8 +149,8 @@ export default class TableContent extends React.Component<
     let restrictionList: Array<String>
     restrictionList = []
     queryParams = ''
-    let headers = this.getPrimaryKeys().concat(this.getSecondaryKeys())
-    for (let i in arr) {
+    let headers = this.getPrimaryKeys()
+    for (let i in headers) {
       restrictionList.push(headers[i].toString() + '=' + arr[i].toString())
     }
     for (let i in restrictionList) {
