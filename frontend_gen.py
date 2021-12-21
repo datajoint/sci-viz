@@ -1,6 +1,7 @@
 from pathlib import Path
 import yaml
 import os
+import re
 
 # Page String Components
 page_header = '''
@@ -45,14 +46,14 @@ table_template = '''
 fullplotly_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='plotContainer'>
-                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{restrictionList}}/>
+                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{[...restrictionList]}}/>
                     </div>
                   </div>
 '''
 metadata_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='metadataContainer'>
-                      <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}' restrictionList={{[]}}/>
+                      <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}' restrictionList={{[...restrictionList]}}/>
                     </div>
                   </div>'''
 mkdown_template = '''
@@ -239,7 +240,7 @@ with open(Path(spec_path), 'r') as y, \
                 p.write(grid_header.format(num_cols=grid['columns'],
                                            row_height=grid['row_height']))
                 for component_name, component in grid['components'].items():
-                    if component['type'] == 'markdown':
+                    if re.match(r'^markdown.*$', component['type']):
                         p.write(mkdown_template.format(component_name=component_name,
                                                        markdown=component['text'].replace(
                                                            '`', '\`'),
@@ -248,7 +249,7 @@ with open(Path(spec_path), 'r') as y, \
                                                        height=component['height'],
                                                        width=component['width']))
                         continue
-                    if component['type'] == 'plot:plotly:stored_json':
+                    if re.match(r'^plot.*$', component['type']):
                         p.write(fullplotly_template.format(component_name=component_name,
                                                            x=component['x'],
                                                            y=component['y'],
@@ -256,7 +257,7 @@ with open(Path(spec_path), 'r') as y, \
                                                            width=component['width'],
                                                            route=component['route']))
                         continue
-                    if component['type'] == 'metadata':
+                    if re.match(r'^metadata.*$', component['type']):
                         p.write(metadata_template.format(component_name=component_name,
                                                          x=component['x'],
                                                          y=component['y'],
@@ -264,17 +265,18 @@ with open(Path(spec_path), 'r') as y, \
                                                          width=component['width'],
                                                          route=component['route']))
                         continue
-                    try:
-                        link = f"link='{component['link']}'"
-                    except KeyError:
-                        link = ''
-                    p.write(table_template.format(component_name=component_name,
-                                                  x=component['x'],
-                                                  y=component['y'],
-                                                  height=component['height'],
-                                                  width=component['width'],
-                                                  route=component['route'],
-                                                  link=link))
+                    if re.match(r'^table.*$', component['type']):
+                        try:
+                            link = f"link='{component['link']}'"
+                        except KeyError:
+                            link = ''
+                        p.write(table_template.format(component_name=component_name,
+                                                      x=component['x'],
+                                                      y=component['y'],
+                                                      height=component['height'],
+                                                      width=component['width'],
+                                                      route=component['route'],
+                                                      link=link))
                 p.write(grid_footer)
             p.write(export_footer)
     s.write(sidebar_footer)

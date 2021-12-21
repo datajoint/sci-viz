@@ -1,10 +1,5 @@
 import React from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import TableView from './Table/TableView'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import FullPlotly from './Plots/FullPlotly'
 import Metadata from './Table/Metadata'
 
@@ -96,7 +91,7 @@ export default class DynamicGrid extends React.Component<
                 {this.props.componentList.map(
                   (componentType: string, compListIndex: number) => {
                     let restrictionListCopy = [...restrictionList]
-                    if (componentType == 'plot:plotly:stored_json') {
+                    if (componentType.match(/^plot.*$/)) {
                       return (
                         <FullPlotly
                           route={this.props.routeList[compListIndex]}
@@ -105,7 +100,7 @@ export default class DynamicGrid extends React.Component<
                         />
                       )
                     }
-                    if (componentType == 'metadata') {
+                    if (componentType.match(/^metadata.*$/)) {
                       return (
                         <Metadata
                           name="Metadata"

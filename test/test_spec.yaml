@@ -337,6 +337,21 @@ SciViz: # top level tab
           columns: 3
           row_height: 600
           components:
+            Mouse metadata:
+              route: /dawdgar
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: metadata
+              link: /hiddenpage
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=(Mouse), fetch_args=[])
             testplot:
               type: plot:plotly:stored_json
               x: 0

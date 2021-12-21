@@ -151,6 +151,34 @@ export default class TableContent extends React.Component<
     queryParams = ''
     let headers = this.getPrimaryKeys()
     for (let i in headers) {
+      // date is 19
+      if (
+        this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
+        19
+      ) {
+        arr[i] = Date.parse(arr[i]) / 1000
+      }
+      // Datetime is 20
+      if (
+        this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
+        20
+      ) {
+        arr[i] = Date.parse(arr[i]) / 1000
+      }
+      // time is 21
+      if (
+        this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
+        21
+      ) {
+        arr[i] = Date.parse(arr[i]) / 1000
+      }
+      // timestamp is 22
+      if (
+        this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
+        22
+      ) {
+        arr[i] = Date.parse(arr[i]) / 1000
+      }
       restrictionList.push(headers[i].toString() + '=' + arr[i].toString())
     }
     for (let i in restrictionList) {
