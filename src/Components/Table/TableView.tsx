@@ -340,7 +340,9 @@ export default class TableView extends React.Component<
             tableAttributes[i].attributeType === TableAttributeType.DATETIME
           ) {
             for (let tuple of result.records) {
+              console.log(tuple[i])
               tuple[i] = TableAttribute.parseDateTime(tuple[i])
+              console.log(tuple[i])
             }
           } else if (
             tableAttributes[i].attributeType === TableAttributeType.DATE
@@ -584,7 +586,7 @@ export default class TableView extends React.Component<
       return TableAttributeType.UUID
     } else if (tableTypeString === 'date') {
       return TableAttributeType.DATE
-    } else if (tableTypeString === 'datetime') {
+    } else if (tableTypeString.includes('datetime')) {
       return TableAttributeType.DATETIME
     } else if (tableTypeString === 'time') {
       return TableAttributeType.TIME

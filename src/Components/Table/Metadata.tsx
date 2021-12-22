@@ -73,6 +73,7 @@ export default class Metadata extends React.Component<
         return result.json()
       })
       .then((result) => {
+        console.log(result)
         this.setState({
           attributes: {
             primary: result.attributes.primary,
@@ -93,7 +94,7 @@ export default class Metadata extends React.Component<
         )
       } else if (
         fullAttr[i][1] === 'timestamp' ||
-        fullAttr[i][1] === 'datetime'
+        fullAttr[i][1].includes('datetime')
       ) {
         this.state.data.records[i] = TableAttribute.parseDateTime(
           this.state.data.records[i]

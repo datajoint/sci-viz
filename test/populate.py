@@ -65,7 +65,7 @@ class TableB(dj.Lookup):
 class Mouse(dj.Lookup):
     definition = """
     mouse_id: int
-    mouse_dob: datetime
+    mouse_dob: datetime(3)
     ---
     mouse_name: varchar(30)
     """
@@ -82,8 +82,9 @@ class MousePlots(dj.Lookup):
     ---
     plot: longblob
     """
-    contents = [(1, '1928-08-13 00:13:23', 1, plot2), (2,
-                                                       '1948-03-13 00:14:23', 2, plot3), (0, '1998-07-13 00:11:23', 0, plot1)]
+    contents = [(0, '1998-07-13 00:11:23', 0, plot1),
+                (1, '1928-08-13 00:13:23', 1, plot2),
+                (2, '1948-03-13 00:14:23', 2, plot3)]
 
 
 @group1_simple
