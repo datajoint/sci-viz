@@ -47,7 +47,7 @@ export default class TableAttribute {
       return '=NULL='
     }
 
-    const timeNumber = parseInt(timeString)
+    const timeNumber = parseFloat(timeString)
     let date = new Date(timeNumber * 1000)
     const zeroPad = (num: number, places: number) =>
       String(num).padStart(places, '0')
@@ -57,7 +57,8 @@ export default class TableAttribute {
       ':' +
       zeroPad(date.getUTCMinutes(), 2) +
       ':' +
-      zeroPad(date.getUTCSeconds(), 2)
+      zeroPad(date.getUTCSeconds(), 2) +
+      zeroPad(date.getMilliseconds(), 2)
     )
   }
 
@@ -70,9 +71,11 @@ export default class TableAttribute {
     if (dateTimeString === null) {
       return '=NULL='
     }
-
-    let date = new Date(parseInt(dateTimeString) * 1000)
-    return date.toUTCString()
+    console.log(dateTimeString)
+    let date = new Date(parseFloat(dateTimeString) * 1000)
+    return date
+      .toUTCString()
+      .replace(' GMT', '.' + date.getUTCMilliseconds() + ' GMT')
   }
 
   /**

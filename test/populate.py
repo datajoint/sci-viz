@@ -69,7 +69,7 @@ class Mouse(dj.Lookup):
     ---
     mouse_name: varchar(30)
     """
-    contents = [(0, '1998-07-13 00:11:23', 'jeff'),
+    contents = [(0, '1998-07-13 00:11:23.15', 'jeff'),
                 (1, '1928-08-13 00:13:23', 'splinter'),
                 (2, '1948-03-13 00:14:23', 'ratman')]
 
@@ -82,7 +82,7 @@ class MousePlots(dj.Lookup):
     ---
     plot: longblob
     """
-    contents = [(0, '1998-07-13 00:11:23', 0, plot1),
+    contents = [(0, '1998-07-13 00:11:23.15', 0, plot1),
                 (1, '1928-08-13 00:13:23', 1, plot2),
                 (2, '1948-03-13 00:14:23', 2, plot3)]
 
