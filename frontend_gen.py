@@ -17,6 +17,7 @@ import {solarizedlight} from 'react-syntax-highlighter/dist/esm/styles/prism'
 import FullPlotly from '../Plots/FullPlotly'
 import Metadata from '../Table/Metadata'
 import DynamicGrid from '../DynamicGrid'
+import Image from '../Image'
 
 interface Page1Props {
   jwtToken: string;
@@ -56,6 +57,13 @@ metadata_template = '''
                       <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}' restrictionList={{[...restrictionList]}}/>
                     </div>
                   </div>'''
+image_template = '''
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <div className='imageContainer'>
+                      <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...restrictionList]}}/>
+                    </div>
+                  </div>
+'''
 mkdown_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                   <div className='markdownContainer'>
@@ -265,6 +273,13 @@ with open(Path(spec_path), 'r') as y, \
                                                          width=component['width'],
                                                          route=component['route']))
                         continue
+                    if re.match(r'^file:image.*$', component['type']):
+                        p.write(image_template.format(component_name=component_name,
+                                                      x=component['x'],
+                                                      y=component['y'],
+                                                      height=component['height'],
+                                                      width=component['width'],
+                                                      route=component['route']))
                     if re.match(r'^table.*$', component['type']):
                         try:
                             link = f"link='{component['link']}'"

@@ -1,5 +1,6 @@
 """Simple test schemas."""
 import datajoint as dj
+from pathlib import Path
 
 
 connection = dj.conn(host='localdb', user='root', password='pharus')
@@ -85,6 +86,19 @@ class MousePlots(dj.Lookup):
     contents = [(0, '1998-07-13 00:11:23.15', 0, plot1),
                 (1, '1928-08-13 00:13:23', 1, plot2),
                 (2, '1948-03-13 00:14:23', 2, plot3)]
+
+
+assert Path('/tmp/test/dog.JPG').exists()
+
+
+@group1_simple
+class MousePics(dj.Lookup):
+    definition = """
+    -> Mouse
+    ---
+    image_payload: attach
+    """
+    contents = [(0, '1998-07-13 00:11:23.15', '/tmp/test/dog.JPG')]
 
 
 @group1_simple

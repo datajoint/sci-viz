@@ -65,3 +65,14 @@
   flex-grow: 1;
   box-shadow: -1px 0px 3px #91938f;
 }
+.imageContainer {
+  background-color: #fbfbfb;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  flex-grow: 1;
+  box-shadow: -1px 0px 3px #91938f;
+}
+.imageContainer img {
+  max-width: 100%;
+}

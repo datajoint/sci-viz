@@ -339,8 +339,8 @@ SciViz: # top level tab
           components:
             Mouse metadata:
               route: /dawdgar
-              x: 0
-              y: 1
+              x: 1
+              y: 0
               height: 1
               width: 1
               type: metadata
@@ -366,3 +366,17 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=(MousePlots), fetch_args=['plot'])
+            picture:
+              type: file:image:jpg
+              route: /picture
+              height: 1
+              width: 1
+              x: 2
+              y: 0
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePics = test_group1_simple.MousePics
+                    return dict(query=MousePics, fetch_args=['image_payload'])
