@@ -43,6 +43,24 @@ export default class Metadata extends React.Component<
         apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
       }
     }
+    fetch(apiUrlAttr, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + this.props.token,
+      },
+    })
+      .then((result) => {
+        return result.json()
+      })
+      .then((result) => {
+        this.setState({
+          attributes: {
+            primary: result.attributes.primary,
+            secondary: result.attributes.secondary,
+          },
+        })
+      })
     fetch(apiUrl, {
       method: 'GET',
       headers: {
@@ -59,25 +77,6 @@ export default class Metadata extends React.Component<
             recordHeader: result.recordHeader,
             records: result.records[0],
             totalCount: result.totalCount,
-          },
-        })
-      })
-    fetch(apiUrlAttr, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + this.props.token,
-      },
-    })
-      .then((result) => {
-        return result.json()
-      })
-      .then((result) => {
-        console.log(result)
-        this.setState({
-          attributes: {
-            primary: result.attributes.primary,
-            secondary: result.attributes.secondary,
           },
         })
       })

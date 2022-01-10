@@ -367,7 +367,7 @@ SciViz: # top level tab
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=(MousePlots), fetch_args=['plot'])
             picture:
-              type: file:image:jpg
+              type: file:image:attach
               route: /picture
               height: 1
               width: 1

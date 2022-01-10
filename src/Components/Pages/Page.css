@@ -75,4 +75,7 @@
 }
 .imageContainer img {
   max-width: 100%;
+  max-height: 99%;
+  min-width: auto;
+  min-height: auto;
 }
