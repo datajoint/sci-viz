@@ -99,6 +99,8 @@ A dynamic `grid` takes 7 arguments:
 
 Additionally any components in the dynamic grid do not need `x`, `y` , `height`, and `width` fields.
 
+Currently only the `metadata` and `plot` components are supported in dynamic mode.
+
 # Components
 
 All components need minimally these fields:
@@ -173,6 +175,18 @@ The Metadata component takes 3 additional arguments:
 - `dj_query:` the datajoint query for for the table data.
 
 Additionally the metadata component only takes a single row from a table as its input so the `dj_query` and `restriction` need to be properly set to produce a single record. This component is not very useful by itself but when combined with other components as part of a template in a `Dynamic grid` it can provide useful information on what the other components are showing.
+
+## Image component
+
+`type:` file:image:attach
+
+the Image component takes 3 additional arguments:
+
+- `route:` the backend route for the rest api query, must start with a `/`
+- `restriction:` the restriction for the datajoint query
+- `dj_query:` the datajoint query for for the table data.
+
+Additionally the image that you want to display needs to be stored as a datajoint [attach](https://docs.datajoint.org/python/definition/06.5-External-Data.html?highlight=attach) attribute type and your query should produce only one record with one column which is the column where the image is stored.
 
 # DEV
 

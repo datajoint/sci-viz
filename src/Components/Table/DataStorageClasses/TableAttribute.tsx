@@ -68,14 +68,17 @@ export default class TableAttribute {
    */
   static parseDateTime(dateTimeString: string) {
     // Handle case with null
+    let microseconds = '000'
     if (dateTimeString === null) {
       return '=NULL='
     }
-    console.log(dateTimeString)
+    if ((parseFloat(dateTimeString) * 1000 + '').includes('.')) {
+      microseconds = (parseFloat(dateTimeString) * 1000 + '').split('.')[1]
+    }
     let date = new Date(parseFloat(dateTimeString) * 1000)
     return date
       .toUTCString()
-      .replace(' GMT', '.' + date.getUTCMilliseconds() + ' GMT')
+      .replace(' GMT', '.' + date.getUTCMilliseconds() + microseconds + ' GMT')
   }
 
   /**

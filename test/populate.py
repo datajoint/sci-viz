@@ -66,11 +66,11 @@ class TableB(dj.Lookup):
 class Mouse(dj.Lookup):
     definition = """
     mouse_id: int
-    mouse_dob: datetime(3)
+    mouse_dob: datetime(6)
     ---
     mouse_name: varchar(30)
     """
-    contents = [(0, '1998-07-13 00:11:23.15', 'jeff'),
+    contents = [(0, '1998-07-13 00:11:23.153333', 'jeff'),
                 (1, '1928-08-13 00:13:23', 'splinter'),
                 (2, '1948-03-13 00:14:23', 'ratman')]
 
@@ -83,7 +83,7 @@ class MousePlots(dj.Lookup):
     ---
     plot: longblob
     """
-    contents = [(0, '1998-07-13 00:11:23.15', 0, plot1),
+    contents = [(0, '1998-07-13 00:11:23.153333', 0, plot1),
                 (1, '1928-08-13 00:13:23', 1, plot2),
                 (2, '1948-03-13 00:14:23', 2, plot3)]
 
@@ -98,7 +98,7 @@ class MousePics(dj.Lookup):
     ---
     image_payload: attach
     """
-    contents = [(0, '1998-07-13 00:11:23.15', '/tmp/test/dog.JPG')]
+    contents = [(0, '1998-07-13 00:11:23.153333', '/tmp/test/dog.JPG')]
 
 
 @group1_simple

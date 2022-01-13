@@ -144,7 +144,7 @@ export default class TableContent extends React.Component<
       })
     }
   }
-  rowToQueryParams(arr: Array<any>) {
+  rowToQueryParams(arr: Array<string>) {
     let queryParams: string
     let restrictionList: Array<String>
     restrictionList = []
@@ -156,28 +156,34 @@ export default class TableContent extends React.Component<
         this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
         19
       ) {
-        arr[i] = Date.parse(arr[i]) / 1000
+        arr[i] = Date.parse(arr[i]) / 1000 + ''
       }
       // Datetime is 20
+      var myRegex = new RegExp(/(?<=\.[0-9][0-9][0-9])[0-9]*/)
       if (
         this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
         20
       ) {
-        arr[i] = Date.parse(arr[i]) / 1000
+        console.log('regex result:', arr[i].match(myRegex))
+        if (arr[i].match(myRegex) !== null) {
+          arr[i] = Date.parse(arr[i]) / 1000 + arr[i].match(myRegex)![0]
+        } else {
+          arr[i] = Date.parse(arr[i]) / 1000 + ''
+        }
       }
       // time is 21
       if (
         this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
         21
       ) {
-        arr[i] = Date.parse(arr[i]) / 1000
+        arr[i] = Date.parse(arr[i]) / 1000 + ''
       }
       // timestamp is 22
       if (
         this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
         22
       ) {
-        arr[i] = Date.parse(arr[i]) / 1000
+        arr[i] = Date.parse(arr[i]) / 1000 + ''
       }
       restrictionList.push(headers[i].toString() + '=' + arr[i].toString())
     }
