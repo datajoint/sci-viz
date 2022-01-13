@@ -11,13 +11,11 @@ import TableView from '../Table/TableView';
 import ReactMarkdown from 'react-markdown';
 import SideBar from '../SideBar/SideBar';
 import './Page.css'
-import remarkGfm from 'remark-gfm'
-import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
-import {solarizedlight} from 'react-syntax-highlighter/dist/esm/styles/prism'
 import FullPlotly from '../Plots/FullPlotly'
 import Metadata from '../Table/Metadata'
 import DynamicGrid from '../DynamicGrid'
 import Image from '../Image'
+import Markdown from '../Markdown'
 
 interface Page1Props {
   jwtToken: string;
@@ -66,28 +64,10 @@ image_template = '''
 '''
 mkdown_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                  <div className='markdownContainer'>
-                    <ReactMarkdown className='markdown' remarkPlugins={{[remarkGfm]}}
-                    children={{`{markdown}`}}
-                    components={{{{
-                        code({{node, inline, className, children, ...props}}) {{
-                            const match = /language-(\\w+)/.exec(className || '')
-                            return !inline && match ? (
-                            <SyntaxHighlighter
-                                children={{String(children).replace(/\\n$/, '')}}
-                                style={{solarizedlight}}
-                                language={{match[1]}}
-                                PreTag="div"
-                            />
-                            ) : (
-                            <code style={{{{background: 'rgb(222,222,222)', color: 'red'}}}} className={{className}} {{...props}}>
-                                {{children}}
-                            </code>
-                            )
-                        }}
-                        }}}}
-                    />
-                  </div>
+                  <Markdown
+                    content={{`{markdown}`}}
+                    imageRoute={{{image_route}}}
+                  />
                   </div>'''
 
 grid_footer = '''
@@ -255,7 +235,9 @@ with open(Path(spec_path), 'r') as y, \
                                                        x=component['x'],
                                                        y=component['y'],
                                                        height=component['height'],
-                                                       width=component['width']))
+                                                       width=component['width'],
+                                                       image_route=f"require('{component['image_route']}')['default']"
+                                                       if 'image_route' in component else "''"))
                         continue
                     if re.match(r'^plot.*$', component['type']):
                         p.write(fullplotly_template.format(component_name=component_name,
