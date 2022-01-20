@@ -5,7 +5,6 @@ exports[`Snapshot of header component 1`] = `
   <img
     alt="Sci-viz logo"
     className="header-img"
-    src=""
   />
   <div
     className="header-content"
@@ -17,9 +16,7 @@ exports[`Snapshot of header component 1`] = `
             "paddingLeft": "20px",
           }
         }
-      >
-        Powered by DataJoint
-      </i>
+      />
     </p>
   </div>
 </header>
