@@ -35,6 +35,7 @@ interface TableContentProps {
   fetchTableContent: () => void // Callback function to tell the parent component to update the contentData
   setRestrictions: (restrictions: Array<Restriction>) => void
   setOrders: (Order: string) => void
+  updateRestrictionList: (queryParams: string) => string
 }
 
 interface TableContentState {
@@ -164,7 +165,6 @@ export default class TableContent extends React.Component<
         this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
         20
       ) {
-        console.log('regex result:', arr[i].match(myRegex))
         if (arr[i].match(myRegex) !== null) {
           arr[i] = Date.parse(arr[i]) / 1000 + arr[i].match(myRegex)![0]
         } else {
@@ -537,6 +537,11 @@ export default class TableContent extends React.Component<
                                       this.rowToQueryParams([...entry]),
                                     state: [...modifiedEntry],
                                   }}
+                                  onClick={() =>
+                                    this.props.updateRestrictionList(
+                                      this.rowToQueryParams([...entry])
+                                    )
+                                  }
                                   style={{
                                     color: 'inherit',
                                     textDecoration: 'inherit',

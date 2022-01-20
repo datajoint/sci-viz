@@ -68,7 +68,7 @@ export default class TableAttribute {
    */
   static parseDateTime(dateTimeString: string) {
     // Handle case with null
-    let microseconds = '000'
+    let microseconds = ''
     if (dateTimeString === null) {
       return '=NULL='
     }

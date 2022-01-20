@@ -1,7 +1,10 @@
 import React from 'react'
 import './Header.css'
-import logo from '../../logo.svg'
-interface HeaderProps {}
+
+interface HeaderProps {
+  imageRoute: string
+  text: string
+}
 
 interface HeaderState {}
 
@@ -12,10 +15,14 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
   render() {
     return (
       <header>
-        <img className="header-img" src={logo} alt="Sci-viz logo" />
+        <img
+          className="header-img"
+          src={this.props.imageRoute}
+          alt="Sci-viz logo"
+        />
         <div className="header-content">
           <p>
-            <i style={{ paddingLeft: '20px' }}>Powered by DataJoint</i>
+            <i style={{ paddingLeft: '20px' }}>{this.props.text}</i>
           </p>
         </div>
       </header>

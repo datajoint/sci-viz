@@ -21,6 +21,7 @@ interface TableViewProps {
   route: string
   tableName: string
   link?: string
+  updateRestrictionList: (queryParams: string) => string
 }
 
 interface TableViewState {
@@ -628,6 +629,7 @@ export default class TableView extends React.Component<
             fetchTableContent={this.fetchTableContent}
             setRestrictions={this.setRestrictions}
             setOrders={this.setOrders}
+            updateRestrictionList={this.props.updateRestrictionList}
           />
         </div>
       </div>

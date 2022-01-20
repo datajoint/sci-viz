@@ -7,6 +7,7 @@ import logo from '../../logo.svg'
 
 interface LoginProps {
   setJWTTokenAndHostName: (jwt: string, hostname: string) => void // Call back function to setting the jwtToken
+  imageRoute?: string
 }
 
 interface LoginState {
@@ -141,7 +142,12 @@ export default class Login extends Component<LoginProps, LoginState> {
     return (
       <div className="login-div">
         <div className="login-container">
-          <img className="login-top-logo" src={logo} alt="datajoint gui logo" />
+          {console.log(this.props.imageRoute)}
+          <img
+            className="login-top-logo"
+            src={this.props.imageRoute}
+            alt="datajoint gui logo"
+          />
           <form className="login-form">
             <label className="login-input-label">Host/Database Address</label>
             <input

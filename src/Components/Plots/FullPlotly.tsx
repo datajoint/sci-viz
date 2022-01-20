@@ -23,16 +23,17 @@ export default class FullPlotly extends React.Component<
     this.state = {
       plotlyJson: { data: [], layout: {} },
     }
+    this.updatePlot = this.updatePlot.bind(this)
   }
-
-  componentDidMount() {
+  updatePlot() {
     let apiUrl =
       `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route
-    if (this.props.restrictionList.length > 0) {
+    let resListCopy = [...this.props.restrictionList]
+    if (resListCopy.length > 0) {
       apiUrl = apiUrl + '?'
-      apiUrl = apiUrl + this.props.restrictionList.shift()
-      while (this.props.restrictionList.length > 0) {
-        apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
+      apiUrl = apiUrl + resListCopy.shift()
+      while (resListCopy.length > 0) {
+        apiUrl = apiUrl + '&' + resListCopy.shift()
       }
     }
     fetch(apiUrl, {
@@ -51,10 +52,23 @@ export default class FullPlotly extends React.Component<
         })
       })
   }
+  componentDidMount() {
+    this.updatePlot()
+    this.forceUpdate()
+  }
+  componentDidUpdate(
+    prevProps: FullPlotlyProps,
+    prevState: FullPlotlyState
+  ): void {
+    if (prevProps.restrictionList !== this.props.restrictionList) {
+      this.updatePlot()
+    }
+  }
 
   render() {
     return (
-      <div>
+      <div key={this.props.restrictionList.toString()}>
+        {console.log(this.props.restrictionList)}
         <Plot
           data={this.state.plotlyJson.data}
           layout={this.state.plotlyJson.layout}

@@ -3,6 +3,11 @@ LabBook: null
 SciViz: # top level tab
   auth:
     mode: database # reuse from DJ LabBook
+  # header:
+  #   image_route: ./IBLlogo.png
+  #   text: Data Portal
+  # login:
+  #   image_route: ./IBLlogo.png
   pages: # individual pages
     # The first page in the list of pages is the splash page after login
     # By convention this should be a home page with a markdown component
@@ -233,23 +238,27 @@ SciViz: # top level tab
               width: 1
               restriction: >
                 def restriction(**kwargs):
-                    return dict(**kwargs, p_id=2)
+                    return dict(**kwargs)
               dj_query: >
                 def dj_query(test_group1_simple):
-                    PlotlyTable = test_group1_simple.PlotlyTable
-                    return dict(query=PlotlyTable, fetch_args=['plot'])
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=MousePlots, fetch_args=['plot'])
             component2:
-              type: markdown
+              route: /hukhjmhyfgngc
               x: 1
               y: 0
               height: 1
               width: 1
-              text: |
-                # This is a plotly plot
+              type: table
+              link: /plots
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=(Mouse), fetch_args=[])
 
-                *Nice*
-
-                🤔 yaml apparently allows emojis
     Metadata:
       route: /metadata
       grids:

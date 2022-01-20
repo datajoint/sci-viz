@@ -20,12 +20,34 @@ import Markdown from '../Markdown'
 interface Page1Props {
   jwtToken: string;
 }
+interface Page1State {
+  restrictionList: Array<string>
+}
 const ResponsiveGridLayout = WidthProvider(Responsive);
 '''
 export_header = '''
-  export default class Page1 extends React.Component<Page1Props> {
+  export default class Page1 extends React.Component<Page1Props, Page1State> {
+      constructor(props: Page1Props) {
+      super(props)
+      this.state = {
+        restrictionList: [],
+      }
+      this.updateRestrictionList = this.updateRestrictionList.bind(this)
+    }
+    componentDidMount() {
+      this.setState({
+        restrictionList: new URLSearchParams(window.location.search)
+          .toString()
+          .split('&'),
+      })
+    }
+    updateRestrictionList(queryParams: string): string {
+      this.setState({
+        restrictionList: new URLSearchParams(queryParams).toString().split('&'),
+      })
+      return queryParams
+    }
     render() {
-      var restrictionList: Array<string> = new URLSearchParams(window.location.search).toString().split('&')
       return (
         <div>
           <SideBar />
@@ -40,25 +62,25 @@ grid_header = '''
                   useCSSTransforms={{true}}>'''
 table_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}' {link}/>
+                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}' {link} updateRestrictionList={{this.updateRestrictionList}}/>
                   </div>'''
 fullplotly_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='plotContainer'>
-                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{[...restrictionList]}}/>
+                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{[...this.state.restrictionList]}}/>
                     </div>
                   </div>
 '''
 metadata_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='metadataContainer'>
-                      <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}' restrictionList={{[...restrictionList]}}/>
+                      <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}' restrictionList={{[...this.state.restrictionList]}}/>
                     </div>
                   </div>'''
 image_template = '''
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='imageContainer'>
-                      <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...restrictionList]}}/>
+                      <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...this.state.restrictionList]}}/>
                     </div>
                   </div>
 '''
@@ -161,12 +183,12 @@ app_render_header = '''
   render() {{
     return (
       <div>
-        <Header></Header>
+        <Header text='{header_text}' imageRoute={{require('{header_image}')['default']}}/>
         <Router>
           <div className='content'>
             <Switch>
               <Route exact path='/'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Redirect to='/login'/>}}</Route>
-              <Route path='/login'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Login setJWTTokenAndHostName={{this.setJWTTokenAndHostName}}></Login>}}</Route>'''
+              <Route path='/login'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Login setJWTTokenAndHostName={{this.setJWTTokenAndHostName}} imageRoute={{{image_route}}}></Login>}}</Route>'''
 
 app_render_route = '''
               <Route path='{page_route}*'>{{this.state.jwtToken !== '' ? <{page_name} jwtToken={{this.state.jwtToken}}></{page_name}> : <Redirect to='/login'/>}}</Route>'''
@@ -176,7 +198,7 @@ app_render_footer = '''
             </Switch>
           </div>
         </Router>
-        <Footer></Footer>
+        <Footer/>
       </div>
     );
   }
@@ -198,8 +220,21 @@ with open(Path(spec_path), 'r') as y, \
     app.write(app_header)
     for page in pages.keys():
         app.write(app_import_template.format(page_name=page.replace(' ', '_')))
-    app.write(
-        app_export + app_render_header.format(first_page_route=list(pages.values())[0]['route']))
+    app.write(app_export + app_render_header.format(header_text='Powered by datajoint'
+                                                    if 'header' not in values_yaml['SciViz']
+                                                    else values_yaml['SciViz']
+                                                                    ['header']
+                                                                    ['text'],
+                                                    header_image='./logo.svg'
+                                                    if 'header' not in values_yaml['SciViz']
+                                                    else values_yaml['SciViz']
+                                                                    ['header']
+                                                                    ['image_route'],
+                                                    first_page_route=list(pages.values())[
+                                                        0]['route'],
+                                                    image_route='require("./logo.svg")["default"]'
+                                                    if 'login' not in values_yaml['SciViz']
+                                                    else f"require('{values_yaml['SciViz']['login']['image_route']}')['default']"))
     for page_name, page in pages.items():
         with open(Path(page_path.format(page_name=page_name.replace(' ', '_'))), 'w') as p:
             p.write(page_header + export_header)
