@@ -25,7 +25,7 @@ export default class Footer extends React.Component<FooterProps, FooterState> {
    * Get the version number upon being mounted.
    */
   componentDidMount() {
-    fetch(`${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/version`, {
+    fetch(`${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/version`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })

@@ -193,7 +193,7 @@ export default class TableView extends React.Component<
    */
   fetchTableAttribute() {
     fetch(
-      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` +
+      `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
         this.props.route +
         '/attributes',
       {
@@ -282,7 +282,7 @@ export default class TableView extends React.Component<
 
     // Build the url with params
     let apiUrl =
-      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route
+      `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
     if (urlParams.length > 0) {
       apiUrl += '?'
 

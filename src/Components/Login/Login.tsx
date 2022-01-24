@@ -101,7 +101,7 @@ export default class Login extends Component<LoginProps, LoginState> {
 
     // Attempt to authenticate
     const response = await fetch(
-      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}/login`,
+      `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/login`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -31,9 +31,9 @@ export default class Metadata extends React.Component<
 
   componentDidMount() {
     let apiUrl =
-      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` + this.props.route
+      `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
     let apiUrlAttr =
-      `${process.env.REACT_APP_DJLABBOOK_BACKEND_PREFIX}` +
+      `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
       this.props.route +
       '/attributes'
     if (this.props.restrictionList.length > 0) {
