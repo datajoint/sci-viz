@@ -68,7 +68,6 @@ export default class FullPlotly extends React.Component<
   render() {
     return (
       <div key={this.props.restrictionList.toString()}>
-        {console.log(this.props.restrictionList)}
         <Plot
           data={this.state.plotlyJson.data}
           layout={this.state.plotlyJson.layout}

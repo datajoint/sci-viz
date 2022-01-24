@@ -1,4 +1,4 @@
-#HOST_UID="$(id -u)" HOST_GID="$(id -g)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\' '{print $2}') docker-compose up --build
+#HOST_UID="$(id -u)" HOST_GID="$(id -g)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\" '{print $2}') docker-compose up --build
 version: '2.4'
 services:
   sci-viz:
@@ -54,17 +54,17 @@ services:
       service: pharus
     environment:
       - FLASK_ENV=development # enables logging to console from Flask
-      - API_SPEC_PATH=specs/test_spec.yaml # for dynamic api spec
+      - PHARUS_SPEC_PATH=specs/test_spec.yaml # for dynamic api spec
+      - PHARUS_MODE=DEV
     volumes:
       - ./test:/tmp/test
       - ./test/test_spec.yaml:/main/specs/test_spec.yaml
-    # use pharus-hotreload-prod.sh for production gunicorn deploment
     command:
       - sh
       - -lc
       - |
         python /tmp/test/populate.py
-        sh pharus-hotreload-dev.sh
+        pharus
     networks:
       - main
   jnotebook:

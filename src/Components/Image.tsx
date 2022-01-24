@@ -41,7 +41,6 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         this.setState({ image: URL.createObjectURL(result) })
       })
     )
-    console.log(this.state.image)
   }
 
   render() {

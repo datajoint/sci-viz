@@ -86,7 +86,6 @@ export default class Metadata extends React.Component<
       this.state.attributes.secondary
     )
     for (let i in fullAttr) {
-      console.log(fullAttr[i][1])
       if (fullAttr[i][1] === 'HH:MM:SS') {
         this.state.data.records[i] = TableAttribute.parseTimeString(
           this.state.data.records[i]

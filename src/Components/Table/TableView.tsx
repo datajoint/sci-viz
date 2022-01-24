@@ -341,9 +341,7 @@ export default class TableView extends React.Component<
             tableAttributes[i].attributeType === TableAttributeType.DATETIME
           ) {
             for (let tuple of result.records) {
-              console.log(tuple[i])
               tuple[i] = TableAttribute.parseDateTime(tuple[i])
-              console.log(tuple[i])
             }
           } else if (
             tableAttributes[i].attributeType === TableAttributeType.DATE

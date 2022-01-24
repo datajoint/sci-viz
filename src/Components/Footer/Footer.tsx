@@ -44,7 +44,6 @@ export default class Footer extends React.Component<FooterProps, FooterState> {
       })
       .catch((error) => {
         this.setState({ backendVersion: 'Unable to get version number' })
-        console.log(error)
       })
   }
 

@@ -142,7 +142,6 @@ export default class Login extends Component<LoginProps, LoginState> {
     return (
       <div className="login-div">
         <div className="login-container">
-          {console.log(this.props.imageRoute)}
           <img
             className="login-top-logo"
             src={this.props.imageRoute}
