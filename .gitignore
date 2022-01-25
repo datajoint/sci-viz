@@ -22,7 +22,7 @@
 .vscode
 src/Components/Pages/*.tsx
 src/App.tsx
-src/Components/SideBar/SideBarData.tsx
+src/Components/MenuBar/MenuBarData.tsx
 *.pem
 
 npm-debug.log*

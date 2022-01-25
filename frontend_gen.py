@@ -9,7 +9,7 @@ import React from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import TableView from '../Table/TableView';
 import ReactMarkdown from 'react-markdown';
-import SideBar from '../SideBar/SideBar';
+import MenuBar from '../MenuBar/MenuBar';
 import './Page.css'
 import FullPlotly from '../Plots/FullPlotly'
 import Metadata from '../Table/Metadata'
@@ -50,7 +50,7 @@ export_header = """
     render() {
       return (
         <div>
-          <SideBar />
+          <MenuBar />
           <div className='grid-container'>
             <ul className='grid-list'>"""
 grid_header = """
@@ -114,16 +114,16 @@ export_footer = """
 """
 
 # Side Bar string components
-sidebar_header = """
-export const SideBarData = ["""
-sidebar_data = """
+MenuBar_header = """
+export const MenuBarData = ["""
+MenuBar_data = """
     {{
         title: '{page_name}',
         path: '{page_route}',
         cName: 'nav-text'
     }},"""
 
-sidebar_footer = """
+MenuBar_footer = """
 ]"""
 
 # App.tsx string components
@@ -207,7 +207,7 @@ app_render_footer = """
 
 # spec_path = os.environ.get('API_SPEC_PATH')
 spec_path = os.environ.get("FRONTEND_SPEC_PATH")
-side_bar_path = "src/Components/SideBar/SideBarData.tsx"
+side_bar_path = "src/Components/MenuBar/MenuBarData.tsx"
 page_path = "src/Components/Pages/{page_name}.tsx"
 app_path = "src/App.tsx"
 with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
@@ -215,7 +215,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
 ) as app:
     values_yaml = yaml.load(y, Loader=yaml.FullLoader)
     pages = values_yaml["SciViz"]["pages"]
-    s.write(sidebar_header)
+    s.write(MenuBar_header)
     # Crawl through the yaml file
     app.write(app_header)
     for page in pages.keys():
@@ -223,16 +223,22 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
     app.write(
         app_export
         + app_render_header.format(
-            header_text="Powered by datajoint"
-            if "header" not in values_yaml["SciViz"]
-            else values_yaml["SciViz"]["header"]["text"],
-            header_image="./logo.svg"
-            if "header" not in values_yaml["SciViz"]
-            else values_yaml["SciViz"]["header"]["image_route"],
+            header_text=(
+                "Powered by datajoint"
+                if "header" not in values_yaml["SciViz"]
+                else values_yaml["SciViz"]["header"]["text"]
+            ),
+            header_image=(
+                "./logo.svg"
+                if "header" not in values_yaml["SciViz"]
+                else values_yaml["SciViz"]["header"]["image_route"]
+            ),
             first_page_route=list(pages.values())[0]["route"],
-            image_route='require("./logo.svg")["default"]'
-            if "login" not in values_yaml["SciViz"]
-            else f"require('{values_yaml['SciViz']['login']['image_route']}')['default']",
+            image_route=(
+                'require("./logo.svg")["default"]'
+                if "login" not in values_yaml["SciViz"]
+                else f"require('{values_yaml['SciViz']['login']['image_route']}')['default']"
+            ),
         )
     )
     for page_name, page in pages.items():
@@ -240,16 +246,16 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
             Path(page_path.format(page_name=page_name.replace(" ", "_"))), "w"
         ) as p:
             p.write(page_header + export_header)
-            try:
+            if "hidden" in page:
                 if not page["hidden"]:
                     s.write(
-                        sidebar_data.format(
+                        MenuBar_data.format(
                             page_name=page_name, page_route=page["route"]
                         )
                     )
-            except KeyError:
+            else:
                 s.write(
-                    sidebar_data.format(page_name=page_name, page_route=page["route"])
+                    MenuBar_data.format(page_name=page_name, page_route=page["route"])
                 )
             app.write(
                 app_render_route.format(
@@ -295,7 +301,6 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 else "''",
                             )
                         )
-                        continue
                     if re.match(r"^plot.*$", component["type"]):
                         p.write(
                             fullplotly_template.format(
@@ -307,7 +312,6 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 route=component["route"],
                             )
                         )
-                        continue
                     if re.match(r"^metadata.*$", component["type"]):
                         p.write(
                             metadata_template.format(
@@ -319,7 +323,6 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 route=component["route"],
                             )
                         )
-                        continue
                     if re.match(r"^file:image.*$", component["type"]):
                         p.write(
                             image_template.format(
@@ -349,6 +352,6 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         )
                 p.write(grid_footer)
             p.write(export_footer)
-    s.write(sidebar_footer)
+    s.write(MenuBar_footer)
     app.write(app_render_footer)
 print("using FRONTEND_SPEC_PATH")
