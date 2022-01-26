@@ -6,9 +6,12 @@ interface FullPlotlyProps {
   token: string
   restrictionList: Array<string>
 }
-
+interface PlotlyPayload {
+  data: Array<{}>
+  layout: {}
+}
 interface FullPlotlyState {
-  plotlyJson: any
+  plotlyJson: PlotlyPayload
 }
 
 /**
@@ -25,7 +28,7 @@ export default class FullPlotly extends React.Component<
     }
     this.updatePlot = this.updatePlot.bind(this)
   }
-  updatePlot() {
+  updatePlot(): Promise<PlotlyPayload> {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
     let resListCopy = [...this.props.restrictionList]
@@ -36,24 +39,24 @@ export default class FullPlotly extends React.Component<
         apiUrl = apiUrl + '&' + resListCopy.shift()
       }
     }
-    fetch(apiUrl, {
+    return fetch(apiUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + this.props.token,
       },
     })
+      .then((result) => result.json())
       .then((result) => {
-        return result.json()
-      })
-      .then((result) => {
-        this.setState({
-          plotlyJson: { data: result.data, layout: result.layout },
-        })
+        return result as PlotlyPayload
       })
   }
   componentDidMount() {
-    this.updatePlot()
+    this.updatePlot().then((payload) => {
+      this.setState({
+        plotlyJson: { data: payload.data, layout: payload.layout },
+      })
+    })
     this.forceUpdate()
   }
   componentDidUpdate(
@@ -61,7 +64,11 @@ export default class FullPlotly extends React.Component<
     prevState: FullPlotlyState
   ): void {
     if (prevProps.restrictionList !== this.props.restrictionList) {
-      this.updatePlot()
+      this.updatePlot().then((payload) => {
+        this.setState({
+          plotlyJson: { data: payload.data, layout: payload.layout },
+        })
+      })
     }
   }
 

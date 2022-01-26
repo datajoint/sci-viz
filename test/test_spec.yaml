@@ -121,9 +121,9 @@ SciViz: # top level tab
                     q = ((TableA * TableB).proj(
                         ...,
                         #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
-                        _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "rgba(255, 0, 0, 0.16)")',
+                        _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "NULL")',
                         ))
-                    return dict(query=q, fetch_args=[])
+                    return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}
             example table 1 markdown:
               x: 1
               y: 0

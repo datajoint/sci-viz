@@ -7,7 +7,7 @@ interface ImageProps {
 }
 
 interface ImageState {
-  image: any
+  imageLocation: string
 }
 
 /**
@@ -17,7 +17,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
   constructor(props: ImageProps) {
     super(props)
     this.state = {
-      image: {},
+      imageLocation: '',
     }
   }
 
@@ -38,12 +38,12 @@ export default class Image extends React.Component<ImageProps, ImageState> {
       },
     }).then((result) =>
       result.blob().then((result) => {
-        this.setState({ image: URL.createObjectURL(result) })
+        this.setState({ imageLocation: URL.createObjectURL(result) })
       })
     )
   }
 
   render() {
-    return <img src={this.state.image} />
+    return <img src={this.state.imageLocation} />
   }
 }
