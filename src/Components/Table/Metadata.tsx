@@ -9,8 +9,29 @@ interface MetadataProps {
 }
 
 interface MetadataState {
-  data: any
-  attributes: any
+  data: djRecords
+  dataAttributes: djAttributes
+}
+//loot at pharus/interface.py get_attributes() for payload
+interface djAttributesArray {
+  [index: number]: string
+  type: string
+  nullable: boolean
+  default: string
+  autoincriment: boolean
+}
+interface djAttributes {
+  attributeHeaders: Array<string>
+  attributes: {
+    primary: Array<djAttributesArray>
+    secondary: Array<djAttributesArray>
+  }
+}
+
+interface djRecords {
+  recordHeader: Array<string>
+  records: Array<Array<number | null | bigint | boolean | string>>
+  totalCount: number
 }
 
 /**
@@ -23,19 +44,19 @@ export default class Metadata extends React.Component<
   constructor(props: MetadataProps) {
     super(props)
     this.state = {
-      data: { recordHeader: [], records: [], totalCount: 0 },
-      attributes: { primary: [], secondary: [] },
+      data: { recordHeader: [], records: [[]], totalCount: 0 },
+      dataAttributes: {
+        attributeHeaders: [],
+        attributes: { primary: [], secondary: [] },
+      },
     }
     this.parseTimestr = this.parseTimestr.bind(this)
+    this.getRecords = this.getRecords.bind(this)
+    this.getAttributes = this.getAttributes.bind(this)
   }
-
-  componentDidMount() {
+  getRecords(): Promise<djRecords> {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
-    let apiUrlAttr =
-      `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
-      this.props.route +
-      '/attributes'
     if (this.props.restrictionList.length > 0) {
       apiUrl = apiUrl + '?'
       apiUrl = apiUrl + this.props.restrictionList.shift()
@@ -43,7 +64,7 @@ export default class Metadata extends React.Component<
         apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
       }
     }
-    fetch(apiUrlAttr, {
+    return fetch(apiUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -54,61 +75,77 @@ export default class Metadata extends React.Component<
         return result.json()
       })
       .then((result) => {
-        this.setState({
-          attributes: {
-            primary: result.attributes.primary,
-            secondary: result.attributes.secondary,
-          },
-        })
-      })
-    fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + this.props.token,
-      },
-    })
-      .then((result) => {
-        return result.json()
-      })
-      .then((result) => {
-        this.setState({
-          data: {
-            recordHeader: result.recordHeader,
-            records: result.records[0],
-            totalCount: result.totalCount,
-          },
-        })
+        return result as Promise<djRecords>
       })
   }
+
+  getAttributes(): Promise<djAttributes> {
+    let apiUrlAttr =
+      `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+      this.props.route +
+      '/attributes'
+    return fetch(apiUrlAttr, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + this.props.token,
+      },
+    })
+      .then((result) => {
+        return result.json()
+      })
+      .then((result) => {
+        return result as Promise<djAttributes>
+      })
+  }
+
+  componentDidMount() {
+    this.getAttributes()
+      .then((result) => {
+        this.setState({ dataAttributes: result })
+      })
+      .then(() => {
+        return this.getRecords()
+      })
+      .then((result) => {
+        this.setState({ data: result })
+      })
+      .then(() => this.parseTimestr())
+  }
+
   parseTimestr() {
-    let fullAttr = this.state.attributes.primary.concat(
-      this.state.attributes.secondary
+    let fullAttr = this.state.dataAttributes.attributes.primary.concat(
+      this.state.dataAttributes.attributes.secondary
     )
     for (let i in fullAttr) {
       if (fullAttr[i][1] === 'HH:MM:SS') {
-        this.state.data.records[i] = TableAttribute.parseTimeString(
-          this.state.data.records[i]
+        let newData = this.state.data
+        newData.records[0][i] = TableAttribute.parseTimeString(
+          newData.records[0][i]!.toString()
         )
+        this.setState({ data: newData })
       } else if (
         fullAttr[i][1] === 'timestamp' ||
         fullAttr[i][1].includes('datetime')
       ) {
-        this.state.data.records[i] = TableAttribute.parseDateTime(
-          this.state.data.records[i]
+        let newData = this.state.data
+        newData.records[0][i] = TableAttribute.parseDateTime(
+          newData.records[0][i]!.toString()
         )
+        this.setState({ data: newData })
       } else if (fullAttr[i][1] === 'date') {
-        this.state.data.records[i] = TableAttribute.parseDate(
-          this.state.data.records[i]
+        let newData = this.state.data
+        newData.records[0][i] = TableAttribute.parseDate(
+          newData.records[0][i]!.toString()
         )
+        this.setState({ data: newData })
       }
     }
   }
   render() {
-    this.parseTimestr()
     return (
       <tbody className="metadata">
-        {this.state.data.records.map((record: any, index: number) => {
+        {this.state.data.records[0].map((record: any, index: number) => {
           return (
             <tr>
               <td>{this.state.data.recordHeader[index]}</td>
