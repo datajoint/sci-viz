@@ -200,7 +200,7 @@ There are a couple issues to address if you are collaborating on this project
 for running frontend_gen.py you need this variable in your .env file
 
 ```bash
-FRONTEND_SPEC_PATH=test/test_spec.yaml
+DJSCIVIZ_SPEC_PATH=test/test_spec.yaml
 ```
 
 # References

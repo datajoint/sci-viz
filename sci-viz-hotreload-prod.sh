@@ -11,13 +11,13 @@ sciviz_update() {
 sciviz_update
 echo "[$(date -u '+%Y-%m-%d %H:%M:%S')][DataJoint]: Monitoring SciViz updates..."
 INIT_TIME=$(date +%s)
-LAST_MOD_TIME=$(date -r $FRONTEND_SPEC_PATH +%s)
+LAST_MOD_TIME=$(date -r $DJSCIVIZ_SPEC_PATH +%s)
 DELTA=$(expr $LAST_MOD_TIME - $INIT_TIME)
 while true; do
-	CURR_LAST_MOD_TIME=$(date -r $FRONTEND_SPEC_PATH +%s)
+	CURR_LAST_MOD_TIME=$(date -r $DJSCIVIZ_SPEC_PATH +%s)
 	CURR_DELTA=$(expr $CURR_LAST_MOD_TIME - $INIT_TIME)
 	if [ "$DELTA" -lt "$CURR_DELTA" ]; then
-		echo "[$(date -u '+%Y-%m-%d %H:%M:%S')][DataJoint]: Reloading SciViz since \`$FRONTEND_SPEC_PATH\` changed."
+		echo "[$(date -u '+%Y-%m-%d %H:%M:%S')][DataJoint]: Reloading SciViz since \`$DJSCIVIZ_SPEC_PATH\` changed."
 		sciviz_update
 		DELTA=$CURR_DELTA
 	else

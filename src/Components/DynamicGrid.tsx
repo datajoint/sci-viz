@@ -13,7 +13,13 @@ interface DynamicGridProps {
 }
 
 interface DynamicGridState {
-  data: any
+  data: djRecords
+}
+
+interface djRecords {
+  recordHeader: Array<string>
+  records: Array<Array<number | null | bigint | boolean | string>>
+  totalCount: number
 }
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
@@ -28,7 +34,7 @@ export default class DynamicGrid extends React.Component<
   constructor(props: DynamicGridProps) {
     super(props)
     this.state = {
-      data: { recordHeader: [], records: [], totalCount: 0 },
+      data: { recordHeader: [], records: [[]], totalCount: 0 },
     }
   }
 
@@ -66,56 +72,61 @@ export default class DynamicGrid extends React.Component<
         cols={{ lg: this.props.columns, sm: 1 }}
         useCSSTransforms={true}
       >
-        {this.state.data.records.map((record: any, index: number) => {
-          let restrictionList: Array<string>
-          restrictionList = []
-          for (const i in this.state.data.recordHeader) {
-            restrictionList.push(
-              this.state.data.recordHeader[i].toString() +
-                '=' +
-                record[i].toString()
+        {this.state.data.records.map(
+          (
+            record: Array<number | null | bigint | boolean | string>,
+            index: number
+          ) => {
+            let restrictionList: Array<string>
+            restrictionList = []
+            for (const i in this.state.data.recordHeader) {
+              restrictionList.push(
+                this.state.data.recordHeader[i].toString() +
+                  '=' +
+                  record[i]!.toString()
+              )
+            }
+            return (
+              <div
+                key={index}
+                data-grid={{
+                  x: index % this.props.columns,
+                  y: Math.floor(index / this.props.columns),
+                  w: 1,
+                  h: 1,
+                  static: true,
+                }}
+              >
+                <div className="plotContainer">
+                  {this.props.componentList.map(
+                    (componentType: string, compListIndex: number) => {
+                      let restrictionListCopy = [...restrictionList]
+                      if (componentType.match(/^plot.*$/)) {
+                        return (
+                          <FullPlotly
+                            route={this.props.routeList[compListIndex]}
+                            token={this.props.token}
+                            restrictionList={restrictionListCopy}
+                          />
+                        )
+                      }
+                      if (componentType.match(/^metadata.*$/)) {
+                        return (
+                          <Metadata
+                            name="Metadata"
+                            route={this.props.routeList[compListIndex]}
+                            token={this.props.token}
+                            restrictionList={restrictionListCopy}
+                          />
+                        )
+                      }
+                    }
+                  )}
+                </div>
+              </div>
             )
           }
-          return (
-            <div
-              key={index}
-              data-grid={{
-                x: index % this.props.columns,
-                y: Math.floor(index / this.props.columns),
-                w: 1,
-                h: 1,
-                static: true,
-              }}
-            >
-              <div className="plotContainer">
-                {this.props.componentList.map(
-                  (componentType: string, compListIndex: number) => {
-                    let restrictionListCopy = [...restrictionList]
-                    if (componentType.match(/^plot.*$/)) {
-                      return (
-                        <FullPlotly
-                          route={this.props.routeList[compListIndex]}
-                          token={this.props.token}
-                          restrictionList={restrictionListCopy}
-                        />
-                      )
-                    }
-                    if (componentType.match(/^metadata.*$/)) {
-                      return (
-                        <Metadata
-                          name="Metadata"
-                          route={this.props.routeList[compListIndex]}
-                          token={this.props.token}
-                          restrictionList={restrictionListCopy}
-                        />
-                      )
-                    }
-                  }
-                )}
-              </div>
-            </div>
-          )
-        })}
+        )}
       </ResponsiveGridLayout>
     )
   }

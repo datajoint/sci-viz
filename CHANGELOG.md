@@ -6,16 +6,16 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ### Added
 
-- [pharus](https://github.com/datajoint/pharus) As submodule (#17) PR #10
-- Components PR #10:
+- [pharus](https://github.com/datajoint/pharus) As submodule (#17) PR #33
+- Components PR #33:
   - `table`
   - `markdown`
   - `metadata`
   - `plot:plotly:stored_json`
   - `file:image:attach`
-- Grid system PR #10
-- Dynamic grid system (#23) PR #10
-- Database Login PR (#9) #10
-- Basic GHA for repo PR (#26) #10
-- Hotreloading based off of spec sheet (#24) PR #10
-- Initial framework for jest testing (#27) PR #10
+- Grid system PR #33
+- Dynamic grid system (#23) PR #33
+- Database Login PR (#9) #33
+- Basic GHA for repo PR (#26) #33
+- Hotreloading based off of spec sheet (#24) PR #33
+- Initial framework for jest testing (#27) PR #33

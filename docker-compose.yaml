@@ -7,7 +7,7 @@ services:
     environment:
       CHOKIDAR_USEPOLLING: 'true'
       REACT_APP_DJSCIVIZ_BACKEND_PREFIX: '/api'
-      FRONTEND_SPEC_PATH: ./test/test_spec.yaml
+      DJSCIVIZ_SPEC_PATH: ./test/test_spec.yaml
     volumes:
       - .:/app
     # ports:

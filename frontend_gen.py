@@ -206,7 +206,7 @@ app_render_footer = """
 """
 
 # spec_path = os.environ.get('API_SPEC_PATH')
-spec_path = os.environ.get("FRONTEND_SPEC_PATH")
+spec_path = os.environ.get("DJSCIVIZ_SPEC_PATH")
 side_bar_path = "src/Components/MenuBar/MenuBarData.tsx"
 page_path = "src/Components/Pages/{page_name}.tsx"
 app_path = "src/App.tsx"
@@ -301,7 +301,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 else "''",
                             )
                         )
-                    if re.match(r"^plot.*$", component["type"]):
+                    elif re.match(r"^plot.*$", component["type"]):
                         p.write(
                             fullplotly_template.format(
                                 component_name=component_name,
@@ -312,7 +312,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 route=component["route"],
                             )
                         )
-                    if re.match(r"^metadata.*$", component["type"]):
+                    elif re.match(r"^metadata.*$", component["type"]):
                         p.write(
                             metadata_template.format(
                                 component_name=component_name,
@@ -323,7 +323,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 route=component["route"],
                             )
                         )
-                    if re.match(r"^file:image.*$", component["type"]):
+                    elif re.match(r"^file:image.*$", component["type"]):
                         p.write(
                             image_template.format(
                                 component_name=component_name,
@@ -334,7 +334,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 route=component["route"],
                             )
                         )
-                    if re.match(r"^table.*$", component["type"]):
+                    elif re.match(r"^table.*$", component["type"]):
                         try:
                             link = f"link='{component['link']}'"
                         except KeyError:
@@ -354,4 +354,4 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
             p.write(export_footer)
     s.write(MenuBar_footer)
     app.write(app_render_footer)
-print("using FRONTEND_SPEC_PATH")
+print("using DJSCIVIZ_SPEC_PATH")
