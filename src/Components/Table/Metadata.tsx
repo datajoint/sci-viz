@@ -100,15 +100,15 @@ export default class Metadata extends React.Component<
   }
 
   componentDidMount() {
-    this.getAttributes()
-      .then((result) => {
-        this.setState({ dataAttributes: result })
-      })
-      .then(() => {
-        return this.getRecords()
-      })
+    this.getRecords()
       .then((result) => {
         this.setState({ data: result })
+      })
+      .then(() => {
+        return this.getAttributes()
+      })
+      .then((result) => {
+        this.setState({ dataAttributes: result })
       })
       .then(() => this.parseTimestr())
   }

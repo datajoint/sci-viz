@@ -236,6 +236,7 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
+              channel: myslider
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -243,14 +244,29 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=MousePlots, fetch_args=['plot'])
-            component2:
+            # component2:
+            #   route: /hukhjmhyfgngc
+            #   x: 1
+            #   y: 0
+            #   height: 1
+            #   width: 1
+            #   type: table
+            #   link: /plots
+            #   restriction: >
+            #     def restriction(**kwargs):
+            #         return dict(**kwargs)
+            #   dj_query: >
+            #     def dj_query(test_group1_simple):
+            #         Mouse = test_group1_simple.Mouse
+            #         return dict(query=(Mouse), fetch_args=[])
+            myslider:
               route: /hukhjmhyfgngc
               x: 1
               y: 0
               height: 1
               width: 1
-              type: table
-              link: /plots
+              type: slider
+              channel: myslider
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)

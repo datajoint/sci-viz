@@ -9,6 +9,7 @@
     "@types/node": "^16.10.2",
     "@types/react": "^17.0.27",
     "@types/react-dom": "^17.0.9",
+    "antd": "^4.18.5",
     "js-cookie": "^3.0.1",
     "plotly.js": "^2.6.3",
     "react": "^17.0.2",
@@ -31,7 +32,10 @@
     "moduleNameMapper": {
       "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "^.+\\.(css|less)$": "<rootDir>/__mocks__/CSSStub.js"
-    }
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
+    ]
   },
   "scripts": {
     "start": "react-scripts start",
@@ -58,13 +62,13 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.16.0",
+    "@babel/plugin-transform-react-jsx": "^7.16.0",
+    "@babel/preset-react": "^7.16.0",
+    "@babel/preset-typescript": "^7.12.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "@babel/plugin-syntax-jsx": "^7.16.0",
-    "@babel/preset-react": "^7.16.0",
-    "@babel/plugin-transform-react-jsx": "^7.16.0",
-    "@babel/preset-typescript": "^7.12.1",
     "@types/jest": "^27.0.3",
     "@types/js-cookie": "^3.0.0",
     "@types/react-grid-layout": "^1.1.2",

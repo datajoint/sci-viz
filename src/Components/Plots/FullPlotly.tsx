@@ -5,6 +5,7 @@ interface FullPlotlyProps {
   route: string
   token: string
   restrictionList: Array<string>
+  storeList?: Array<string>
 }
 interface PlotlyPayload {
   data: Array<{}>
@@ -31,14 +32,12 @@ export default class FullPlotly extends React.Component<
   updatePlot(): Promise<PlotlyPayload> {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
-    let resListCopy = [...this.props.restrictionList]
-    if (resListCopy.length > 0) {
-      apiUrl = apiUrl + '?'
-      apiUrl = apiUrl + resListCopy.shift()
-      while (resListCopy.length > 0) {
-        apiUrl = apiUrl + '&' + resListCopy.shift()
-      }
+    let queryParamList = [...this.props.restrictionList]
+    if (typeof this.props.storeList != undefined) {
+      queryParamList = queryParamList.concat(this.props.storeList!)
     }
+    console.log('query params list: ', queryParamList)
+    apiUrl = apiUrl + '?' + queryParamList.join('&')
     return fetch(apiUrl, {
       method: 'GET',
       headers: {

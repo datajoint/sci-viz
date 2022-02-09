@@ -5,23 +5,23 @@ import re
 
 # Page String Components
 page_header = """
-import React from 'react';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import TableView from '../Table/TableView';
-import ReactMarkdown from 'react-markdown';
-import MenuBar from '../MenuBar/MenuBar';
+import React, { Suspense } from 'react'
+import { Responsive, WidthProvider } from 'react-grid-layout'
+import MenuBar from '../MenuBar/MenuBar'
+import { Spin } from 'antd'
 import './Page.css'
-import FullPlotly from '../Plots/FullPlotly'
-import Metadata from '../Table/Metadata'
-import DynamicGrid from '../DynamicGrid'
-import Image from '../Image'
-import Markdown from '../Markdown'
 
 interface Page1Props {
   jwtToken: string;
 }
 interface Page1State {
   restrictionList: Array<string>
+  store: RestrictionStore
+}
+// The key would be the channel the components are listening on and the array would be
+// the record to restrict by
+interface RestrictionStore {
+  [key: string]: Array<string>
 }
 const ResponsiveGridLayout = WidthProvider(Responsive);
 """
@@ -31,8 +31,10 @@ export_header = """
       super(props)
       this.state = {
         restrictionList: [],
+        store: {},
       }
       this.updateRestrictionList = this.updateRestrictionList.bind(this)
+      this.updateStore = this.updateStore.bind(this)
     }
     componentDidMount() {
       this.setState({
@@ -47,6 +49,11 @@ export_header = """
       })
       return queryParams
     }
+    updateStore(key: string, record: Array<string>) {
+      let myStore = this.state.store || { [key]: record }
+      myStore[key] = record
+      this.setState({ store: myStore })
+    }
     render() {
       return (
         <div>
@@ -55,6 +62,7 @@ export_header = """
             <ul className='grid-list'>"""
 grid_header = """
               <li>
+                <Suspense fallback={{<Spin size="default"/>}}>
                 <ResponsiveGridLayout className="mygrid" rowHeight={{{row_height}}}
                   measureBeforeMount={{false}}
                   breakpoints={{{{lg: 1200, sm: 768}}}}
@@ -67,7 +75,7 @@ table_template = """
 fullplotly_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='plotContainer'>
-                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{[...this.state.restrictionList]}}/>
+                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{[...this.state.restrictionList]}} {storeList}/>
                     </div>
                   </div>
 """
@@ -91,11 +99,22 @@ mkdown_template = """
                     imageRoute={{{image_route}}}
                   />
                   </div>"""
-
+slider_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                  <DjSlider
+                    token={{this.props.jwtToken}}
+                    route='{route}'
+                    restrictionList={{[...this.state.restrictionList]}}
+                    channel="{channel}"
+                    updatePageStore={{this.updateStore}}
+                  />
+                  </div>"""
 grid_footer = """
                 </ResponsiveGridLayout>
+                </Suspense>
               </li>"""
 dynamic_grid = """
+              <Suspense fallback={{<Spin size="default"/>}}>
               <li>
                 <DynamicGrid route={{'{route}'}}
                              token={{this.props.jwtToken}}
@@ -103,7 +122,8 @@ dynamic_grid = """
                              rowHeight={{{rowHeight}}}
                              componentList={{{componentList}}}
                              routeList={{{routeList}}}/>
-              </li>"""
+              </li>
+              </Suspense>"""
 export_footer = """
             </ul>
           </div>
@@ -245,6 +265,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
         with open(
             Path(page_path.format(page_name=page_name.replace(" ", "_"))), "w"
         ) as p:
+            import_set = set()
             p.write(page_header + export_header)
             if "hidden" in page:
                 if not page["hidden"]:
@@ -280,6 +301,9 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             routeList=route_list,
                         )
                     )
+                    import_set.add(
+                        "const DynamicGrid = React.lazy(() => import('../DynamicGrid'))"
+                    )
                     continue
                 p.write(
                     grid_header.format(
@@ -301,6 +325,9 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 else "''",
                             )
                         )
+                        import_set.add(
+                            "const Markdown = React.lazy(() => import('../Markdown'))"
+                        )
                     elif re.match(r"^plot.*$", component["type"]):
                         p.write(
                             fullplotly_template.format(
@@ -310,7 +337,15 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 height=component["height"],
                                 width=component["width"],
                                 route=component["route"],
+                                storeList=(
+                                    f"storeList={{this.state.store['{component['''channel''']}']}}"
+                                    if "channel" in component
+                                    else ""
+                                ),
                             )
+                        )
+                        import_set.add(
+                            "const FullPlotly = React.lazy(() => import('../Plots/FullPlotly'))"
                         )
                     elif re.match(r"^metadata.*$", component["type"]):
                         p.write(
@@ -323,6 +358,10 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 route=component["route"],
                             )
                         )
+                        import_set.add(
+                            "const Metadata = React.lazy(() => import('../Table/Metadata'))"
+                        )
+
                     elif re.match(r"^file:image.*$", component["type"]):
                         p.write(
                             image_template.format(
@@ -333,6 +372,9 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 width=component["width"],
                                 route=component["route"],
                             )
+                        )
+                        import_set.add(
+                            "const Image = React.lazy(() => import('../Image'))"
                         )
                     elif re.match(r"^table.*$", component["type"]):
                         try:
@@ -350,8 +392,29 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 link=link,
                             )
                         )
+                        import_set.add(
+                            "const TableView = React.lazy(() => import('../Table/TableView'))"
+                        )
+                    elif re.match(r"^slider.*$", component["type"]):
+                        p.write(
+                            slider_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                route=component["route"],
+                                channel=component["channel"],
+                            )
+                        )
+                        import_set.add(
+                            "const DjSlider = React.lazy(() => import('../Slider'))"
+                        )
                 p.write(grid_footer)
             p.write(export_footer)
+            for string in import_set:
+                p.write(string)
+                p.write("\n")
     s.write(MenuBar_footer)
     app.write(app_render_footer)
 print("using DJSCIVIZ_SPEC_PATH")

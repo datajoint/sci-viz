@@ -5,6 +5,9 @@
   display: inline;
   list-style-type: none;
 }
+.nav-menu-items {
+  margin-top: 12px;
+}
 .nav-menu {
   z-index: 1;
   display: flex;
