@@ -1,11 +1,14 @@
 import React from 'react'
 import Plot from 'react-plotly.js'
+import { Card } from 'antd'
 
 interface FullPlotlyProps {
   route: string
   token: string
   restrictionList: Array<string>
+  height: number | string
   storeList?: Array<string>
+  needQueryParams?: boolean
 }
 interface PlotlyPayload {
   data: Array<{}>
@@ -29,14 +32,24 @@ export default class FullPlotly extends React.Component<
     }
     this.updatePlot = this.updatePlot.bind(this)
   }
+  public static defaultProps = {
+    needQueryParams: true,
+  }
   updatePlot(): Promise<PlotlyPayload> {
+    let queryParamList = [...this.props.restrictionList]
+    if (
+      this.props.needQueryParams == true &&
+      this.props.restrictionList.includes('') &&
+      this.props.storeList?.length == 0
+    ) {
+      let arr = Array({})
+      return Promise.resolve({ data: arr, layout: {} })
+    }
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
-    let queryParamList = [...this.props.restrictionList]
     if (typeof this.props.storeList != undefined) {
       queryParamList = queryParamList.concat(this.props.storeList!)
     }
-    console.log('query params list: ', queryParamList)
     apiUrl = apiUrl + '?' + queryParamList.join('&')
     return fetch(apiUrl, {
       method: 'GET',
@@ -51,12 +64,17 @@ export default class FullPlotly extends React.Component<
       })
   }
   componentDidMount() {
-    this.updatePlot().then((payload) => {
-      this.setState({
-        plotlyJson: { data: payload.data, layout: payload.layout },
+    if (
+      this.props.needQueryParams &&
+      this.props.restrictionList != [''] &&
+      this.props.storeList != []
+    ) {
+      this.updatePlot().then((payload) => {
+        this.setState({
+          plotlyJson: { data: payload.data, layout: payload.layout },
+        })
       })
-    })
-    this.forceUpdate()
+    }
   }
   componentDidUpdate(
     prevProps: FullPlotlyProps,
@@ -73,12 +91,18 @@ export default class FullPlotly extends React.Component<
 
   render() {
     return (
-      <div key={this.props.restrictionList.toString()}>
+      <Card
+        style={{
+          height: this.props.height,
+        }}
+        bodyStyle={{ overflow: 'auto', height: '100%' }}
+        hoverable={true}
+      >
         <Plot
           data={this.state.plotlyJson.data}
           layout={this.state.plotlyJson.layout}
         />
-      </div>
+      </Card>
     )
   }
 }
