@@ -5,8 +5,10 @@
   min-height: calc(calc(100vh - 1.35in) - 46px);
 }
 .grid-list {
+  padding: unset;
   width: 100%;
   list-style: none;
+  margin-bottom: 0.4in;
 }
 .markdownContainer {
   background-color: #fbfbfb;

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Slider } from 'antd'
+import { Slider, Card } from 'antd'
 
 interface DjSliderProps {
   /**JWT token for api call */
@@ -14,11 +14,14 @@ interface DjSliderProps {
   storeList?: Array<string>
   /**Determines whether the slider is vertical or horizontal */
   vertical?: boolean
+  /**Determines whether the slider will also display what record is selected */
+  showRecord?: boolean
   updatePageStore: (key: string, record: Array<string>) => void
 }
 
 interface DjSliderState {
   data: djRecords
+  sliderValue: number
 }
 
 interface djRecords {
@@ -38,6 +41,7 @@ export default class DjSlider extends React.Component<
     super(props)
     this.state = {
       data: { recordHeader: [], records: [[]], totalCount: 0 },
+      sliderValue: 0,
     }
     this.getRecords = this.getRecords.bind(this)
     this.recordToQueryParams = this.recordToQueryParams.bind(this)
@@ -45,7 +49,9 @@ export default class DjSlider extends React.Component<
   //Default props for slider component
   public static defaultProps = {
     vertical: false,
+    showRecord: false,
   }
+
   getRecords(): Promise<djRecords> {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
@@ -95,23 +101,47 @@ export default class DjSlider extends React.Component<
     return queryParams
   }
 
+  displayRecord(displayRecord: boolean) {
+    if (displayRecord) {
+      return (
+        <div>
+          <tr>
+            {this.state.data.recordHeader.map((value: string) => {
+              return <th>{value}</th>
+            })}
+          </tr>
+          <tr>
+            {this.state.data.records[this.state.sliderValue].map(
+              (value: number | null | bigint | boolean | string) => {
+                return <td>{value}</td>
+              }
+            )}
+          </tr>
+        </div>
+      )
+    }
+  }
+
   render() {
     return (
-      <Slider
-        max={this.state.data.totalCount - 1}
-        vertical={this.props.vertical}
-        onChange={(value) => {
-          console.log('slider value:', value)
-          console.log(this.state.data.records[value])
-          this.props.updatePageStore(
-            this.props.channel,
-            this.recordToQueryParams(
-              this.state.data.records[value],
-              this.state.data.recordHeader
+      <Card hoverable={true}>
+        <Slider
+          max={this.state.data.totalCount - 1}
+          vertical={this.props.vertical}
+          onChange={(value) => {
+            console.log(this.state.data.recordHeader[value])
+            this.props.updatePageStore(
+              this.props.channel,
+              this.recordToQueryParams(
+                this.state.data.records[value],
+                this.state.data.recordHeader
+              )
             )
-          )
-        }}
-      />
+            this.setState({ sliderValue: value })
+          }}
+        />
+        {this.displayRecord(this.props.showRecord!)}
+      </Card>
     )
   }
 }

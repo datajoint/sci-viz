@@ -86,6 +86,11 @@ export default class DynamicGrid extends React.Component<
                   record[i]!.toString()
               )
             }
+            // if restrictionList is empty that means that the data is empty/unfetched
+            // which means that we should not render anything
+            if (restrictionList.length == 0) {
+              return <div></div>
+            }
             return (
               <div
                 key={index}
@@ -107,6 +112,7 @@ export default class DynamicGrid extends React.Component<
                             route={this.props.routeList[compListIndex]}
                             token={this.props.token}
                             restrictionList={restrictionListCopy}
+                            height="fitcontent"
                           />
                         )
                       }

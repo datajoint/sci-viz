@@ -21,9 +21,9 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
           alt="Sci-viz logo"
         />
         <div className="header-content">
-          <p>
+          <text>
             <i style={{ paddingLeft: '20px' }}>{this.props.text}</i>
-          </p>
+          </text>
         </div>
       </header>
     )

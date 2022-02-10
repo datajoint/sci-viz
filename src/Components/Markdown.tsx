@@ -3,9 +3,11 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { Card } from 'antd'
 
 interface MarkdownProps {
   content: string
+  height: number
   imageRoute?: string
 }
 
@@ -18,12 +20,14 @@ export default class Markdown extends React.Component<MarkdownProps> {
   }
   render() {
     return (
-      <div
-        className="markdownContainer"
+      <Card
         style={{
           backgroundImage: 'url(' + this.props.imageRoute + ')',
           backgroundSize: '100% 100%',
+          height: this.props.height,
         }}
+        bodyStyle={{ overflow: 'auto', height: '100%' }}
+        hoverable={true}
       >
         <ReactMarkdown
           className="markdown"
@@ -54,7 +58,7 @@ export default class Markdown extends React.Component<MarkdownProps> {
             },
           }}
         />
-      </div>
+      </Card>
     )
   }
 }

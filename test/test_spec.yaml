@@ -17,7 +17,7 @@ SciViz: # top level tab
         grid5:
           type: fixed
           columns: 1
-          row_height: 700
+          row_height: 680
           components:
             comp:
               x: 0
@@ -42,7 +42,7 @@ SciViz: # top level tab
           type: fixed
           max_component_per_page: 20
           columns: 2
-          row_height: 700
+          row_height: 680
           components:
             component1:
               x: 0
@@ -103,7 +103,7 @@ SciViz: # top level tab
           type: fixed
           max_component_per_page: 20
           columns: 2
-          row_height: 700
+          row_height: 680
           components:
             Example table (conditional row coloring): # yaml allows keys with spaces!
               route: /query2
@@ -227,7 +227,7 @@ SciViz: # top level tab
           type: fixed
           max_component_per_page: 20
           columns: 2
-          row_height: 700
+          row_height: 680
           components:
             component1:
               route: /plot1

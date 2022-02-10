@@ -1,4 +1,5 @@
 import React from 'react'
+import { Card } from 'antd'
 
 interface ImageProps {
   route: string
@@ -44,6 +45,6 @@ export default class Image extends React.Component<ImageProps, ImageState> {
   }
 
   render() {
-    return <img src={this.state.imageLocation} />
+    return <Card cover={<img src={this.state.imageLocation} />} />
   }
 }

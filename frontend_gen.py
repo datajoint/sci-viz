@@ -64,7 +64,7 @@ grid_header = """
               <li>
                 <Suspense fallback={{<Spin size="default"/>}}>
                 <ResponsiveGridLayout className="mygrid" rowHeight={{{row_height}}}
-                  measureBeforeMount={{false}}
+                  measureBeforeMount={{true}}
                   breakpoints={{{{lg: 1200, sm: 768}}}}
                   cols={{{{lg: {num_cols}, sm: 1}}}}
                   useCSSTransforms={{true}}>"""
@@ -74,9 +74,7 @@ table_template = """
                   </div>"""
 fullplotly_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                    <div className='plotContainer'>
-                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{[...this.state.restrictionList]}} {storeList}/>
-                    </div>
+                    <FullPlotly route='{route}' token={{this.props.jwtToken}} height={{{gridHeight}}} restrictionList={{[...this.state.restrictionList]}} {storeList}/>
                   </div>
 """
 metadata_template = """
@@ -87,9 +85,7 @@ metadata_template = """
                   </div>"""
 image_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                    <div className='imageContainer'>
-                      <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...this.state.restrictionList]}}/>
-                    </div>
+                    <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...this.state.restrictionList]}}/>
                   </div>
 """
 mkdown_template = """
@@ -97,6 +93,7 @@ mkdown_template = """
                   <Markdown
                     content={{`{markdown}`}}
                     imageRoute={{{image_route}}}
+                    height={{{gridHeight}}}
                   />
                   </div>"""
 slider_template = """
@@ -320,6 +317,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 y=component["y"],
                                 height=component["height"],
                                 width=component["width"],
+                                gridHeight=grid["row_height"],
                                 image_route=f"require('{component['image_route']}')['default']"
                                 if "image_route" in component
                                 else "''",
@@ -334,6 +332,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 component_name=component_name,
                                 x=component["x"],
                                 y=component["y"],
+                                gridHeight=grid["row_height"],
                                 height=component["height"],
                                 width=component["width"],
                                 route=component["route"],
