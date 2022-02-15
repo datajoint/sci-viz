@@ -2,10 +2,6 @@ import { Menu, Dropdown, Button, Card, Space } from 'antd'
 import React from 'react'
 import { DownOutlined } from '@ant-design/icons'
 
-interface DropdownPayload {
-  [key: string]: string
-}
-
 interface DropdownProps {
   /**Determines the key for the restriction store*/
   channel: string
