@@ -2,12 +2,16 @@ import React from 'react'
 import Plot from 'react-plotly.js'
 import { Card } from 'antd'
 
+interface RestrictionStore {
+  [key: string]: Array<string>
+}
 interface FullPlotlyProps {
   route: string
   token: string
   restrictionList: Array<string>
   height: number | string
-  storeList?: Array<string>
+  channelList?: Array<string>
+  store?: RestrictionStore
   needQueryParams?: boolean
 }
 interface PlotlyPayload {
@@ -37,19 +41,53 @@ export default class FullPlotly extends React.Component<
   }
   updatePlot(): Promise<PlotlyPayload> {
     let queryParamList = [...this.props.restrictionList]
+    let channelCheckArr = Array<boolean>()
+
+    // check to see if all the channels are populated
+    for (let i in this.props.channelList) {
+      console.log('i: ', i)
+      console.log(this.props.store![this.props.channelList[+i]])
+      console.log(typeof this.props.store![this.props.channelList[+i]])
+      console.log(this.props.store![this.props.channelList[+i]] != undefined)
+      if (this.props.store![this.props.channelList[+i]]) {
+        channelCheckArr.push(true)
+      } else {
+        channelCheckArr.push(false)
+      }
+
+      console.log(channelCheckArr)
+    }
+    console.log('Store: ', this.props.store)
+    console.log('channelCheckArr: ', channelCheckArr)
+    console.log('needQueryParams: ', this.props.needQueryParams == true)
+    console.log(this.props.restrictionList.includes(''))
+    console.log(channelCheckArr.includes(false))
+    console.log(
+      this.props.needQueryParams == true &&
+        this.props.restrictionList.includes('') &&
+        channelCheckArr.includes(false)
+    )
+    // check if all the conditions are met to fetch the plot
     if (
       this.props.needQueryParams == true &&
       this.props.restrictionList.includes('') &&
-      this.props.storeList?.length == 0
+      channelCheckArr.includes(false)
     ) {
       let arr = Array({})
       return Promise.resolve({ data: arr, layout: {} })
     }
+
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
-    if (typeof this.props.storeList != undefined) {
-      queryParamList = queryParamList.concat(this.props.storeList!)
+
+    for (let i in this.props.channelList) {
+      if (typeof this.props.store![this.props.channelList[+i]] != undefined) {
+        queryParamList = queryParamList.concat(
+          this.props.store![this.props.channelList[+i]]
+        )
+      }
     }
+    console.log('queryParamList: ', queryParamList)
     apiUrl = apiUrl + '?' + queryParamList.join('&')
     return fetch(apiUrl, {
       method: 'GET',
@@ -64,17 +102,11 @@ export default class FullPlotly extends React.Component<
       })
   }
   componentDidMount() {
-    if (
-      this.props.needQueryParams &&
-      this.props.restrictionList != [''] &&
-      this.props.storeList != []
-    ) {
-      this.updatePlot().then((payload) => {
-        this.setState({
-          plotlyJson: { data: payload.data, layout: payload.layout },
-        })
+    this.updatePlot().then((payload) => {
+      this.setState({
+        plotlyJson: { data: payload.data, layout: payload.layout },
       })
-    }
+    })
   }
   componentDidUpdate(
     prevProps: FullPlotlyProps,

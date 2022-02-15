@@ -236,7 +236,7 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              channel: myslider
+              channels: [myslider]
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -265,15 +265,12 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              type: slider
+              type: dropdown
               channel: myslider
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(test_group1_simple):
-                    Mouse = test_group1_simple.Mouse
-                    return dict(query=(Mouse), fetch_args=[])
+              content:
+                mouse 0: 'mouse_id=0'
+                mouse 1: 'mouse_id=1'
+                mouse 2: 'mouse_id=2'
 
     Metadata:
       route: /metadata

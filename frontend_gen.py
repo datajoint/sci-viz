@@ -74,7 +74,7 @@ table_template = """
                   </div>"""
 fullplotly_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                    <FullPlotly route='{route}' token={{this.props.jwtToken}} height={{{gridHeight}}} restrictionList={{[...this.state.restrictionList]}} {storeList}/>
+                    <FullPlotly route='{route}' token={{this.props.jwtToken}} height={{{gridHeight}}} restrictionList={{[...this.state.restrictionList]}} store={{this.state.store}} {channelList}/>
                   </div>
 """
 metadata_template = """
@@ -105,6 +105,15 @@ slider_template = """
                     channel="{channel}"
                     updatePageStore={{this.updateStore}}
                   />
+                  </div>"""
+dropdown_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <Dropdown
+                      height={{{gridHeight}}}
+                      payload={{{payload}}}
+                      channel="myslider"
+                      updatePageStore={{this.updateStore}}
+                    />
                   </div>"""
 grid_footer = """
                 </ResponsiveGridLayout>
@@ -336,9 +345,9 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 height=component["height"],
                                 width=component["width"],
                                 route=component["route"],
-                                storeList=(
-                                    f"storeList={{this.state.store['{component['''channel''']}']}}"
-                                    if "channel" in component
+                                channelList=(
+                                    f"channelList={{{component['''channels''']}}}"
+                                    if "channels" in component
                                     else ""
                                 ),
                             )
@@ -408,6 +417,23 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         )
                         import_set.add(
                             "const DjSlider = React.lazy(() => import('../Slider'))"
+                        )
+                    elif re.match(r"^dropdown.*$", component["type"]):
+                        p.write(
+                            dropdown_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                route=component["route"],
+                                channel=component["channel"],
+                                payload=component["content"],
+                                gridHeight=grid["row_height"],
+                            )
+                        )
+                        import_set.add(
+                            "const Dropdown = React.lazy(() => import('../Dropdown'))"
                         )
                 p.write(grid_footer)
             p.write(export_footer)
