@@ -74,7 +74,7 @@ table_template = """
                   </div>"""
 fullplotly_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                    <FullPlotly route='{route}' token={{this.props.jwtToken}} height={{{gridHeight}}} restrictionList={{[...this.state.restrictionList]}} store={{this.state.store}} {channelList}/>
+                    <FullPlotly route='{route}' token={{this.props.jwtToken}} height={{{gridHeight}*{height}+({height}-1)*10}} restrictionList={{[...this.state.restrictionList]}} store={{Object.assign({{}}, this.state.store)}} {channelList}/>
                   </div>
 """
 metadata_template = """
@@ -93,7 +93,7 @@ mkdown_template = """
                   <Markdown
                     content={{`{markdown}`}}
                     imageRoute={{{image_route}}}
-                    height={{{gridHeight}}}
+                    height={{{gridHeight}*{height}+({height}-1)*10}}
                   />
                   </div>"""
 slider_template = """
@@ -109,9 +109,18 @@ slider_template = """
 dropdown_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <Dropdown
-                      height={{{gridHeight}}}
+                      height={{{gridHeight}*{height}+({height}-1)*10}}
                       payload={{{payload}}}
-                      channel="myslider"
+                      channel="{channel}"
+                      updatePageStore={{this.updateStore}}
+                    />
+                  </div>"""
+radiobuttons_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <RadioButtons
+                      height={{{gridHeight}*{height}+({height}-1)*10}}
+                      payload={{{payload}}}
+                      channel="{channel}"
                       updatePageStore={{this.updateStore}}
                     />
                   </div>"""
@@ -216,8 +225,21 @@ app_render_header = """
               <Route exact path='/'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Redirect to='/login'/>}}</Route>
               <Route path='/login'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Login setJWTTokenAndHostName={{this.setJWTTokenAndHostName}} imageRoute={{{image_route}}}></Login>}}</Route>"""
 
+app_render_header_nologin = """
+  render() {{
+    return (
+      <div>
+        <Header text='{header_text}' imageRoute={{require('{header_image}')['default']}}/>
+        <Router>
+          <div className='content'>
+            <Switch>
+              <Route exact path='/'>{{<Redirect to='{first_page_route}'/>}}</Route>"""
+
 app_render_route = """
               <Route path='{page_route}*'>{{this.state.jwtToken !== '' ? <{page_name} jwtToken={{this.state.jwtToken}}></{page_name}> : <Redirect to='/login'/>}}</Route>"""
+
+app_render_route_nologin = """
+              <Route path='{page_route}*'>{{<{page_name} jwtToken={{this.state.jwtToken}}></{page_name}>}}</Route>"""
 
 app_render_footer = """
               <Route path="*" component={NotFound} />
@@ -248,7 +270,11 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
         app.write(app_import_template.format(page_name=page.replace(" ", "_")))
     app.write(
         app_export
-        + app_render_header.format(
+        + (
+            app_render_header
+            if values_yaml["SciViz"]["auth"]
+            else app_render_header_nologin
+        ).format(
             header_text=(
                 "Powered by datajoint"
                 if "header" not in values_yaml["SciViz"]
@@ -285,7 +311,11 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                     MenuBar_data.format(page_name=page_name, page_route=page["route"])
                 )
             app.write(
-                app_render_route.format(
+                (
+                    app_render_route
+                    if values_yaml["SciViz"]["auth"]
+                    else app_render_route_nologin
+                ).format(
                     page_route=page["route"], page_name=page_name.replace(" ", "_")
                 )
             )
@@ -426,7 +456,6 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 y=component["y"],
                                 height=component["height"],
                                 width=component["width"],
-                                route=component["route"],
                                 channel=component["channel"],
                                 payload=component["content"],
                                 gridHeight=grid["row_height"],
@@ -434,6 +463,22 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         )
                         import_set.add(
                             "const Dropdown = React.lazy(() => import('../Dropdown'))"
+                        )
+                    elif re.match(r"^radiobuttons.*$", component["type"]):
+                        p.write(
+                            radiobuttons_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                channel=component["channel"],
+                                payload=component["content"],
+                                gridHeight=grid["row_height"],
+                            )
+                        )
+                        import_set.add(
+                            "const RadioButtons = React.lazy(() => import('../RadioButtons'))"
                         )
                 p.write(grid_footer)
             p.write(export_footer)

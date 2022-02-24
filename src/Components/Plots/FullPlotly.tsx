@@ -38,35 +38,21 @@ export default class FullPlotly extends React.Component<
   }
   public static defaultProps = {
     needQueryParams: true,
+    channelList: [],
   }
   updatePlot(): Promise<PlotlyPayload> {
     let queryParamList = [...this.props.restrictionList]
     let channelCheckArr = Array<boolean>()
 
     // check to see if all the channels are populated
-    for (let i in this.props.channelList) {
-      console.log('i: ', i)
-      console.log(this.props.store![this.props.channelList[+i]])
-      console.log(typeof this.props.store![this.props.channelList[+i]])
-      console.log(this.props.store![this.props.channelList[+i]] != undefined)
-      if (this.props.store![this.props.channelList[+i]]) {
+    this.props.channelList?.forEach((element) => {
+      if (this.props.store![element]) {
         channelCheckArr.push(true)
       } else {
         channelCheckArr.push(false)
       }
+    })
 
-      console.log(channelCheckArr)
-    }
-    console.log('Store: ', this.props.store)
-    console.log('channelCheckArr: ', channelCheckArr)
-    console.log('needQueryParams: ', this.props.needQueryParams == true)
-    console.log(this.props.restrictionList.includes(''))
-    console.log(channelCheckArr.includes(false))
-    console.log(
-      this.props.needQueryParams == true &&
-        this.props.restrictionList.includes('') &&
-        channelCheckArr.includes(false)
-    )
     // check if all the conditions are met to fetch the plot
     if (
       this.props.needQueryParams == true &&
@@ -87,7 +73,7 @@ export default class FullPlotly extends React.Component<
         )
       }
     }
-    console.log('queryParamList: ', queryParamList)
+
     apiUrl = apiUrl + '?' + queryParamList.join('&')
     return fetch(apiUrl, {
       method: 'GET',
@@ -108,11 +94,24 @@ export default class FullPlotly extends React.Component<
       })
     })
   }
+  componentWillUnmount() {}
   componentDidUpdate(
     prevProps: FullPlotlyProps,
     prevState: FullPlotlyState
   ): void {
-    if (prevProps.restrictionList !== this.props.restrictionList) {
+    let propsUpdate = false
+    if (this.props.store !== prevProps.store) {
+      this.props.channelList?.forEach((element) => {
+        if (
+          JSON.stringify(this.props.store![element]) !==
+          JSON.stringify(prevProps.store![element])
+        ) {
+          propsUpdate = true
+        }
+      })
+    }
+
+    if (propsUpdate) {
       this.updatePlot().then((payload) => {
         this.setState({
           plotlyJson: { data: payload.data, layout: payload.layout },

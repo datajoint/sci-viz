@@ -56,6 +56,9 @@ services:
       - FLASK_ENV=development # enables logging to console from Flask
       - PHARUS_SPEC_PATH=specs/test_spec.yaml # for dynamic api spec
       - PHARUS_MODE=DEV
+      - PHARUS_USER
+      - PHARUS_HOST
+      - PHARUS_PASSWORD
     volumes:
       - ./test:/tmp/test
       - ./test/test_spec.yaml:/main/specs/test_spec.yaml

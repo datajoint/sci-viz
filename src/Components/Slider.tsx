@@ -97,7 +97,6 @@ export default class DjSlider extends React.Component<
     for (let i in recordHeader) {
       queryParams.push(recordHeader[i] + '=' + record[i])
     }
-    console.log('queryparams: ', queryParams)
     return queryParams
   }
 
@@ -129,7 +128,6 @@ export default class DjSlider extends React.Component<
           max={this.state.data.totalCount - 1}
           vertical={this.props.vertical}
           onChange={(value) => {
-            console.log(this.state.data.recordHeader[value])
             this.props.updatePageStore(
               this.props.channel,
               this.recordToQueryParams(

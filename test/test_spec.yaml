@@ -1,8 +1,7 @@
 version: 'v0.0.0'
 LabBook: null
 SciViz: # top level tab
-  auth:
-    mode: database # reuse from DJ LabBook
+  auth: True
   # header:
   #   image_route: ./IBLlogo.png
   #   text: Data Portal
@@ -225,16 +224,67 @@ SciViz: # top level tab
       grids:
         grid1:
           type: fixed
-          max_component_per_page: 20
           columns: 2
-          row_height: 680
+          row_height: 80
           components:
-            component1:
-              route: /plot1
+            plot1:
+              route: /plot1a
               type: plot:plotly:stored_json
+              x: 0
+              y: 1
+              height: 6
+              width: 1
+              channels: [mybuttons]
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=MousePlots, fetch_args=['plot'])
+            mybuttons:
               x: 0
               y: 0
               height: 1
+              width: 1
+              type: radiobuttons
+              channel: mybuttons
+              content:
+                mouse 0: 'mouse_id=0'
+                mouse 1: 'mouse_id=1'
+                mouse 2: 'mouse_id=2'
+            plot2:
+              route: /plot1b
+              type: plot:plotly:stored_json
+              x: 1
+              y: 1
+              height: 6
+              width: 1
+              channels: [mydropdown]
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=MousePlots, fetch_args=['plot'])
+            mydropdown:
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              type: dropdown
+              channel: mydropdown
+              content:
+                mouse 0: 'mouse_id=0'
+                mouse 1: 'mouse_id=1'
+                mouse 2: 'mouse_id=2'
+            plot3:
+              route: /plot1c
+              type: plot:plotly:stored_json
+              x: 0
+              y: 8
+              height: 6
               width: 1
               channels: [myslider]
               restriction: >
@@ -244,34 +294,21 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=MousePlots, fetch_args=['plot'])
-            # component2:
-            #   route: /hukhjmhyfgngc
-            #   x: 1
-            #   y: 0
-            #   height: 1
-            #   width: 1
-            #   type: table
-            #   link: /plots
-            #   restriction: >
-            #     def restriction(**kwargs):
-            #         return dict(**kwargs)
-            #   dj_query: >
-            #     def dj_query(test_group1_simple):
-            #         Mouse = test_group1_simple.Mouse
-            #         return dict(query=(Mouse), fetch_args=[])
             myslider:
-              route: /hukhjmhyfgngc
-              x: 1
-              y: 0
+              type: slider
+              route: /myslider
+              x: 0
+              y: 7
               height: 1
               width: 1
-              type: dropdown
               channel: myslider
-              content:
-                mouse 0: 'mouse_id=0'
-                mouse 1: 'mouse_id=1'
-                mouse 2: 'mouse_id=2'
-
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=MousePlots.proj(), fetch_args=[])
     Metadata:
       route: /metadata
       grids:
