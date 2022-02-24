@@ -446,7 +446,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             )
                         )
                         import_set.add(
-                            "const DjSlider = React.lazy(() => import('../Slider'))"
+                            "const DjSlider = React.lazy(() => import('../Emitters/Slider'))"
                         )
                     elif re.match(r"^dropdown.*$", component["type"]):
                         p.write(
@@ -462,7 +462,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             )
                         )
                         import_set.add(
-                            "const Dropdown = React.lazy(() => import('../Dropdown'))"
+                            "const Dropdown = React.lazy(() => import('../Emitters/Dropdown'))"
                         )
                     elif re.match(r"^radiobuttons.*$", component["type"]):
                         p.write(
@@ -478,7 +478,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             )
                         )
                         import_set.add(
-                            "const RadioButtons = React.lazy(() => import('../RadioButtons'))"
+                            "const RadioButtons = React.lazy(() => import('../Emitters/RadioButtons'))"
                         )
                 p.write(grid_footer)
             p.write(export_footer)
