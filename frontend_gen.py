@@ -70,7 +70,7 @@ grid_header = """
                   useCSSTransforms={{true}}>"""
 table_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}' {link} updateRestrictionList={{this.updateRestrictionList}}/>
+                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}' {link} {channel} updateRestrictionList={{this.updateRestrictionList}} updatePageStore={{this.updateStore}}/>
                   </div>"""
 fullplotly_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
@@ -429,6 +429,11 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             link = f"link='{component['link']}'"
                         except KeyError:
                             link = ""
+                        channel = (
+                            f"channel='{component['channel']}'"
+                            if "channel" in component
+                            else ""
+                        )
                         p.write(
                             table_template.format(
                                 component_name=component_name,
@@ -438,6 +443,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 width=component["width"],
                                 route=component["route"],
                                 link=link,
+                                channel=channel,
                             )
                         )
                         import_set.add(

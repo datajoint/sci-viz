@@ -325,6 +325,36 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=MousePlots.proj(), fetch_args=[])
+            mytable:
+              type: table
+              route: /mytableplots
+              x: 0
+              y: 14
+              height: 6
+              width: 1
+              channel: mytable
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=Mouse, fetch_args=[])
+            tableplots:
+              route: /plot1d
+              type: plot:plotly:stored_json
+              x: 0
+              y: 14
+              height: 6
+              width: 1
+              channels: [mytable]
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=MousePlots, fetch_args=['plot'])
     Metadata:
       route: /metadata
       grids:

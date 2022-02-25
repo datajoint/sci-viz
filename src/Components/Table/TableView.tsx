@@ -22,7 +22,9 @@ interface TableViewProps {
   route: string
   tableName: string
   link?: string
+  channel?: string
   updateRestrictionList: (queryParams: string) => string
+  updatePageStore: (key: string, record: Array<string>) => void
 }
 
 interface TableViewState {
@@ -632,6 +634,8 @@ export default class TableView extends React.Component<
           setRestrictions={this.setRestrictions}
           setOrders={this.setOrders}
           updateRestrictionList={this.props.updateRestrictionList}
+          updatePageStore={this.props.updatePageStore}
+          channel={this.props.channel}
         />
       </Card>
     )
