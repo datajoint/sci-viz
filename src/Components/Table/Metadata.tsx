@@ -12,7 +12,7 @@ interface MetadataState {
   data: djRecords
   dataAttributes: djAttributes
 }
-//loot at pharus/interface.py get_attributes() for payload
+//look at pharus/interface.py get_attributes() for payload
 interface djAttributesArray {
   [index: number]: string
   type: string

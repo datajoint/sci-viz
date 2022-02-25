@@ -268,17 +268,33 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=MousePlots, fetch_args=['plot'])
+            # mydropdown:
+            #   x: 1
+            #   y: 0
+            #   height: 1
+            #   width: 1
+            #   type: dropdown-static
+            #   channel: mydropdown
+            #   content:
+            #     mouse 0: 'mouse_id=0'
+            #     mouse 1: 'mouse_id=1'
+            #     mouse 2: 'mouse_id=2'
             mydropdown:
               x: 1
               y: 0
               height: 1
               width: 1
-              type: dropdown
+              type: dropdown-query
               channel: mydropdown
-              content:
-                mouse 0: 'mouse_id=0'
-                mouse 1: 'mouse_id=1'
-                mouse 2: 'mouse_id=2'
+              route: /testtest
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    q = dj.U('mouse_id') & Mouse
+                    return dict(query=q, fetch_args=[])
             plot3:
               route: /plot1c
               type: plot:plotly:stored_json

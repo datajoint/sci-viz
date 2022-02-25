@@ -115,6 +115,16 @@ dropdown_template = """
                       updatePageStore={{this.updateStore}}
                     />
                   </div>"""
+dropdown_query_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <DropdownQuery
+                      height={{{gridHeight}*{height}+({height}-1)*10}}
+                      channel="{channel}"
+                      route='{route}'
+                      token={{this.props.jwtToken}}
+                      updatePageStore={{this.updateStore}}
+                    />
+                  </div>"""
 radiobuttons_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <RadioButtons
@@ -448,7 +458,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         import_set.add(
                             "const DjSlider = React.lazy(() => import('../Emitters/Slider'))"
                         )
-                    elif re.match(r"^dropdown.*$", component["type"]):
+                    elif re.match(r"^dropdown-static.*$", component["type"]):
                         p.write(
                             dropdown_template.format(
                                 component_name=component_name,
@@ -463,6 +473,22 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         )
                         import_set.add(
                             "const Dropdown = React.lazy(() => import('../Emitters/Dropdown'))"
+                        )
+                    elif re.match(r"^dropdown-query.*$", component["type"]):
+                        p.write(
+                            dropdown_query_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                channel=component["channel"],
+                                route=component["route"],
+                                gridHeight=grid["row_height"],
+                            )
+                        )
+                        import_set.add(
+                            "const DropdownQuery = React.lazy(() => import('../Emitters/DropdownQuery'))"
                         )
                     elif re.match(r"^radiobuttons.*$", component["type"]):
                         p.write(
