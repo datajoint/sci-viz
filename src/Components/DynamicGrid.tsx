@@ -10,6 +10,7 @@ interface DynamicGridProps {
   rowHeight: number
   componentList: Array<string>
   routeList: Array<string>
+  queryParams?: Array<string>
 }
 
 interface DynamicGridState {
@@ -41,6 +42,13 @@ export default class DynamicGrid extends React.Component<
   componentDidMount() {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
+    console.log(this.props.queryParams)
+    if (
+      this.props.queryParams != undefined &&
+      !this.props.queryParams.includes('')
+    ) {
+      apiUrl = apiUrl + '?' + this.props.queryParams.join('&')
+    }
     fetch(apiUrl, {
       method: 'GET',
       headers: {

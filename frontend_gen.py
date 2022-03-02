@@ -146,7 +146,8 @@ dynamic_grid = """
                              columns={{{columns}}}
                              rowHeight={{{rowHeight}}}
                              componentList={{{componentList}}}
-                             routeList={{{routeList}}}/>
+                             routeList={{{routeList}}}
+                             queryParams={{[...this.state.restrictionList]}}/>
               </li>
               </Suspense>"""
 export_footer = """

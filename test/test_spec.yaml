@@ -439,6 +439,29 @@ SciViz: # top level tab
       route: /hiddenpage
       hidden: True
       grids:
+        dgrid:
+          route: /dgridasdawdd
+          type: dynamic
+          columns: 3
+          row_height: 600
+          restriction: >
+            def restriction(**kwargs):
+                return dict(**kwargs)
+          dj_query: >
+            def dj_query(test_group1_simple):
+                Mouse = test_group1_simple.Mouse
+                return dict(query=(Mouse.proj()), fetch_args=[])
+          component_templates:
+            comp2:
+              route: /myMetakkljj
+              type: metadata
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=(Mouse), fetch_args=[])
         mygrid:
           type: fixed
           columns: 3
