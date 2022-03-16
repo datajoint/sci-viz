@@ -17,6 +17,7 @@ interface FullPlotlyProps {
 interface PlotlyPayload {
   data: Array<{}>
   layout: {}
+  config: {}
 }
 interface FullPlotlyState {
   plotlyJson: PlotlyPayload
@@ -32,7 +33,7 @@ export default class FullPlotly extends React.Component<
   constructor(props: FullPlotlyProps) {
     super(props)
     this.state = {
-      plotlyJson: { data: [], layout: {} },
+      plotlyJson: { data: [], layout: {}, config: {} },
     }
     this.updatePlot = this.updatePlot.bind(this)
   }
@@ -60,7 +61,7 @@ export default class FullPlotly extends React.Component<
       channelCheckArr.includes(false)
     ) {
       let arr = Array({})
-      return Promise.resolve({ data: arr, layout: {} })
+      return Promise.resolve({ data: arr, layout: {}, config: {} })
     }
 
     let apiUrl =
@@ -90,7 +91,11 @@ export default class FullPlotly extends React.Component<
   componentDidMount() {
     this.updatePlot().then((payload) => {
       this.setState({
-        plotlyJson: { data: payload.data, layout: payload.layout },
+        plotlyJson: {
+          data: payload.data,
+          layout: payload.layout,
+          config: payload.config,
+        },
       })
     })
   }
@@ -114,7 +119,11 @@ export default class FullPlotly extends React.Component<
     if (propsUpdate) {
       this.updatePlot().then((payload) => {
         this.setState({
-          plotlyJson: { data: payload.data, layout: payload.layout },
+          plotlyJson: {
+            data: payload.data,
+            layout: payload.layout,
+            config: payload.config,
+          },
         })
       })
     }
@@ -132,6 +141,7 @@ export default class FullPlotly extends React.Component<
         <Plot
           data={this.state.plotlyJson.data}
           layout={this.state.plotlyJson.layout}
+          config={this.state.plotlyJson.config}
         />
       </Card>
     )

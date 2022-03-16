@@ -1,6 +1,9 @@
 import React from 'react'
 import { Slider, Card } from 'antd'
 
+interface RestrictionStore {
+  [key: string]: Array<string>
+}
 interface DjSliderProps {
   /**JWT token for api call */
   token: string
@@ -8,10 +11,11 @@ interface DjSliderProps {
   route: string
   /**List of strings to append to the api call for restricting query, comes from page query params */
   restrictionList: Array<string>
+  channelList?: Array<string>
   /**key for page store */
   channel: string
   /**List of strings to append to the api call for restricting query, comes from other components */
-  storeList?: Array<string>
+  store?: RestrictionStore
   /**Determines whether the slider is vertical or horizontal */
   vertical?: boolean
   /**Determines whether the slider will also display what record is selected */
@@ -50,14 +54,19 @@ export default class DjSlider extends React.Component<
   public static defaultProps = {
     vertical: false,
     showRecord: false,
+    channelList: [],
   }
 
   getRecords(): Promise<djRecords> {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
     let queryParamList = [...this.props.restrictionList]
-    if (this.props.storeList !== undefined) {
-      queryParamList = queryParamList.concat(this.props.storeList)
+    if (this.props.store !== undefined) {
+      this.props.channelList!.forEach((element) => {
+        if (this.props.store![element] !== undefined) {
+          queryParamList = queryParamList.concat(this.props.store![element])
+        }
+      })
     }
     apiUrl = apiUrl + '?' + queryParamList.join('&')
     return fetch(apiUrl, {
@@ -81,11 +90,36 @@ export default class DjSlider extends React.Component<
     })
   }
 
-  componentDidUpdate(prevProps: DjSliderProps): void {
-    if (prevProps.restrictionList !== this.props.restrictionList) {
-      this.getRecords().then((payload) => {
-        this.setState({ data: payload })
+  componentDidUpdate(prevProps: DjSliderProps, prevState: DjSliderState): void {
+    let propsUpdate = false
+    if (this.props.store !== prevProps.store) {
+      this.props.channelList?.forEach((element) => {
+        if (
+          JSON.stringify(this.props.store![element]) !==
+          JSON.stringify(prevProps.store![element])
+        ) {
+          propsUpdate = true
+        }
       })
+    }
+
+    if (propsUpdate) {
+      this.getRecords()
+        .then((payload) => {
+          this.setState({
+            data: payload,
+            sliderValue: 0,
+          })
+        })
+        .then(() => {
+          this.props.updatePageStore(
+            this.props.channel,
+            this.recordToQueryParams(
+              this.state.data.records[0],
+              this.state.data.recordHeader
+            )
+          )
+        })
     }
   }
 

@@ -85,7 +85,7 @@ metadata_template = """
                   </div>"""
 image_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                    <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...this.state.restrictionList]}}/>
+                    <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...this.state.restrictionList]}} height={{{gridHeight}*{height}+({height}-1)*10}}/>
                   </div>
 """
 mkdown_template = """
@@ -104,6 +104,8 @@ slider_template = """
                     restrictionList={{[...this.state.restrictionList]}}
                     channel="{channel}"
                     updatePageStore={{this.updateStore}}
+                    {channelList}
+                    {store}
                   />
                   </div>"""
 dropdown_template = """
@@ -420,6 +422,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 height=component["height"],
                                 width=component["width"],
                                 route=component["route"],
+                                gridHeight=grid["row_height"],
                             )
                         )
                         import_set.add(
@@ -460,6 +463,16 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 width=component["width"],
                                 route=component["route"],
                                 channel=component["channel"],
+                                channelList=(
+                                    f"channelList={{{component['''channels''']}}}"
+                                    if "channels" in component
+                                    else ""
+                                ),
+                                store=(
+                                    "store={Object.assign({}, this.state.store)}"
+                                    if "channels" in component
+                                    else ""
+                                ),
                             )
                         )
                         import_set.add(
