@@ -1,0 +1,71 @@
+#HOST_UID="$(id -u)" HOST_GID="$(id -g)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\" '{print $2}') docker-compose up --build
+version: '2.4'
+services:
+  sci-viz:
+    build: .
+    image: jverswijver/sciviz:0.1.2-beta.10
+    environment:
+      CHOKIDAR_USEPOLLING: 'true'
+      REACT_APP_DJSCIVIZ_BACKEND_PREFIX: '/api'
+      DJSCIVIZ_SPEC_PATH: ./test/test_spec.yaml
+    volumes:
+      - .:/app
+    # ports:
+    #   - "3000:3000"
+    networks:
+      - main
+    working_dir: /app
+    user: '${HOST_UID}:${HOST_GID}'
+    # use sci-viz-hotreload-prod.sh for production nginx deploment
+    command:
+      - sh
+      - -lc
+      - |
+        sh sci-viz-hotreload-dev.sh
+  localdb:
+    image: datajoint/mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=pharus
+    volumes:
+      - ./pharus/tests/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - main
+  fakeservices.datajoint.io:
+    image: datajoint/nginx:v0.0.19
+    environment:
+      - ADD_pharus_TYPE=REST
+      - ADD_pharus_ENDPOINT=pharus:5000
+      - ADD_pharus_PREFIX=/api
+      - ADD_sciviz_TYPE=REST
+      - ADD_sciviz_ENDPOINT=sci-viz:3000
+      - ADD_sciviz_PREFIX=/
+      - HTTPS_PASSTHRU=TRUE
+    ports:
+      - '443:443'
+      - '80:80'
+    networks:
+      - main
+  pharus:
+    depends_on:
+      localdb:
+        condition: service_healthy
+    extends:
+      file: ./pharus/docker-compose-build.yaml
+      service: pharus
+    environment:
+      - FLASK_ENV=development # enables logging to console from Flask
+      - PHARUS_SPEC_PATH=specs/test_spec.yaml # for dynamic api spec
+      - PHARUS_MODE=DEV
+    volumes:
+      - ./test:/tmp/test
+      - ./test/test_spec.yaml:/main/specs/test_spec.yaml
+    command:
+      - sh
+      - -lc
+      - |
+        python /tmp/test/populate.py
+        pharus
+    networks:
+      - main
+networks:
+  main:

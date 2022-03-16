@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800px"
+   height="600px"
+   viewBox="0 0 800 600"
+   version="1.1"
+   id="SVGRoot"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="3440"
+     inkscape:window-height="1403"
+     id="namedview19"
+     showgrid="false"
+     inkscape:zoom="1.265"
+     inkscape:cx="247.82609"
+     inkscape:cy="304.89027"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="SVGRoot"
+     inkscape:document-rotation="0" />
+  <defs
+     id="defs10">
+    <rect
+       x="160.37665"
+       y="370.91465"
+       width="238.27778"
+       height="95.013886"
+       id="rect28" />
+    <rect
+       x="237.82964"
+       y="199.3936"
+       width="213.06702"
+       height="111.39239"
+       id="rect22" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter2017"
+       x="-0.0016420998"
+       width="1.0032842"
+       y="-0.0084129025"
+       height="1.0168258">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.28550257"
+         id="feGaussianBlur2019" />
+    </filter>
+  </defs>
+  <metadata
+     id="metadata13">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <text
+     xml:space="preserve"
+     style="font-size:109.911px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';opacity:1;stroke:#00ff00;stroke-width:2.74778;filter:url(#filter2017)"
+     x="204.6687"
+     y="420.12338"
+     id="text38"
+     transform="matrix(1.5699472,0,0,2.0717487,-258.34918,-492.54678)"><tspan
+       sodipodi:role="line"
+       id="tspan36"
+       x="204.6687"
+       y="420.12338"
+       style="stroke:#00ff00;stroke-width:2.74778">SCI⚛VIZ</tspan></text>
+</svg>

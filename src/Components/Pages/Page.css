@@ -1,0 +1,81 @@
+.grid-container {
+  margin-bottom: 0.25in;
+  display: flex;
+  background-color: #f1f1f1;
+  min-height: calc(calc(100vh - 1.35in) - 46px);
+}
+.grid-list {
+  width: 100%;
+  list-style: none;
+}
+.markdownContainer {
+  background-color: #fbfbfb;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  flex-grow: 1;
+  box-shadow: -1px 0px 3px #91938f;
+}
+.markdown {
+  margin: 15px;
+}
+
+.markdown table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.markdown th {
+  border: 1px solid black;
+}
+
+.markdown tr {
+  border: 1px solid black;
+}
+
+.markdown td {
+  border: 1px solid black;
+}
+
+.markdown img {
+  max-width: 100%;
+}
+
+.contains-task-list {
+  list-style-type: none;
+}
+.js-plotly-plot,
+.plot-container {
+  height: 100%;
+  width: 100%;
+}
+.plotContainer {
+  background-color: #fbfbfb;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  flex-grow: 1;
+  box-shadow: -1px 0px 3px #91938f;
+}
+.metadataContainer {
+  background-color: #fbfbfb;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  flex-grow: 1;
+  box-shadow: -1px 0px 3px #91938f;
+}
+.imageContainer {
+  background-color: #fbfbfb;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  flex-grow: 1;
+  box-shadow: -1px 0px 3px #91938f;
+}
+.imageContainer img {
+  max-width: 100%;
+  max-height: 99%;
+  min-width: auto;
+  min-height: auto;
+}

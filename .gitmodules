@@ -1,0 +1,4 @@
+[submodule "pharus"]
+	path = pharus
+	url = https://github.com/datajoint/pharus.git
+	branch = master

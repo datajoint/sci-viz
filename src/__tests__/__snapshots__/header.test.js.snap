@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot of header component 1`] = `
+<header>
+  <img
+    alt="Sci-viz logo"
+    className="header-img"
+  />
+  <div
+    className="header-content"
+  >
+    <p>
+      <i
+        style={
+          Object {
+            "paddingLeft": "20px",
+          }
+        }
+      />
+    </p>
+  </div>
+</header>
+`;

@@ -1,0 +1,393 @@
+version: 'v0.0.0'
+LabBook: null
+SciViz: # top level tab
+  auth:
+    mode: database # reuse from DJ LabBook
+  # header:
+  #   image_route: ./IBLlogo.png
+  #   text: Data Portal
+  # login:
+  #   image_route: ./IBLlogo.png
+  pages: # individual pages
+    # The first page in the list of pages is the splash page after login
+    # By convention this should be a home page with a markdown component
+    Home:
+      route: /home
+      grids:
+        grid5:
+          type: fixed
+          columns: 1
+          row_height: 700
+          components:
+            comp:
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: markdown
+              # this example of image_route has the image in the /src dir
+              image_route: ../../logo.svg
+              text: |
+                # Welcome!
+
+                This is a basic homepage created entirely through the config file.
+
+                It is comprised of a single markdown component that supports the [github markdown spec.](https://guides.github.com/features/mastering-markdown/)
+
+                For more examples of the markdown component go the the markdown page.
+    Markdown:
+      route: /mkdown # dev, be careful of name collisions
+      grids:
+        grid1:
+          type: fixed
+          max_component_per_page: 20
+          columns: 2
+          row_height: 700
+          components:
+            component1:
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: markdown
+              text: |
+                ![Image](https://www.datajoint.org/static/images/djopen-color-dark.png)
+                # Markdown support  
+                ### Hello!  
+                this is an example of the markdown component  
+                ~~~python  
+                print('Nice! Codeblock support!')  
+                ~~~  
+                list: 
+                  * apple
+                  * pear
+                  * melon
+
+                ordered list:
+                1. one
+                2. two
+                3. three
+
+                `Inline code highlight! `
+
+                [Hyperlinks!](https://www.google.com/)
+                # h1
+                ## h2
+                ### h3
+                #### h4
+                ##### h5
+                ###### h6
+
+                nested lists:
+                  * parent
+                    * child
+
+                task lists:
+                  * [x] apples
+                  * [x] pizza
+                  * [ ] chicken
+
+                tables:
+
+                first header | second header
+                ------------ | -------------
+                Content cell 1 | content cell 2
+                Content cell 3 | content cell 4
+    Table:
+      route: /tableExample
+      args:
+        - subject_name
+        - session_number
+      grids:
+        grid1:
+          type: fixed
+          max_component_per_page: 20
+          columns: 2
+          row_height: 700
+          components:
+            Example table (conditional row coloring): # yaml allows keys with spaces!
+              route: /query2
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)
+                    q = ((TableA * TableB).proj(
+                        ...,
+                        #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
+                        _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "NULL")',
+                        ))
+                    return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}
+            example table 1 markdown:
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              type: markdown
+              text: |
+                # Hello! 
+                This is a Datajoint table component populated by the codeblock:
+                ~~~python  
+                def dj_query(vms):
+                    TableA, TableB = (vms['test_group1_simple'].TableA,
+                                      vms['test_group1_simple'].TableB)
+                    q = ((TableA * TableB).proj(
+                        ...,
+                        _sciviz_background='''
+                        IF(a_name = "Raphael",
+                        "rgba(50, 255, 0, 0.16)",
+                        "rgba(255, 0, 0, 0.16)")
+                        ''',))
+                    return dict(query=q, fetch_args=[])
+                ~~~
+                # *Sci-Viz* speaks datajoint natively, isnt that neat!  
+
+                ### About the coloring in the table:
+                Notice that this query has a projection that produces an additional column.
+                The column `_sciviz_background` accepts any css compatable color,
+                so if you want custom coloring based off of a condition in your query result 
+                all you have to do is make a projection with a condition that inserts a color into the `_sciviz_background` column.
+
+                If the `_sciviz_background` column exists, the frontend automatically hides the column and applys its css colors to each row.
+                The onlt thing that the `_sciviz_background` column cares about is that it has a valid css color or NULL in it,
+                so you can enforce as many color conditions as you want.
+
+                This same functionality also exists for the text using the column `_sciviz_font`
+                [here is a good tool for picking css colors.](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Colors/Color_picker_tool)
+            Example table 2 (restriction):
+              route: /exampletable2
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: table
+              link: /hiddenpage
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs, a_id=1)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA,
+                                      test_group1_simple.TableB)
+                    return dict(query=(TableA * TableB), fetch_args=[])
+            example table 2 markdown:
+              x: 1
+              y: 1
+              height: 1
+              width: 1
+              type: markdown
+              text: |
+                # DJ table with restriction:
+
+                This is a datajoint table from the following query:
+                ~~~python
+                  def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA,
+                                      test_group1_simple.TableB)
+                    return dict(query=(TableA * TableB), fetch_args=[])
+                ~~~
+
+                But it also has the following restriction applied to it:
+                ~~~python
+                  def restriction(**kwargs):
+                    return dict(**kwargs, a_id=1)
+                ~~~
+                ## Why is this useful?
+
+                What this does is it injects the additional restriction into the query.
+
+                This is useful because you can use anchoring and aliasing in the config to
+                copy one query to many components and only have to change the restriction on the
+                component
+            Mouse table with linking:
+              route: /dawdgargaefdaefa
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: table
+              link: /hiddenpage
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=(Mouse), fetch_args=[])
+    Plots:
+      route: /plots
+      grids:
+        grid1:
+          type: fixed
+          max_component_per_page: 20
+          columns: 2
+          row_height: 700
+          components:
+            component1:
+              route: /plot1
+              type: plot:plotly:stored_json
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=MousePlots, fetch_args=['plot'])
+            component2:
+              route: /hukhjmhyfgngc
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              type: table
+              link: /plots
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=(Mouse), fetch_args=[])
+
+    Metadata:
+      route: /metadata
+      grids:
+        grid2:
+          type: fixed
+          columns: 6
+          row_height: 233
+          components:
+            comp:
+              type: metadata
+              route: /metadata1
+              x: 1
+              y: 1
+              height: 1
+              width: 1
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs, b_id=19)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA,
+                                      test_group1_simple.TableB)
+                    return dict(query=(TableA * TableB), fetch_args=[])
+            desc:
+              type: markdown
+              x: 3
+              y: 0
+              height: 3
+              width: 3
+              text: |
+                # This is a metadata component
+                it is not very useful by itself but when combined with the dynamic
+                component generator it can provide a useful description of what the other
+                components are.
+    Dynamic Grid:
+      route: /dynamicGrid
+      grids:
+        dgrid:
+          route: /dgrid
+          type: dynamic
+          columns: 3
+          row_height: 600
+          restriction: >
+            def restriction(**kwargs):
+                return dict(**kwargs)
+          dj_query: >
+            def dj_query(test_group1_simple):
+                Mouse = test_group1_simple.Mouse
+                return dict(query=(Mouse.proj()), fetch_args=[])
+          component_templates:
+            comp2:
+              route: /myMeta
+              type: metadata
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=(Mouse), fetch_args=[])
+            comp1:
+              route: /myPlot
+              type: plot:plotly:stored_json
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=(MousePlots), fetch_args=['plot'])
+            comp3:
+              route: /myTableD
+              type: table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=(MousePlots), fetch_args=[])
+    Hidden Page:
+      route: /hiddenpage
+      hidden: True
+      grids:
+        mygrid:
+          type: fixed
+          columns: 3
+          row_height: 600
+          components:
+            Mouse metadata:
+              route: /dawdgar
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              type: metadata
+              link: /hiddenpage
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    Mouse = test_group1_simple.Mouse
+                    return dict(query=(Mouse), fetch_args=[])
+            testplot:
+              type: plot:plotly:stored_json
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              route: /someplotroute
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePlots = test_group1_simple.MousePlots
+                    return dict(query=(MousePlots), fetch_args=['plot'])
+            picture:
+              type: file:image:attach
+              route: /picture
+              height: 1
+              width: 1
+              x: 2
+              y: 0
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    MousePics = test_group1_simple.MousePics
+                    return dict(query=MousePics, fetch_args=['image_payload'])
