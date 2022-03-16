@@ -70,23 +70,5 @@ services:
         pharus
     networks:
       - main
-  jnotebook:
-    image: datajoint/djlab:py3.7-alpine-b3bbe1c
-    networks:
-      - main
-    ports:
-      - 8888:8888
-    environment:
-      - DISPLAY # Necessary to allow GUI to route to Docker host
-      - Djlab_JupyterServer_Password=datajoint # Jupyter login password
-      # - Djlab_JupyterServer_DisplayFilepath=/home/anaconda/README.md  # Display on login
-      # - Djlab_JupyterServer_SaveOutput=FALSE  # Set if notebook save includes output
-      - DJ_HOST=localdb # Specify DataJoint database host
-      - DJ_USER=root # Specify DataJoint database user
-      - DJ_PASS=pharus # Specify DataJoint database password
-    user: ${HOST_UID}:anaconda # Necessary to allow GUI to route to Docker host
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw # Necessary to allow GUI to route to Docker host
-      - ../jupyter notebooks/:/home/anaconda/notebooks # Display on login
 networks:
   main:
