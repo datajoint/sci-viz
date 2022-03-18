@@ -106,13 +106,3 @@ jobs:
         with:
           push: true
           tags: datajoint/sci-viz:${{env.DJSCIVIZ_VERSION}}
-          outputs: type=docker,dest=/tmp/sci-viz_${{env.DJSCIVIZ_VERSION}}.tar
-      - name: Upload image to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          upload_url: ${{needs.publish-release.outputs.release_upload_url}}
-          asset_path: /tmp/sci-viz_${{env.DJSCIVIZ_VERSION}}.tar
-          asset_name: sci-viz_${{env.DJSCIVIZ_VERSION}}.tar
-          asset_content_type: application/x-tar
