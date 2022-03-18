@@ -1,9 +1,11 @@
 import React from 'react'
+import { Card } from 'antd'
 
 interface ImageProps {
   route: string
   token: string
   restrictionList: Array<string>
+  height: number | string
 }
 
 interface ImageState {
@@ -44,6 +46,15 @@ export default class Image extends React.Component<ImageProps, ImageState> {
   }
 
   render() {
-    return <img src={this.state.imageLocation} />
+    return (
+      <Card
+        style={{
+          height: this.props.height,
+        }}
+        bodyStyle={{ overflow: 'auto', height: '100%' }}
+        hoverable={true}
+        cover={<img src={this.state.imageLocation} />}
+      />
+    )
   }
 }

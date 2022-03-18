@@ -9,7 +9,7 @@ exports[`Snapshot of header component 1`] = `
   <div
     className="header-content"
   >
-    <p>
+    <text>
       <i
         style={
           Object {
@@ -17,7 +17,7 @@ exports[`Snapshot of header component 1`] = `
           }
         }
       />
-    </p>
+    </text>
   </div>
 </header>
 `;

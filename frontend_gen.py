@@ -5,23 +5,23 @@ import re
 
 # Page String Components
 page_header = """
-import React from 'react';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import TableView from '../Table/TableView';
-import ReactMarkdown from 'react-markdown';
-import MenuBar from '../MenuBar/MenuBar';
+import React, { Suspense } from 'react'
+import { Responsive, WidthProvider } from 'react-grid-layout'
+import MenuBar from '../MenuBar/MenuBar'
+import { Spin } from 'antd'
 import './Page.css'
-import FullPlotly from '../Plots/FullPlotly'
-import Metadata from '../Table/Metadata'
-import DynamicGrid from '../DynamicGrid'
-import Image from '../Image'
-import Markdown from '../Markdown'
 
 interface Page1Props {
   jwtToken: string;
 }
 interface Page1State {
   restrictionList: Array<string>
+  store: RestrictionStore
+}
+// The key would be the channel the components are listening on and the array would be
+// the record to restrict by
+interface RestrictionStore {
+  [key: string]: Array<string>
 }
 const ResponsiveGridLayout = WidthProvider(Responsive);
 """
@@ -31,8 +31,10 @@ export_header = """
       super(props)
       this.state = {
         restrictionList: [],
+        store: {},
       }
       this.updateRestrictionList = this.updateRestrictionList.bind(this)
+      this.updateStore = this.updateStore.bind(this)
     }
     componentDidMount() {
       this.setState({
@@ -47,6 +49,11 @@ export_header = """
       })
       return queryParams
     }
+    updateStore(key: string, record: Array<string>) {
+      let myStore = this.state.store || { [key]: record }
+      myStore[key] = record
+      this.setState({ store: myStore })
+    }
     render() {
       return (
         <div>
@@ -55,20 +62,19 @@ export_header = """
             <ul className='grid-list'>"""
 grid_header = """
               <li>
+                <Suspense fallback={{<Spin size="default"/>}}>
                 <ResponsiveGridLayout className="mygrid" rowHeight={{{row_height}}}
-                  measureBeforeMount={{false}}
+                  measureBeforeMount={{true}}
                   breakpoints={{{{lg: 1200, sm: 768}}}}
                   cols={{{{lg: {num_cols}, sm: 1}}}}
                   useCSSTransforms={{true}}>"""
 table_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}' {link} updateRestrictionList={{this.updateRestrictionList}}/>
+                  <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}' {link} {channel} updateRestrictionList={{this.updateRestrictionList}} updatePageStore={{this.updateStore}}/>
                   </div>"""
 fullplotly_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                    <div className='plotContainer'>
-                      <FullPlotly route='{route}' token={{this.props.jwtToken}} restrictionList={{[...this.state.restrictionList]}}/>
-                    </div>
+                    <FullPlotly route='{route}' token={{this.props.jwtToken}} height={{{gridHeight}*{height}+({height}-1)*10}} restrictionList={{[...this.state.restrictionList]}} store={{Object.assign({{}}, this.state.store)}} {channelList}/>
                   </div>
 """
 metadata_template = """
@@ -79,9 +85,7 @@ metadata_template = """
                   </div>"""
 image_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                    <div className='imageContainer'>
-                      <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...this.state.restrictionList]}}/>
-                    </div>
+                    <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...this.state.restrictionList]}} height={{{gridHeight}*{height}+({height}-1)*10}}/>
                   </div>
 """
 mkdown_template = """
@@ -89,21 +93,65 @@ mkdown_template = """
                   <Markdown
                     content={{`{markdown}`}}
                     imageRoute={{{image_route}}}
+                    height={{{gridHeight}*{height}+({height}-1)*10}}
                   />
                   </div>"""
-
+slider_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                  <DjSlider
+                    token={{this.props.jwtToken}}
+                    route='{route}'
+                    restrictionList={{[...this.state.restrictionList]}}
+                    channel="{channel}"
+                    updatePageStore={{this.updateStore}}
+                    {channelList}
+                    {store}
+                  />
+                  </div>"""
+dropdown_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <Dropdown
+                      height={{{gridHeight}*{height}+({height}-1)*10}}
+                      payload={{{payload}}}
+                      channel="{channel}"
+                      updatePageStore={{this.updateStore}}
+                    />
+                  </div>"""
+dropdown_query_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <DropdownQuery
+                      height={{{gridHeight}*{height}+({height}-1)*10}}
+                      channel="{channel}"
+                      route='{route}'
+                      token={{this.props.jwtToken}}
+                      updatePageStore={{this.updateStore}}
+                    />
+                  </div>"""
+radiobuttons_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <RadioButtons
+                      height={{{gridHeight}*{height}+({height}-1)*10}}
+                      payload={{{payload}}}
+                      channel="{channel}"
+                      updatePageStore={{this.updateStore}}
+                    />
+                  </div>"""
 grid_footer = """
                 </ResponsiveGridLayout>
+                </Suspense>
               </li>"""
 dynamic_grid = """
+              <Suspense fallback={{<Spin size="default"/>}}>
               <li>
                 <DynamicGrid route={{'{route}'}}
                              token={{this.props.jwtToken}}
                              columns={{{columns}}}
                              rowHeight={{{rowHeight}}}
                              componentList={{{componentList}}}
-                             routeList={{{routeList}}}/>
-              </li>"""
+                             routeList={{{routeList}}}
+                             queryParams={{[...this.state.restrictionList]}}/>
+              </li>
+              </Suspense>"""
 export_footer = """
             </ul>
           </div>
@@ -190,8 +238,21 @@ app_render_header = """
               <Route exact path='/'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Redirect to='/login'/>}}</Route>
               <Route path='/login'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Login setJWTTokenAndHostName={{this.setJWTTokenAndHostName}} imageRoute={{{image_route}}}></Login>}}</Route>"""
 
+app_render_header_nologin = """
+  render() {{
+    return (
+      <div>
+        <Header text='{header_text}' imageRoute={{require('{header_image}')['default']}}/>
+        <Router>
+          <div className='content'>
+            <Switch>
+              <Route exact path='/'>{{<Redirect to='{first_page_route}'/>}}</Route>"""
+
 app_render_route = """
               <Route path='{page_route}*'>{{this.state.jwtToken !== '' ? <{page_name} jwtToken={{this.state.jwtToken}}></{page_name}> : <Redirect to='/login'/>}}</Route>"""
+
+app_render_route_nologin = """
+              <Route path='{page_route}*'>{{<{page_name} jwtToken={{this.state.jwtToken}}></{page_name}>}}</Route>"""
 
 app_render_footer = """
               <Route path="*" component={NotFound} />
@@ -220,9 +281,17 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
     app.write(app_header)
     for page in pages.keys():
         app.write(app_import_template.format(page_name=page.replace(" ", "_")))
+    used_app_render_header = (
+        app_render_header
+        if values_yaml["SciViz"]["auth"]
+        else app_render_header_nologin
+    )
+    used_app_render = (
+        app_render_route if values_yaml["SciViz"]["auth"] else app_render_route_nologin
+    )
     app.write(
         app_export
-        + app_render_header.format(
+        + (used_app_render_header).format(
             header_text=(
                 "Powered by datajoint"
                 if "header" not in values_yaml["SciViz"]
@@ -245,6 +314,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
         with open(
             Path(page_path.format(page_name=page_name.replace(" ", "_"))), "w"
         ) as p:
+            import_set = set()
             p.write(page_header + export_header)
             if "hidden" in page:
                 if not page["hidden"]:
@@ -258,7 +328,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                     MenuBar_data.format(page_name=page_name, page_route=page["route"])
                 )
             app.write(
-                app_render_route.format(
+                (used_app_render).format(
                     page_route=page["route"], page_name=page_name.replace(" ", "_")
                 )
             )
@@ -280,6 +350,9 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             routeList=route_list,
                         )
                     )
+                    import_set.add(
+                        "const DynamicGrid = React.lazy(() => import('../DynamicGrid'))"
+                    )
                     continue
                 p.write(
                     grid_header.format(
@@ -296,10 +369,14 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 y=component["y"],
                                 height=component["height"],
                                 width=component["width"],
+                                gridHeight=grid["row_height"],
                                 image_route=f"require('{component['image_route']}')['default']"
                                 if "image_route" in component
                                 else "''",
                             )
+                        )
+                        import_set.add(
+                            "const Markdown = React.lazy(() => import('../Markdown'))"
                         )
                     elif re.match(r"^plot.*$", component["type"]):
                         p.write(
@@ -307,10 +384,19 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 component_name=component_name,
                                 x=component["x"],
                                 y=component["y"],
+                                gridHeight=grid["row_height"],
                                 height=component["height"],
                                 width=component["width"],
                                 route=component["route"],
+                                channelList=(
+                                    f"channelList={{{component['''channels''']}}}"
+                                    if "channels" in component
+                                    else ""
+                                ),
                             )
+                        )
+                        import_set.add(
+                            "const FullPlotly = React.lazy(() => import('../Plots/FullPlotly'))"
                         )
                     elif re.match(r"^metadata.*$", component["type"]):
                         p.write(
@@ -323,6 +409,10 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 route=component["route"],
                             )
                         )
+                        import_set.add(
+                            "const Metadata = React.lazy(() => import('../Table/Metadata'))"
+                        )
+
                     elif re.match(r"^file:image.*$", component["type"]):
                         p.write(
                             image_template.format(
@@ -332,13 +422,22 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 height=component["height"],
                                 width=component["width"],
                                 route=component["route"],
+                                gridHeight=grid["row_height"],
                             )
+                        )
+                        import_set.add(
+                            "const Image = React.lazy(() => import('../Image'))"
                         )
                     elif re.match(r"^table.*$", component["type"]):
                         try:
                             link = f"link='{component['link']}'"
                         except KeyError:
                             link = ""
+                        channel = (
+                            f"channel='{component['channel']}'"
+                            if "channel" in component
+                            else ""
+                        )
                         p.write(
                             table_template.format(
                                 component_name=component_name,
@@ -348,10 +447,90 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 width=component["width"],
                                 route=component["route"],
                                 link=link,
+                                channel=channel,
                             )
+                        )
+                        import_set.add(
+                            "const TableView = React.lazy(() => import('../Table/TableView'))"
+                        )
+                    elif re.match(r"^slider.*$", component["type"]):
+                        p.write(
+                            slider_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                route=component["route"],
+                                channel=component["channel"],
+                                channelList=(
+                                    f"channelList={{{component['''channels''']}}}"
+                                    if "channels" in component
+                                    else ""
+                                ),
+                                store=(
+                                    "store={Object.assign({}, this.state.store)}"
+                                    if "channels" in component
+                                    else ""
+                                ),
+                            )
+                        )
+                        import_set.add(
+                            "const DjSlider = React.lazy(() => import('../Emitters/Slider'))"
+                        )
+                    elif re.match(r"^dropdown-static.*$", component["type"]):
+                        p.write(
+                            dropdown_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                channel=component["channel"],
+                                payload=component["content"],
+                                gridHeight=grid["row_height"],
+                            )
+                        )
+                        import_set.add(
+                            "const Dropdown = React.lazy(() => import('../Emitters/Dropdown'))"
+                        )
+                    elif re.match(r"^dropdown-query.*$", component["type"]):
+                        p.write(
+                            dropdown_query_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                channel=component["channel"],
+                                route=component["route"],
+                                gridHeight=grid["row_height"],
+                            )
+                        )
+                        import_set.add(
+                            "const DropdownQuery = React.lazy(() => import('../Emitters/DropdownQuery'))"
+                        )
+                    elif re.match(r"^radiobuttons.*$", component["type"]):
+                        p.write(
+                            radiobuttons_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                channel=component["channel"],
+                                payload=component["content"],
+                                gridHeight=grid["row_height"],
+                            )
+                        )
+                        import_set.add(
+                            "const RadioButtons = React.lazy(() => import('../Emitters/RadioButtons'))"
                         )
                 p.write(grid_footer)
             p.write(export_footer)
+            for string in import_set:
+                p.write(string)
+                p.write("\n")
     s.write(MenuBar_footer)
     app.write(app_render_footer)
 print("using DJSCIVIZ_SPEC_PATH")

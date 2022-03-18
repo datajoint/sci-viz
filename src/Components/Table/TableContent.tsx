@@ -29,6 +29,7 @@ interface TableContentProps {
   maxPageNumber: number
   tuplePerPage: number
   link?: string // Link to page for custom view from table
+  channel?: string
   tableAttributesInfo?: TableAttributesInfo // A TableAttributeInfo object that contains everything about both primary and secondary attributes of the table
   setPageNumber: (pageNumber: number) => void
   setNumberOfTuplesPerPage: (numberOfTuplesPerPage: number) => void
@@ -36,6 +37,7 @@ interface TableContentProps {
   setRestrictions: (restrictions: Array<Restriction>) => void
   setOrders: (Order: string) => void
   updateRestrictionList: (queryParams: string) => string
+  updatePageStore: (key: string, record: Array<string>) => void
 }
 
 interface TableContentState {
@@ -103,7 +105,14 @@ export default class TableContent extends React.Component<
     if (prevProps.tuplePerPage !== this.props.tuplePerPage) {
       this.setState({ tuplesReference: this.constructTupleReferenceArray() })
     }
-
+    if (prevProps.contentData.length != this.props.contentData.length) {
+      if (this.props.channel != undefined) {
+        this.props.updatePageStore(
+          this.props.channel,
+          this.rowToQueryParams([...this.props.contentData[0]])[1]
+        )
+      }
+    }
     // Break if the the selectedTable did not change
     if (prevProps.selectedTableName === this.props.selectedTableName) {
       return
@@ -145,9 +154,9 @@ export default class TableContent extends React.Component<
       })
     }
   }
-  rowToQueryParams(arr: Array<string>) {
+  rowToQueryParams(arr: Array<string>): [string, Array<string>] {
     let queryParams: string
-    let restrictionList: Array<String>
+    let restrictionList: Array<string>
     restrictionList = []
     queryParams = ''
     let headers = this.getPrimaryKeys()
@@ -192,6 +201,7 @@ export default class TableContent extends React.Component<
         restrictionList.splice(+i)
       }
     }
+    var restrictionListCopy = [...restrictionList]
     if (restrictionList.length > 0) {
       queryParams = queryParams + '?'
       queryParams = queryParams + restrictionList.shift()
@@ -199,7 +209,7 @@ export default class TableContent extends React.Component<
         queryParams = queryParams + '&' + restrictionList.shift()
       }
     }
-    return queryParams
+    return [queryParams, restrictionListCopy]
   }
   /**
    * Call back function for goToFirstPage button
@@ -507,7 +517,10 @@ export default class TableContent extends React.Component<
                         ref={this.state.tuplesReference[tupleIndex]}
                       >
                         {modifiedEntry.map((column: any, index: number) => {
-                          if (this.props.link == undefined) {
+                          if (
+                            this.props.link == undefined &&
+                            this.props.channel == undefined
+                          ) {
                             return (
                               <td
                                 style={{
@@ -520,7 +533,10 @@ export default class TableContent extends React.Component<
                                 {column}
                               </td>
                             )
-                          } else {
+                          } else if (
+                            this.props.channel == undefined &&
+                            this.props.link != undefined
+                          ) {
                             return (
                               <td
                                 style={{
@@ -534,12 +550,12 @@ export default class TableContent extends React.Component<
                                   to={{
                                     pathname:
                                       this.props.link +
-                                      this.rowToQueryParams([...entry]),
+                                      this.rowToQueryParams([...entry])[0],
                                     state: [...modifiedEntry],
                                   }}
                                   onClick={() =>
                                     this.props.updateRestrictionList(
-                                      this.rowToQueryParams([...entry])
+                                      this.rowToQueryParams([...entry])[0]
                                     )
                                   }
                                   style={{
@@ -549,6 +565,28 @@ export default class TableContent extends React.Component<
                                 >
                                   {column}
                                 </Link>
+                              </td>
+                            )
+                          } else if (
+                            this.props.link == undefined &&
+                            this.props.channel != undefined
+                          ) {
+                            return (
+                              <td
+                                style={{
+                                  backgroundColor: bgColor,
+                                  color: textColor,
+                                }}
+                                key={`${column}-${index}`}
+                                className="tableCell"
+                                onClick={() =>
+                                  this.props.updatePageStore(
+                                    this.props.channel!,
+                                    this.rowToQueryParams([...entry])[1]
+                                  )
+                                }
+                              >
+                                {column}
                               </td>
                             )
                           }

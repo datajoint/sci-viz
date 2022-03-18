@@ -8,6 +8,7 @@ import PrimaryTableAttribute from './DataStorageClasses/PrimaryTableAttribute'
 import SecondaryTableAttribute from './DataStorageClasses/SecondaryTableAttribute'
 import TableAttribute from './DataStorageClasses/TableAttribute'
 import Restriction from './DataStorageClasses/Restriction'
+import { Card } from 'antd'
 import './TableView.css'
 
 const NUMBER_OF_TUPLES_PER_PAGE_TIMEOUT: number = 500
@@ -21,7 +22,9 @@ interface TableViewProps {
   route: string
   tableName: string
   link?: string
+  channel?: string
   updateRestrictionList: (queryParams: string) => string
+  updatePageStore: (key: string, record: Array<string>) => void
 }
 
 interface TableViewState {
@@ -610,27 +613,31 @@ export default class TableView extends React.Component<
 
   render() {
     return (
-      <div className="table-view">
-        <div className="view-area">
-          <TableContent
-            token={this.props.token}
-            selectedTableName={this.props.tableName}
-            contentData={this.state.tableContentData}
-            currentPageNumber={this.state.currentPageNumber}
-            maxPageNumber={this.state.maxPageNumber}
-            totalNumOfTuples={this.state.totalNumOfTuples}
-            tuplePerPage={this.state.numberOfTuplesPerPage}
-            tableAttributesInfo={this.state.tableAttributesInfo}
-            link={this.props.link}
-            setPageNumber={this.setPageNumber}
-            setNumberOfTuplesPerPage={this.setNumberOfTuplesPerPage}
-            fetchTableContent={this.fetchTableContent}
-            setRestrictions={this.setRestrictions}
-            setOrders={this.setOrders}
-            updateRestrictionList={this.props.updateRestrictionList}
-          />
-        </div>
-      </div>
+      <Card
+        className="table-view"
+        bodyStyle={{ overflow: 'auto', height: '100%' }}
+        hoverable={true}
+      >
+        <TableContent
+          token={this.props.token}
+          selectedTableName={this.props.tableName}
+          contentData={this.state.tableContentData}
+          currentPageNumber={this.state.currentPageNumber}
+          maxPageNumber={this.state.maxPageNumber}
+          totalNumOfTuples={this.state.totalNumOfTuples}
+          tuplePerPage={this.state.numberOfTuplesPerPage}
+          tableAttributesInfo={this.state.tableAttributesInfo}
+          link={this.props.link}
+          setPageNumber={this.setPageNumber}
+          setNumberOfTuplesPerPage={this.setNumberOfTuplesPerPage}
+          fetchTableContent={this.fetchTableContent}
+          setRestrictions={this.setRestrictions}
+          setOrders={this.setOrders}
+          updateRestrictionList={this.props.updateRestrictionList}
+          updatePageStore={this.props.updatePageStore}
+          channel={this.props.channel}
+        />
+      </Card>
     )
   }
 }

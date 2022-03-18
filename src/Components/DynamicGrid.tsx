@@ -10,6 +10,7 @@ interface DynamicGridProps {
   rowHeight: number
   componentList: Array<string>
   routeList: Array<string>
+  queryParams?: Array<string>
 }
 
 interface DynamicGridState {
@@ -41,6 +42,12 @@ export default class DynamicGrid extends React.Component<
   componentDidMount() {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
+    if (
+      this.props.queryParams != undefined &&
+      !this.props.queryParams.includes('')
+    ) {
+      apiUrl = apiUrl + '?' + this.props.queryParams.join('&')
+    }
     fetch(apiUrl, {
       method: 'GET',
       headers: {
@@ -86,6 +93,11 @@ export default class DynamicGrid extends React.Component<
                   record[i]!.toString()
               )
             }
+            // if restrictionList is empty that means that the data is empty/unfetched
+            // which means that we should not render anything
+            if (restrictionList.length == 0) {
+              return <div></div>
+            }
             return (
               <div
                 key={index}
@@ -107,6 +119,7 @@ export default class DynamicGrid extends React.Component<
                             route={this.props.routeList[compListIndex]}
                             token={this.props.token}
                             restrictionList={restrictionListCopy}
+                            height="fitcontent"
                           />
                         )
                       }
