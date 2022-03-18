@@ -85,7 +85,7 @@ jobs:
         github.repository_owner == 'datajoint-company'
       )
     environment: docker
-    needs: test
+    needs: publish-release
     runs-on: ubuntu-latest
     steps:
       - name: get version
