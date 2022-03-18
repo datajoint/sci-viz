@@ -106,7 +106,7 @@ jobs:
         with:
           push: true
           tags: datajoint/sciviz:${{env.DJSCIVIZ_VERSION}}
-          outputs: type=docker,dest=/tmp/sciviz_${{env.DJSCIVIZ_VERSION}}.tar
+          outputs: type=docker,dest=/tmp/sci-viz_${{env.DJSCIVIZ_VERSION}}.tar
       - name: Upload image to release
         uses: actions/upload-release-asset@v1
         env:
