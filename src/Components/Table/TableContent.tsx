@@ -107,9 +107,6 @@ export default class TableContent extends React.Component<
     }
     if (prevProps.contentData.length != this.props.contentData.length) {
       if (this.props.channel != undefined) {
-        console.log(
-          this.props.contentData.filter((element, index) => (index = 0))
-        )
         this.props.updatePageStore(
           this.props.channel,
           this.rowToQueryParams([...this.props.contentData[0]])[1]

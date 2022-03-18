@@ -281,13 +281,17 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
     app.write(app_header)
     for page in pages.keys():
         app.write(app_import_template.format(page_name=page.replace(" ", "_")))
+    used_app_render_header = (
+        app_render_header
+        if values_yaml["SciViz"]["auth"]
+        else app_render_header_nologin
+    )
+    used_app_render = (
+        app_render_route if values_yaml["SciViz"]["auth"] else app_render_route_nologin
+    )
     app.write(
         app_export
-        + (
-            app_render_header
-            if values_yaml["SciViz"]["auth"]
-            else app_render_header_nologin
-        ).format(
+        + (used_app_render_header).format(
             header_text=(
                 "Powered by datajoint"
                 if "header" not in values_yaml["SciViz"]
@@ -324,11 +328,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                     MenuBar_data.format(page_name=page_name, page_route=page["route"])
                 )
             app.write(
-                (
-                    app_render_route
-                    if values_yaml["SciViz"]["auth"]
-                    else app_render_route_nologin
-                ).format(
+                (used_app_render).format(
                     page_route=page["route"], page_name=page_name.replace(" ", "_")
                 )
             )

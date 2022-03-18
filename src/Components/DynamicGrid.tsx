@@ -42,7 +42,6 @@ export default class DynamicGrid extends React.Component<
   componentDidMount() {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
-    console.log(this.props.queryParams)
     if (
       this.props.queryParams != undefined &&
       !this.props.queryParams.includes('')
