@@ -8,6 +8,7 @@ services:
       CHOKIDAR_USEPOLLING: 'true'
       REACT_APP_DJSCIVIZ_BACKEND_PREFIX: '/api'
       DJSCIVIZ_SPEC_PATH: ./test/test_spec.yaml
+      # PUBLIC_URL: #for subdir host, ONLY WORKS IN PROD BUILD NOT DEV 
     volumes:
       - .:/app
     # ports:

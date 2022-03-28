@@ -232,7 +232,7 @@ app_render_header = """
     return (
       <div>
         <Header text='{header_text}' imageRoute={{require('{header_image}')['default']}}/>
-        <Router>
+        <Router basename={{process.env.PUBLIC_URL}}>
           <div className='content'>
             <Switch>
               <Route exact path='/'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Redirect to='/login'/>}}</Route>
