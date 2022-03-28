@@ -6,7 +6,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ### Added
 
-- support for hosting sci-viz under a subdirectory PR
+- support for hosting sci-viz under a subdirectory PR #44
 
 ## [0.1.0] - 03-18-22
 
