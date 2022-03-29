@@ -215,6 +215,7 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
     };
 
     this.setJWTTokenAndHostName = this.setJWTTokenAndHostName.bind(this);
+    this.getBasename = this.getBasename.bind(this)
   }
 
   /**
@@ -225,6 +226,16 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
   setJWTTokenAndHostName(jwt: string, hostname: string) {
     this.setState({jwtToken: jwt, hostname: hostname});
   }
+  getBasename(){
+    if (window.location.href.split('/').length == 4){
+      return ''
+    }
+    else {
+      let arr = window.location.href.split('/').splice(3)
+      arr.pop() // pop the empty string
+      return ('/' + arr.join('/'))
+    }
+  }
 """
 
 app_render_header = """
@@ -232,7 +243,7 @@ app_render_header = """
     return (
       <div>
         <Header text='{header_text}' imageRoute={{require('{header_image}')['default']}}/>
-        <Router basename={{process.env.PUBLIC_URL}}>
+        <Router basename={{this.getBasename()}}>
           <div className='content'>
             <Switch>
               <Route exact path='/'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Redirect to='/login'/>}}</Route>
@@ -243,7 +254,7 @@ app_render_header_nologin = """
     return (
       <div>
         <Header text='{header_text}' imageRoute={{require('{header_image}')['default']}}/>
-        <Router>
+        <Router basename={{this.state.bname}}>
           <div className='content'>
             <Switch>
               <Route exact path='/'>{{<Redirect to='{first_page_route}'/>}}</Route>"""

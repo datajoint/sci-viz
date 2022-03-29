@@ -3,12 +3,11 @@ version: '2.4'
 services:
   sci-viz:
     build: .
-    image: datajoint/sci-viz:0.1.0
+    image: datajoint/sci-viz:0.1.1
     environment:
       CHOKIDAR_USEPOLLING: 'true'
       REACT_APP_DJSCIVIZ_BACKEND_PREFIX: '/api'
       DJSCIVIZ_SPEC_PATH: ./test/test_spec.yaml
-      # PUBLIC_URL: #for subdir host, ONLY WORKS IN PROD BUILD NOT DEV 
     volumes:
       - .:/app
     # ports:
