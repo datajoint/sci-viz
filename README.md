@@ -161,6 +161,10 @@ The plot component takes 3 additional arguments:
 - `restriction:` the restriction for the datajoint query
 - `dj_query:` the datajoint query for for the table data.
 
+The plot component also takes one optional argument:
+
+- `channels:` (string Arr) channels to listen to for additional restrictions from other components (slider, dropdown, ect.)
+
 Additionally for the plot to render properly the result of your query must be a single entry with one element that is a plotly JSON.
 An easy way to do this is to set the `fetch_args=[]` in your `dj_query` to be only the column that contains a plotly JSON and additionaly set your restriction to be the index of the plot you are looking for
 
@@ -187,6 +191,54 @@ the Image component takes 3 additional arguments:
 - `dj_query:` the datajoint query for for the table data.
 
 Additionally the image that you want to display needs to be stored as a datajoint [attach](https://docs.datajoint.org/python/definition/06.5-External-Data.html?highlight=attach) attribute type and your query should produce only one record with one column which is the column where the image is stored.
+
+## Slider component
+
+The slider is a component that takes a datajoint query and creates a slider based off the payload that the query returns. It turns each record into an index on the slider and also emits the currently selected record on its channel as a restriction to other components.
+
+`type:` slider
+
+the Slider component takes 3 additional arguments:
+
+- `route:` the backend route for the rest api query, must start with a `/`.
+- `restriction:` the restriction for the datajoint query.
+- `dj_query:` the datajoint query for for the table data.
+- `channel:` the name of the channel that the slider outputs its restriction on.
+
+The Slider also takes one optional argument:
+
+- `channels:` the array of channels to listen to for restricting its own query.
+
+## Radiobutton/dropdown-static component
+
+Similar to the Slider, the radiobutton and dropdown-static components are components that supply a selected restriction on a channel to a component that can accept them.
+
+`type:` radiobuttons | dropdown-static
+
+the Radiobutton/dropdown-static component takes 2 additional arguments:
+
+- `channel:` the name of the channel that the Radiobutton/dropdown-static outputs its restriction on.
+- `content:` dictionary of key value pairs, the key is what text is shown to the user while the value is the actual restriction. example:
+
+```
+content:
+  mouse 0: 'mouse_id=0'
+  mouse 1: 'mouse_id=1'
+  mouse 2: 'mouse_id=2'
+```
+
+## dropdown-query component
+
+The dropdown-query component is the same as the slider component except it only expects a result with one column.
+
+`type:` dropdown-query
+
+the dropdown-query component takes 3 additional arguments:
+
+- `route:` the backend route for the rest api query, must start with a `/`.
+- `restriction:` the restriction for the datajoint query.
+- `dj_query:` the datajoint query for for the table data.
+- `channel:` the name of the channel that the slider outputs its restriction on.
 
 # DEV
 

@@ -22,7 +22,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Components PR #41:
   - `radiobuttons`
   - `dropdown-query`
-  - `dropdown`
+  - `dropdown-static`
 - Grid system PR #33
 - Dynamic grid system (#23) PR #33
 - Database Login PR (#9) #33
