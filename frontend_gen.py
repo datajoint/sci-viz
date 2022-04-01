@@ -254,7 +254,7 @@ app_render_header_nologin = """
     return (
       <div>
         <Header text='{header_text}' imageRoute={{require('{header_image}')['default']}}/>
-        <Router basename={{this.state.bname}}>
+        <Router basename={{this.getBasename()}}>
           <div className='content'>
             <Switch>
               <Route exact path='/'>{{<Redirect to='{first_page_route}'/>}}</Route>"""
