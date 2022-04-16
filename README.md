@@ -63,7 +63,7 @@ If the website does not work after running the frontend generation script check 
 
 ## Grids
 
-Sci-viz produces custom visualizations by putting `grids` on `pages` and then filling them with visualization `components`. Currently there are two types of grids **Fixed** and **Dynamic**
+Sci-Viz produces custom visualizations by putting `grids` on `pages` and then filling them with visualization `components`. Currently there are two types of grids **Fixed** and **Dynamic**
 
 <details>
 <summary>Click to expand details</summary>
