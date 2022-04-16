@@ -25,7 +25,7 @@ SciViz: # top level tab
               width: 1
               type: markdown
               # this example of image_route has the image in the /src dir
-              image_route: ../../logo.png
+              image_route: ../../logo.svg
               text: |
                 # Welcome!
 
