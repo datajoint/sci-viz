@@ -1,8 +1,9 @@
-# sci-viz
+# DataJoint Sci-Viz
+
+Generic visualization framework for building dashboarding capabilities for DataJoint pipelines.
 
 ![image](src/logo.png)
 
-Generic visualization framework for building dashboarding capabilities for DataJoint pipelines.
 
 ## Installation
 
