@@ -267,10 +267,10 @@ DJSCIVIZ_SPEC_PATH=test/test_spec.yaml
 
 ## References
 
-- DataJoint
-  - https://datajoint.org
-- Pharus (a DataJoint REST API backend):
-  - https://github.com/datajoint/pharus
++ https://datajoint.org  -- start page
++ https://github.com/datajoint/pharus -- Pharus (a DataJoint REST API backend)
++ https://docs.datajoint.org -- up-to-date documentation
++ https://tutorials.datajoint.io -- step-by-step tutorials
 
 ## Citation
 
