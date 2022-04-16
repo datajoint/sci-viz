@@ -246,6 +246,8 @@ the dropdown-query component takes 3 additional arguments:
 
 </details>
 
+# Developer instructions
+
 There are a couple issues to address if you are collaborating on this project
 
 - devs will have have to point the submodule to their own fork of pharus if they need to edit pharus to support new features for sci-viz.
