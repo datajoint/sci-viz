@@ -65,7 +65,8 @@ If the website does not work after running the frontend generation script check 
 
 Sci-viz produces custom visualizations by putting `grids` on `pages` and then filling them with visualization `components`. Currently there are two types of grids **Fixed** and **Dynamic**
 
-## Fixed mode grid
+<details>
+<summary>Click to expand details</summary>
 
 A fixed mode grid requires all components to explicitly give their position and size on the grid.
 
@@ -101,7 +102,8 @@ Additionally any components in the dynamic grid do not need `x`, `y` , `height`,
 
 Currently only the `metadata` and `plot` components are supported in dynamic mode.
 
-# Components
+</details>
+
 
 <details>
 <summary>Click to expand details</summary>
