@@ -2,7 +2,7 @@
 
 ![image](src/logo.png)
 
-+ Generic visualization framework for building dashboarding capabilities for DataJoint pipelines.
++ Generic visualization framework for building dashboards of DataJoint pipelines.
 
 ## Installation
 
