@@ -1,6 +1,6 @@
 # sci-viz
 
-![image](src/logo.svg)
+![image](src/logo.png)
 
 Generic visualization framework for building dashboarding capabilities for DataJoint pipelines.
 

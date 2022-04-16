@@ -309,13 +309,13 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                 else values_yaml["SciViz"]["header"]["text"]
             ),
             header_image=(
-                "./logo.svg"
+                "./logo.png"
                 if "header" not in values_yaml["SciViz"]
                 else values_yaml["SciViz"]["header"]["image_route"]
             ),
             first_page_route=list(pages.values())[0]["route"],
             image_route=(
-                'require("./logo.svg")["default"]'
+                'require("./logo.png")["default"]'
                 if "login" not in values_yaml["SciViz"]
                 else f"require('{values_yaml['SciViz']['login']['image_route']}')['default']"
             ),
