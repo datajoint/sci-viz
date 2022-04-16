@@ -103,6 +103,9 @@ Currently only the `metadata` and `plot` components are supported in dynamic mod
 
 # Components
 
+<details>
+<summary>Click to expand details</summary>
+
 All components need minimally these fields:
 
 - `type:` indicates the type of component you are trying to generate
@@ -240,7 +243,7 @@ the dropdown-query component takes 3 additional arguments:
 - `dj_query:` the datajoint query for for the table data.
 - `channel:` the name of the channel that the slider outputs its restriction on.
 
-# DEV
+</details>
 
 There are a couple issues to address if you are collaborating on this project
 
