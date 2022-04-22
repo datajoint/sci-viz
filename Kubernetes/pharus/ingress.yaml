@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: pharus
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    cert-manager.io/cluster-issuer: self-signed
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+  - host: fakeservices.datajoint.io
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        backend:
+          serviceName: pharus
+          servicePort: http
+  tls:
+    - hosts:
+      - labbook.datajoint.io
+      secretName: labbook-tls
+...

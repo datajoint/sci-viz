@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: sci-viz
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # cert-manager.io/cluster-issuer: letsencrypt-staging
+    cert-manager.io/cluster-issuer: self-signed
+spec:
+  rules:
+  - host: fakeservices.datajoint.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: sci-viz
+          servicePort: http
+  tls:
+    - hosts:
+      - labbook.datajoint.io
+      secretName: labbook-tls         
+...
