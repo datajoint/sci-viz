@@ -1,8 +1,8 @@
-# sci-viz
+# DataJoint Sci-Viz
 
 ![image](src/logo.svg)
 
-Generic visualization framework for building dashboarding capabilities for DataJoint pipelines.
++ DataJoint Sci-Viz (scientific visualization) is a generic visualization framework for building dashboards of DataJoint pipelines.
 
 ## Installation
 
@@ -42,7 +42,10 @@ To stop the application, use the same command as before but with `down` in place
 
 ## Dynamic spec sheet
 
-Sci-Vis is used to build visualization dashboards, this is done through a single spec sheet. An example spec sheet is included named `example_visualization_spec.yaml`
+Sci-Viz is used to build visualization dashboards, this is done through a single spec sheet. An example spec sheet is included named `example_visualization_spec.yaml`
+
+<details>
+<summary>Click to expand details</summary>
 
 Important notes about restrictions in the spec sheet:
 
@@ -61,11 +64,16 @@ Important notes about restrictions in the spec sheet:
 
 If the website does not work after running the frontend generation script check this list to make sure that spec sheet is constructed properly, in the future we may include a script that lints the spec sheet for you. see issue [#20](https://github.com/datajoint/sci-viz/issues/20)
 
-# Grids
+</details>
 
-Sci-viz produces custom visualizations by putting `grids` on `pages` and then filling them with visualization `components`. Currently there are two types of grids **Fixed** and **Dynamic**
+## Grids
 
-## Fixed mode grid
+Sci-Viz produces custom visualizations by putting `grids` on `pages` and then filling them with visualization `components`. Currently there are two types of grids **Fixed** and **Dynamic**
+
+<details>
+<summary>Click to expand details</summary>
+
+### Fixed mode grid
 
 A fixed mode grid requires all components to explicitly give their position and size on the grid.
 
@@ -76,7 +84,7 @@ A fixed `grid` takes 4 arguments:
 - `row_height:` the height of each row in pixels
 - `components:` a yaml dictionary of components to be spawned in the grid
 
-## Dynamic grid mode
+### Dynamic grid mode
 
 A dynamic grid takes a datajoint query and then uses each record and applies that record as a restriction to a template of components. It then spawns a single or group of components for each record of that parent query but the components query is restricted by the entire record that has been passed in from the parent query.
 
@@ -101,7 +109,12 @@ Additionally any components in the dynamic grid do not need `x`, `y` , `height`,
 
 Currently only the `metadata` and `plot` components are supported in dynamic mode.
 
-# Components
+</details>
+
+## Components
+
+<details>
+<summary>Click to expand details</summary>
 
 All components need minimally these fields:
 
@@ -111,7 +124,7 @@ All components need minimally these fields:
 - `height:` the amount of grid squares tall a component can be, minimum 1
 - `width:` the amount of grid square wide a compoentnt can be, minimum 1
 
-## Table component
+### Table component
 
 `type:` table
 
@@ -123,7 +136,7 @@ The Table component takes a few additional fields:
 
 If setup correctly the component will render the result of the query in a table that supports paging, sorting, and filtering.
 
-### Adding color to your tables using projections
+#### Adding color to your tables using projections
 
 ```python
 def dj_query(vms):
@@ -144,14 +157,14 @@ It does so through the use of 2 protected column names:
 In the example we do a join of two tables and then do a projection where we create 2 new columns with the protected names and if a condition is met we set their field to a css-compatable color else we have it be `NULL`. In the example above we use rgb when we do not need transparency and rgba when we do.
 [here is a good tool for picking css colors.](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Colors/Color_picker_tool)
 
-## Markdown component
+### Markdown component
 
 `type:` markdown
 
 The markdown component takes one additional field `text: |`
 underneath the `|` operator you can place any markdown text block that you want.
 
-## Plot component from stored Plotly JSON
+### Plot component from stored Plotly JSON
 
 `type:` plot:plotly:stored_json
 
@@ -168,7 +181,7 @@ The plot component also takes one optional argument:
 Additionally for the plot to render properly the result of your query must be a single entry with one element that is a plotly JSON.
 An easy way to do this is to set the `fetch_args=[]` in your `dj_query` to be only the column that contains a plotly JSON and additionaly set your restriction to be the index of the plot you are looking for
 
-## Metadata component
+### Metadata component
 
 `type:` metadata
 
@@ -180,7 +193,7 @@ The Metadata component takes 3 additional arguments:
 
 Additionally the metadata component only takes a single row from a table as its input so the `dj_query` and `restriction` need to be properly set to produce a single record. This component is not very useful by itself but when combined with other components as part of a template in a `Dynamic grid` it can provide useful information on what the other components are showing.
 
-## Image component
+### Image component
 
 `type:` file:image:attach
 
@@ -192,7 +205,7 @@ the Image component takes 3 additional arguments:
 
 Additionally the image that you want to display needs to be stored as a datajoint [attach](https://docs.datajoint.org/python/definition/06.5-External-Data.html?highlight=attach) attribute type and your query should produce only one record with one column which is the column where the image is stored.
 
-## Slider component
+### Slider component
 
 The slider is a component that takes a datajoint query and creates a slider based off the payload that the query returns. It turns each record into an index on the slider and also emits the currently selected record on its channel as a restriction to other components.
 
@@ -209,7 +222,7 @@ The Slider also takes one optional argument:
 
 - `channels:` the array of channels to listen to for restricting its own query.
 
-## Radiobutton/dropdown-static component
+### Radiobutton/dropdown-static component
 
 Similar to the Slider, the radiobutton and dropdown-static components are components that supply a selected restriction on a channel to a component that can accept them.
 
@@ -227,7 +240,7 @@ content:
   mouse 2: 'mouse_id=2'
 ```
 
-## dropdown-query component
+### dropdown-query component
 
 The dropdown-query component is the same as the slider component except it only expects a result with one column.
 
@@ -240,14 +253,16 @@ the dropdown-query component takes 3 additional arguments:
 - `dj_query:` the datajoint query for for the table data.
 - `channel:` the name of the channel that the slider outputs its restriction on.
 
-# DEV
+</details>
+
+## Developer instructions
 
 There are a couple issues to address if you are collaborating on this project
 
 - devs will have have to point the submodule to their own fork of pharus if they need to edit pharus to support new features for sci-viz.
 - That change to pharus would need to be pr'd and then merged into pharus before we can pr and merge their change to sci-viz as we probably dont want unreviewed code linked to sci-viz nor do we want the submodule pointing to their fork of pharus.
 
-## .env
+### .env
 
 for running frontend_gen.py you need this variable in your .env file
 
@@ -255,9 +270,17 @@ for running frontend_gen.py you need this variable in your .env file
 DJSCIVIZ_SPEC_PATH=test/test_spec.yaml
 ```
 
-# References
+## References
 
-- DataJoint
-  - https://datajoint.org
-- Pharus (a DataJoint REST API backend):
-  - https://github.com/datajoint/pharus
++ https://datajoint.org  -- start page
++ https://github.com/datajoint/pharus -- Pharus (a DataJoint REST API backend)
++ https://docs.datajoint.org -- up-to-date documentation
++ https://tutorials.datajoint.io -- step-by-step tutorials
+
+## Citation
+
++ If your work uses DataJoint Sci-Viz, please cite the following Research Resource Identifier (RRID) and manuscript.
+
++ DataJoint ([RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)) - DataJoint Sci-Viz (version `<Enter version number>`)
+
++ Yatsenko D, Nguyen T, Shen S, Gunalan K, Turner CA, Guzman R, Sasaki M, Sitonic D, Reimer J, Walker EY, Tolias AS. DataJoint Elements: Data Workflows for Neurophysiology. bioRxiv. 2021 Jan 1. doi: https://doi.org/10.1101/2021.03.30.437358
