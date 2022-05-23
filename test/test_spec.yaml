@@ -381,10 +381,28 @@ SciViz: # top level tab
     Dynamic Grid:
       route: /dynamicGrid
       grids:
+        dropdownGrid:
+          type: fixed
+          columns: 1
+          row_height: 80
+          components:
+            mydropdown:
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              type: dropdown-static
+              channel: testtest
+              content:
+                none: ''
+                jeff: mouse_id=0
+                splinter: mouse_id=1
+
         dgrid:
           route: /dgrid
           type: dynamic
-          columns: 3
+          channels: [testtest]
+          columns: 1
           row_height: 600
           restriction: >
             def restriction(**kwargs):

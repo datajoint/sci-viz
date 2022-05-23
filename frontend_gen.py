@@ -80,7 +80,7 @@ fullplotly_template = """
 metadata_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <div className='metadataContainer'>
-                      <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}' restrictionList={{[...this.state.restrictionList]}}/>
+                      <Metadata token={{this.props.jwtToken}} route='{route}' name='{component_name}' restrictionList={{[...this.state.restrictionList]}} height={{{gridHeight}}}/>
                     </div>
                   </div>"""
 image_template = """
@@ -149,7 +149,9 @@ dynamic_grid = """
                              rowHeight={{{rowHeight}}}
                              componentList={{{componentList}}}
                              routeList={{{routeList}}}
-                             queryParams={{[...this.state.restrictionList]}}/>
+                             queryParams={{[...this.state.restrictionList]}}
+                             {channelList}
+                             {store}/>
               </li>
               </Suspense>"""
 export_footer = """
@@ -359,6 +361,16 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             rowHeight=grid["row_height"],
                             componentList=component_list,
                             routeList=route_list,
+                            channelList=(
+                                f"channelList={{{grid['''channels''']}}}"
+                                if "channels" in grid
+                                else ""
+                            ),
+                            store=(
+                                "store={Object.assign({}, this.state.store)}"
+                                if "channels" in grid
+                                else ""
+                            ),
                         )
                     )
                     import_set.add(
@@ -418,6 +430,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 height=component["height"],
                                 width=component["width"],
                                 route=component["route"],
+                                gridHeight=grid["row_height"],
                             )
                         )
                         import_set.add(

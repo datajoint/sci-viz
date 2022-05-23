@@ -74,7 +74,9 @@ export default class FullPlotly extends React.Component<
         )
       }
     }
-
+    if (queryParamList.indexOf('') !== -1) {
+      queryParamList.splice(queryParamList.indexOf(''), 1)
+    }
     apiUrl = apiUrl + '?' + queryParamList.join('&')
     return fetch(apiUrl, {
       method: 'GET',
@@ -85,6 +87,8 @@ export default class FullPlotly extends React.Component<
     })
       .then((result) => result.json())
       .then((result) => {
+        delete result.layout['width']
+        delete result.layout['height']
         return result as PlotlyPayload
       })
   }
@@ -132,15 +136,15 @@ export default class FullPlotly extends React.Component<
   render() {
     return (
       <Card
-        style={{
-          height: this.props.height,
-        }}
-        bodyStyle={{ overflow: 'auto', height: '100%' }}
+        style={{ width: '100%', height: this.props.height }}
+        bodyStyle={{ height: '100%' }}
         hoverable={true}
       >
         <Plot
           data={this.state.plotlyJson.data}
-          layout={this.state.plotlyJson.layout}
+          layout={Object.assign(this.state.plotlyJson.layout, {
+            autosize: true,
+          })}
           config={this.state.plotlyJson.config}
         />
       </Card>
