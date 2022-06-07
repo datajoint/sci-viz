@@ -25,13 +25,8 @@ jobs:
           echo "BODY=${BODY}"
           echo "PRERELEASE=${PRERELEASE}"
           echo "DRAFT=${DRAFT}"
-  yarn-install:
-    needs: test-changelog
-    runs-on: ubuntu-latest
-    steps:
-      - run: yarn install
   test:
-    needs: yarn-install
+    needs: test-changelog
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
@@ -42,8 +37,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
-      - run: yarn test
+      - run: yarn install
+      - run: yarn test --coverage
   publish-release:
     if: |
       github.event_name == 'push' &&
