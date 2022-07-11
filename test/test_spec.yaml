@@ -5,6 +5,7 @@ SciViz: # top level tab
   # header:
   #   image_route: ./IBLlogo.png
   #   text: Data Portal
+  hostname: 'localdb'
   # login:
   #   image_route: ./IBLlogo.png
   pages: # individual pages

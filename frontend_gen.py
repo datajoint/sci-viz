@@ -249,7 +249,7 @@ app_render_header = """
           <div className='content'>
             <Switch>
               <Route exact path='/'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Redirect to='/login'/>}}</Route>
-              <Route path='/login'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Login setJWTTokenAndHostName={{this.setJWTTokenAndHostName}} imageRoute={{{image_route}}}></Login>}}</Route>"""
+              <Route path='/login'>{{this.state.jwtToken !== '' ? <Redirect to='{first_page_route}'/> : <Login setJWTTokenAndHostName={{this.setJWTTokenAndHostName}} {hostname} imageRoute={{{image_route}}}></Login>}}</Route>"""
 
 app_render_header_nologin = """
   render() {{
@@ -302,27 +302,53 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
     used_app_render = (
         app_render_route if values_yaml["SciViz"]["auth"] else app_render_route_nologin
     )
-    app.write(
-        app_export
-        + (used_app_render_header).format(
-            header_text=(
-                "Powered by datajoint"
-                if "header" not in values_yaml["SciViz"]
-                else values_yaml["SciViz"]["header"]["text"]
-            ),
-            header_image=(
-                "./logo.svg"
-                if "header" not in values_yaml["SciViz"]
-                else values_yaml["SciViz"]["header"]["image_route"]
-            ),
-            first_page_route=list(pages.values())[0]["route"],
-            image_route=(
-                'require("./logo.svg")["default"]'
-                if "login" not in values_yaml["SciViz"]
-                else f"require('{values_yaml['SciViz']['login']['image_route']}')['default']"
-            ),
+    if "hostname" in values_yaml["SciViz"]:
+        default_address = values_yaml["SciViz"]["hostname"]
+        app.write(
+            app_export
+            + (used_app_render_header).format(
+                header_text=(
+                    "Powered by datajoint"
+                    if "header" not in values_yaml["SciViz"]
+                    else values_yaml["SciViz"]["header"]["text"]
+                ),
+                header_image=(
+                    "./logo.svg"
+                    if "header" not in values_yaml["SciViz"]
+                    else values_yaml["SciViz"]["header"]["image_route"]
+                ),
+                first_page_route=list(pages.values())[0]["route"],
+                image_route=(
+                    'require("./logo.svg")["default"]'
+                    if "login" not in values_yaml["SciViz"]
+                    else f"require('{values_yaml['SciViz']['login']['image_route']}')['default']"
+                ),
+                hostname=f"defaultAddress='{default_address}'",
+            )
         )
-    )
+    else:
+        app.write(
+            app_export
+            + (used_app_render_header).format(
+                header_text=(
+                    "Powered by datajoint"
+                    if "header" not in values_yaml["SciViz"]
+                    else values_yaml["SciViz"]["header"]["text"]
+                ),
+                header_image=(
+                    "./logo.svg"
+                    if "header" not in values_yaml["SciViz"]
+                    else values_yaml["SciViz"]["header"]["image_route"]
+                ),
+                first_page_route=list(pages.values())[0]["route"],
+                image_route=(
+                    'require("./logo.svg")["default"]'
+                    if "login" not in values_yaml["SciViz"]
+                    else f"require('{values_yaml['SciViz']['login']['image_route']}')['default']"
+                ),
+                hostname="",
+            )
+        )
     for page_name, page in pages.items():
         with open(
             Path(page_path.format(page_name=page_name.replace(" ", "_"))), "w"
