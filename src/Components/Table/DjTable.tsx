@@ -1,8 +1,7 @@
 import React from 'react'
-import TableAttribute from './DataStorageClasses/TableAttribute'
+import { Card, Descriptions, Table } from 'antd'
 
-import { Card, Descriptions } from 'antd'
-interface MetadataProps {
+interface DjTableProps {
   token: string
   route: string
   name: string
@@ -10,13 +9,13 @@ interface MetadataProps {
   restrictionList: Array<string>
 }
 
-interface MetadataState {
+interface DjTableState {
   data: djRecords
   dataAttributes: djAttributes
 }
 //look at pharus/interface.py get_attributes() for payload
 interface djAttributesArray {
-  [index: number]: string
+  name: string
   type: string
   nullable: boolean
   default: string
@@ -37,13 +36,13 @@ interface djRecords {
 }
 
 /**
- * Metadata component
+ * DjTable component
  */
-export default class Metadata extends React.Component<
-  MetadataProps,
-  MetadataState
+export default class DjTable extends React.Component<
+  DjTableProps,
+  DjTableState
 > {
-  constructor(props: MetadataProps) {
+  constructor(props: DjTableProps) {
     super(props)
     this.state = {
       data: { recordHeader: [], records: [[]], totalCount: 0 },
@@ -52,9 +51,10 @@ export default class Metadata extends React.Component<
         attributes: { primary: [], secondary: [] },
       },
     }
-    this.parseTimestr = this.parseTimestr.bind(this)
+    // this.parseTimestr = this.parseTimestr.bind(this)
     this.getRecords = this.getRecords.bind(this)
     this.getAttributes = this.getAttributes.bind(this)
+    this.compileTable = this.compileTable.bind(this)
   }
   getRecords(): Promise<djRecords> {
     let apiUrl =
@@ -112,38 +112,68 @@ export default class Metadata extends React.Component<
       .then((result) => {
         this.setState({ dataAttributes: result })
       })
-      .then(() => this.parseTimestr())
   }
 
-  parseTimestr() {
+  compileTable() {
+    // could make an interface for these
+    let columns: Array<{}> = []
+    let data: Array<{}> = []
+
     let fullAttr = this.state.dataAttributes.attributes.primary.concat(
       this.state.dataAttributes.attributes.secondary
     )
-    for (let i in fullAttr) {
-      if (fullAttr[i][1] === 'HH:MM:SS') {
-        let newData = this.state.data
-        newData.records[0][i] = TableAttribute.parseTimeString(
-          newData.records[0][i]!.toString()
+    this.state.data.recordHeader.map((value: string) => {
+      columns.push({ title: value, dataIndex: value })
+    })
+    this.state.data.records.map(
+      (value: (string | number | bigint | boolean | null)[], index: number) => {
+        let tmp: {} = { key: index }
+        value.map(
+          (value: string | number | bigint | boolean | null, index: number) => {
+            Object.assign(tmp, { [this.state.data.recordHeader[index]]: value })
+          }
         )
-        this.setState({ data: newData })
-      } else if (
-        fullAttr[i][1] === 'timestamp' ||
-        fullAttr[i][1].includes('datetime')
-      ) {
-        let newData = this.state.data
-        newData.records[0][i] = TableAttribute.parseDateTime(
-          newData.records[0][i]!.toString()
-        )
-        this.setState({ data: newData })
-      } else if (fullAttr[i][1] === 'date') {
-        let newData = this.state.data
-        newData.records[0][i] = TableAttribute.parseDate(
-          newData.records[0][i]!.toString()
-        )
-        this.setState({ data: newData })
+        data.push(tmp)
       }
-    }
+    )
+    return (
+      <Table
+        columns={columns}
+        dataSource={data}
+        key={data.toString() + columns.toString()
+        }
+      />
+    )
   }
+  // parseTimestr() {
+  //   let fullAttr = this.state.dataAttributes.attributes.primary.concat(
+  //     this.state.dataAttributes.attributes.secondary
+  //   )
+  //   for (let i in fullAttr) {
+  //     if (fullAttr[i][1] === 'HH:MM:SS') {
+  //       let newData = this.state.data
+  //       newData.records[0][i] = TableAttribute.parseTimeString(
+  //         newData.records[0][i]!.toString()
+  //       )
+  //       this.setState({ data: newData })
+  //     } else if (
+  //       fullAttr[i][1] === 'timestamp' ||
+  //       fullAttr[i][1].includes('datetime')
+  //     ) {
+  //       let newData = this.state.data
+  //       newData.records[0][i] = TableAttribute.parseDateTime(
+  //         newData.records[0][i]!.toString()
+  //       )
+  //       this.setState({ data: newData })
+  //     } else if (fullAttr[i][1] === 'date') {
+  //       let newData = this.state.data
+  //       newData.records[0][i] = TableAttribute.parseDate(
+  //         newData.records[0][i]!.toString()
+  //       )
+  //       this.setState({ data: newData })
+  //     }
+  //   }
+  // }
   render() {
     return (
       <Card
@@ -151,21 +181,7 @@ export default class Metadata extends React.Component<
         bodyStyle={{ height: '100%', overflowY: 'auto' }}
         hoverable={true}
       >
-        <Descriptions
-          bordered
-          layout="horizontal"
-          size="small"
-          column={1}
-          style={{ height: '100%' }}
-        >
-          {this.state.data.records[0].map((record: any, index: number) => {
-            return (
-              <Descriptions.Item label={this.state.data.recordHeader[index]}>
-                {record}
-              </Descriptions.Item>
-            )
-          })}
-        </Descriptions>
+        {this.compileTable()}
       </Card>
     )
   }

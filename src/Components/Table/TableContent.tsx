@@ -166,7 +166,7 @@ export default class TableContent extends React.Component<
         this.props.tableAttributesInfo?.primaryAttributes[i].attributeType ===
         19
       ) {
-        arr[i] = Date.parse(arr[i]) / 1000 + ''
+        arr[i] = Date.parse(arr[i]) / 1000 - 21600 + ''
       }
       // Datetime is 20
       var myRegex = new RegExp(/(?<=\.[0-9][0-9][0-9])[0-9]*/)

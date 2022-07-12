@@ -565,7 +565,10 @@ export default class TableView extends React.Component<
       return TableAttributeType.BIG_UNSIGNED
     } else if (tableTypeString === 'int') {
       return TableAttributeType.INT
-    } else if (tableTypeString === 'int unsigned') {
+    } else if (
+      tableTypeString === 'int unsigned' ||
+      tableTypeString === 'bigint unsigned'
+    ) {
       return TableAttributeType.INT_UNSIGNED
     } else if (tableTypeString.substr(0, 7) === 'decimal') {
       return TableAttributeType.DECIMAL
@@ -596,7 +599,11 @@ export default class TableView extends React.Component<
       return TableAttributeType.TIMESTAMP
     } else if (tableTypeString.substring(0, 4) === 'enum') {
       return TableAttributeType.ENUM
-    } else if (tableTypeString === 'blob' || tableTypeString === 'longblob') {
+    } else if (
+      tableTypeString === 'blob' ||
+      tableTypeString === 'longblob' ||
+      tableTypeString === 'mediumblob'
+    ) {
       return TableAttributeType.BLOB
     } else if (tableTypeString === 'expression') {
       return TableAttributeType.EXPRESSION

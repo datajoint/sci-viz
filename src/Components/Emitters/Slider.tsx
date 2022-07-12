@@ -128,8 +128,10 @@ export default class DjSlider extends React.Component<
     recordHeader: Array<string>
   ): Array<string> {
     let queryParams: Array<string> = []
-    for (let i in recordHeader) {
-      queryParams.push(recordHeader[i] + '=' + record[i])
+    if (record && recordHeader && record.length === recordHeader.length) {
+      for (let i in recordHeader) {
+        queryParams.push(recordHeader[i] + '=' + record[i])
+      }
     }
     return queryParams
   }

@@ -8,6 +8,7 @@ import logo from '../../logo.svg'
 interface LoginProps {
   setJWTTokenAndHostName: (jwt: string, hostname: string) => void // Call back function to setting the jwtToken
   imageRoute?: string
+  defaultAddress?: string
 }
 
 interface LoginState {
@@ -26,12 +27,22 @@ export default class Login extends Component<LoginProps, LoginState> {
     super(props)
 
     // Default values
-    this.state = {
-      databaseAddress: '',
-      username: '',
-      password: '',
-      rememberMe: false,
-      returnMessage: '',
+    if (this.props.defaultAddress) {
+      this.state = {
+        databaseAddress: this.props.defaultAddress,
+        username: '',
+        password: '',
+        rememberMe: false,
+        returnMessage: '',
+      }
+    } else {
+      this.state = {
+        databaseAddress: '',
+        username: '',
+        password: '',
+        rememberMe: false,
+        returnMessage: '',
+      }
     }
 
     // Bind on change functions
@@ -47,14 +58,21 @@ export default class Login extends Component<LoginProps, LoginState> {
    */
   componentDidMount() {
     // Load databaseAddress and usernameCookie from cookies
-    var databaseAddressCookie = Cookies.get('databaseAddress')
-    var usernameCookie = Cookies.get('username')
+    if (this.props.defaultAddress) {
+      var usernameCookie = Cookies.get('username')
+      this.setState({
+        username: usernameCookie === undefined ? '' : usernameCookie,
+      })
+    } else {
+      var databaseAddressCookie = Cookies.get('databaseAddress')
+      var usernameCookie = Cookies.get('username')
 
-    this.setState({
-      databaseAddress:
-        databaseAddressCookie === undefined ? '' : databaseAddressCookie,
-      username: usernameCookie === undefined ? '' : usernameCookie,
-    })
+      this.setState({
+        databaseAddress:
+          databaseAddressCookie === undefined ? '' : databaseAddressCookie,
+        username: usernameCookie === undefined ? '' : usernameCookie,
+      })
+    }
   }
 
   /**
@@ -87,6 +105,25 @@ export default class Login extends Component<LoginProps, LoginState> {
    */
   onRememberMeChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ rememberMe: event.target.checked })
+  }
+
+  selectDatabase() {
+    if (this.props.defaultAddress) {
+      return <b>Target DB: {this.state.databaseAddress}</b>
+    } else {
+      return (
+        <>
+          <label className="login-input-label">Host/Database Address</label>
+          <input
+            className="login-input"
+            type="text"
+            id="database-server"
+            value={this.state.databaseAddress}
+            onChange={this.onDatabaseAddressChange}
+          ></input>
+        </>
+      )
+    }
   }
 
   /**
@@ -148,14 +185,7 @@ export default class Login extends Component<LoginProps, LoginState> {
             alt="datajoint gui logo"
           />
           <form className="login-form">
-            <label className="login-input-label">Host/Database Address</label>
-            <input
-              className="login-input"
-              type="text"
-              id="database-server"
-              value={this.state.databaseAddress}
-              onChange={this.onDatabaseAddressChange}
-            ></input>
+            {this.selectDatabase()}
             <label className="login-input-label">Username</label>
             <input
               className="login-input"
