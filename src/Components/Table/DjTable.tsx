@@ -12,6 +12,8 @@ interface DjTableProps {
 interface DjTableState {
   data: djRecords
   dataAttributes: djAttributes
+  numberOfTuples: number
+  offset: number
 }
 //look at pharus/interface.py get_attributes() for payload
 interface djAttributesArray {
@@ -50,22 +52,60 @@ export default class DjTable extends React.Component<
         attributeHeaders: [],
         attributes: { primary: [], secondary: [] },
       },
+      numberOfTuples: 5, //limit 
+      offset: 1, //offset 
     }
     // this.parseTimestr = this.parseTimestr.bind(this)
     this.getRecords = this.getRecords.bind(this)
     this.getAttributes = this.getAttributes.bind(this)
     this.compileTable = this.compileTable.bind(this)
+    this.updateFilter = this.updateFilter.bind(this)
   }
+
+  handleChange(pagination: any, filters: any) {
+    console.log(`typeof of pagination ${typeof pagination} + ${pagination}`)
+    console.log(Object.getOwnPropertyNames(pagination))
+    console.log(`typeof of filters ${typeof filters} + ${filters}`)
+    console.log(Object.getOwnPropertyNames(filters))
+    let offset = pagination.current; 
+    // let limit = pagination.pageSize
+
+    this.setState({ offset: offset})
+    // this.getRecords()
+  }
+
+  // setPageNumber(pageNumber: number) {
+  //   if (pageNumber < 1 || pageNumber > this.state.maxPageNumber) {
+  //     throw Error('Invalid pageNumber ' + pageNumber + ' requested')
+  //   }
+
+  //   this.setState({ currentPageNumber: pageNumber })
+  // }
+
+  // /**
+  //  * Setter method for number of tuples per page
+  //  * @param numberOfTuplesPerPage number of tuples per page to view
+  //  */
+  //  setNumberOfTuplesPerPage(numberOfTuplesPerPage: number) {
+  //   if (numberOfTuplesPerPage < 0) {
+  //     throw Error('Number of Tuples per page cannnot be less then 0')
+  //   }
+  //   this.setState({ numberOfTuplesPerPage: numberOfTuplesPerPage })
+  // }
+
+
   getRecords(): Promise<djRecords> {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
-    if (this.props.restrictionList.length > 0) {
-      apiUrl = apiUrl + '?'
-      apiUrl = apiUrl + this.props.restrictionList.shift()
-      while (this.props.restrictionList.length > 0) {
-        apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
-      }
-    }
+    // if (this.props.restrictionList.length > 0) {
+    //   apiUrl = apiUrl + '?'
+    //   apiUrl = apiUrl + this.props.restrictionList.shift()
+    //   while (this.props.restrictionList.length > 0) {
+    //     apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
+    //   }
+    // }
+
+    apiUrl = apiUrl + '?page=' + this.state.offset + '&limit=' + this.state.numberOfTuples;
     return fetch(apiUrl, {
       method: 'GET',
       headers: {
@@ -114,6 +154,22 @@ export default class DjTable extends React.Component<
       })
   }
 
+  componentDidUpdate(
+    prevProps: DjTableProps,
+    prevState: DjTableState
+  ): void {
+    if(prevState.offset !== this.state.offset){
+      this.getRecords()
+      .then((result) => {
+        this.setState({ data: result })
+      })
+    }
+  }
+
+  updateFilter(value: string, record: string) {
+    console.log(`${value} value, ${record} record`)
+  }
+
   compileTable() {
     // could make an interface for these
     let columns: Array<{}> = []
@@ -140,8 +196,14 @@ export default class DjTable extends React.Component<
       <Table
         columns={columns}
         dataSource={data}
-        key={data.toString() + columns.toString()
-        }
+        key={data.toString() + columns.toString()}
+        onChange={this.handleChange.bind(this)}
+        
+        pagination={{
+          total: this.state.data.totalCount,
+          pageSize: this.state.numberOfTuples,
+          current: this.state.offset,
+        }}
       />
     )
   }
