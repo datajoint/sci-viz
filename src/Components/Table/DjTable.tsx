@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card, Descriptions, Table } from 'antd'
+import type { FilterValue, SorterResult } from 'antd/es/table/interface';
 
 interface DjTableProps {
   token: string
@@ -14,6 +15,7 @@ interface DjTableState {
   dataAttributes: djAttributes
   numberOfTuples: number
   offset: number
+  filter: Array<string>
 }
 //look at pharus/interface.py get_attributes() for payload
 interface djAttributesArray {
@@ -29,6 +31,7 @@ interface djAttributes {
     primary: Array<djAttributesArray>
     secondary: Array<djAttributesArray>
   }
+  unique_values: Array<Array<number | null | bigint | boolean | string>>
 }
 
 interface djRecords {
@@ -51,9 +54,11 @@ export default class DjTable extends React.Component<
       dataAttributes: {
         attributeHeaders: [],
         attributes: { primary: [], secondary: [] },
+        unique_values: [[]]
       },
       numberOfTuples: 5, //limit 
       offset: 1, //offset 
+      filter: []
     }
     // this.parseTimestr = this.parseTimestr.bind(this)
     this.getRecords = this.getRecords.bind(this)
@@ -62,13 +67,16 @@ export default class DjTable extends React.Component<
     this.updateFilter = this.updateFilter.bind(this)
   }
 
-  handleChange(pagination: any, filters: any) {
+  handleChange(pagination: any, filters: Record<string, FilterValue | null>) {
     console.log(`typeof of pagination ${typeof pagination} + ${pagination}`)
     console.log(Object.getOwnPropertyNames(pagination))
     console.log(`typeof of filters ${typeof filters} + ${filters}`)
-    console.log(Object.getOwnPropertyNames(filters))
+    console.log(`\n\n\n${JSON.stringify(filters)} string\n\n\n`)
+    console.log(`\n\n\n${Object.getOwnPropertyNames(filters)} string\n\n\n`)
     let offset = pagination.current; 
     // let limit = pagination.pageSize
+
+    // let filter = filters.
 
     this.setState({ offset: offset})
     // this.getRecords()
@@ -170,6 +178,10 @@ export default class DjTable extends React.Component<
     console.log(`${value} value, ${record} record`)
   }
 
+  filterTable(value: string){
+    console.log(`\n\n\nfilter that user has chosen ${value}\n\n\n`)
+  }
+
   compileTable() {
     // could make an interface for these
     let columns: Array<{}> = []
@@ -178,9 +190,14 @@ export default class DjTable extends React.Component<
     let fullAttr = this.state.dataAttributes.attributes.primary.concat(
       this.state.dataAttributes.attributes.secondary
     )
-    this.state.data.recordHeader.map((value: string) => {
-      columns.push({ title: value, dataIndex: value })
-    })
+    this.state.data.recordHeader.map((value: string, index: number) => {
+      console.log(`filters ${this.state.dataAttributes.unique_values[index]}`)
+      columns.push({title: value,
+                    dataIndex: value, 
+                    filters: this.state.dataAttributes.unique_values[index],
+                    filterMultiple: false, 
+                    }
+    )})
     this.state.data.records.map(
       (value: (string | number | bigint | boolean | null)[], index: number) => {
         let tmp: {} = { key: index }
