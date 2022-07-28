@@ -1,10 +1,12 @@
 import React from 'react'
 import TableAttribute from './DataStorageClasses/TableAttribute'
-import './Metadata.css'
+
+import { Card, Descriptions } from 'antd'
 interface MetadataProps {
   token: string
   route: string
   name: string
+  height: number
   restrictionList: Array<string>
 }
 
@@ -144,16 +146,27 @@ export default class Metadata extends React.Component<
   }
   render() {
     return (
-      <tbody className="metadata">
-        {this.state.data.records[0].map((record: any, index: number) => {
-          return (
-            <tr>
-              <td>{this.state.data.recordHeader[index]}</td>
-              <td>{record}</td>
-            </tr>
-          )
-        })}
-      </tbody>
+      <Card
+        style={{ width: '100%', height: this.props.height }}
+        bodyStyle={{ height: '100%', overflowY: 'auto' }}
+        hoverable={true}
+      >
+        <Descriptions
+          bordered
+          layout="horizontal"
+          size="small"
+          column={1}
+          style={{ height: '100%' }}
+        >
+          {this.state.data.records[0].map((record: any, index: number) => {
+            return (
+              <Descriptions.Item label={this.state.data.recordHeader[index]}>
+                {record}
+              </Descriptions.Item>
+            )
+          })}
+        </Descriptions>
+      </Card>
     )
   }
 }
