@@ -72,6 +72,10 @@ table_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                   <TableView token={{this.props.jwtToken}} route='{route}' tableName='{component_name}' {link} {channel} updateRestrictionList={{this.updateRestrictionList}} updatePageStore={{this.updateStore}}/>
                   </div>"""
+djtable_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                  <DjTable token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}}} restrictionList={{[]}} />
+                  </div>"""
 fullplotly_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <FullPlotly route='{route}' token={{this.props.jwtToken}} height={{{gridHeight}*{height}+({height}-1)*10}} restrictionList={{[...this.state.restrictionList]}} store={{Object.assign({{}}, this.state.store)}} {channelList}/>
@@ -502,6 +506,30 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         )
                         import_set.add(
                             "const TableView = React.lazy(() => import('../Table/TableView'))"
+                        )
+                    elif re.match(r"^djtable.*$", component["type"]):
+                        # try:
+                        #     link = f"link='{component['link']}'"
+                        # except KeyError:
+                        #     link = ""
+                        # channel = (
+                        #     f"channel='{component['channel']}'"
+                        #     if "channel" in component
+                        #     else ""
+                        # )
+                        p.write(
+                            djtable_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                gridHeight=grid["row_height"],
+                                height=component["height"],
+                                width=component["width"],
+                                route=component["route"],
+                            )
+                        )
+                        import_set.add(
+                            "const DjTable = React.lazy(() => import('../Table/DjTable'))"
                         )
                     elif re.match(r"^slider.*$", component["type"]):
                         p.write(
