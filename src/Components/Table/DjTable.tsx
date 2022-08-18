@@ -10,6 +10,8 @@ interface DjTableProps {
   height: number
   restrictionList: Array<string>
   link?: string
+  updatePageStore: (key: string, record: Array<string>) => void
+  channel?: string
 }
 
 interface DjTableState {
@@ -20,6 +22,7 @@ interface DjTableState {
   filter: Array<string>
   sorter: Array<string>
   keys: Array<string> | undefined
+  selectedRow: Array<number>
 }
 //look at pharus/interface.py get_attributes() for payload
 interface djAttributesArray {
@@ -65,62 +68,32 @@ export default class DjTable extends React.Component<
       offset: 1, //offset 
       filter: [],
       sorter: [],
-      keys: undefined
+      keys: undefined,
+      selectedRow: [0]
     }
     // this.parseTimestr = this.parseTimestr.bind(this)
     this.getRecords = this.getRecords.bind(this)
     this.getAttributes = this.getAttributes.bind(this)
     this.compileTable = this.compileTable.bind(this)
-    this.updateFilter = this.updateFilter.bind(this)
     this.redirect = this.redirect.bind(this)
   }
 
-  
-
   handleChange(pagination: any, filters: Record<string, FilterValue | null>, sorter: any) {
-    // console.log(`typeof of pagination ${typeof pagination} + ${pagination}`)
-    // console.log(Object.getOwnPropertyNames(pagination))
-    // console.log(`typeof of filters ${typeof filters} + ${filters}`)
-    // console.log(`\n\n\n${JSON.stringify(filters)} string\n\n\n`)
-    // console.log(`typeof of sorter ${typeof sorter} + ${sorter}`)
-    // console.log(JSON.stringify(sorter))
-    // let filter = JSON.stringify(filters)
-
-    // for (const entry in filters) {
-    //   console.log(`this is the entry for filter ${entry}`);
-    // }
 
     let filter = []
 
     let isFilterNull = true
 
     for(const key in filters){
-        // console.log(`key: ${key} : value:${filters[key]}`)
         if(filters[key] !== null){
           filter.push(`&${key}=${filters[key]}`)
           isFilterNull = false
         }
     }
 
-    let str = "&order="
-
     let sorterArr = []
 
     let isSorterNull = true
-
-    // for(const key in sorter){
-    //   console.log(`\n\n\nin sorter key: ${key} : value: ${sorter[key]}\n\n\n`)
-    //   if(sorter[key] !== null && key === "field"){
-    //     // str.concat(sorter[key])
-    //     sorterArr.push(`${sorter[key]}`)
-    //     isSorterNull = false
-    //     // isNull = false
-    //   }else if(sorter[key] !== null && key === "order"){
-    //     // str.concat(' ', sorter[key])
-    //     sorterArr.push(`${sorter[key]}`)
-    //     isSorterNull = false
-    //   }
-    // }
 
     if(sorter["order"] !== null && sorter["field"] !== null){
       isSorterNull = false
@@ -133,19 +106,10 @@ export default class DjTable extends React.Component<
       sorterArr.push(`${sorter["field"]} ${sort}`)
     }
 
-    // console.log(`\n\n\n\n${str}\n\n\n\n`)
-
-    // console.log(`filter array: ${filter}`)
-
-    // console.log(`\n\n\n${JSON.stringify(filters)} string\n\n\n`)
-    // console.log(`\n\n\n${Object.getOwnPropertyNames(filters)} string\n\n\n`)
     let offset = pagination.current; 
-    // let limit = pagination.pageSize
-
-    // let filter = filters.
 
     if(isFilterNull){
-      this.setState({ offset: offset})
+      this.setState({ offset: offset, filter: []})
     }else{
       this.setState({ offset: offset, filter: filter})
     }
@@ -155,7 +119,6 @@ export default class DjTable extends React.Component<
     }else{
       this.setState({ offset: offset, sorter: sorterArr})
     }
-    // this.getRecords()
   }
 
   getRecords(): Promise<djRecords> {
@@ -163,18 +126,17 @@ export default class DjTable extends React.Component<
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
 
     if(!this.state.sorter.join(",").includes('ASC') && !this.state.sorter.join(",").includes('DESC')){
-      // console.log(`\n\n in if getRecords() ${this.state.sorter.join(",")}\n\n`)
-      // console.log(`\n\n in if getRecords() ${this.state.sorter.join(",").includes('ASC')}\n\n`)
-      // console.log(`\n\n in if getRecords() ${this.state.sorter.join(",").includes('DESC')}\n\n`)
       apiUrl = apiUrl + '?page=' + this.state.offset + '&limit=' + this.state.numberOfTuples;
-    } else {
-      // console.log(`\n\n in else getRecords() ${this.state.sorter.join(",").length}\n\n`)
+    } else { 
       apiUrl = apiUrl + '?page=' + this.state.offset + '&limit=' + this.state.numberOfTuples + '&order=' + this.state.sorter.join(",");
     }
 
+    if(this.props.restrictionList.length > 0){
+      apiUrl = apiUrl + '&' + this.props.restrictionList.join('&')
+    }
+    
     if(this.state.filter.length !== 0){
       for (const key of this.state.filter){
-        // console.log(`key: ${key} `)
         apiUrl = apiUrl + key
       }
     }
@@ -223,6 +185,28 @@ export default class DjTable extends React.Component<
       })
       .then((result) => {
         this.setState({ dataAttributes: result })
+
+        let pks: string[] = [] 
+
+        this.state.dataAttributes.attributes.primary.map( (value: any, index: number) => {
+          pks.push(value[0])
+        })
+
+        let record: string[] = []
+
+        for(const val in this.state.data.records){
+         
+          pks.forEach((value: any, index: any) => { //this works because i assume the primary keys are the first ones in this.state.data.recordHeader
+            if(this.state.data.recordHeader[index] === value){ //might need revision 
+              record.push(`${value}=${this.state.data.records[val][index]}`)
+            }
+          });
+        }
+
+        this.props.updatePageStore(
+          this.props.channel!,
+          record.slice(0, 2)
+        )
       })
   }
 
@@ -238,40 +222,16 @@ export default class DjTable extends React.Component<
     }
   }
 
-  updateFilter(value: string, record: string) {
-    console.log(`${value} value, ${record} record`)
-  }
-
-  filterTable(value: string){
-    console.log(`\n\n\nfilter that user has chosen ${value}\n\n\n`)
-  }
-
   redirect() {
     let a_id = ""
     let b_id = ""
     let link = ""
     if(this.state.keys !== undefined){
       this.state.keys.forEach(function (val, i, array) {
-        // let split = val.split('=')
-        console.log(`\nval=${val}\n`)
-        // if(split[0] == "a_id"){
-        //   a_id = val
-        // }else if(split[0] == "b_id"){
-        //   b_id = val
-        // }
-        // if(i !== array.length - 1){
           link = link + "&" + val
-        // }else {
-          // link = link + val
-        // }
       })
-      console.log(`a_id=${a_id}\nb_id=${b_id}`)
       return (
-        <Redirect to={{pathname:`/hiddenpage?${link}`}} />
-      )
-    } else {
-      return (
-        <div>test</div>
+        this.props.link ? <Redirect to={{pathname:`${this.props.link}?${link}`}}/> : console.log('Unable to link')
       )
     }
   }
@@ -285,14 +245,11 @@ export default class DjTable extends React.Component<
       this.state.dataAttributes.attributes.secondary
     )
     this.state.data.recordHeader.map((value: string, index: number) => {
-      console.log(`filters ${this.state.dataAttributes.unique_values[index]}`)
       columns.push({title: value,
                     dataIndex: value, 
                     filters: this.state.dataAttributes.unique_values[index],
                     filterMultiple: false,
-                    sorter: {
-                      // compare: (a: any, b: any) => a.value - b.value
-                      }
+                    sorter: {}
                     }
     )})
     this.state.data.records.map(
@@ -309,36 +266,52 @@ export default class DjTable extends React.Component<
     return (
       <Table
         columns={columns}
+        rowSelection={this.props.channel ? {
+          selectedRowKeys: this.state.selectedRow,
+          type:"radio",
+          onChange: (selectedRowKeys: any, selectedRows: any) => {
+
+            console.log(`this is the selectedRowKeys: ${selectedRowKeys}`)
+
+            let record: string[] = []
+
+            let pks: any[] = []
+
+            this.state.dataAttributes.attributes.primary.map( (value: any, index: number) => {
+              pks.push(value[0])
+            })
+
+            for(const val in selectedRows[0]){
+              pks.forEach((value: any, index: any) => {
+                if(val !== "key" && val === value){
+                  record.push(`${val}=${selectedRows[0][val.toString()]}`)
+                }
+              });
+            }
+
+            this.props.updatePageStore(
+              this.props.channel!,
+              record
+            )
+
+            this.setState({selectedRow: [...selectedRowKeys]})
+
+          }
+        } : {}}
         dataSource={data}
         key={data.toString() + columns.toString()}
         onChange={this.handleChange.bind(this)}
         onRow={(record: any, rowIndex: number | undefined) => { 
-          // console.log(`record within onRow: ${JSON.stringify(record)}\n rowIndex: ${rowIndex}\n`)
-          for (const property in record){
-            // console.log(`${property}: ${record[property]}`);
-          }
+
           return { 
-            // onClick: (e) => 
             onClick: event => {
               event.stopPropagation();
               let keysArr: string[] = []
-              // console.log("\nonRow onClick\n", event.target, record, rowIndex);
               this.state.dataAttributes.attributes.primary.map( (value: any, index: number) => {
-                // array[0]
-                console.log(`\n\ntest console${value[0]} = ${record[value[0]]}\n\n`)
                 keysArr.push(`${value[0]}=${record[value[0]]}`)
-              }
-              )
-              // keysArr.push(`a_id=${record.a_id}`)
-              // keysArr.push(`b_id=${record.b_id}`)
+              })
               this.setState({keys: keysArr})
-              console.log(`\n${this.state.keys}`)
-              // window.history.pushState(data, '', `/hiddenpage/hiddenpage/?a_id=${record['a_id']}&b_id=${record['b_id']}`)
-              // <Redirect to={{pathname:"/hiddenpage"}} />
-              // this.state.history.push(`/hiddenpage/?a_id=${record['a_id']}&b_id=${record['b_id']}`)
-              // window.location.href = `/hiddenpage/?a_id=${record['a_id']}&b_id=${record['b_id']}`;
             }
-              // {window.history.pushState(data, '', `/hiddenpage/?a_id=${record['a_id']}`)}
           };
         }}
         pagination={{

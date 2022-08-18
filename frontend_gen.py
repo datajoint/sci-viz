@@ -74,7 +74,7 @@ table_template = """
                   </div>"""
 djtable_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                  <DjTable token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}}} restrictionList={{[]}} />
+                  <DjTable token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}*{height}+({height}-1)*10}} {link} {channel} restrictionList={{[...this.state.restrictionList]}} updatePageStore={{this.updateStore}}/>
                   </div>"""
 fullplotly_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
@@ -508,15 +508,18 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             "const TableView = React.lazy(() => import('../Table/TableView'))"
                         )
                     elif re.match(r"^djtable.*$", component["type"]):
-                        # try:
-                        #     link = f"link='{component['link']}'"
-                        # except KeyError:
-                        #     link = ""
-                        # channel = (
-                        #     f"channel='{component['channel']}'"
-                        #     if "channel" in component
-                        #     else ""
-                        # )
+                        try:
+                            link = f"link='{component['link']}'"
+                        except KeyError:
+                            link = ""
+                        channel = (
+                            f"channel='{component['channel']}'"
+                            if "channel" in component
+                            else ""
+                        )
+                        if "link" in component and "channel" in component: 
+                            print(f'''\n\n\n\n\n\n\n\n\n\nCANNOT HAVE BOTH {component['link']} AND {component['channel']}\n\n\n\n\n\n\n''', flush=True)
+                            raise ValueError(f'Cannot have both link and channel props within {component_name}')
                         p.write(
                             djtable_template.format(
                                 component_name=component_name,
@@ -526,6 +529,8 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 height=component["height"],
                                 width=component["width"],
                                 route=component["route"],
+                                channel=channel,
+                                link=link
                             )
                         )
                         import_set.add(
