@@ -338,7 +338,6 @@ export default class DjTable extends React.Component<
     )
     
     fullAttr.map((value: djAttributesArray, index: number) => {
-      console.log(value)
 
       value[1].includes("datetime") || value[1] === "time" || value[1] === "timestamp" || value[1] === "date" ?       
       columns.push({title: value[0],
@@ -373,8 +372,6 @@ export default class DjTable extends React.Component<
           type:"radio",
           onChange: (selectedRowKeys: any, selectedRows: any) => {
 
-            console.log(`this is the selectedRowKeys: ${selectedRowKeys}`)
-
             let record: string[] = []
 
             let pks: any[] = []
@@ -399,7 +396,7 @@ export default class DjTable extends React.Component<
             this.setState({selectedRow: [...selectedRowKeys]})
 
           }
-        } : {}}
+        } : undefined}
         dataSource={data}
         key={data.toString() + columns.toString()}
         onChange={this.handleChange.bind(this)}
