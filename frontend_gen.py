@@ -74,7 +74,7 @@ table_template = """
                   </div>"""
 djtable_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                  <DjTable token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}*{height}+({height}-1)*10}} {link} {channel} restrictionList={{[...this.state.restrictionList]}} updatePageStore={{this.updateStore}}/>
+                  <DjTable token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}*{height}+({height}-1)*10}} {link} {channel} store={{Object.assign({{}}, this.state.store)}} {channelList} restrictionList={{[...this.state.restrictionList]}} updatePageStore={{this.updateStore}}/>
                   </div>"""
 fullplotly_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
@@ -518,7 +518,6 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             else ""
                         )
                         if "link" in component and "channel" in component: 
-                            print(f'''\n\n\n\n\n\n\n\n\n\nCANNOT HAVE BOTH {component['link']} AND {component['channel']}\n\n\n\n\n\n\n''', flush=True)
                             raise ValueError(f'Cannot have both link and channel props within {component_name}')
                         p.write(
                             djtable_template.format(
@@ -530,7 +529,12 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 width=component["width"],
                                 route=component["route"],
                                 channel=channel,
-                                link=link
+                                link=link,
+                                channelList=(
+                                    f"channelList={{{component['''channels''']}}}"
+                                    if "channels" in component
+                                    else ""
+                                ),
                             )
                         )
                         import_set.add(

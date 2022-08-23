@@ -1,7 +1,11 @@
 import React from 'react'
-import { Card, Descriptions, Table } from 'antd'
-import type { FilterValue, SorterResult } from 'antd/es/table/interface';
-import { Link, Redirect, useHistory } from 'react-router-dom'
+import { Card, Table } from 'antd'
+import type { FilterValue } from 'antd/es/table/interface';
+import { Redirect } from 'react-router-dom'
+
+interface RestrictionStore {
+  [key: string]: Array<string>
+}
 
 interface DjTableProps {
   token: string
@@ -12,6 +16,8 @@ interface DjTableProps {
   link?: string
   updatePageStore: (key: string, record: Array<string>) => void
   channel?: string
+  channelList?: Array<string>
+  store?: RestrictionStore
 }
 
 interface DjTableState {
@@ -24,8 +30,9 @@ interface DjTableState {
   keys: Array<string> | undefined
   selectedRow: Array<number>
 }
-//look at pharus/interface.py get_attributes() for payload
+
 interface djAttributesArray {
+  [index: number]: string
   name: string
   type: string
   nullable: boolean
@@ -71,7 +78,7 @@ export default class DjTable extends React.Component<
       keys: undefined,
       selectedRow: [0]
     }
-    // this.parseTimestr = this.parseTimestr.bind(this)
+
     this.getRecords = this.getRecords.bind(this)
     this.getAttributes = this.getAttributes.bind(this)
     this.compileTable = this.compileTable.bind(this)
@@ -122,6 +129,38 @@ export default class DjTable extends React.Component<
   }
 
   getRecords(): Promise<djRecords> {
+    let queryParamList = [...this.props.restrictionList]
+    let channelCheckArr = Array<boolean>()
+
+    this.props.channelList?.forEach((element) => {
+      if (this.props.store![element]) {
+        channelCheckArr.push(true)
+      } else {
+        channelCheckArr.push(false)
+      }
+    })
+
+    if (
+      this.props.restrictionList.includes('') &&
+      channelCheckArr.includes(false)
+    ) {
+      let arr = Array<string>()
+      let arrRec = Array<Array<number | null | bigint | boolean | string>>()
+    
+      return Promise.resolve({ recordHeader: arr, records: arrRec, totalCount: 0 })
+    }
+
+    for (let i in this.props.channelList) {
+      if (typeof this.props.store![this.props.channelList[+i]] != undefined) {
+        queryParamList = queryParamList.concat(
+          this.props.store![this.props.channelList[+i]]
+        )
+      }
+    }
+    if (queryParamList.indexOf('') !== -1) {
+      queryParamList.splice(queryParamList.indexOf(''), 1)
+    }
+
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
 
@@ -134,6 +173,10 @@ export default class DjTable extends React.Component<
     if(this.props.restrictionList.length > 0){
       apiUrl = apiUrl + '&' + this.props.restrictionList.join('&')
     }
+
+    apiUrl = apiUrl.concat("&")
+
+    apiUrl = apiUrl + queryParamList.join('&')
     
     if(this.state.filter.length !== 0){
       for (const key of this.state.filter){
@@ -220,11 +263,45 @@ export default class DjTable extends React.Component<
         this.setState({ data: result })
       })
     }
+    let propsUpdate = false
+    if (this.props.store !== prevProps.store) {
+      this.props.channelList?.forEach((element) => {
+        if (
+          JSON.stringify(this.props.store![element]) !==
+          JSON.stringify(prevProps.store![element])
+        ) {
+          propsUpdate = true
+        }
+      })
+    }
+    if (propsUpdate) {
+      this.getRecords().then((payload) => {
+        this.setState({ data: payload })
+        let pks: string[] = []
+        this.state.dataAttributes.attributes.primary.map( (value: any, index: number) => {
+          pks.push(value[0])
+        })
+
+        let record: string[] = []
+
+        for(const val in this.state.data.records){
+         
+          pks.forEach((value: any, index: any) => { //this works because i assume the primary keys are the first ones in this.state.data.recordHeader
+            if(this.state.data.recordHeader[index] === value){ //might need revision 
+              record.push(`${value}=${this.state.data.records[val][index]}`)
+            }
+          });
+        }
+
+        this.props.updatePageStore(
+          this.props.channel!,
+          record.slice(0, 2)
+        )
+      })
+    }
   }
 
   redirect() {
-    let a_id = ""
-    let b_id = ""
     let link = ""
     if(this.state.keys !== undefined){
       this.state.keys.forEach(function (val, i, array) {
@@ -236,6 +313,21 @@ export default class DjTable extends React.Component<
     }
   }
 
+  parseDate(dateTimeString: string) {
+    // Handle case with null
+    let microseconds = ''
+    if (dateTimeString === null) {
+      return '=NULL='
+    }
+    if ((parseFloat(dateTimeString) * 1000 + '').includes('.')) {
+      microseconds = (parseFloat(dateTimeString) * 1000 + '').split('.')[1]
+    }
+    let date = new Date(parseFloat(dateTimeString) * 1000)
+    return date
+      .toUTCString()
+      .replace(' GMT', '.' + date.getUTCMilliseconds() + microseconds + ' GMT')
+  }
+
   compileTable() {
     // could make an interface for these
     let columns: Array<{}> = []
@@ -244,14 +336,24 @@ export default class DjTable extends React.Component<
     let fullAttr = this.state.dataAttributes.attributes.primary.concat(
       this.state.dataAttributes.attributes.secondary
     )
-    this.state.data.recordHeader.map((value: string, index: number) => {
-      columns.push({title: value,
-                    dataIndex: value, 
+    
+    fullAttr.map((value: djAttributesArray, index: number) => {
+      console.log(value)
+
+      value[1].includes("datetime") || value[1] === "time" || value[1] === "timestamp" || value[1] === "date" ?       
+      columns.push({title: value[0],
+                    dataIndex: value[0], 
                     filters: this.state.dataAttributes.unique_values[index],
                     filterMultiple: false,
-                    sorter: {}
-                    }
-    )})
+                    sorter: {},
+                    render: ((date:string) => this.parseDate(date))  
+                    }) : columns.push({title: value[0],
+                      dataIndex: value[0], 
+                      filters: this.state.dataAttributes.unique_values[index],
+                      filterMultiple: false,
+                      sorter: {}  
+                      })
+    })
     this.state.data.records.map(
       (value: (string | number | bigint | boolean | null)[], index: number) => {
         let tmp: {} = { key: index }
