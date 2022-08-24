@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pharus
+  labels:
+    app: pharus
+spec:
+  selector:
+    app: pharus
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+...

@@ -18,6 +18,6 @@ header {
   color: rgb(0, 0, 0);
 }
 .header-img {
-  border-right: 5px solid;
-  border-color: rgb(183, 247, 181);
+  border-right: 2px solid;
+  border-color: #adb1ad;
 }

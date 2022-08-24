@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sci-viz-deployment
+  labels:
+    app: sci-viz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sci-viz
+  template:
+    metadata:
+      labels:
+        app: sci-viz
+    spec:
+      containers:
+      - name: sci-viz
+        image: datajoint/sci-viz:0.1.1
+        env:
+          - name: CHOKIDAR_USEPOLLING
+            value: "true"
+          - name: REACT_APP_DJSCIVIZ_BACKEND_PREFIX
+            value: "/api"
+          - name: DJSCIVIZ_SPEC_PATH
+            value: "specs/test_spec.yaml"
+        command: ["/bin/sh"]
+        args: ["-c","sh sci-viz-hotreload-dev.sh"]
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: spec
+            mountPath: "/main/specs"
+            readOnly: true
+      volumes:
+      - name: spec
+        configMap:
+          name: mymap
+...

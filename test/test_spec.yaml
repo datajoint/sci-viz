@@ -5,6 +5,7 @@ SciViz: # top level tab
   # header:
   #   image_route: ./IBLlogo.png
   #   text: Data Portal
+  hostname: 'localdb'
   # login:
   #   image_route: ./IBLlogo.png
   pages: # individual pages
@@ -110,7 +111,8 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              type: table
+              type: djtable
+              link: /hiddenpage
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -227,21 +229,6 @@ SciViz: # top level tab
           columns: 2
           row_height: 80
           components:
-            plot1:
-              route: /plot1a
-              type: plot:plotly:stored_json
-              x: 0
-              y: 1
-              height: 6
-              width: 1
-              channels: [mybuttons]
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(test_group1_simple):
-                    MousePlots = test_group1_simple.MousePlots
-                    return dict(query=MousePlots, fetch_args=['plot'])
             mybuttons:
               x: 0
               y: 0
@@ -253,21 +240,6 @@ SciViz: # top level tab
                 mouse 0: 'mouse_id=0'
                 mouse 1: 'mouse_id=1'
                 mouse 2: 'mouse_id=2'
-            plot2:
-              route: /plot1b
-              type: plot:plotly:stored_json
-              x: 1
-              y: 1
-              height: 6
-              width: 1
-              channels: [mydropdown]
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(test_group1_simple):
-                    MousePlots = test_group1_simple.MousePlots
-                    return dict(query=MousePlots, fetch_args=['plot'])
             mydropdown:
               x: 1
               y: 0
@@ -284,44 +256,15 @@ SciViz: # top level tab
                     Mouse = test_group1_simple.Mouse
                     q = dj.U('mouse_id') & Mouse
                     return dict(query=q, fetch_args=[])
-            plot3:
-              route: /plot1c
-              type: plot:plotly:stored_json
+            Example table (conditional row coloring): # yaml allows keys with spaces!
+              route: /weuroiewjqroiew
               x: 0
-              y: 8
+              y: 20
               height: 6
               width: 1
-              channels: [myslider]
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(test_group1_simple):
-                    MousePlots = test_group1_simple.MousePlots
-                    return dict(query=MousePlots, fetch_args=['plot'])
-            myslider:
-              type: slider
-              route: /myslider
-              x: 0
-              y: 7
-              height: 1
-              width: 1
-              channel: myslider
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(test_group1_simple):
-                    MousePlots = test_group1_simple.MousePlots
-                    return dict(query=MousePlots.proj(), fetch_args=[])
-            mytable:
-              type: table
-              route: /mytableplots
-              x: 0
-              y: 14
-              height: 6
-              width: 1
-              channel: mytable
+              type: djtable
+              channel: mydjtable
+              channels: [mybuttons]
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -336,7 +279,7 @@ SciViz: # top level tab
               y: 14
               height: 6
               width: 1
-              channels: [mytable]
+              channels: [mydjtable]
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -381,10 +324,28 @@ SciViz: # top level tab
     Dynamic Grid:
       route: /dynamicGrid
       grids:
+        dropdownGrid:
+          type: fixed
+          columns: 1
+          row_height: 80
+          components:
+            mydropdown:
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              type: dropdown-static
+              channel: testtest
+              content:
+                none: ''
+                jeff: mouse_id=0
+                splinter: mouse_id=1
+
         dgrid:
           route: /dgrid
           type: dynamic
-          columns: 3
+          channels: [testtest]
+          columns: 1
           row_height: 600
           restriction: >
             def restriction(**kwargs):
@@ -456,6 +417,26 @@ SciViz: # top level tab
           columns: 3
           row_height: 600
           components:
+            Example table (conditional row coloring): # yaml allows keys with spaces!
+              route: /nvoihfoewo
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: djtable
+              channel: mytable
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)
+                    q = ((TableA * TableB).proj(
+                        ...,
+                        #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
+                        _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "NULL")',
+                        ))
+                    return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}
             Mouse metadata:
               route: /dawdgar
               x: 1

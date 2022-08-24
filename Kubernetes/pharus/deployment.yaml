@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pharus-deployment
+  labels:
+    app: pharus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pharus
+  template:
+    metadata:
+      labels:
+        app: pharus
+    spec:
+      containers:
+      - name: pharus
+        image: datajoint/pharus:0.4.1
+        env:
+        - name: PHARUS_PORT
+          value: "5000"
+        - name: PHARUS_SPEC_PATH
+          value: "specs/test_spec.yaml"
+        volumeMounts:
+          - name: spec
+            mountPath: "/main/specs/"
+            readOnly: true
+        command: ["/bin/sh"]
+        args: ["-c","pwd; pharus"]
+      volumes:
+      - name: spec
+        configMap:
+          name: mymap
+...

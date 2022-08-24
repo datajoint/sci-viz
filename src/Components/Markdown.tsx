@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { Card } from 'antd'
@@ -32,6 +33,7 @@ export default class Markdown extends React.Component<MarkdownProps> {
         <ReactMarkdown
           className="markdown"
           remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
           children={this.props.content}
           components={{
             code({ node, inline, className, children, ...props }) {
