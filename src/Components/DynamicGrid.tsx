@@ -110,7 +110,6 @@ export default class DynamicGrid extends React.Component<
   }
 
   onChange = (page: any) => {
-    console.log(page)
     this.setState({
       page: page,
     })
