@@ -111,7 +111,7 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              type: djtable
+              type: antd-table
               link: /hiddenpage
               restriction: >
                 def restriction(**kwargs):
@@ -262,8 +262,8 @@ SciViz: # top level tab
               y: 20
               height: 6
               width: 1
-              type: djtable
-              channel: mydjtable
+              type: antd-table
+              channel: myantd-table
               channels: [mybuttons]
               restriction: >
                 def restriction(**kwargs):
@@ -279,7 +279,7 @@ SciViz: # top level tab
               y: 14
               height: 6
               width: 1
-              channels: [mydjtable]
+              channels: [myantd-table]
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -423,7 +423,7 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              type: djtable
+              type: antd-table
               channel: mytable
               restriction: >
                 def restriction(**kwargs):

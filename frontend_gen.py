@@ -507,7 +507,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         import_set.add(
                             "const TableView = React.lazy(() => import('../Table/TableView'))"
                         )
-                    elif re.match(r"^djtable.*$", component["type"]):
+                    elif re.match(r"^antd-table.*$", component["type"]):
                         try:
                             link = f"link='{component['link']}'"
                         except KeyError:
@@ -517,8 +517,10 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                             if "channel" in component
                             else ""
                         )
-                        if "link" in component and "channel" in component: 
-                            raise ValueError(f'Cannot have both link and channel props within {component_name}')
+                        if "link" in component and "channel" in component:
+                            raise ValueError(
+                                f"Cannot have both link and channel props within {component_name}"
+                            )
                         p.write(
                             djtable_template.format(
                                 component_name=component_name,
