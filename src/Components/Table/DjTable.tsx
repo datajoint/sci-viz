@@ -210,7 +210,7 @@ export default class DjTable extends React.Component<
       apiUrl = apiUrl + '&' + this.props.restrictionList.join('&')
     }
 
-    if (queryParamList.length > 0) {
+    if (queryParamList.length) {
       apiUrl = apiUrl + '&' + queryParamList.join('&')
     }
 
