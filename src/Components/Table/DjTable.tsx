@@ -186,21 +186,20 @@ export default class DjTable extends React.Component<
       !this.state.sorter.join(',').includes('ASC') &&
       !this.state.sorter.join(',').includes('DESC')
     ) {
-      apiUrl =
-        apiUrl +
-        '?page=' +
-        this.state.offset +
-        '&limit=' +
-        this.state.numberOfTuples
+      let params: Record<string, string> = {
+        page: String(this.state.offset),
+        limit: String(this.state.numberOfTuples),
+      }
+      let queryString = new URLSearchParams(params).toString()
+      apiUrl = apiUrl + '?' + queryString
     } else {
-      apiUrl =
-        apiUrl +
-        '?page=' +
-        this.state.offset +
-        '&limit=' +
-        this.state.numberOfTuples +
-        '&order=' +
-        this.state.sorter.join(',')
+      let params: Record<string, string> = {
+        page: String(this.state.offset),
+        limit: String(this.state.numberOfTuples),
+        order: this.state.sorter.join(','),
+      }
+      let queryString = new URLSearchParams(params).toString()
+      apiUrl = apiUrl + '?' + queryString
     }
 
     if (
