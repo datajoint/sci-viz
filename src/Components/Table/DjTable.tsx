@@ -414,13 +414,11 @@ export default class DjTable extends React.Component<
   }
 
   redirect() {
-    let link = ''
     if (this.state.keys !== undefined) {
-      this.state.keys.forEach(function (val, i, array) {
-        link = link + '&' + val
-      })
       return this.props.link ? (
-        <Redirect to={{ pathname: `${this.props.link}?${link}` }} />
+        <Redirect
+          to={{ pathname: `${this.props.link}?${this.state.keys.join('&')}` }}
+        />
       ) : (
         console.log('Unable to link')
       )
