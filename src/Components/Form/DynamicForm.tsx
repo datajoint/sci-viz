@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  Card,
   Form,
   Select,
   InputNumber,
@@ -25,6 +26,7 @@ const { Title } = Typography
 interface formProps {
   token: string
   route: string
+  height: number
 }
 
 interface attributeFieldData {
@@ -347,50 +349,56 @@ function DynamicForm(props: formProps) {
   }
   let gridDimension = Math.ceil(Math.sqrt(fieldData!.fields.length))
   return (
-    <Form
-      name="Multi-table Insert"
-      layout="vertical"
-      onFinish={handleSubmit}
-      disabled={insertLoading}
+    <Card
+      style={{ width: '100%', height: props.height }}
+      bodyStyle={{ height: '100%' }}
+      hoverable={true}
     >
-      <ResponsiveGridLayout
-        className="formGrid"
-        rowHeight={100}
-        width={3000}
-        isDraggable={false}
-        isResizable={false}
+      <Form
+        name="Multi-table Insert"
+        layout="vertical"
+        onFinish={handleSubmit}
+        disabled={insertLoading}
       >
-        {fieldData!.fields.map((field, i) => (
-          <div
-            key={field.name}
-            data-grid={{ x: i % gridDimension, y: 0, w: 1, h: 1 }}
-          >
-            <Form.Item
-              label={field.name}
-              name={field.name}
-              rules={[
-                {
-                  required: !field.default || field.default === 'null',
-                },
-              ]}
-            >
-              {generateFieldItem(field)}
-            </Form.Item>
-          </div>
-        ))}
-      </ResponsiveGridLayout>
-      <Form.Item>
-        <Button
-          type="primary"
-          size="large"
-          shape="round"
-          htmlType="submit"
-          loading={insertLoading}
+        <ResponsiveGridLayout
+          className="formGrid"
+          rowHeight={100}
+          width={3000}
+          isDraggable={false}
+          isResizable={false}
         >
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
+          {fieldData!.fields.map((field, i) => (
+            <div
+              key={field.name}
+              data-grid={{ x: i % gridDimension, y: 0, w: 1, h: 1 }}
+            >
+              <Form.Item
+                label={field.name}
+                name={field.name}
+                rules={[
+                  {
+                    required: !field.default || field.default === 'null',
+                  },
+                ]}
+              >
+                {generateFieldItem(field)}
+              </Form.Item>
+            </div>
+          ))}
+        </ResponsiveGridLayout>
+        <Form.Item>
+          <Button
+            type="primary"
+            size="large"
+            shape="round"
+            htmlType="submit"
+            loading={insertLoading}
+          >
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
   )
 }
 
