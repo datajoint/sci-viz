@@ -6,6 +6,8 @@ from pathlib import Path
 connection = dj.conn(host="localdb", user="root", password="pharus")
 group1_simple = dj.Schema("test_group1_simple", connection=connection)
 group2_simple = dj.Schema("test_group2_simple", connection=connection)
+group3_simple = dj.Schema("test_group3_simple", connection=connection)
+group4_simple = dj.Schema("test_group4_simple", connection=connection)
 
 plot1 = dict(
     data=[
@@ -135,6 +137,164 @@ class TableB(dj.Lookup):
             44.33,
         ),
     ]
+
+
+@group2_simple
+class DiffTableB(dj.Lookup):
+    definition = """
+    -> TableA
+    bs_id: int
+    ---
+    bs_number: float
+    """
+    contents = [
+        (0, -10, -99.99),
+        (
+            0,
+            -11,
+            287.11,
+        ),
+    ]
+
+
+@group1_simple
+class TableC(dj.Lookup):
+    definition = """
+    -> TableB
+    c_id: int
+    ---
+    c_name = John Smith : varchar(30)
+    """
+    contents = [
+        (0, 10, 100, -8),
+        (
+            0,
+            11,
+            200,
+            "Josh",
+        ),
+        (
+            0,
+            11,
+            300,
+            "Lumberjack",
+        ),
+    ]
+
+
+@group3_simple
+class TableZ(dj.Lookup):
+    definition = """
+    z_id: int
+    ---
+    z_name: varchar(30)
+    """
+    contents = [
+        (
+            0,
+            "Adib",
+        ),
+        (
+            1,
+            "Bert",
+        ),
+    ]
+
+
+@group4_simple
+class DiffTableZ(dj.Lookup):
+    definition = """
+    zs_id: int
+    ---
+    zs_name: varchar(30)
+    """
+    contents = [
+        (
+            0,
+            "Jeroen",
+        ),
+        (
+            1,
+            "Elmo",
+        ),
+    ]
+
+
+@group3_simple
+class TableY(dj.Lookup):
+    definition = """
+    -> DiffTableZ
+    y_id: int
+    ---
+    y_number: float
+    """
+    contents = [
+        (0, 21, 33.23),
+        (
+            0,
+            22,
+            -2.32,
+        ),
+        (
+            1,
+            32,
+            8.88,
+        ),
+    ]
+
+
+@group4_simple
+class DiffTableY(dj.Lookup):
+    definition = """
+    -> TableZ
+    ys_id: int
+    ---
+    ys_number: float
+    """
+    contents = [
+        (0, 32, 44.34),
+        (
+            0,
+            33,
+            -3.43,
+        ),
+        (
+            1,
+            43,
+            9.99,
+        ),
+    ]
+
+
+@group3_simple
+class TableX(dj.Lookup):
+    definition = """
+    x_id: int
+    x_name: varchar(30)
+    x_int: int
+    """
+    contents = [
+        (
+            0,
+            "Carlos",
+            10,
+        ),
+        (
+            1,
+            "Oscar",
+            20,
+        ),
+    ]
+
+
+@group4_simple
+class TableW(dj.Lookup):
+    definition = """
+    -> TableX
+    w_id: int
+    ---
+    w_int = 123 : int
+    """
 
 
 @group1_simple
