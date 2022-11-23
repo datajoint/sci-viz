@@ -385,6 +385,127 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=(MousePlots), fetch_args=[])
+    Dynamic Form:
+      route: /dynamicForm
+      grids:
+        grid1:
+          type: fixed
+          columns: 2
+          row_height: 600
+          components:
+            insert:
+              route: /insert
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableB
+                - test_group1_simple.TableC
+              map:
+                - type: attribute
+                  input: B Id
+                  destination: b_id
+                - type: attribute
+                  input: B Number
+                  destination: b_number
+                - type: table
+                  input: Table A
+                  destination: test_group1_simple.TableA
+                  map:
+                    - type: attribute
+                      input: A Id
+                      destination: a_id
+                - type: attribute
+                  input: C Id
+                  destination: c_id
+            insert2:
+              route: /insert2
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableB
+                - test_group1_simple.TableC
+              map:
+                - type: attribute
+                  input: B Id
+                  destination: b_id
+                - type: attribute
+                  input: B Number
+                  destination: b_number
+                - type: table
+                  input: Table A
+                  destination: test_group1_simple.TableA
+                - type: attribute
+                  input: C Id
+                  destination: c_id
+            insert3:
+              route: /insert3
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - '{group}_simple.TableB'
+                - '{group}_simple.TableC'
+            insert4:
+              route: /insert4
+              x: 1
+              y: 1
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group2_simple.DiffTableB
+                - test_group1_simple.TableC
+            insert5:
+              route: /insert5
+              x: 0
+              y: 2
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableB
+                - test_group2_simple.DiffTableB
+            insert6:
+              route: /insert6
+              x: 1
+              y: 2
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group3_simple.TableY
+                - test_group4_simple.DiffTableY
+            insert7:
+              route: /insert7
+              x: 0
+              y: 3
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group4_simple.TableW
+            insert8:
+              route: /insert8
+              x: 1
+              y: 3
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableB
+                - test_group2_simple.DiffTableB
+                - test_group1_simple.TableC
+                - test_group3_simple.TableY
+                - test_group4_simple.DiffTableY
+                - test_group4_simple.TableW
     Hidden Page:
       route: /hiddenpage
       hidden: True
