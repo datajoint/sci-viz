@@ -3,6 +3,27 @@ import yaml
 import os
 import re
 
+# Index.html
+index_html = """
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/{favicon}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="{website_title}" content="Visualization powered by datajoint" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>{website_title}</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+"""
+
 # Page String Components
 page_header = """
 import React, { Suspense } from 'react'
@@ -306,6 +327,17 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
     used_app_render = (
         app_render_route if values_yaml["SciViz"]["auth"] else app_render_route_nologin
     )
+    with open(Path("public/index.html"), "w") as index:
+        index.write(
+            index_html.format(
+                website_title=values_yaml["SciViz"]["website_title"]
+                if "website_title" in values_yaml["SciViz"]
+                else "SciViz",
+                favicon=values_yaml["SciViz"]["favicon_name"]
+                if "favicon_name" in values_yaml["SciViz"]
+                else "favicon.ico",
+            )
+        )
     if "hostname" in values_yaml["SciViz"]:
         default_address = values_yaml["SciViz"]["hostname"]
         app.write(

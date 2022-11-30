@@ -202,13 +202,6 @@ export default class DjTable extends React.Component<
       apiUrl = apiUrl + '?' + queryString
     }
 
-    if (
-      this.props.restrictionList.length >= 1 &&
-      this.props.restrictionList[0] != ''
-    ) {
-      apiUrl = apiUrl + '&' + this.props.restrictionList.join('&')
-    }
-
     if (queryParamList.length) {
       apiUrl = apiUrl + '&' + queryParamList.join('&')
     }
@@ -242,6 +235,8 @@ export default class DjTable extends React.Component<
     let queryParamList = [...this.props.restrictionList]
     let channelCheckArr = Array<boolean>()
 
+    console.log(`queryParamList = ${JSON.stringify(queryParamList)}`)
+
     this.props.channelList?.forEach((element) => {
       if (this.props.store![element]) {
         channelCheckArr.push(true)
@@ -257,19 +252,9 @@ export default class DjTable extends React.Component<
         )
       }
     }
+    console.log(`queryParamList = ${JSON.stringify(queryParamList)}`)
     if (queryParamList.indexOf('') !== -1) {
       queryParamList.splice(queryParamList.indexOf(''), 1)
-    }
-
-    if (
-      this.props.restrictionList.length >= 1 &&
-      this.props.restrictionList[0] != ''
-    ) {
-      if (apiUrlAttr.includes('?') == false) {
-        apiUrlAttr = apiUrlAttr + '?' + this.props.restrictionList.join('&')
-      } else {
-        apiUrlAttr = apiUrlAttr + '&' + this.props.restrictionList.join('&')
-      }
     }
 
     if (queryParamList.length) {
@@ -450,7 +435,6 @@ export default class DjTable extends React.Component<
     )
 
     fullAttr.map((value: djAttributesArray, index: number) => {
-      // console.log(JSON.stringify(value.filter))
       value[1].includes('datetime') ||
       value[1] === 'time' ||
       value[1] === 'timestamp' ||

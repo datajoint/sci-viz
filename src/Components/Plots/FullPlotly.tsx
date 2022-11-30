@@ -77,6 +77,14 @@ export default class FullPlotly extends React.Component<
     if (queryParamList.indexOf('') !== -1) {
       queryParamList.splice(queryParamList.indexOf(''), 1)
     }
+
+    var tmp = []
+    for (var i = 0; i < queryParamList.length; i++) {
+      if (tmp.indexOf(queryParamList[i]) == -1) {
+        tmp.push(queryParamList[i])
+      }
+    }
+    queryParamList = tmp
     apiUrl = apiUrl + '?' + queryParamList.join('&')
     return fetch(apiUrl, {
       method: 'GET',
