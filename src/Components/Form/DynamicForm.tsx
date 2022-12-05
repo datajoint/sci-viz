@@ -12,6 +12,7 @@ import {
   notification,
   Typography,
   Space,
+  Spin,
 } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
@@ -327,26 +328,7 @@ function DynamicForm(props: formProps) {
   }
 
   if (status === 'loading') {
-    return (
-      <Space
-        direction="vertical"
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          textAlign: 'center',
-          minHeight: '10vh',
-          color: '#00a0df',
-        }}
-      >
-        <FontAwesomeIcon
-          style={{ minHeight: '5vh' }}
-          icon={['fas', 'spinner']}
-          spinPulse
-        />
-        <Title level={2}>{'Loading...'}</Title>
-      </Space>
-    )
+    return <Spin size="default" />
   } else if (status === 'error') {
     return <Alert message="Form failed to generate" type="error" />
   }
