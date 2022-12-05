@@ -85,9 +85,19 @@ export default class DjSlider extends React.Component<
   }
 
   componentDidMount() {
-    this.getRecords().then((payload) => {
-      this.setState({ data: payload })
-    })
+    this.getRecords()
+      .then((payload) => {
+        this.setState({ data: payload })
+      })
+      .then(() => {
+        this.props.updatePageStore(
+          this.props.channel,
+          this.recordToQueryParams(
+            this.state.data.records[0],
+            this.state.data.recordHeader
+          )
+        )
+      })
   }
 
   componentDidUpdate(prevProps: DjSliderProps, prevState: DjSliderState): void {

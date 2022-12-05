@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Table } from 'antd'
+import { Card, Table, TablePaginationConfig } from 'antd'
 import type { FilterValue } from 'antd/es/table/interface'
 import { Redirect } from 'react-router-dom'
 
@@ -24,11 +24,12 @@ interface DjTableState {
   data: djRecords
   dataAttributes: djAttributes
   numberOfTuples: number
-  offset: number
-  filter: Array<string>
+  offset: number | undefined
+  filter: { [key: string]: djFilter }
   sorter: Array<string>
   keys: Array<string> | undefined
-  selectedRow: Array<number>
+  selectedRow: (string | number)[]
+  loading: boolean
 }
 
 interface djAttributesArray {
@@ -38,6 +39,7 @@ interface djAttributesArray {
   nullable: boolean
   default: string
   autoincriment: boolean
+  filter: { text: string; value: string | number }[]
 }
 interface djAttributes {
   attributeHeaders: Array<string>
@@ -45,13 +47,19 @@ interface djAttributes {
     primary: Array<djAttributesArray>
     secondary: Array<djAttributesArray>
   }
-  unique_values: Array<Array<number | null | bigint | boolean | string>>
+  // unique_values: Array<Array<number | null | bigint | boolean | string>>
 }
 
 interface djRecords {
   recordHeader: Array<string>
   records: Array<Array<number | null | bigint | boolean | string>>
   totalCount: number
+}
+
+interface djFilter {
+  filteredValue: FilterValue | null
+  filtered: boolean
+  restriction: string
 }
 
 /**
@@ -68,14 +76,15 @@ export default class DjTable extends React.Component<
       dataAttributes: {
         attributeHeaders: [],
         attributes: { primary: [], secondary: [] },
-        unique_values: [[]],
+        // unique_values: [[]],
       },
       numberOfTuples: 5, //limit
       offset: 1, //offset
-      filter: [],
+      filter: {},
       sorter: [],
       keys: undefined,
       selectedRow: [0],
+      loading: false,
     }
 
     this.getRecords = this.getRecords.bind(this)
@@ -85,17 +94,20 @@ export default class DjTable extends React.Component<
   }
 
   handleChange(
-    pagination: any,
+    pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,
-    sorter: any
+    sorter: any //must use any here due to antd callback design
   ) {
-    let filter = []
-
+    let filter: { [key: string]: djFilter } = {}
     let isFilterNull = true
 
     for (const key in filters) {
       if (filters[key] !== null) {
-        filter.push(`&${key}=${filters[key]}`)
+        filter[`${key}`] = {
+          filteredValue: filters[key],
+          restriction: `${key}=${filters[key]}`,
+          filtered: true,
+        }
         isFilterNull = false
       }
     }
@@ -118,7 +130,7 @@ export default class DjTable extends React.Component<
     let offset = pagination.current
 
     if (isFilterNull) {
-      this.setState({ offset: offset, filter: [] })
+      this.setState({ offset: offset, filter: {} })
     } else {
       this.setState({ offset: offset, filter: filter })
     }
@@ -174,34 +186,29 @@ export default class DjTable extends React.Component<
       !this.state.sorter.join(',').includes('ASC') &&
       !this.state.sorter.join(',').includes('DESC')
     ) {
-      apiUrl =
-        apiUrl +
-        '?page=' +
-        this.state.offset +
-        '&limit=' +
-        this.state.numberOfTuples
+      let params: Record<string, string> = {
+        page: String(this.state.offset),
+        limit: String(this.state.numberOfTuples),
+      }
+      let queryString = new URLSearchParams(params).toString()
+      apiUrl = apiUrl + '?' + queryString
     } else {
-      apiUrl =
-        apiUrl +
-        '?page=' +
-        this.state.offset +
-        '&limit=' +
-        this.state.numberOfTuples +
-        '&order=' +
-        this.state.sorter.join(',')
+      let params: Record<string, string> = {
+        page: String(this.state.offset),
+        limit: String(this.state.numberOfTuples),
+        order: this.state.sorter.join(','),
+      }
+      let queryString = new URLSearchParams(params).toString()
+      apiUrl = apiUrl + '?' + queryString
     }
 
-    if (this.props.restrictionList.length > 0) {
-      apiUrl = apiUrl + '&' + this.props.restrictionList.join('&')
+    if (queryParamList.length) {
+      apiUrl = apiUrl + '&' + queryParamList.join('&')
     }
 
-    apiUrl = apiUrl.concat('&')
-
-    apiUrl = apiUrl + queryParamList.join('&')
-
-    if (this.state.filter.length !== 0) {
-      for (const key of this.state.filter) {
-        apiUrl = apiUrl + key
+    if (Object.keys(this.state.filter).length !== 0) {
+      for (const key of Object.keys(this.state.filter)) {
+        apiUrl = apiUrl + '&' + this.state.filter[key].restriction
       }
     }
     return fetch(apiUrl, {
@@ -224,6 +231,49 @@ export default class DjTable extends React.Component<
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
       this.props.route +
       '/attributes'
+
+    let queryParamList = [...this.props.restrictionList]
+    let channelCheckArr = Array<boolean>()
+
+    console.log(`queryParamList = ${JSON.stringify(queryParamList)}`)
+
+    this.props.channelList?.forEach((element) => {
+      if (this.props.store![element]) {
+        channelCheckArr.push(true)
+      } else {
+        channelCheckArr.push(false)
+      }
+    })
+
+    for (let i in this.props.channelList) {
+      if (typeof this.props.store![this.props.channelList[+i]] != undefined) {
+        queryParamList = queryParamList.concat(
+          this.props.store![this.props.channelList[+i]]
+        )
+      }
+    }
+    console.log(`queryParamList = ${JSON.stringify(queryParamList)}`)
+    if (queryParamList.indexOf('') !== -1) {
+      queryParamList.splice(queryParamList.indexOf(''), 1)
+    }
+
+    if (queryParamList.length) {
+      if (apiUrlAttr.includes('?') == false) {
+        apiUrlAttr = apiUrlAttr + '?' + queryParamList.join('&')
+      } else {
+        apiUrlAttr = apiUrlAttr + '&' + queryParamList.join('&')
+      }
+    }
+
+    if (Object.keys(this.state.filter).length !== 0) {
+      for (const key of Object.keys(this.state.filter)) {
+        if (apiUrlAttr.includes('?') == false) {
+          apiUrlAttr = apiUrlAttr + '?' + this.state.filter[key].restriction
+        } else {
+          apiUrlAttr = apiUrlAttr + '&' + this.state.filter[key].restriction
+        }
+      }
+    }
     return fetch(apiUrlAttr, {
       method: 'GET',
       headers: {
@@ -240,20 +290,22 @@ export default class DjTable extends React.Component<
   }
 
   componentDidMount() {
+    let records: djRecords
+    this.setState({ loading: true })
     this.getRecords()
       .then((result) => {
-        this.setState({ data: result })
+        records = result
       })
       .then(() => {
         return this.getAttributes()
       })
       .then((result) => {
-        this.setState({ dataAttributes: result })
+        this.setState({ dataAttributes: result, data: records, loading: false })
 
         let pks: string[] = []
 
         this.state.dataAttributes.attributes.primary.map(
-          (value: any, index: number) => {
+          (value: djAttributesArray, index: number) => {
             pks.push(value[0])
           }
         )
@@ -261,7 +313,7 @@ export default class DjTable extends React.Component<
         let record: string[] = []
 
         for (const val in this.state.data.records) {
-          pks.forEach((value: any, index: any) => {
+          pks.forEach((value: string, index: number) => {
             //this works because i assume the primary keys are the first ones in this.state.data.recordHeader
             if (this.state.data.recordHeader[index] === value) {
               //might need revision
@@ -280,9 +332,21 @@ export default class DjTable extends React.Component<
       this.state.filter !== prevState.filter ||
       this.state.sorter !== prevState.sorter
     ) {
-      this.getRecords().then((result) => {
-        this.setState({ data: result })
-      })
+      let attributes: djAttributes
+      this.setState({ loading: true })
+      this.getAttributes()
+        .then((attrs) => {
+          attributes = attrs
+        })
+        .then(() => {
+          this.getRecords().then((result) => {
+            this.setState({
+              dataAttributes: attributes,
+              data: result,
+              loading: false,
+            })
+          })
+        })
     }
     let propsUpdate = false
     if (this.props.store !== prevProps.store) {
@@ -296,40 +360,50 @@ export default class DjTable extends React.Component<
       })
     }
     if (propsUpdate) {
-      this.getRecords().then((payload) => {
-        this.setState({ data: payload })
-        let pks: string[] = []
-        this.state.dataAttributes.attributes.primary.map(
-          (value: any, index: number) => {
-            pks.push(value[0])
-          }
-        )
+      let attributes: djAttributes
+      this.setState({ loading: true })
+      this.getAttributes()
+        .then((attrs) => {
+          attributes = attrs
+        })
+        .then(() => {
+          this.getRecords().then((payload) => {
+            this.setState({
+              dataAttributes: attributes,
+              data: payload,
+              loading: false,
+            })
+            let pks: string[] = []
+            this.state.dataAttributes.attributes.primary.map(
+              (value: djAttributesArray, index: number) => {
+                pks.push(value[0])
+              }
+            )
 
-        let record: string[] = []
+            let record: string[] = []
 
-        for (const val in this.state.data.records) {
-          pks.forEach((value: any, index: any) => {
-            //this works because i assume the primary keys are the first ones in this.state.data.recordHeader
-            if (this.state.data.recordHeader[index] === value) {
-              //might need revision
-              record.push(`${value}=${this.state.data.records[val][index]}`)
+            for (const val in this.state.data.records) {
+              pks.forEach((value: string, index: number) => {
+                //this works because i assume the primary keys are the first ones in this.state.data.recordHeader
+                if (this.state.data.recordHeader[index] === value) {
+                  //might need revision
+                  record.push(`${value}=${this.state.data.records[val][index]}`)
+                }
+              })
             }
-          })
-        }
 
-        this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
-      })
+            this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
+          })
+        })
     }
   }
 
   redirect() {
-    let link = ''
     if (this.state.keys !== undefined) {
-      this.state.keys.forEach(function (val, i, array) {
-        link = link + '&' + val
-      })
       return this.props.link ? (
-        <Redirect to={{ pathname: `${this.props.link}?${link}` }} />
+        <Redirect
+          to={{ pathname: `${this.props.link}?${this.state.keys.join('&')}` }}
+        />
       ) : (
         console.log('Unable to link')
       )
@@ -368,17 +442,31 @@ export default class DjTable extends React.Component<
         ? columns.push({
             title: value[0],
             dataIndex: value[0],
-            filters: this.state.dataAttributes.unique_values[index],
+            filters: value[5],
             filterMultiple: false,
             sorter: {},
+            filteredValue: this.state.filter[value[0]]
+              ? this.state.filter[value[0]].filteredValue
+              : null,
+            filtered: this.state.filter[value[0]]
+              ? this.state.filter[value[0]].filtered
+              : false,
+            filterSearch: true,
             render: (date: string) => this.parseDate(date),
           })
         : columns.push({
             title: value[0],
             dataIndex: value[0],
-            filters: this.state.dataAttributes.unique_values[index],
+            filters: value[5],
             filterMultiple: false,
             sorter: {},
+            filteredValue: this.state.filter[value[0]]
+              ? this.state.filter[value[0]].filteredValue
+              : null,
+            filtered: this.state.filter[value[0]]
+              ? this.state.filter[value[0]].filtered
+              : false,
+            filterSearch: true,
           })
     })
     this.state.data.records.map(
@@ -395,24 +483,30 @@ export default class DjTable extends React.Component<
     return (
       <Table
         columns={columns}
+        loading={this.state.loading}
         rowSelection={
           this.props.channel
             ? {
                 selectedRowKeys: this.state.selectedRow,
                 type: 'radio',
-                onChange: (selectedRowKeys: any, selectedRows: any) => {
+                onChange: (
+                  selectedRowKeys: React.Key[],
+                  // Must use any since the native type of selectedRows is {}[]
+                  // which is basically unusable since you cannot index into the object
+                  selectedRows: any[]
+                ) => {
                   let record: string[] = []
 
-                  let pks: any[] = []
+                  let pks: string[] = []
 
                   this.state.dataAttributes.attributes.primary.map(
-                    (value: any, index: number) => {
+                    (value: djAttributesArray, index: number) => {
                       pks.push(value[0])
                     }
                   )
 
                   for (const val in selectedRows[0]) {
-                    pks.forEach((value: any, index: any) => {
+                    pks.forEach((value: string, index: number) => {
                       if (val !== 'key' && val === value) {
                         record.push(`${val}=${selectedRows[0][val.toString()]}`)
                       }
@@ -429,13 +523,14 @@ export default class DjTable extends React.Component<
         dataSource={data}
         key={data.toString() + columns.toString()}
         onChange={this.handleChange.bind(this)}
+        // any is needed due to ant design return type
         onRow={(record: any, rowIndex: number | undefined) => {
           return {
             onClick: (event) => {
               event.stopPropagation()
               let keysArr: string[] = []
               this.state.dataAttributes.attributes.primary.map(
-                (value: any, index: number) => {
+                (value: djAttributesArray, index: number) => {
                   keysArr.push(`${value[0]}=${record[value[0]]}`)
                 }
               )
@@ -447,6 +542,7 @@ export default class DjTable extends React.Component<
           total: this.state.data.totalCount,
           pageSize: this.state.numberOfTuples,
           current: this.state.offset,
+          showTotal: (total: number) => `Total records: ${total}`,
         }}
       />
     )
