@@ -26,6 +26,7 @@ const { Title } = Typography
 interface formProps {
   token: string
   route: string
+  name: string
   height: number
 }
 
@@ -83,7 +84,7 @@ function DynamicForm(props: formProps) {
   }
 
   const insertPayload = async (payload: { submissions: formPayloadData[] }) => {
-    let apiUrl = `/api/${props.route}` //?organization=${props.org}&project=${props.workflow!.wfs_name}`
+    let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${props.route}`
     return fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -127,7 +128,9 @@ function DynamicForm(props: formProps) {
   )
 
   const getFormFieldData = async (): Promise<fieldsData> => {
-    let apiUrl = `/api/${props.route!}` //fields?organization=${props.org}&project=${props.workflow!.wfs_name}`
+    let apiUrl = `${
+      process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX
+    }${props.route!}/fields`
     return fetch(apiUrl, {
       method: 'GET',
       headers: {

@@ -453,8 +453,8 @@ SciViz: # top level tab
               width: 1
               type: form
               tables:
-                - '{group}_simple.TableB'
-                - '{group}_simple.TableC'
+                - test_group1_simple.TableB
+                - test_group1_simple.TableC
             insert4:
               route: /insert4
               x: 1
