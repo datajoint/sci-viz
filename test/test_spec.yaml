@@ -395,9 +395,18 @@ SciViz: # top level tab
           columns: 2
           row_height: 600
           components:
-            insert:
-              route: /insert
+            insert1:
+              route: /insert1
               x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableA
+            insert2:
+              route: /insert2
+              x: 1
               y: 0
               height: 1
               width: 1
@@ -422,10 +431,10 @@ SciViz: # top level tab
                 - type: attribute
                   input: C Id
                   destination: c_id
-            insert2:
-              route: /insert2
-              x: 1
-              y: 0
+            insert3:
+              route: /insert3
+              x: 0
+              y: 1
               height: 1
               width: 1
               type: form
@@ -445,16 +454,6 @@ SciViz: # top level tab
                 - type: attribute
                   input: C Id
                   destination: c_id
-            insert3:
-              route: /insert3
-              x: 0
-              y: 1
-              height: 1
-              width: 1
-              type: form
-              tables:
-                - test_group1_simple.TableB
-                - test_group1_simple.TableC
             insert4:
               route: /insert4
               x: 1
@@ -463,7 +462,7 @@ SciViz: # top level tab
               width: 1
               type: form
               tables:
-                - test_group2_simple.DiffTableB
+                - test_group1_simple.TableB
                 - test_group1_simple.TableC
             insert5:
               route: /insert5
@@ -473,8 +472,8 @@ SciViz: # top level tab
               width: 1
               type: form
               tables:
-                - test_group1_simple.TableB
                 - test_group2_simple.DiffTableB
+                - test_group1_simple.TableC
             insert6:
               route: /insert6
               x: 1
@@ -483,8 +482,8 @@ SciViz: # top level tab
               width: 1
               type: form
               tables:
-                - test_group3_simple.TableY
-                - test_group4_simple.DiffTableY
+                - test_group1_simple.TableB
+                - test_group2_simple.DiffTableB
             insert7:
               route: /insert7
               x: 0
@@ -493,11 +492,21 @@ SciViz: # top level tab
               width: 1
               type: form
               tables:
-                - test_group4_simple.TableW
+                - test_group3_simple.TableY
+                - test_group4_simple.DiffTableY
             insert8:
               route: /insert8
               x: 1
               y: 3
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group4_simple.TableW
+            insert9:
+              route: /insert9
+              x: 0
+              y: 4
               height: 1
               width: 1
               type: form
