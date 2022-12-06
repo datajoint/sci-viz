@@ -393,7 +393,7 @@ SciViz: # top level tab
         grid1:
           type: fixed
           columns: 2
-          row_height: 600
+          row_height: 325
           components:
             insert1:
               route: /insert1
@@ -507,8 +507,8 @@ SciViz: # top level tab
               route: /insert9
               x: 0
               y: 4
-              height: 1
-              width: 1
+              height: 2
+              width: 2
               type: form
               tables:
                 - test_group1_simple.TableB

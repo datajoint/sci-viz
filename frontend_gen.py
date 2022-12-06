@@ -115,7 +115,7 @@ image_template = """
 """
 form_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                    <DynamicForm token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}}}/>             
+                    <DynamicForm token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}*{height}+({height}-1)*10}}/>             
                   </div>"""
 mkdown_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
