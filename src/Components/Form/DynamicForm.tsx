@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
   Card,
   Form,
@@ -10,19 +10,13 @@ import {
   Button,
   Alert,
   notification,
-  Typography,
-  Space,
   Spin,
 } from 'antd'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { Responsive as ResponsiveGridLayout } from 'react-grid-layout'
+import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 
-library.add(faSpinner, faPlusCircle)
+const ResponsiveGridLayout = WidthProvider(Responsive)
 const { TextArea } = Input
-const { Title } = Typography
 
 interface formProps {
   token: string
@@ -79,7 +73,7 @@ function DynamicForm(props: formProps) {
     smallint: [-32768, 32767],
     'smallint unsigned': [0, 65535],
     mediumint: [-8388608, 8388607],
-    'mediumint unsigned': [0, 16777216],
+    'mediumint unsigned': [0, 16777215],
     int: [-2147483648, 2147483647],
     'int unsigned': [0, 4294967295],
   }
@@ -332,7 +326,12 @@ function DynamicForm(props: formProps) {
   } else if (status === 'error') {
     return <Alert message="Form failed to generate" type="error" />
   }
-  let gridDimension = Math.ceil(Math.sqrt(fieldData!.fields.length))
+  let layout5 = fieldData!.fields.map((field, i) => {
+    return { i: field.name, x: i % 5, y: Math.floor(i / 5), w: 1, h: 1 }
+  })
+  let layout3 = fieldData!.fields.map((field, i) => {
+    return { i: field.name, x: i % 3, y: Math.floor(i / 3), w: 1, h: 1 }
+  })
   return (
     <Card
       style={{ width: '100%', height: props.height }}
@@ -348,15 +347,15 @@ function DynamicForm(props: formProps) {
         <ResponsiveGridLayout
           className="formGrid"
           rowHeight={100}
-          width={3000}
+          autoSize={true}
           isDraggable={false}
           isResizable={false}
+          breakpoints={{ lg: 1200, md: 800 }}
+          cols={{ lg: 5, md: 3 }}
+          layouts={{ lg: layout5, md: layout3 }}
         >
-          {fieldData!.fields.map((field, i) => (
-            <div
-              key={field.name}
-              data-grid={{ x: i % gridDimension, y: 0, w: 1, h: 1 }}
-            >
+          {fieldData!.fields.map((field) => (
+            <div key={field.name}>
               <Form.Item
                 label={field.name}
                 name={field.name}
