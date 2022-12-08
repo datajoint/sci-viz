@@ -334,6 +334,7 @@ function DynamicForm(props: formProps) {
   })
   return (
     <Card
+      title={props.name}
       style={{ width: '100%', height: props.height }}
       bodyStyle={{ height: '100%' }}
       hoverable={true}
