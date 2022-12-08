@@ -393,9 +393,9 @@ SciViz: # top level tab
         grid1:
           type: fixed
           columns: 2
-          row_height: 325
+          row_height: 375
           components:
-            insert1:
+            Table A:
               route: /insert1
               x: 0
               y: 0
@@ -404,7 +404,7 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableA
-            insert2:
+            Table B:
               route: /insert2
               x: 1
               y: 0
@@ -413,7 +413,7 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableB
-            insert3:
+            Table C:
               route: /insert3
               x: 0
               y: 1
@@ -422,7 +422,7 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableC
-            insert4:
+            B and C with mapping:
               route: /insert4
               x: 1
               y: 1
@@ -449,7 +449,7 @@ SciViz: # top level tab
                 - type: attribute
                   input: C Id
                   destination: c_id
-            insert5:
+            B and C with mapping except table map:
               route: /insert5
               x: 0
               y: 2
@@ -472,7 +472,7 @@ SciViz: # top level tab
                 - type: attribute
                   input: C Id
                   destination: c_id
-            insert6:
+            B and C with no mapping:
               route: /insert6
               x: 1
               y: 2
@@ -482,7 +482,7 @@ SciViz: # top level tab
               tables:
                 - test_group1_simple.TableB
                 - test_group1_simple.TableC
-            insert7:
+            All supported input types:
               route: /insert7
               x: 0
               y: 3
