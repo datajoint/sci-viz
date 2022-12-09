@@ -18,11 +18,17 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 const ResponsiveGridLayout = WidthProvider(Responsive)
 const { TextArea } = Input
 
+interface RestrictionStore {
+  [key: string]: Array<string>
+}
+
 interface formProps {
   token: string
   route: string
   name: string
   height: number
+  channelList?: Array<string>
+  store?: RestrictionStore
 }
 
 interface attributeFieldData {
@@ -77,9 +83,19 @@ function DynamicForm(props: formProps) {
     int: [-2147483648, 2147483647],
     'int unsigned': [0, 4294967295],
   }
+  let queryParamList: string[] = []
+  if (props.store !== undefined) {
+    props.channelList!.forEach((element) => {
+      if (props.store![element] !== undefined) {
+        queryParamList = queryParamList.concat(props.store![element])
+      }
+    })
+  }
 
   const insertPayload = async (payload: { submissions: formPayloadData[] }) => {
-    let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${props.route}`
+    let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${
+      props.route
+    }?${queryParamList.join('&')}`
     return fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -116,7 +132,8 @@ function DynamicForm(props: formProps) {
     {
       onSuccess: () => {
         queryClient.refetchQueries({
-          predicate: (query) => query.queryKey.includes('_form'),
+          predicate: (query) =>
+            query.queryKey.includes('_form') && query.isActive(),
         })
       },
     }
@@ -125,7 +142,7 @@ function DynamicForm(props: formProps) {
   const getFormFieldData = async (): Promise<fieldsData> => {
     let apiUrl = `${
       process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX
-    }${props.route!}/fields`
+    }${props.route!}/fields?${queryParamList.join('&')}`
     return fetch(apiUrl, {
       method: 'GET',
       headers: {
@@ -136,8 +153,17 @@ function DynamicForm(props: formProps) {
     })
   }
   const { data: fieldData, status } = useQuery(
-    `${props.route}_form`,
-    getFormFieldData
+    `${props.route}_form${queryParamList.length ? `:${queryParamList}` : ''}`,
+    getFormFieldData,
+    {
+      enabled: !(
+        props.store &&
+        props.channelList &&
+        !props.channelList.every((val) =>
+          Object.keys(props.store!).includes(val)
+        )
+      ),
+    }
   )
 
   const handleSubmit = async () => {
@@ -321,7 +347,14 @@ function DynamicForm(props: formProps) {
     else return <>Datatype not yet supported</>
   }
 
-  if (status === 'loading') {
+  if (
+    status === 'loading' ||
+    (props.store &&
+      props.channelList &&
+      !props.channelList.every((val) =>
+        Object.keys(props.store!).includes(val)
+      ))
+  ) {
     return <Spin size="default" />
   } else if (status === 'error') {
     return <Alert message="Form failed to generate" type="error" />

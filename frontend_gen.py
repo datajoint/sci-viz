@@ -115,7 +115,7 @@ image_template = """
 """
 form_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
-                    <DynamicForm token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}*{height}+({height}-1)*10}}/>             
+                    <DynamicForm token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}*{height}+({height}-1)*10}} store={{Object.assign({{}}, this.state.store)}} {channelList}/>             
                   </div>"""
 mkdown_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
@@ -606,7 +606,7 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                                 channelList=(
                                     f"channelList={{{component['''channels''']}}}"
                                     if "channels" in component
-                                    else ""
+                                    else "channelList={[]}"
                                 ),
                             )
                         )

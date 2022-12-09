@@ -491,6 +491,106 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableD
+            Buttons:
+              route: /formButtons
+              x: 0
+              y: 5
+              height: 1
+              width: 1
+              type: radiobuttons
+              channel: formButtons
+              content:
+                Table A: 'table=TableA'
+                Table B: 'table=TableB'
+                Table C: 'table=TableC'
+            One-One Channeled Form:
+              route: /insert8
+              x: 1
+              y: 5
+              height: 1
+              width: 1
+              type: form
+              channels: [formButtons]
+              tables:
+                - 'test_group1_simple.{table}'
+            Dropdown:
+              route: /formDropdown
+              x: 0
+              y: 6
+              height: 1
+              width: 1
+              type: dropdown-static
+              channel: formDropdown
+              content:
+                Schema 1: 'schema=test_group1_simple'
+                Schema 2: 'schema=test_group2_simple'
+            Many-One Channeled Form:
+              route: /insert9
+              x: 1
+              y: 6
+              height: 1
+              width: 1
+              type: form
+              channels: [formButtons, formDropdown]
+              tables:
+                - '{schema}.{table}'
+            Buttons2:
+              route: /formButtons2
+              x: 0
+              y: 7
+              height: 1
+              width: 1
+              type: radiobuttons
+              channel: formButtons2
+              content:
+                Table A: 'table=test_group1_simple.TableA'
+                Table B: 'table=test_group1_simple.TableB'
+                Table C: 'table=test_group1_simple.TableC'
+                Table A2: 'table=test_group2_simple.TableA'
+                Table B2: 'table=test_group2_simple.TableB'
+                Table C2: 'table=test_group2_simple.TableC'
+                None: ''
+            Dropdown3:
+              route: /formDropdown3
+              x: 0
+              y: 8
+              height: 1
+              width: 1
+              type: radiobuttons
+              channel: formButtons3
+              content:
+                Table B: 'table2=test_group1_simple.TableB'
+                Table C: 'table2=test_group1_simple.TableC'
+                Table A2: 'table2=test_group2_simple.TableA'
+                Table B2: 'table2=test_group2_simple.TableB'
+                Table C2: 'table2=test_group2_simple.TableC'
+                None: ''
+            Dropdown4:
+              route: /formDropdown4
+              x: 0
+              y: 9
+              height: 1
+              width: 1
+              type: radiobuttons
+              channel: formButtons4
+              content:
+                Table C: 'table3=test_group1_simple.TableC'
+                Table A2: 'table3=test_group2_simple.TableA'
+                Table B2: 'table3=test_group2_simple.TableB'
+                Table C2: 'table3=test_group2_simple.TableC'
+                None: ''
+            Channeled Multi Form:
+              route: /insert10
+              x: 1
+              y: 7
+              height: 3
+              width: 1
+              type: form
+              channels: [formButtons2, formButtons3, formButtons4]
+              tables:
+                - '{table}'
+                - '{table2}'
+                - '{table3}'
     Hidden Page:
       route: /hiddenpage
       hidden: True

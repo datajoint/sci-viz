@@ -5,6 +5,7 @@ from pathlib import Path
 
 connection = dj.conn(host="localdb", user="root", password="pharus")
 group1_simple = dj.Schema("test_group1_simple", connection=connection)
+group2_simple = dj.Schema("test_group2_simple", connection=connection)
 
 plot1 = dict(
     data=[
@@ -185,6 +186,118 @@ class TableD(dj.Lookup):
     decimal: decimal(5,3)
     decimal_unsigned: decimal(6,4) unsigned
     """
+
+
+@group2_simple
+class TableA(dj.Lookup):
+    definition = """
+    a_id: int
+    ---
+    a_number: int
+    """
+    contents = [
+        (
+            0,
+            0,
+        ),
+        (
+            1,
+            1,
+        ),
+    ]
+
+
+@group2_simple
+class TableB(dj.Lookup):
+    definition = """
+    -> TableA
+    b_id: int
+    ---
+    b_number: float
+    """
+    contents = [
+        (0, 10, 22.12),
+        (
+            0,
+            11,
+            -1.21,
+        ),
+        (
+            1,
+            21,
+            7.77,
+        ),
+        (
+            0,
+            13,
+            2.13,
+        ),
+        (
+            0,
+            15,
+            -5.22,
+        ),
+        (
+            1,
+            26,
+            12.33,
+        ),
+        (
+            0,
+            19,
+            3.15,
+        ),
+        (
+            0,
+            22,
+            -3.46,
+        ),
+        (
+            1,
+            24,
+            15.97,
+        ),
+        (
+            0,
+            31,
+            7.15,
+        ),
+        (
+            0,
+            33,
+            -9.77,
+        ),
+        (
+            1,
+            37,
+            44.33,
+        ),
+    ]
+
+
+@group2_simple
+class TableC(dj.Lookup):
+    definition = """
+    -> TableB
+    c_id: int
+    ---
+    c_name = John Smith : varchar(30)
+    """
+    contents = [
+        (0, 10, 100, -8),
+        (
+            0,
+            11,
+            200,
+            "Josh",
+        ),
+        (
+            0,
+            11,
+            300,
+            "Lumberjack",
+        ),
+    ]
 
 
 @group1_simple
