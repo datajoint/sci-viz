@@ -191,9 +191,9 @@ class TableD(dj.Lookup):
 @group2_simple
 class TableA(dj.Lookup):
     definition = """
-    a_id: int
+    a2_id: int
     ---
-    a_number: int
+    a2_number: int
     """
     contents = [
         (
@@ -211,9 +211,9 @@ class TableA(dj.Lookup):
 class TableB(dj.Lookup):
     definition = """
     -> TableA
-    b_id: int
+    b2_id: int
     ---
-    b_number: float
+    b2_number: float
     """
     contents = [
         (0, 10, 22.12),
@@ -279,9 +279,9 @@ class TableB(dj.Lookup):
 class TableC(dj.Lookup):
     definition = """
     -> TableB
-    c_id: int
+    c2_id: int
     ---
-    c_name = John Smith : varchar(30)
+    c2_name = John Smith : varchar(30)
     """
     contents = [
         (0, 10, 100, -8),
