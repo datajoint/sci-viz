@@ -550,8 +550,8 @@ SciViz: # top level tab
                 Table B2: 'table=test_group2_simple.TableB'
                 Table C2: 'table=test_group2_simple.TableC'
                 None: ''
-            Dropdown3:
-              route: /formDropdown3
+            Buttons3:
+              route: /formButtons3
               x: 0
               y: 8
               height: 1
@@ -565,8 +565,8 @@ SciViz: # top level tab
                 Table B2: 'table2=test_group2_simple.TableB'
                 Table C2: 'table2=test_group2_simple.TableC'
                 None: ''
-            Dropdown4:
-              route: /formDropdown4
+            Buttons4:
+              route: /formButtons4
               x: 0
               y: 9
               height: 1
