@@ -47,7 +47,6 @@ interface djAttributes {
     primary: Array<djAttributesArray>
     secondary: Array<djAttributesArray>
   }
-  // unique_values: Array<Array<number | null | bigint | boolean | string>>
 }
 
 interface djRecords {
@@ -76,7 +75,6 @@ export default class DjTable extends React.Component<
       dataAttributes: {
         attributeHeaders: [],
         attributes: { primary: [], secondary: [] },
-        // unique_values: [[]],
       },
       numberOfTuples: 5, //limit
       offset: 1, //offset
@@ -235,8 +233,6 @@ export default class DjTable extends React.Component<
     let queryParamList = [...this.props.restrictionList]
     let channelCheckArr = Array<boolean>()
 
-    console.log(`queryParamList = ${JSON.stringify(queryParamList)}`)
-
     this.props.channelList?.forEach((element) => {
       if (this.props.store![element]) {
         channelCheckArr.push(true)
@@ -252,7 +248,6 @@ export default class DjTable extends React.Component<
         )
       }
     }
-    console.log(`queryParamList = ${JSON.stringify(queryParamList)}`)
     if (queryParamList.indexOf('') !== -1) {
       queryParamList.splice(queryParamList.indexOf(''), 1)
     }
@@ -405,7 +400,7 @@ export default class DjTable extends React.Component<
           to={{ pathname: `${this.props.link}?${this.state.keys.join('&')}` }}
         />
       ) : (
-        console.log('Unable to link')
+        <></>
       )
     }
   }
