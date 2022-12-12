@@ -173,7 +173,6 @@ export default class DynamicGrid extends React.Component<
                     {this.props.componentList.map(
                       (componentType: string, compListIndex: number) => {
                         let restrictionListCopy = [...restrictionList]
-                        console.log(`got to grid, state: ${this.props}`)
                         if (componentType.match(/^plot.*$/)) {
                           return (
                             <FullPlotly
@@ -202,7 +201,6 @@ export default class DynamicGrid extends React.Component<
                           )
                         }
                         if (componentType.match(/^file:image:attach.*$/)) {
-                          console.log(`got here, state: ${this.props}`)
                           return (
                             <Image
                               route={this.props.routeList[compListIndex]}
