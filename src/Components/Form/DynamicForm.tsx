@@ -36,6 +36,7 @@ interface attributeFieldData {
   datatype: string
   name: string
   default: string | null
+  store: string
 }
 
 interface tableFieldData {
@@ -43,6 +44,7 @@ interface tableFieldData {
   values: Array<object>
   name: string
   default: null
+  store: string
 }
 
 interface fieldsData {
@@ -72,7 +74,6 @@ function DynamicForm(props: formProps) {
       placement: 'top',
     })
   }
-  const [formPayload, setFormPayload] = useState<formPayloadData>({})
   const intRangeMap: { [key: string]: [number, number] } = {
     tinyint: [-128, 127],
     'tinyint unsigned': [0, 255],
@@ -166,26 +167,25 @@ function DynamicForm(props: formProps) {
     }
   )
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: formPayloadData) => {
+    fieldData!.fields.forEach((field) => {
+      if (field.type == 'table') {
+        values = Object.assign(values, JSON.parse(values[field.name] as string))
+        delete values[field.name]
+      } else if (
+        ['datetime', 'timestamp', 'date', 'time'].includes(
+          (field as attributeFieldData).datatype
+        )
+      )
+        values[field.name] = convertDateTime(
+          field.store,
+          (field as attributeFieldData).datatype
+        )
+    })
     let payload = {
-      submissions: [formPayload],
+      submissions: [values],
     }
     insert(payload)
-  }
-
-  const handleTableChange = (value: string) => {
-    const tableValues = JSON.parse(value)
-    setFormPayload({
-      ...formPayload,
-      ...tableValues,
-    })
-  }
-
-  const handleAttrChange = (value: string | number | null, key: string) => {
-    setFormPayload({
-      ...formPayload,
-      [key]: value,
-    })
   }
 
   const convertDateTime = (value: string | number, type: string) => {
@@ -196,7 +196,7 @@ function DynamicForm(props: formProps) {
     } else if (type === 'time') {
       let time = new Date(`1970-01-01 ${value}`)
       value = time.toISOString().split('T')[1].split('.')[0]
-    } else if (type === 'datetime') {
+    } else if (type === 'datetime' || type === 'timestamp') {
       let datetime = new Date(value)
       value = `${datetime.toISOString().split('T')[0]} ${
         datetime.toISOString().split('T')[1].split('.')[0]
@@ -209,7 +209,7 @@ function DynamicForm(props: formProps) {
     if (field.type === 'table') {
       let tableField = field as tableFieldData
       return (
-        <Select style={{ width: '100%' }} onChange={handleTableChange}>
+        <Select style={{ width: '100%' }}>
           {tableField.values.map((option) => (
             <Select.Option value={JSON.stringify(option)}>
               {JSON.stringify(option)}
@@ -239,7 +239,6 @@ function DynamicForm(props: formProps) {
           max={range[1]}
           precision={0}
           style={{ width: '100%' }}
-          onChange={(value) => handleAttrChange(value, attrField.name)}
         />
       )
     } else if (
@@ -247,13 +246,7 @@ function DynamicForm(props: formProps) {
       (attrField.datatype.split('(') &&
         attrField.datatype.split('(')[0] === 'decimal')
     ) {
-      return (
-        <InputNumber
-          id={attrField.name}
-          style={{ width: '100%' }}
-          onChange={(value) => handleAttrChange(value, attrField.name)}
-        />
-      )
+      return <InputNumber id={attrField.name} style={{ width: '100%' }} />
     } else if (
       attrField.datatype.split('(') &&
       ['char', 'varchar'].includes(attrField.datatype.split('(')[0])
@@ -267,9 +260,6 @@ function DynamicForm(props: formProps) {
             showCount
             autoSize={{ maxRows: 3 }}
             style={{ width: '100%' }}
-            onChange={(value) =>
-              handleAttrChange(value.target.value, value.target.id)
-            }
           />
         )
       }
@@ -279,9 +269,6 @@ function DynamicForm(props: formProps) {
           showCount
           maxLength={size}
           style={{ width: '100%' }}
-          onChange={(value) =>
-            handleAttrChange(value.target.value, value.target.id)
-          }
         />
       )
     } else if (
@@ -294,11 +281,7 @@ function DynamicForm(props: formProps) {
         .replaceAll("'", '')
         .split(',')
       return (
-        <Select
-          id={attrField.name}
-          style={{ width: '100%' }}
-          onChange={(value) => handleAttrChange(value, attrField.name)}
-        >
+        <Select id={attrField.name} style={{ width: '100%' }}>
           {options.map((option) => (
             <Select.Option value={option}>{option}</Select.Option>
           ))}
@@ -310,12 +293,7 @@ function DynamicForm(props: formProps) {
           showTime
           id={attrField.name}
           style={{ width: '100%' }}
-          onChange={(value, dateString) =>
-            handleAttrChange(
-              convertDateTime(dateString, 'datetime'),
-              attrField.name
-            )
-          }
+          onChange={(value, dateString) => (field.store = dateString)}
         />
       )
     else if (attrField.datatype === 'date')
@@ -323,12 +301,7 @@ function DynamicForm(props: formProps) {
         <DatePicker
           id={attrField.name}
           style={{ width: '100%' }}
-          onChange={(value, dateString) =>
-            handleAttrChange(
-              convertDateTime(dateString, 'date'),
-              attrField.name
-            )
-          }
+          onChange={(value, dateString) => (field.store = dateString)}
         />
       )
     else if (attrField.datatype === 'time')
@@ -336,12 +309,7 @@ function DynamicForm(props: formProps) {
         <TimePicker
           id={attrField.name}
           style={{ width: '100%' }}
-          onChange={(value, timeString) =>
-            handleAttrChange(
-              convertDateTime(timeString, 'time'),
-              attrField.name
-            )
-          }
+          onChange={(value, timeString) => (field.store = timeString)}
         />
       )
     else return <>Datatype not yet supported</>
