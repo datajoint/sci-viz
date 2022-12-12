@@ -549,7 +549,6 @@ SciViz: # top level tab
                 Table A2: 'table=test_group2_simple.TableA'
                 Table B2: 'table=test_group2_simple.TableB'
                 Table C2: 'table=test_group2_simple.TableC'
-                None: ''
             Buttons3:
               route: /formButtons3
               x: 0
@@ -564,7 +563,6 @@ SciViz: # top level tab
                 Table A2: 'table2=test_group2_simple.TableA'
                 Table B2: 'table2=test_group2_simple.TableB'
                 Table C2: 'table2=test_group2_simple.TableC'
-                None: ''
             Buttons4:
               route: /formButtons4
               x: 0
@@ -578,7 +576,6 @@ SciViz: # top level tab
                 Table A2: 'table3=test_group2_simple.TableA'
                 Table B2: 'table3=test_group2_simple.TableB'
                 Table C2: 'table3=test_group2_simple.TableC'
-                None: ''
             Channeled Multi Form:
               route: /insert10
               x: 1
