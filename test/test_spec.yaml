@@ -479,9 +479,7 @@ SciViz: # top level tab
               height: 1
               width: 1
               type: form
-              tables:
-                - test_group1_simple.TableB
-                - test_group1_simple.TableC
+              tables: [test_group1_simple.TableB, test_group1_simple.TableC]
             All supported input types:
               route: /insert7
               x: 0
