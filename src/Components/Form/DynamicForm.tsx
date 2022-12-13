@@ -211,7 +211,10 @@ function DynamicForm(props: formProps) {
       return (
         <Select style={{ width: '100%' }}>
           {tableField.values.map((option) => (
-            <Select.Option value={JSON.stringify(option)}>
+            <Select.Option
+              value={JSON.stringify(option)}
+              key={`${tableField.name}_select_option`}
+            >
               {JSON.stringify(option)}
             </Select.Option>
           ))}
@@ -283,7 +286,12 @@ function DynamicForm(props: formProps) {
       return (
         <Select id={attrField.name} style={{ width: '100%' }}>
           {options.map((option) => (
-            <Select.Option value={option}>{option}</Select.Option>
+            <Select.Option
+              value={option}
+              key={`${attrField.name}_select_option`}
+            >
+              {option}
+            </Select.Option>
           ))}
         </Select>
       )
