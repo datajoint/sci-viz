@@ -3,6 +3,7 @@ import { Responsive, WidthProvider } from 'react-grid-layout'
 import FullPlotly from './Plots/FullPlotly'
 import Metadata from './Table/Metadata'
 import { Pagination } from 'antd'
+import Image from './Image'
 
 interface DynamicGridProps {
   route: string
@@ -110,7 +111,6 @@ export default class DynamicGrid extends React.Component<
   }
 
   onChange = (page: any) => {
-    console.log(page)
     this.setState({
       page: page,
     })
@@ -190,6 +190,19 @@ export default class DynamicGrid extends React.Component<
                           return (
                             <Metadata
                               name="Metadata"
+                              route={this.props.routeList[compListIndex]}
+                              token={this.props.token}
+                              height={
+                                this.props.rowHeight /
+                                this.props.componentList.length
+                              }
+                              restrictionList={restrictionListCopy}
+                            />
+                          )
+                        }
+                        if (componentType.match(/^file:image:attach.*$/)) {
+                          return (
+                            <Image
                               route={this.props.routeList[compListIndex]}
                               token={this.props.token}
                               height={

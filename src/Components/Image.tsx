@@ -47,13 +47,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
   render() {
     return (
-      <Card
-        style={{
-          height: this.props.height,
-        }}
-        bodyStyle={{ overflow: 'auto', height: '100%' }}
-        hoverable={true}
-        cover={<img src={this.state.imageLocation} />}
+      <img
+        src={this.state.imageLocation}
+        style={{ maxWidth: '100%', maxHeight: '100%' }}
       />
     )
   }

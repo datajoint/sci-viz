@@ -1,6 +1,8 @@
 version: 'v0.0.0'
 LabBook: null
 SciViz: # top level tab
+  # website_title: whatever you want your website to be called in the browser tab
+  favicon_name: favicon.ico
   auth: True
   # header:
   #   image_route: ./IBLlogo.png
@@ -111,7 +113,7 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              type: djtable
+              type: antd-table
               link: /hiddenpage
               restriction: >
                 def restriction(**kwargs):
@@ -245,7 +247,7 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              type: dropdown-query
+              type: slider
               channel: mydropdown
               route: /testtest
               restriction: >
@@ -262,8 +264,8 @@ SciViz: # top level tab
               y: 20
               height: 6
               width: 1
-              type: djtable
-              channel: mydjtable
+              type: antd-table
+              channel: myantd-table
               channels: [mybuttons]
               restriction: >
                 def restriction(**kwargs):
@@ -279,7 +281,7 @@ SciViz: # top level tab
               y: 14
               height: 6
               width: 1
-              channels: [mydjtable]
+              channels: [myantd-table]
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -423,7 +425,7 @@ SciViz: # top level tab
               y: 0
               height: 1
               width: 1
-              type: djtable
+              type: antd-table
               channel: mytable
               restriction: >
                 def restriction(**kwargs):
