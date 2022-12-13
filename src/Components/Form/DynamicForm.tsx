@@ -168,7 +168,7 @@ function DynamicForm(props: formProps) {
 
   const handleSubmit = async (values: formPayloadData) => {
     fieldData!.fields.forEach((field) => {
-      if (field.type == 'table') {
+      if (field.type === 'table') {
         values = Object.assign(values, JSON.parse(values[field.name] as string))
         delete values[field.name]
       } else if (
