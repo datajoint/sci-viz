@@ -1,4 +1,4 @@
-# Tutorials
+# Getting Started
 
 ## Installation
 

@@ -1,21 +1,19 @@
 # ---------------------- PROJECT SPECIFIC ---------------------------
 
-site_name: DataJoint Documentation
+site_name: Sci-Viz
 site_url: http://localhost/docs/sci-viz
 repo_url: https://github.com/datajoint/sci-viz
 repo_name: datajoint/sci-viz
 nav:
-  - Sci-Viz: index.md
-  - Concepts: concepts.md
-  - Tutorials:
-      - Getting Started: tutorials/getting_started.md
-      - Dynamic Spec Sheet: tutorials/spec_sheet.md
-      - Grids: tutorials/grids.md
-      - Components: tutorials/components.md
-      - Developer Instructions: tutorials/dev_instructions.md
-      - References: tutorials/references.md
+  - Getting Started: getting_started.md
+  - Concepts:
+      - Dynamic Spec Sheet: concepts/spec_sheet.md
+      - Grids: concepts/grids.md
+      - Components: concepts/components.md
+      - Developer Instructions: concepts/dev_instructions.md
+      - References: concepts/references.md
+  # - Tutorials: tutorials.md
   - Citation: citation.md
-  - API: api.md
   - Changelog: changelog.md
 
 # --------------------- NOTES TO CONTRIBUTORS -----------------------
@@ -87,9 +85,9 @@ theme:
 plugins:
   - markdownextradata: {}
   - search
-  # - redirects: # OPTIONAL REDIRECTS
-  #     redirect_maps:
-  #       "index.md": "getting_started.md"
+  - redirects: # OPTIONAL REDIRECTS
+      redirect_maps:
+        'index.md': 'getting_started.md'
 
 markdown_extensions:
   - attr_list

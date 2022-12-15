@@ -2,7 +2,7 @@
 
 Sci-Viz produces custom visualizations by putting `grids` on `pages` and then filling them with visualization `components`. Currently there are two types of grids **Fixed** and **Dynamic**
 
-### Fixed mode grid
+## Fixed mode grid
 
 A fixed mode grid requires all components to explicitly give their position and size on the grid.
 
@@ -13,7 +13,7 @@ A fixed `grid` takes four arguments:
 - `row_height:` the height of each row in pixels
 - `components:` a yaml dictionary of components to be spawned in the grid
 
-### Dynamic grid mode
+## Dynamic grid mode
 
 A dynamic grid takes a datajoint query and then uses each record and applies that record as a restriction to a template of components. It then spawns a single or group of components for each record of that parent query but the components query is restricted by the entire record that has been passed in from the parent query.
 
