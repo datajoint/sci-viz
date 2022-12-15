@@ -1,6 +1,6 @@
 # Dynamic Spec Sheet
 
-Sci-Viz is used to build visualization dashboards, this is done through a single spec sheet. An example spec sheet is included named `example_visualization_spec.yaml
+Sci-Viz is used to build visualization dashboards, this is done through a single spec sheet. An example spec sheet is included named `example_visualization_spec.yaml`
 
 Important notes about restrictions in the spec sheet:
 
