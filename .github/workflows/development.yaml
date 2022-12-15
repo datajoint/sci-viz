@@ -42,11 +42,12 @@ jobs:
   publish-release:
     if: |
       github.event_name == 'push' &&
-      startsWith(github.ref, 'refs/tags') &&
-      (
-        github.repository_owner == 'datajoint' ||
-        github.repository_owner == 'datajoint-company'
-      )
+      startsWith(github.ref, 'refs/tags') 
+      # &&
+      # (
+      #   github.repository_owner == 'datajoint' ||
+      #   github.repository_owner == 'datajoint-company'
+      # )
     needs:
       - test
     runs-on: ubuntu-latest
@@ -58,12 +59,12 @@ jobs:
         run: |
           DJSCIVIZ_VERSION=$(cat package.json | grep \"version\" | awk -F\" '{print $4}')
           echo "DJSCIVIZ_VERSION=${DJSCIVIZ_VERSION}" >> $GITHUB_ENV
-      - name: Get changelog entry
-        id: changelog_reader
-        uses: guzman-raphael/changelog-reader-action@v5
-        with:
-          path: ./CHANGELOG.md
-          version: ${{env.DJSCIVIZ_VERSION}}
+      # - name: Get changelog entry
+      #   id: changelog_reader
+      #   uses: guzman-raphael/changelog-reader-action@v5
+      #   with:
+      #     path: ./CHANGELOG.md
+      #     version: ${{env.DJSCIVIZ_VERSION}}
       - name: Deploy docs
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
