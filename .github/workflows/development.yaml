@@ -42,12 +42,7 @@ jobs:
   publish-release:
     if: |
       github.event_name == 'push' &&
-      startsWith(github.ref, 'refs/tags') 
-      # &&
-      # (
-      #   github.repository_owner == 'datajoint' ||
-      #   github.repository_owner == 'datajoint-company'
-      # )
+      startsWith(github.ref, 'refs/tags')
     needs:
       - test
     runs-on: ubuntu-latest
