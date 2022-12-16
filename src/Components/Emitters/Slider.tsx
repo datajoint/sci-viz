@@ -158,7 +158,11 @@ export default class DjSlider extends React.Component<
           <tr>
             {this.state.data.records[this.state.sliderValue].map(
               (value: number | null | bigint | boolean | string) => {
-                return <td>{value}</td>
+                return (
+                  <td>
+                    <>{value}</>
+                  </td>
+                )
               }
             )}
           </tr>

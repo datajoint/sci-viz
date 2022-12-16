@@ -3,7 +3,7 @@ version: '2.4'
 services:
   sci-viz:
     build: .
-    image: datajoint/sci-viz:0.2.0
+    image: datajoint/sci-viz:1.0.0
     environment:
       CHOKIDAR_USEPOLLING: 'true'
       REACT_APP_DJSCIVIZ_BACKEND_PREFIX: '/api'
@@ -31,7 +31,7 @@ services:
     networks:
       - main
   fakeservices.datajoint.io:
-    image: datajoint/nginx:v0.2.3
+    image: datajoint/nginx:v0.2.4
     environment:
       - ADD_pharus_TYPE=REST
       - ADD_pharus_ENDPOINT=pharus:5000

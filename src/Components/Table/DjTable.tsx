@@ -550,8 +550,10 @@ export default class DjTable extends React.Component<
         bodyStyle={{ height: '100%', overflowY: 'auto' }}
         hoverable={true}
       >
-        {this.redirect()}
-        {this.compileTable()}
+        <>
+          {this.redirect()}
+          {this.compileTable()}
+        </>
       </Card>
     )
   }
