@@ -113,6 +113,10 @@ image_template = """
                     <Image token={{this.props.jwtToken}} route='{route}' restrictionList={{[...this.state.restrictionList]}} height={{{gridHeight}*{height}+({height}-1)*10}}/>
                   </div>
 """
+form_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <DynamicForm token={{this.props.jwtToken}} route='{route}' name='{component_name}' height={{{gridHeight}*{height}+({height}-1)*10}} store={{Object.assign({{}}, this.state.store)}} {channelList}/>             
+                  </div>"""
 mkdown_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                   <Markdown
@@ -573,6 +577,41 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         )
                         import_set.add(
                             "const DjTable = React.lazy(() => import('../Table/DjTable'))"
+                        )
+                    elif re.match(r"^form.*$", component["type"]):
+                        try:
+                            link = f"link='{component['link']}'"
+                        except KeyError:
+                            link = ""
+                        channel = (
+                            f"channel='{component['channel']}'"
+                            if "channel" in component
+                            else ""
+                        )
+                        if "link" in component and "channel" in component:
+                            raise ValueError(
+                                f"Cannot have both link and channel props within {component_name}"
+                            )
+                        p.write(
+                            form_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                gridHeight=grid["row_height"],
+                                height=component["height"],
+                                width=component["width"],
+                                route=component["route"],
+                                channel=channel,
+                                link=link,
+                                channelList=(
+                                    f"channelList={{{component['''channels''']}}}"
+                                    if "channels" in component
+                                    else "channelList={[]}"
+                                ),
+                            )
+                        )
+                        import_set.add(
+                            "const DynamicForm = React.lazy(() => import('../Form/DynamicForm'))"
                         )
                     elif re.match(r"^slider.*$", component["type"]):
                         p.write(

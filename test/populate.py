@@ -138,6 +138,169 @@ class TableB(dj.Lookup):
 
 
 @group1_simple
+class TableC(dj.Lookup):
+    definition = """
+    -> TableB
+    c_id: int
+    ---
+    c_name = John Smith : varchar(30)
+    """
+    contents = [
+        (0, 10, 100, -8),
+        (
+            0,
+            11,
+            200,
+            "Josh",
+        ),
+        (
+            0,
+            11,
+            300,
+            "Lumberjack",
+        ),
+    ]
+
+
+@group1_simple
+class TableD(dj.Lookup):
+    definition = """
+    tinyint: tinyint
+    ---
+    tinyint_unsigned: tinyint unsigned
+    smallint: smallint
+    smallint_unsigned: smallint unsigned
+    mediumint: mediumint
+    mediumint_unsigned: mediumint unsigned
+    int_unsigned: int unsigned
+    int: int
+    char: char(10)
+    varchar: varchar(516)
+    date: date
+    time: time
+    datetime: datetime
+    timestamp: timestamp
+    enum: enum("option1", "option2", "option3")
+    float: float
+    double: double
+    decimal: decimal(5,3)
+    decimal_unsigned: decimal(6,4) unsigned
+    """
+
+
+@group2_simple
+class TableA(dj.Lookup):
+    definition = """
+    a2_id: int
+    ---
+    a2_number: int
+    """
+    contents = [
+        (
+            0,
+            0,
+        ),
+        (
+            1,
+            1,
+        ),
+    ]
+
+
+@group2_simple
+class TableB(dj.Lookup):
+    definition = """
+    -> TableA
+    b2_id: int
+    ---
+    b2_number: float
+    """
+    contents = [
+        (0, 10, 22.12),
+        (
+            0,
+            11,
+            -1.21,
+        ),
+        (
+            1,
+            21,
+            7.77,
+        ),
+        (
+            0,
+            13,
+            2.13,
+        ),
+        (
+            0,
+            15,
+            -5.22,
+        ),
+        (
+            1,
+            26,
+            12.33,
+        ),
+        (
+            0,
+            19,
+            3.15,
+        ),
+        (
+            0,
+            22,
+            -3.46,
+        ),
+        (
+            1,
+            24,
+            15.97,
+        ),
+        (
+            0,
+            31,
+            7.15,
+        ),
+        (
+            0,
+            33,
+            -9.77,
+        ),
+        (
+            1,
+            37,
+            44.33,
+        ),
+    ]
+
+
+@group2_simple
+class TableC(dj.Lookup):
+    definition = """
+    -> TableB
+    c2_id: int
+    ---
+    c2_name = John Smith : varchar(30)
+    """
+    contents = [
+        (0, 10, 100, -8),
+        (
+            0,
+            11,
+            200,
+            "Josh",
+        ),
+        (
+            0,
+            11,
+            300,
+            "Lumberjack",
+        ),
+    ]
+
+
+@group1_simple
 class Mouse(dj.Lookup):
     definition = """
     mouse_id: int
