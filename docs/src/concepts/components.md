@@ -89,6 +89,32 @@ The Image component takes two additional arguments:
 
 Additionally the image that you want to display needs to be stored as a datajoint [attach](https://docs.datajoint.org/python/definition/06.5-External-Data.html?highlight=attach) attribute type and your query should produce only one record with one column which is the column where the image is stored.
 
+### Form component
+
+`type:` form
+
+The Form component takes 2 additional arguments:
+
+- `route:` the backend route for the rest api query, must start with a `/`
+- `tables:` the list of tables in "`schema.table`" format to insert into
+  - Table names can be templated, either fully or partially, using the `'{keyword}'` format. This keyword can then be assigned a value by an emitter component as a query parameter.
+
+The Form can also take 2 optional argument:
+
+- `map:` a mapping to change the displayed names of the fields in the form
+
+  A map takes a _list_ of 3 arguments:
+
+  - `type:` attribute | table
+  - `input:` the new name of the field
+  - `destination:` the field to be renamed
+
+  A map entry with a `table` type can also take 1 optional argument:
+
+  - `map:` a nested mapping of the same structure to change the displayed names of the table's primary key attributes
+
+- `channels:` an array of channels to listen to for templated table name values.
+
 ## Slider component
 
 The Slider is a component that takes a datajoint query and creates a slider based off the payload that the query returns. It turns each record into an index on the slider and also emits the currently selected record on its channel as a restriction to other components.
