@@ -93,13 +93,12 @@ Additionally the image that you want to display needs to be stored as a datajoin
 
 `type:` form
 
-The Form component takes 2 additional arguments:
+The Form component takes 1 additional argument:
 
-- `route:` the backend route for the rest api query, must start with a `/`
 - `tables:` the list of tables in "`schema.table`" format to insert into
   - Table names can be templated, either fully or partially, using the `'{keyword}'` format. This keyword can then be assigned a value by an emitter component as a query parameter.
 
-The Form can also take 2 optional argument:
+The Form can also take 2 optional arguments:
 
 - `map:` a mapping to change the displayed names of the fields in the form
 
