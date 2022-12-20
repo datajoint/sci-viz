@@ -89,7 +89,7 @@ The Image component takes two additional arguments:
 
 Additionally the image that you want to display needs to be stored as a datajoint [attach](https://docs.datajoint.org/python/definition/06.5-External-Data.html?highlight=attach) attribute type and your query should produce only one record with one column which is the column where the image is stored.
 
-### Form component
+## Form component
 
 `type:` form
 
