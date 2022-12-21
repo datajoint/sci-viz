@@ -2,14 +2,6 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [1.1.0] - 12-16-22
-
-### Added
-
-- Kubernetes docs PR #50
-- Antd Table component PR #53, #54
-- Dynamic form component PR #55
-
 ## [1.0.0] - 12-16-22
 
 ### Added
