@@ -1,4 +1,4 @@
-# MODE="LIVE|QA|PUSH" PACKAGE=sci-viz UPSTREAM_REPO=https://github.com/datajoint/sci-viz.git HOST_UID=$(id -u) docker compose -f docs/docker-compose.yaml up --build
+# MODE="LIVE|QA|PUSH" GOOGLE_ANALYTICS_KEY= UPSTREAM_REPO=https://github.com/datajoint/sci-viz.git HOST_UID=$(id -u) docker compose -f docs/docker-compose.yaml up --build
 #
 # navigate to http://localhost/
 version: '2.4'
@@ -7,15 +7,11 @@ services:
     build:
       dockerfile: docs/.docker/Dockerfile
       context: ../
-      args:
-        - PACKAGE
-    image: ${PACKAGE}-docs
+    image: sci-viz-docs
     environment:
-      - PACKAGE
       - UPSTREAM_REPO
       - MODE
       - GOOGLE_ANALYTICS_KEY=''
-      - PATCH_VERSION
     volumes:
       - ../docs:/main/docs
       - ../package.json:/main/package.json
@@ -28,7 +24,6 @@ services:
       - |
         git config --global --add safe.directory /main
         set -e
-        export PATCH_VERSION=$$(cat /main/package.json | jq -r '.version')
         if echo "$${MODE}" | grep -i live &>/dev/null; then
             mkdocs serve --config-file ./docs/mkdocs.yaml -a 0.0.0.0:80
         elif echo "$${MODE}" | grep -iE "qa|push" &>/dev/null; then

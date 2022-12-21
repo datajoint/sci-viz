@@ -1,7 +1,7 @@
 # ---------------------- PROJECT SPECIFIC ---------------------------
 
-site_name: Sci-Viz
-site_url: http://localhost/docs/sci-viz
+site_name: SciViz
+site_url: http://datajoint.com/docs/sci-viz
 repo_url: https://github.com/datajoint/sci-viz
 repo_name: datajoint/sci-viz
 nav:
@@ -11,7 +11,6 @@ nav:
       - Grids: concepts/grids.md
       - Components: concepts/components.md
       - Developer Instructions: concepts/dev_instructions.md
-      - References: concepts/references.md
   # - Tutorials: tutorials.md
   - Citation: citation.md
   - Changelog: changelog.md
@@ -88,30 +87,16 @@ plugins:
   - redirects: # OPTIONAL REDIRECTS
       redirect_maps:
         'index.md': 'getting_started.md'
+  - literate-nav:
+      nav_file: navigation.md
 
 markdown_extensions:
   - attr_list
   - toc:
       permalink: true
-  - pymdownx.emoji:
-      options:
-        custom_icons:
-          - .overrides/.icons
   - mdx_truly_sane_lists
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tabbed:
-      alternate_style: true
-  - pymdownx.highlight:
-      linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
 
 extra:
-  PATCH_VERSION: !ENV PATCH_VERSION
   generator: false # Disable watermark
   analytics:
     provider: google
