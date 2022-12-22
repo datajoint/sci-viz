@@ -53,7 +53,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE: PUSH
         run: |
-          export UPSTREAM_REPO=https://github.com/${GITHUB_REPOSITORY}.git
+          export UPSTREAM_REPO=https://action-user:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           export HOST_UID=$(id -u)
           docker compose -f docs/docker-compose.yaml up --exit-code-from docs --build
   publish-release:
