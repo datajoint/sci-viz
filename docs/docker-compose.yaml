@@ -11,7 +11,7 @@ services:
     environment:
       - UPSTREAM_REPO
       - MODE
-      - GOOGLE_ANALYTICS_KEY=''
+      - GOOGLE_ANALYTICS_KEY
     volumes:
       - ../docs:/main/docs
       - ../package.json:/main/package.json
