@@ -1,0 +1,6 @@
+mkdocs-material
+mkdocs-redirects
+mike
+mdx-truly-sane-lists
+mkdocs-markdownextradata-plugin
+mkdocs-literate-nav
