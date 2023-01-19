@@ -46,6 +46,17 @@ SciViz: # top level tab
           columns: 2
           row_height: 680
           components:
+            myslideshow:
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              type: slideshow
+              route: /slideshowtest
+              batch_size: 3
+              chunk_size: 50
+              buffer_size: 30
+              max_FPS: 50
             component1:
               x: 0
               y: 0

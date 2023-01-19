@@ -165,6 +165,11 @@ radiobuttons_template = """
                       updatePageStore={{this.updateStore}}
                     />
                   </div>"""
+slideshow_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <Slideshow route='{route}' maxFPS={{{maxFPS}}}token={{this.props.jwtToken}} height={{{gridHeight}*{height}+({height}-1)*10}} chunkSize={{{chunkSize}}} bufferSize={{{bufferSize}}} batchSize={{{batchSize}}} restrictionList={{[...this.state.restrictionList]}} store={{Object.assign({{}}, this.state.store)}} {channelList}/>
+                  </div>
+"""
 grid_footer = """
                 </ResponsiveGridLayout>
                 </Suspense>
@@ -486,6 +491,30 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         )
                         import_set.add(
                             "const FullPlotly = React.lazy(() => import('../Plots/FullPlotly'))"
+                        )
+                    elif re.match(r"^slideshow.*$", component["type"]):
+                        p.write(
+                            slideshow_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                gridHeight=grid["row_height"],
+                                height=component["height"],
+                                width=component["width"],
+                                route=component["route"],
+                                batchSize=component["batch_size"],
+                                chunkSize=component["chunk_size"],
+                                bufferSize=component["buffer_size"],
+                                maxFPS=component["max_FPS"],
+                                channelList=(
+                                    f"channelList={{{component['''channels''']}}}"
+                                    if "channels" in component
+                                    else ""
+                                ),
+                            )
+                        )
+                        import_set.add(
+                            "const Slideshow = React.lazy(() => import('../Slideshow'))"
                         )
                     elif re.match(r"^metadata.*$", component["type"]):
                         p.write(
