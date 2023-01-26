@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: sci-viz
-        image: datajoint/sci-viz:1.0.0
+        image: datajoint/sci-viz:1.0.1
         env:
           - name: CHOKIDAR_USEPOLLING
             value: "true"

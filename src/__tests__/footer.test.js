@@ -9,7 +9,7 @@ beforeAll(() => {
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
-    json: () => Promise.resolve({ version: '1.0.0'}),
+    json: () => Promise.resolve({ version: '1.0.1'}),
   })
 );
 
