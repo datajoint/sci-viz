@@ -2,6 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [1.0.1] - 1-26-23
+
+### Fixed
+
+- Attributes with "null" or "NULL" default values would incorrectly get marked as required inputs in forms (#60) PR #61
+
 ## [1.0.0] - 12-30-22
 
 ### Added
