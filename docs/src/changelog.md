@@ -45,6 +45,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Initial framework for jest testing (#27) PR #33
 - loginless mode PR #41
 
+[1.0.1]: https://github.com/datajoint/sci-viz/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/datajoint/sci-viz/compare/0.1.1...1.0.0
 [0.1.1]: https://github.com/datajoint/sci-viz/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/datajoint/sci-viz/releases/tag/0.1.0
