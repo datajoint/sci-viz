@@ -370,7 +370,7 @@ function DynamicForm(props: formProps) {
                 name={field.name}
                 rules={[
                   {
-                    required: !field.default || field.default === 'null',
+                    required: !field.default,
                   },
                 ]}
               >
