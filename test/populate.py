@@ -304,21 +304,20 @@ class TableC(dj.Lookup):
 class TableV(dj.Lookup):
     definition = """
     datetime: datetime
-    ---
-    q_int = 1 : int
+    v_int: int
     """
     contents = [
         ("2000-01-02 01:02:03", 1),
-        ("2001-02-03 02:03:04", 1),
+        ("2001-02-03 02:03:04", 2),
     ]
 
 
 @group1_simple
 class TableU(dj.Lookup):
     definition = """
-    -> TableV
+    u_int: int
     ---
-    q_int = 1 : int
+    -> TableV
     """
 
 
