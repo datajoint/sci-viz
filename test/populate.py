@@ -301,6 +301,28 @@ class TableC(dj.Lookup):
 
 
 @group1_simple
+class TableV(dj.Lookup):
+    definition = """
+    datetime: datetime
+    ---
+    q_int = 1 : int
+    """
+    contents = [
+        ("2000-01-02 01:02:03", 1),
+        ("2001-02-03 02:03:04", 1),
+    ]
+
+
+@group1_simple
+class TableU(dj.Lookup):
+    definition = """
+    -> TableV
+    ---
+    q_int = 1 : int
+    """
+
+
+@group1_simple
 class Mouse(dj.Lookup):
     definition = """
     mouse_id: int
