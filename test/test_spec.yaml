@@ -586,6 +586,15 @@ SciViz: # top level tab
                 - '{table}'
                 - '{table2}'
                 - '{table3}'
+            Datetime FPK Form:
+              route: /insert11
+              x: 0
+              y: 10
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableU
     Hidden Page:
       route: /hiddenpage
       hidden: True

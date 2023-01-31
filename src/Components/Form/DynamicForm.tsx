@@ -40,7 +40,7 @@ interface attributeFieldData {
 
 interface tableFieldData {
   type: string
-  values: Array<object>
+  values: Array<string>
   name: string
   default: null
   store: string
@@ -211,10 +211,10 @@ function DynamicForm(props: formProps) {
         <Select style={{ width: '100%' }}>
           {tableField.values.map((option) => (
             <Select.Option
-              value={JSON.stringify(option)}
+              value={option}
               key={`${tableField.name}_select_option`}
             >
-              {JSON.stringify(option)}
+              {option}
             </Select.Option>
           ))}
         </Select>
