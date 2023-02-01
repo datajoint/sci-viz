@@ -33,9 +33,7 @@ interface SciVizFixedGrid {
 
 export type ComponentTypes = DropdownQueryComponent | RadioDropdownComponent | SliderComponent | FormComponent | ImageComponent | MetadataComponent | PlotComponent | MarkDownComponent | TableComponent
 
-interface DropdownQueryComponent extends SciVizComponent {
-    restriction: string
-    dj_query: string
+export interface DropdownQueryComponent extends SciVizComponent, SciVizQueried {
     channel: string
 }
 
@@ -44,9 +42,7 @@ interface RadioDropdownComponent extends SciVizComponent {
     content: {[key:string]: string}
 }
 
-interface SliderComponent extends SciVizComponent {
-    restriction: string
-    dj_query: string
+interface SliderComponent extends SciVizComponent, SciVizQueried {
     channel: string
     channels?: string[]
 }
@@ -66,19 +62,11 @@ interface FormComponent extends SciVizComponent {
     channels?: string[]
 }
 
-interface ImageComponent extends SciVizComponent {
-    restriction: string
-    dj_query: string
-}
+interface ImageComponent extends SciVizComponent, SciVizQueried {}
 
-interface MetadataComponent extends SciVizComponent {
-    restriction: string
-    dj_query: string
-}
+interface MetadataComponent extends SciVizComponent, SciVizQueried {}
 
-interface PlotComponent extends SciVizComponent {
-    restriction: string
-    dj_query: string
+interface PlotComponent extends SciVizComponent, SciVizQueried {
     channels?: string[]
 }
 
@@ -87,7 +75,12 @@ interface MarkDownComponent extends SciVizComponent {
     image_route?: string
 }
 
-interface TableComponent extends SciVizComponent {
+interface TableComponent extends SciVizComponent, SciVizQueried {
+    channel?: string
+    link?: string
+}
+
+interface SciVizQueried {
     restriction: string
     dj_query: string
 }
