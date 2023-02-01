@@ -76,8 +76,9 @@ interface MarkDownComponent extends SciVizComponent {
 }
 
 interface TableComponent extends SciVizComponent, SciVizQueried {
-    channel?: string
     link?: string
+    channel?: string
+    channels?: string[]
 }
 
 interface SciVizQueried {
