@@ -11,3 +11,5 @@
 
 # Check subdirectories too
 !*/
+
+/docs
