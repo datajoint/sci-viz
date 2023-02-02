@@ -1,2 +1,15 @@
-# Same as a gitignore but for the TS code formatter
-/pharus 
+# Ignore everything recursively
+*
+
+# But include
+!*.json
+!*.js
+!*.ts
+!*.tsx
+!*.html
+!*.less
+
+# Check subdirectories too
+!*/
+
+/docs

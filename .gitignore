@@ -20,7 +20,6 @@
 .env.test.local
 .env.production.local
 .env
-.vscode
 src/Components/Pages/*.tsx
 src/App.tsx
 src/Components/MenuBar/MenuBarData.tsx
