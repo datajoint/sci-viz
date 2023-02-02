@@ -1,0 +1,14 @@
+{
+    // https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+    // https://marketplace.visualstudio.com/items?itemName=ms-python.python
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.prettierPath": "~/.vscode/extensions/esbenp.prettier-vscode-9.9.0/node_modules/prettier",
+    "prettier.configPath": ".prettierrc.json",
+    "prettier.ignorePath": ".prettierignore",
+    "python.formatting.provider": "black",
+    "[python]": {
+        "editor.defaultFormatter": null
+    }
+}
