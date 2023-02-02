@@ -22,32 +22,44 @@ export interface SciVizPage {
     grids: {[key: string]: GridTypes}
 }
 
-export type GridTypes = SciVizFixedGrid // | SciVizDynamicGrid
+export type GridTypes = SciVizFixedGrid | SciVizDynamicGrid
 
-interface SciVizFixedGrid {
+export interface SciVizFixedGrid extends SciVizGrid{
     type: 'fixed'
-    columns: number
-    row_height: number
     components: {[key:string]:ComponentTypes}
 }
 
+export interface SciVizDynamicGrid extends SciVizGrid, SciVizQueried{
+    type: 'dynamic'
+    route: string
+    component_templates: {[key: string] : DynamicGridComponentTypes}
+    channels?: string[]
+}
+
+interface SciVizGrid {
+    type: 'fixed' | 'dynamic'
+    columns: number
+    row_height: number
+}
+
 export type ComponentTypes = DropdownQueryComponent | RadioDropdownComponent | SliderComponent | FormComponent | ImageComponent | MetadataComponent | PlotComponent | MarkDownComponent | TableComponent
+export type DynamicGridComponentTypes = MetadataComponent | PlotComponent
 
 export interface DropdownQueryComponent extends SciVizComponent, SciVizQueried {
     channel: string
 }
 
-interface RadioDropdownComponent extends SciVizComponent {
+export interface RadioDropdownComponent extends SciVizComponent {
     channel: string
     content: {[key:string]: string}
 }
 
-interface SliderComponent extends SciVizComponent, SciVizQueried {
+export interface SliderComponent extends SciVizComponent, SciVizQueried {
     channel: string
     channels?: string[]
 }
 
-interface FormComponent extends SciVizComponent {
+export interface FormComponent extends SciVizComponent {
     tables: string[]
     map?: {
         type: 'attribute' | 'table'
@@ -62,20 +74,20 @@ interface FormComponent extends SciVizComponent {
     channels?: string[]
 }
 
-interface ImageComponent extends SciVizComponent, SciVizQueried {}
+export interface ImageComponent extends SciVizComponent, SciVizQueried {}
 
-interface MetadataComponent extends SciVizComponent, SciVizQueried {}
+export interface MetadataComponent extends SciVizComponent, SciVizQueried {}
 
-interface PlotComponent extends SciVizComponent, SciVizQueried {
+export interface PlotComponent extends SciVizComponent, SciVizQueried {
     channels?: string[]
 }
 
-interface MarkDownComponent extends SciVizComponent {
+export interface MarkDownComponent extends SciVizComponent {
     text: string
     image_route?: string
 }
 
-interface TableComponent extends SciVizComponent, SciVizQueried {
+export interface TableComponent extends SciVizComponent, SciVizQueried {
     link?: string
     channel?: string
     channels?: string[]
