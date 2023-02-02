@@ -46,6 +46,17 @@ SciViz: # top level tab
           columns: 2
           row_height: 680
           components:
+            mydropdown:
+              x: 1
+              y: 1
+              height: 1
+              width: 1
+              type: dropdown-static
+              channel: testtest
+              content:
+                none: ''
+                jeff: mouse_id=0
+                splinter: mouse_id=1
             myslideshow:
               x: 1
               y: 0
@@ -57,6 +68,7 @@ SciViz: # top level tab
               chunk_size: 50
               buffer_size: 30
               max_FPS: 50
+              channels: [testtest]
             component1:
               x: 0
               y: 0
@@ -114,7 +126,6 @@ SciViz: # top level tab
       grids:
         grid1:
           type: fixed
-          max_component_per_page: 20
           columns: 2
           row_height: 680
           components:

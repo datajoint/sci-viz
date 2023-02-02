@@ -1,5 +1,7 @@
-import { Button } from 'antd'
+import { Button, Card, Spin, Space } from 'antd'
 import { useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 interface RestrictionStore {
   [key: string]: Array<string>
 }
@@ -84,6 +86,10 @@ function Slideshow(props: SlideshowProps) {
         chunkBuffer = chunkBuffer.concat(result)
         // setChunkBuffer(chunkBuffer.concat(result))
         setPendingRequestBatch(false)
+
+        if (currentFrame === '') {
+          setCurrentFrame(nextFrame()!)
+        }
       })
     }
     if (playing && intervalID === undefined) {
@@ -96,25 +102,34 @@ function Slideshow(props: SlideshowProps) {
     }
   })
   return (
-    <>
-      <img
-        height={props.height}
-        src={`data:image/jpeg;base64,${currentFrame}`}
-        alt="vid"
-      ></img>
+    <Card
+      style={{ width: '100%', height: props.height }}
+      bodyStyle={{ height: '100%' }}
+      hoverable={true}
+    >
+      {currentFrame === '' || currentFrame === undefined ? (
+        <div style={{ height: '95%' }}>
+          <Spin size="large" />
+        </div>
+      ) : (
+        <img
+          height={'95%'}
+          src={`data:image/jpeg;base64,${currentFrame}`}
+          alt="vid"
+        />
+      )}
       <Button
-        // icon={
-        //   <FontAwesomeIcon
-        //     icon={'fa-solid fa-play' as IconProp}
         onClick={() => {
           setPlaying(!playing)
         }}
-        //   />
-        // }
       >
-        play/pause
+        {playing ? (
+          <FontAwesomeIcon icon={faPause} />
+        ) : (
+          <FontAwesomeIcon icon={faPlay} />
+        )}
       </Button>
-    </>
+    </Card>
   )
 }
 export default Slideshow
