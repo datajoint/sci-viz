@@ -1,9 +1,5 @@
-
-
 function SciVizPage() {
-    return (
-        <></>
-    )
+    return <></>
 }
 
 export default SciVizPage

@@ -1,8 +1,8 @@
 export interface SciVizSpec {
     SciViz: {
-        pages: {[key:string]:SciVizPage}
+        pages: { [key: string]: SciVizPage }
         auth?: boolean
-        website_title?:string
+        website_title?: string
         favicon_name?: string
         header?: {
             image_route: string
@@ -19,20 +19,20 @@ export interface SciVizSpec {
 export interface SciVizPage {
     route: string
     hidden?: boolean
-    grids: {[key: string]: GridTypes}
+    grids: { [key: string]: GridTypes }
 }
 
 export type GridTypes = SciVizFixedGrid | SciVizDynamicGrid
 
-export interface SciVizFixedGrid extends SciVizGrid{
+export interface SciVizFixedGrid extends SciVizGrid {
     type: 'fixed'
-    components: {[key:string]:ComponentTypes}
+    components: { [key: string]: ComponentTypes }
 }
 
-export interface SciVizDynamicGrid extends SciVizGrid, SciVizQueried{
+export interface SciVizDynamicGrid extends SciVizGrid, SciVizQueried {
     type: 'dynamic'
     route: string
-    component_templates: {[key: string] : DynamicGridComponentTypes}
+    component_templates: { [key: string]: DynamicGridComponentTypes }
     channels?: string[]
 }
 
@@ -42,7 +42,16 @@ interface SciVizGrid {
     row_height: number
 }
 
-export type ComponentTypes = DropdownQueryComponent | RadioDropdownComponent | SliderComponent | FormComponent | ImageComponent | MetadataComponent | PlotComponent | MarkDownComponent | TableComponent
+export type ComponentTypes =
+    | DropdownQueryComponent
+    | RadioDropdownComponent
+    | SliderComponent
+    | FormComponent
+    | ImageComponent
+    | MetadataComponent
+    | PlotComponent
+    | MarkDownComponent
+    | TableComponent
 export type DynamicGridComponentTypes = MetadataComponent | PlotComponent
 
 export interface DropdownQueryComponent extends SciVizComponent, SciVizQueried {
@@ -51,7 +60,7 @@ export interface DropdownQueryComponent extends SciVizComponent, SciVizQueried {
 
 export interface RadioDropdownComponent extends SciVizComponent {
     channel: string
-    content: {[key:string]: string}
+    content: { [key: string]: string }
 }
 
 export interface SliderComponent extends SciVizComponent, SciVizQueried {

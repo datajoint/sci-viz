@@ -1,9 +1,5 @@
-
-
 function SciViz() {
-    return (
-        <></>
-    )
+    return <></>
 }
 
 export default SciViz
