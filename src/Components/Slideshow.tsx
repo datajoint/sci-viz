@@ -28,17 +28,19 @@ interface FrameChunk {
   frames: Array<string>
 }
 
-// var pendingRequestBatch: boolean = false
 var currentChunk: FrameChunk | undefined
 var numFramesQueried: number = 0
 var chunkBuffer: Array<FrameChunk> = []
 var intervalID: NodeJS.Timer | undefined
 
 function Slideshow(props: SlideshowProps) {
+  // States
+  const [store, setStore] = useState<RestrictionStore | undefined>(props.store)
   const [currentFrame, setCurrentFrame] = useState<string>('')
   const [playing, setPlaying] = useState<boolean>(false)
-  // const [chunkBuffer, setChunkBuffer] = useState<Array<FrameChunk>>([])
   const [pendingRequestBatch, setPendingRequestBatch] = useState<boolean>(false)
+
+  // Async functions
   const getFrames = async (): Promise<FrameChunk> => {
     let apiUrl =
       `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
@@ -60,6 +62,22 @@ function Slideshow(props: SlideshowProps) {
         return result as Promise<FrameChunk>
       })
   }
+
+  // Functions
+
+  // Resets the slideshow to its default state
+  // Used when the restriction store changes and when the user hits the refresh button
+  function reset() {
+    currentChunk = undefined
+    numFramesQueried = 0
+    chunkBuffer = []
+    intervalID = undefined
+    setStore(props.store)
+    setCurrentFrame('')
+    setPendingRequestBatch(false)
+    setPlaying(false)
+  }
+
   function nextFrame() {
     if (currentChunk === undefined) {
       currentChunk = chunkBuffer.shift()
@@ -71,7 +89,38 @@ function Slideshow(props: SlideshowProps) {
       return currentChunk?.frames.shift()
     }
   }
+
+  // Returns True if the store is completly populated
+  function storeReady(
+    channelList: Array<string>,
+    store: RestrictionStore
+  ): boolean {
+    let channelCheckArr = Array<boolean>()
+    channelList.forEach((element) => {
+      if (store[element]) {
+        channelCheckArr.push(true)
+      } else {
+        channelCheckArr.push(false)
+      }
+    })
+    return !channelCheckArr.includes(false)
+  }
+
+  // Compares two Stores to see if the channels in the list have changed
+  function storeComparison(
+    store1: RestrictionStore,
+    store2: RestrictionStore,
+    channelList: Array<string>
+  ): boolean {
+    var store1Array: Array<string> = []
+    var store2Array: Array<string> = []
+    channelList.forEach((element) => {
+      store1Array.push(store1[element])
+    })
+  }
+
   useEffect(() => {
+    // if (props.channelList !== undefined && store)
     if (
       chunkBuffer.length < props.bufferSize &&
       props.bufferSize - chunkBuffer.length >= props.batchSize &&
@@ -109,26 +158,43 @@ function Slideshow(props: SlideshowProps) {
     >
       {currentFrame === '' || currentFrame === undefined ? (
         <div style={{ height: '95%' }}>
-          <Spin size="large" />
+          <Spin
+            size="large"
+            style={{
+              display: 'block',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          />
         </div>
       ) : (
         <img
+          style={{ display: 'block', margin: 'auto' }}
           height={'95%'}
           src={`data:image/jpeg;base64,${currentFrame}`}
           alt="vid"
         />
       )}
-      <Button
-        onClick={() => {
-          setPlaying(!playing)
-        }}
-      >
-        {playing ? (
-          <FontAwesomeIcon icon={faPause} />
-        ) : (
-          <FontAwesomeIcon icon={faPlay} />
-        )}
-      </Button>
+      <div style={{ display: 'block' }}>
+        <Button
+          onClick={() => {
+            setPlaying(!playing)
+          }}
+        >
+          {playing ? (
+            <FontAwesomeIcon icon={faPause} />
+          ) : (
+            <FontAwesomeIcon icon={faPlay} />
+          )}
+        </Button>
+        <Button
+          onClick={() => {
+            reset()
+          }}
+        >
+          RESET
+        </Button>
+      </div>
     </Card>
   )
 }
