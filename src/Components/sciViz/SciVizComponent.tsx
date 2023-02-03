@@ -51,22 +51,22 @@ function SciVizComponent(props: ComponentProps) {
                 />
             )
         }
-        return (
-            <div
-                key={props.name}
-                data-grid={{
-                    x: props.component.x,
-                    y: props.component.y,
-                    w: props.component.width,
-                    h: props.component.height,
-                    static: true
-                }}
-            >
-                {comp}
-            </div>
-        )
+        return comp
     }
-    return generateComponent()
+    return (
+        <div
+            key={props.name}
+            data-grid={{
+                x: props.component.x,
+                y: props.component.y,
+                w: props.component.width,
+                h: props.component.height,
+                static: true
+            }}
+        >
+            {generateComponent()}
+        </div>
+    )
 }
 
 export default SciVizComponent
