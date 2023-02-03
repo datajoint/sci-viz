@@ -16,10 +16,10 @@ interface GridProps {
     name: string
     grid: GridTypes
     jwtToken: string
-    restrictionList: string[]
-    store: RestrictionStore
-    updateRestrictionList: (queryParams: string) => string
-    updateStore: (key: string, record: string[]) => void
+    restrictionList?: string[]
+    store?: RestrictionStore
+    updateRestrictionList?: (queryParams: string) => string
+    updateStore?: (key: string, record: string[]) => void
 }
 
 function SciVizGrid(props: GridProps) {

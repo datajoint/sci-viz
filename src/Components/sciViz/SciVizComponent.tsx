@@ -27,10 +27,10 @@ interface ComponentProps {
     name: string
     component: ComponentTypes
     gridHeight: number
-    restrictionList: string[]
-    store: RestrictionStore
-    updateRestrictionList: (queryParams: string) => string
-    updateStore: (key: string, record: string[]) => void
+    restrictionList?: string[]
+    store?: RestrictionStore
+    updateRestrictionList?: (queryParams: string) => string
+    updateStore?: (key: string, record: string[]) => void
 }
 
 function SciVizComponent(props: ComponentProps) {
