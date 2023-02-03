@@ -1,7 +1,11 @@
+export interface RestrictionStore {
+    [key: string]: string[]
+}
+
 export interface SciVizSpec {
     SciViz: {
         pages: { [key: string]: SciVizPage }
-        auth?: boolean
+        auth: boolean
         website_title?: string
         favicon_name?: string
         header?: {
@@ -18,8 +22,8 @@ export interface SciVizSpec {
 
 export interface SciVizPage {
     route: string
-    hidden?: boolean
     grids: { [key: string]: GridTypes }
+    hidden?: boolean
 }
 
 export type GridTypes = SciVizFixedGrid | SciVizDynamicGrid
@@ -91,7 +95,7 @@ export interface PlotComponent extends SciVizComponent, SciVizQueried {
     channels?: string[]
 }
 
-export interface MarkDownComponent extends SciVizComponent {
+export interface MarkDownComponent extends Omit<SciVizComponent, 'route'> {
     text: string
     image_route?: string
 }

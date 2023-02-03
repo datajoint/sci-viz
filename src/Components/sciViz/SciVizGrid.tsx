@@ -1,7 +1,12 @@
 import { Suspense } from 'react'
 import { Spin } from 'antd'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import { GridTypes, SciVizFixedGrid, SciVizDynamicGrid } from './SciVizInterfaces'
+import {
+    GridTypes,
+    SciVizFixedGrid,
+    SciVizDynamicGrid,
+    RestrictionStore
+} from './SciVizInterfaces'
 import SciVizComponent from './SciVizComponent'
 import DynamicGrid from '../DynamicGrid'
 
@@ -10,13 +15,11 @@ const ResponsiveGridLayout = WidthProvider(Responsive)
 interface GridProps {
     name: string
     grid: GridTypes
-    store: RestrictionStore
     jwtToken: string
-    restrictionList?: string[]
-}
-
-interface RestrictionStore {
-    [key: string]: Array<string>
+    restrictionList: string[]
+    store: RestrictionStore
+    updateRestrictionList: (queryParams: string) => string
+    updateStore: (key: string, record: string[]) => void
 }
 
 function SciVizGrid(props: GridProps) {
@@ -41,6 +44,10 @@ function SciVizGrid(props: GridProps) {
                                     name={name}
                                     component={component}
                                     gridHeight={gridData.row_height}
+                                    restrictionList={props.restrictionList}
+                                    store={props.store}
+                                    updateRestrictionList={props.updateRestrictionList}
+                                    updateStore={props.updateStore}
                                 />
                             ))}
                         </ResponsiveGridLayout>
@@ -57,7 +64,6 @@ function SciVizGrid(props: GridProps) {
                     routeList.push(component.route)
                 }
             )
-
             grid = (
                 <Suspense fallback={<Spin size='default' />}>
                     <li>
@@ -70,15 +76,13 @@ function SciVizGrid(props: GridProps) {
                             routeList={routeList}
                             queryParams={props.restrictionList}
                             channelList={gridData.channels}
-                            store={
-                                gridData.channels ? Object.assign({}, props.store) : undefined
-                            }
+                            store={gridData.channels ? props.store : undefined}
                         />
                     </li>
                 </Suspense>
             )
         }
-        return { grid }
+        return grid
     }
     return generateGrid()
 }
