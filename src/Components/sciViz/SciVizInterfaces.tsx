@@ -4,7 +4,7 @@ export interface RestrictionStore {
 
 export interface SciVizSpec {
     SciViz: {
-        pages: { [key: string]: SciVizPage }
+        pages: { [key: string]: SciVizPageType }
         auth: boolean
         website_title?: string
         favicon_name?: string
@@ -20,7 +20,7 @@ export interface SciVizSpec {
     version?: string
 }
 
-export interface SciVizPage {
+export interface SciVizPageType {
     route: string
     grids: { [key: string]: GridTypes }
     hidden?: boolean

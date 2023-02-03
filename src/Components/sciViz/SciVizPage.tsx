@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { SciVizPage, RestrictionStore } from './SciVizInterfaces'
+import { SciVizPageType, RestrictionStore } from './SciVizInterfaces'
 import SciVizGrid from './SciVizGrid'
 
 interface PageProps {
-    page: SciVizPage
+    page: SciVizPageType
     jwtToken: string
 }
 
