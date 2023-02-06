@@ -127,16 +127,6 @@ function Slideshow(props: SlideshowProps) {
     }
 
     useEffect(() => {
-        console.log(JSON.stringify(props.store))
-        console.log(JSON.stringify(store))
-        // setStore(props.store)
-        // if (props.channelList && store ) {
-        //     if (storeComparison(props.store!, store, props.channelList)) {
-        //         console.log(JSON.stringify(props.store))
-        //         console.log(JSON.stringify(store))
-        //         reset()
-        //     }
-        // }
         if (props.channelList) {
             if (!storeComparison(props.store!, store!, props.channelList)) {
                 setStore(props.store!)
@@ -161,7 +151,6 @@ function Slideshow(props: SlideshowProps) {
                 }
                 Promise.all(promiseArray).then((result) => {
                     chunkBuffer = chunkBuffer.concat(result)
-                    // setChunkBuffer(chunkBuffer.concat(result))
                     setPendingRequestBatch(false)
 
                     if (currentFrame === '') {
