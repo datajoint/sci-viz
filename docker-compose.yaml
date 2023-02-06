@@ -46,7 +46,6 @@ services:
     networks:
       - main
   pharus:
-    user: root
     depends_on:
       localdb:
         condition: service_healthy
@@ -63,7 +62,7 @@ services:
     volumes:
       - ./test:/tmp/test
       - ./test/test_spec.yaml:/main/specs/test_spec.yaml
-      - ./test/test.avi:/main/specs/test.avi
+      # - ./test/test.avi:/main/specs/test.avi
     command:
       - sh
       - -lc
