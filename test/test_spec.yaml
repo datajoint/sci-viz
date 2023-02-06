@@ -46,17 +46,13 @@ SciViz: # top level tab
           columns: 2
           row_height: 680
           components:
-            mydropdown:
+            mydatetime:
               x: 1
               y: 1
               height: 1
               width: 1
-              type: dropdown-static
+              type: daterangepicker
               channel: testtest
-              content:
-                none: ''
-                jeff: mouse_id=0
-                splinter: mouse_id=1
             myslideshow:
               x: 1
               y: 0

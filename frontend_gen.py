@@ -146,6 +146,14 @@ dropdown_template = """
                       updatePageStore={{this.updateStore}}
                     />
                   </div>"""
+date_range_picker_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <DateRangePicker
+                      height={{{gridHeight}*{height}+({height}-1)*10}}
+                      channel="{channel}"
+                      updatePageStore={{this.updateStore}}
+                    />
+                  </div>"""
 dropdown_query_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <DropdownQuery
@@ -682,6 +690,21 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         )
                         import_set.add(
                             "const Dropdown = React.lazy(() => import('../Emitters/Dropdown'))"
+                        )
+                    elif re.match(r"^daterangepicker.*$", component["type"]):
+                        p.write(
+                            date_range_picker_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                channel=component["channel"],
+                                gridHeight=grid["row_height"],
+                            )
+                        )
+                        import_set.add(
+                            "const DateRangePicker = React.lazy(() => import('../Emitters/DateRangePicker'))"
                         )
                     elif re.match(r"^dropdown-query.*$", component["type"]):
                         p.write(
