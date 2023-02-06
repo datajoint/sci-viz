@@ -31,6 +31,7 @@ function SciVizPage(props: PageProps) {
                 <ul className='grid-list'>
                     {Object.entries(pageData.grids).map(([name, grid]) => (
                         <SciVizGrid
+                            key={name}
                             name={name}
                             grid={grid}
                             jwtToken={props.jwtToken}

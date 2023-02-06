@@ -4,11 +4,11 @@ import SciVizPage from './SciVizPage'
 
 interface SciVizProps {
     jwtToken: string
-    sciviz: SciVizSpec
+    spec: SciVizSpec
 }
 
 function SciViz(props: SciVizProps) {
-    const menuItems = Object.entries(props.sciviz.SciViz.pages).map(([name, page]) => ({
+    const menuItems = Object.entries(props.spec.SciViz.pages).map(([name, page]) => ({
         key: name,
         label: (
             <span
@@ -20,7 +20,7 @@ function SciViz(props: SciVizProps) {
                 <div>{name}</div>
             </span>
         ),
-        children: <SciVizPage jwtToken={props.jwtToken} page={page} />
+        children: <SciVizPage key={name} jwtToken={props.jwtToken} page={page} />
     }))
     return (
         <Tabs
