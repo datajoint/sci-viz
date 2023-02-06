@@ -48,6 +48,13 @@ function Slideshow(props: SlideshowProps) {
             props.route +
             `?chunk_size=${props.chunkSize}` +
             `&start_frame=${numFramesQueried}`
+        if (props.channelList && storeReady(props.channelList, store!)) {
+            let queryParamList: Array<string> = []
+            for (let i in props.channelList) {
+                queryParamList = queryParamList.concat(store![props.channelList[+i]])
+            }
+            apiUrl = apiUrl + '&' + queryParamList.join('&')
+        }
         numFramesQueried += props.chunkSize
         return fetch(apiUrl, {
             method: 'GET',
@@ -122,7 +129,7 @@ function Slideshow(props: SlideshowProps) {
     useEffect(() => {
         console.log(JSON.stringify(props.store))
         console.log(JSON.stringify(store))
-        setStore(props.store)
+        // setStore(props.store)
         // if (props.channelList && store ) {
         //     if (storeComparison(props.store!, store, props.channelList)) {
         //         console.log(JSON.stringify(props.store))
@@ -130,34 +137,46 @@ function Slideshow(props: SlideshowProps) {
         //         reset()
         //     }
         // }
-
-        if (
-            chunkBuffer.length < props.bufferSize &&
-            props.bufferSize - chunkBuffer.length >= props.batchSize &&
-            !pendingRequestBatch
-        ) {
-            setPendingRequestBatch(true)
-            let promiseArray: Array<Promise<FrameChunk>> = []
-            for (let i = 0; i < props.batchSize; i++) {
-                promiseArray.push(getFrames())
+        if (props.channelList) {
+            if (!storeComparison(props.store!, store!, props.channelList)) {
+                setStore(props.store!)
+                reset()
+            } else if (storeReady(props.channelList, store!)) {
+                slideshowEngine()
             }
-            Promise.all(promiseArray).then((result) => {
-                chunkBuffer = chunkBuffer.concat(result)
-                // setChunkBuffer(chunkBuffer.concat(result))
-                setPendingRequestBatch(false)
-
-                if (currentFrame === '') {
-                    setCurrentFrame(nextFrame()!)
-                }
-            })
+        } else {
+            slideshowEngine()
         }
-        if (playing && intervalID === undefined) {
-            intervalID = setInterval(() => {
-                setCurrentFrame(nextFrame()!)
-            }, 1000 / props.maxFPS)
-        } else if (!playing && intervalID !== undefined) {
-            clearInterval(intervalID)
-            intervalID = undefined
+
+        function slideshowEngine() {
+            if (
+                chunkBuffer.length < props.bufferSize &&
+                props.bufferSize - chunkBuffer.length >= props.batchSize &&
+                !pendingRequestBatch
+            ) {
+                setPendingRequestBatch(true)
+                let promiseArray: Array<Promise<FrameChunk>> = []
+                for (let i = 0; i < props.batchSize; i++) {
+                    promiseArray.push(getFrames())
+                }
+                Promise.all(promiseArray).then((result) => {
+                    chunkBuffer = chunkBuffer.concat(result)
+                    // setChunkBuffer(chunkBuffer.concat(result))
+                    setPendingRequestBatch(false)
+
+                    if (currentFrame === '') {
+                        setCurrentFrame(nextFrame()!)
+                    }
+                })
+            }
+            if (playing && intervalID === undefined) {
+                intervalID = setInterval(() => {
+                    setCurrentFrame(nextFrame()!)
+                }, 1000 / props.maxFPS)
+            } else if (!playing && intervalID !== undefined) {
+                clearInterval(intervalID)
+                intervalID = undefined
+            }
         }
     })
     return (

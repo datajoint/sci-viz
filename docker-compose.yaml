@@ -68,7 +68,6 @@ services:
       - sh
       - -lc
       - |
-        apk add	mesa-gl
         python /tmp/test/populate.py
         pharus
     networks:
