@@ -1,7 +1,8 @@
 import {
     ComponentTypes,
     DropdownQueryComponent,
-    RadioDropdownComponent,
+    DropdownComponent,
+    RadioComponent,
     SliderComponent,
     FormComponent,
     ImageComponent,
@@ -18,14 +19,15 @@ import Metadata from '../Table/Metadata'
 import Image from '../Image'
 import DynamicForm from '../Form/DynamicForm'
 import Markdown from '../Markdown'
-import DjDropdown from '../Emitters/Dropdown'
-import DjDropdownQuery from '../Emitters/DropdownQuery'
-import DjRadioButtons from '../Emitters/RadioButtons'
 import DjSlider from '../Emitters/Slider'
+import Dropdown from '../Emitters/Dropdown'
+import DropdownQuery from '../Emitters/DropdownQuery'
+import RadioButtons from '../Emitters/RadioButtons'
 
 interface ComponentProps {
     name: string
     component: ComponentTypes
+    jwtToken?: string
     gridHeight: number
     restrictionList?: string[]
     store?: RestrictionStore
@@ -34,39 +36,141 @@ interface ComponentProps {
 }
 
 function SciVizComponent(props: ComponentProps) {
-    const generateComponent = () => {
-        var comp: JSX.Element = <></>
-        const type = props.component.type
-        if (/^markdown.*$/.test(type)) {
-            const compData = props.component as MarkDownComponent
-            comp = (
-                <Markdown
-                    content={compData.text}
-                    imageRoute={
-                        compData.image_route
-                            ? `require('${compData.image_route}')['default']`
-                            : ''
-                    }
-                    height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+    var comp: JSX.Element = <></>
+    const type = props.component.type
+    if (/^markdown.*$/.test(type)) {
+        const compData = props.component as MarkDownComponent
+        comp = (
+            <Markdown
+                content={compData.text}
+                imageRoute={
+                    compData.image_route ? `require('${compData.image_route}')['default']` : ''
+                }
+                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+            />
+        )
+    } else if (/^plot.*$/.test(type)) {
+        const compData = props.component as PlotComponent
+        comp = (
+            <FullPlotly
+                token={props.jwtToken!}
+                route={compData.route}
+                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                restrictionList={props.restrictionList!}
+                store={props.store}
+                channelList={compData.channels}
+            />
+        )
+    } else if (/^metadata.*$/.test(type)) {
+        const compData = props.component as MetadataComponent
+        comp = (
+            <div className='metadataContainer'>
+                <Metadata
+                    token={props.jwtToken!}
+                    route={compData.route}
+                    name={props.name}
+                    height={props.gridHeight}
+                    restrictionList={props.restrictionList!}
                 />
-            )
-        }
-        return comp
+            </div>
+        )
+    } else if (/^file:image.*$/.test(type)) {
+        const compData = props.component as ImageComponent
+        comp = (
+            <Image
+                token={props.jwtToken!}
+                route={compData.route}
+                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                restrictionList={props.restrictionList!}
+            />
+        )
+    } else if (/^table.*$/.test(type)) {
+        const compData = props.component as TableComponent
+        comp = (
+            <TableView
+                token={props.jwtToken!}
+                route={compData.route}
+                tableName={props.name}
+                link={compData.link}
+                channel={compData.channel}
+                updateRestrictionList={props.updateRestrictionList!}
+                updatePageStore={props.updateStore!}
+            />
+        )
+    } else if (/^antd-table.*$/.test(type)) {
+        const compData = props.component as TableComponent
+        comp = (
+            <DjTable
+                token={props.jwtToken!}
+                route={compData.route}
+                name={props.name}
+                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                link={compData.link}
+                channel={compData.channel}
+                store={props.store}
+                channelList={compData.channels}
+                restrictionList={props.restrictionList!}
+                updatePageStore={props.updateStore!}
+            />
+        )
+    } else if (/^form.*$/.test(type)) {
+        const compData = props.component as FormComponent
+        comp = (
+            <DynamicForm
+                token={props.jwtToken!}
+                route={compData.route}
+                name={props.name}
+                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                store={props.store}
+                channelList={compData.channels || []}
+            />
+        )
+    } else if (/^slider.*$/.test(type)) {
+        const compData = props.component as SliderComponent
+        comp = (
+            <DjSlider
+                token={props.jwtToken!}
+                route={compData.route}
+                restrictionList={props.restrictionList!}
+                channel={compData.channel}
+                updatePageStore={props.updateStore!}
+                channelList={compData.channels}
+                store={props.store}
+            />
+        )
+    } else if (/^dropdown-static.*$/.test(type)) {
+        const compData = props.component as DropdownComponent
+        comp = (
+            <Dropdown
+                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                payload={compData.content}
+                channel={compData.channel}
+                updatePageStore={props.updateStore!}
+            />
+        )
+    } else if (/^dropdown-query.*$/.test(type)) {
+        const compData = props.component as DropdownQueryComponent
+        comp = (
+            <DropdownQuery
+                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                channel={compData.channel}
+                route={compData.route}
+                token={props.jwtToken!}
+                updatePageStore={props.updateStore!}
+            />
+        )
+    } else if (/^radiobuttons.*$/.test(type)) {
+        const compData = props.component as RadioComponent
+        comp = (
+            <RadioButtons
+                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                payload={compData.content}
+                channel={compData.channel}
+                updatePageStore={props.updateStore!}
+            />
+        )
     }
-    return (
-        <div
-            key={props.name}
-            data-grid={{
-                x: props.component.x,
-                y: props.component.y,
-                w: props.component.width,
-                h: props.component.height,
-                static: true
-            }}
-        >
-            {generateComponent()}
-        </div>
-    )
+    return <>{comp}</>
 }
 
 export default SciVizComponent
