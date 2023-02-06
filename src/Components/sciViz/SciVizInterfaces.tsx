@@ -48,7 +48,8 @@ interface SciVizGrid {
 
 export type ComponentTypes =
     | DropdownQueryComponent
-    | RadioDropdownComponent
+    | DropdownComponent
+    | RadioComponent
     | SliderComponent
     | FormComponent
     | ImageComponent
@@ -62,7 +63,12 @@ export interface DropdownQueryComponent extends SciVizComponent, SciVizQueried {
     channel: string
 }
 
-export interface RadioDropdownComponent extends SciVizComponent {
+export interface DropdownComponent extends SciVizComponent {
+    channel: string
+    content: { [key: string]: string }
+}
+
+export interface RadioComponent extends SciVizComponent {
     channel: string
     content: { [key: string]: string }
 }

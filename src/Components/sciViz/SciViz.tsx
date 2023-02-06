@@ -3,8 +3,8 @@ import { SciVizSpec } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
 
 interface SciVizProps {
-    jwtToken: string
     spec: SciVizSpec
+    jwtToken?: string
 }
 
 function SciViz(props: SciVizProps) {

@@ -4,12 +4,12 @@ import SciVizGrid from './SciVizGrid'
 
 interface PageProps {
     page: SciVizPageType
-    jwtToken: string
+    jwtToken?: string
 }
 
 function SciVizPage(props: PageProps) {
-    const [restrictionList, setRestrictionList] = useState<string[]>([])
-    const [store, setStore] = useState<RestrictionStore>({})
+    const [restrictionList, setRestrictionList] = useState<string[] | undefined>(undefined)
+    const [store, setStore] = useState<RestrictionStore | undefined>(undefined)
     const pageData = props.page
 
     useEffect(() => {

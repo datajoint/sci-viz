@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import React, { Suspense } from 'react'
 import { Spin } from 'antd'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import {
@@ -7,15 +7,15 @@ import {
     SciVizDynamicGrid,
     RestrictionStore
 } from './SciVizInterfaces'
-import SciVizComponent from './SciVizComponent'
-import DynamicGrid from '../DynamicGrid'
+const SciVizComponent = React.lazy(() => import('./SciVizComponent'))
+const DynamicGrid = React.lazy(() => import('../DynamicGrid'))
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
 interface GridProps {
     name: string
     grid: GridTypes
-    jwtToken: string
+    jwtToken?: string
     restrictionList?: string[]
     store?: RestrictionStore
     updateRestrictionList?: (queryParams: string) => string
@@ -38,16 +38,28 @@ function SciVizGrid(props: GridProps) {
                     useCSSTransforms={true}
                 >
                     {Object.entries(gridData.components).map(([name, component]) => (
-                        <SciVizComponent
+                        <div
                             key={name}
-                            name={name}
-                            component={component}
-                            gridHeight={gridData.row_height}
-                            restrictionList={props.restrictionList}
-                            store={props.store}
-                            updateRestrictionList={props.updateRestrictionList}
-                            updateStore={props.updateStore}
-                        />
+                            data-grid={{
+                                x: component.x,
+                                y: component.y,
+                                w: component.width,
+                                h: component.height,
+                                static: true
+                            }}
+                        >
+                            <SciVizComponent
+                                key={name}
+                                name={name}
+                                component={component}
+                                jwtToken={props.jwtToken}
+                                gridHeight={gridData.row_height}
+                                restrictionList={props.restrictionList}
+                                store={props.store || {}}
+                                updateRestrictionList={props.updateRestrictionList}
+                                updateStore={props.updateStore}
+                            />
+                        </div>
                     ))}
                 </ResponsiveGridLayout>
             </Suspense>
@@ -64,14 +76,14 @@ function SciVizGrid(props: GridProps) {
             <Suspense fallback={<Spin size='default' />}>
                 <DynamicGrid
                     route={gridData.route}
-                    token={props.jwtToken}
+                    token={props.jwtToken!}
                     columns={gridData.columns}
                     rowHeight={gridData.row_height}
                     componentList={componentList}
                     routeList={routeList}
                     queryParams={props.restrictionList}
                     channelList={gridData.channels}
-                    store={gridData.channels ? props.store : undefined}
+                    store={gridData.channels ? props.store || {} : undefined}
                 />
             </Suspense>
         )
