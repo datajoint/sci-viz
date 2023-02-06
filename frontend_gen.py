@@ -146,6 +146,14 @@ dropdown_template = """
                       updatePageStore={{this.updateStore}}
                     />
                   </div>"""
+date_range_picker_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <DateRangePicker
+                      height={{{gridHeight}*{height}+({height}-1)*10}}
+                      channel="{channel}"
+                      updatePageStore={{this.updateStore}}
+                    />
+                  </div>"""
 dropdown_query_template = """
                   <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
                     <DropdownQuery
@@ -165,6 +173,11 @@ radiobuttons_template = """
                       updatePageStore={{this.updateStore}}
                     />
                   </div>"""
+slideshow_template = """
+                  <div key='{component_name}' data-grid={{{{x: {x}, y: {y}, w: {width}, h: {height}, static: true}}}}>
+                    <Slideshow route='{route}' maxFPS={{{maxFPS}}}token={{this.props.jwtToken}} height={{{gridHeight}*{height}+({height}-1)*10}} chunkSize={{{chunkSize}}} bufferSize={{{bufferSize}}} batchSize={{{batchSize}}} restrictionList={{[...this.state.restrictionList]}} store={{Object.assign({{}}, this.state.store)}} {channelList}/>
+                  </div>
+"""
 grid_footer = """
                 </ResponsiveGridLayout>
                 </Suspense>
@@ -487,6 +500,30 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         import_set.add(
                             "const FullPlotly = React.lazy(() => import('../Plots/FullPlotly'))"
                         )
+                    elif re.match(r"^slideshow.*$", component["type"]):
+                        p.write(
+                            slideshow_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                gridHeight=grid["row_height"],
+                                height=component["height"],
+                                width=component["width"],
+                                route=component["route"],
+                                batchSize=component["batch_size"],
+                                chunkSize=component["chunk_size"],
+                                bufferSize=component["buffer_size"],
+                                maxFPS=component["max_FPS"],
+                                channelList=(
+                                    f"channelList={{{component['''channels''']}}}"
+                                    if "channels" in component
+                                    else ""
+                                ),
+                            )
+                        )
+                        import_set.add(
+                            "const Slideshow = React.lazy(() => import('../Slideshow'))"
+                        )
                     elif re.match(r"^metadata.*$", component["type"]):
                         p.write(
                             metadata_template.format(
@@ -653,6 +690,21 @@ with open(Path(spec_path), "r") as y, open(Path(side_bar_path), "w") as s, open(
                         )
                         import_set.add(
                             "const Dropdown = React.lazy(() => import('../Emitters/Dropdown'))"
+                        )
+                    elif re.match(r"^daterangepicker.*$", component["type"]):
+                        p.write(
+                            date_range_picker_template.format(
+                                component_name=component_name,
+                                x=component["x"],
+                                y=component["y"],
+                                height=component["height"],
+                                width=component["width"],
+                                channel=component["channel"],
+                                gridHeight=grid["row_height"],
+                            )
+                        )
+                        import_set.add(
+                            "const DateRangePicker = React.lazy(() => import('../Emitters/DateRangePicker'))"
                         )
                     elif re.match(r"^dropdown-query.*$", component["type"]):
                         p.write(
