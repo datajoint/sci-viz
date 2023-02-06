@@ -1,0 +1,578 @@
+{
+    "version": "v0.0.0",
+    "SciViz": {
+        "favicon_name": "favicon.ico",
+        "auth": true,
+        "hostname": "localdb",
+        "pages": {
+            "Home": {
+                "route": "/home",
+                "grids": {
+                    "grid5": {
+                        "type": "fixed",
+                        "columns": 1,
+                        "row_height": 680,
+                        "components": {
+                            "comp": {
+                                "x": 0,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "markdown",
+                                "image_route": "../../logo.svg",
+                                "text": "# Welcome!\n\nThis is a basic homepage created entirely through the config file.\n\nIt is comprised of a single markdown component that supports the [github markdown spec.](https://guides.github.com/features/mastering-markdown/)\n\nFor more examples of the markdown component go the the markdown page.\n"
+                            }
+                        }
+                    }
+                }
+            },
+            "Markdown": {
+                "route": "/mkdown",
+                "grids": {
+                    "grid1": {
+                        "type": "fixed",
+                        "max_component_per_page": 20,
+                        "columns": 2,
+                        "row_height": 680,
+                        "components": {
+                            "component1": {
+                                "x": 0,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "markdown",
+                                "text": "![Image](https://www.datajoint.org/static/images/djopen-color-dark.png)\n# Markdown support  \n### Hello!  \nthis is an example of the markdown component  \n~~~python  \nprint('Nice! Codeblock support!')  \n~~~  \nlist: \n  * apple\n  * pear\n  * melon\n\nordered list:\n1. one\n2. two\n3. three\n\n`Inline code highlight! `\n\n[Hyperlinks!](https://www.google.com/)\n# h1\n## h2\n### h3\n#### h4\n##### h5\n###### h6\n\nnested lists:\n  * parent\n    * child\n\ntask lists:\n  * [x] apples\n  * [x] pizza\n  * [ ] chicken\n\ntables:\n\nfirst header | second header\n------------ | -------------\nContent cell 1 | content cell 2\nContent cell 3 | content cell 4\n"
+                            }
+                        }
+                    }
+                }
+            },
+            "Table": {
+                "route": "/tableExample",
+                "args": ["subject_name", "session_number"],
+                "grids": {
+                    "grid1": {
+                        "type": "fixed",
+                        "max_component_per_page": 20,
+                        "columns": 2,
+                        "row_height": 680,
+                        "components": {
+                            "Example table (conditional row coloring)": {
+                                "route": "/query2",
+                                "x": 0,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "antd-table",
+                                "link": "/hiddenpage",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)\n    q = ((TableA * TableB).proj(\n        ...,\n        #_sciviz_font='IF(a_name = \"Raphael\", \"rgb(255, 0, 0)\", NULL)',\n        _sciviz_background='IF(a_name = \"Raphael\", \"rgba(50, 255, 0, 0.16)\", \"NULL\")',\n        ))\n    return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}\n"
+                            },
+                            "example table 1 markdown": {
+                                "x": 1,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "markdown",
+                                "text": "# Hello! \nThis is a Datajoint table component populated by the codeblock:\n~~~python  \ndef dj_query(vms):\n    TableA, TableB = (vms['test_group1_simple'].TableA,\n                      vms['test_group1_simple'].TableB)\n    q = ((TableA * TableB).proj(\n        ...,\n        _sciviz_background='''\n        IF(a_name = \"Raphael\",\n        \"rgba(50, 255, 0, 0.16)\",\n        \"rgba(255, 0, 0, 0.16)\")\n        ''',))\n    return dict(query=q, fetch_args=[])\n~~~\n# *Sci-Viz* speaks datajoint natively, isnt that neat!  \n\n### About the coloring in the table:\nNotice that this query has a projection that produces an additional column.\nThe column `_sciviz_background` accepts any css compatable color,\nso if you want custom coloring based off of a condition in your query result \nall you have to do is make a projection with a condition that inserts a color into the `_sciviz_background` column.\n\nIf the `_sciviz_background` column exists, the frontend automatically hides the column and applys its css colors to each row.\nThe onlt thing that the `_sciviz_background` column cares about is that it has a valid css color or NULL in it,\nso you can enforce as many color conditions as you want.\n\nThis same functionality also exists for the text using the column `_sciviz_font`\n[here is a good tool for picking css colors.](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Colors/Color_picker_tool)\n"
+                            },
+                            "Example table 2 (restriction)": {
+                                "route": "/exampletable2",
+                                "x": 0,
+                                "y": 1,
+                                "height": 1,
+                                "width": 1,
+                                "type": "table",
+                                "link": "/hiddenpage",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs, a_id=1)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    TableA, TableB = (test_group1_simple.TableA,\n                      test_group1_simple.TableB)\n    return dict(query=(TableA * TableB), fetch_args=[])\n"
+                            },
+                            "example table 2 markdown": {
+                                "x": 1,
+                                "y": 1,
+                                "height": 1,
+                                "width": 1,
+                                "type": "markdown",
+                                "text": "# DJ table with restriction:\n\nThis is a datajoint table from the following query:\n~~~python\n  def dj_query(test_group1_simple):\n    TableA, TableB = (test_group1_simple.TableA,\n                      test_group1_simple.TableB)\n    return dict(query=(TableA * TableB), fetch_args=[])\n~~~\n\nBut it also has the following restriction applied to it:\n~~~python\n  def restriction(**kwargs):\n    return dict(**kwargs, a_id=1)\n~~~\n## Why is this useful?\n\nWhat this does is it injects the additional restriction into the query.\n\nThis is useful because you can use anchoring and aliasing in the config to\ncopy one query to many components and only have to change the restriction on the\ncomponent\n"
+                            },
+                            "Mouse table with linking": {
+                                "route": "/dawdgargaefdaefa",
+                                "x": 0,
+                                "y": 1,
+                                "height": 1,
+                                "width": 1,
+                                "type": "table",
+                                "link": "/hiddenpage",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    Mouse = test_group1_simple.Mouse\n    return dict(query=(Mouse), fetch_args=[])\n"
+                            }
+                        }
+                    }
+                }
+            },
+            "Plots": {
+                "route": "/plots",
+                "grids": {
+                    "grid1": {
+                        "type": "fixed",
+                        "columns": 2,
+                        "row_height": 80,
+                        "components": {
+                            "mybuttons": {
+                                "x": 0,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "radiobuttons",
+                                "channel": "mybuttons",
+                                "content": {
+                                    "mouse 0": "mouse_id=0",
+                                    "mouse 1": "mouse_id=1",
+                                    "mouse 2": "mouse_id=2"
+                                }
+                            },
+                            "mydropdown": {
+                                "x": 1,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "slider",
+                                "channel": "mydropdown",
+                                "route": "/testtest",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    Mouse = test_group1_simple.Mouse\n    q = dj.U('mouse_id') & Mouse\n    return dict(query=q, fetch_args=[])\n"
+                            },
+                            "Example table (conditional row coloring)": {
+                                "route": "/weuroiewjqroiew",
+                                "x": 0,
+                                "y": 20,
+                                "height": 6,
+                                "width": 1,
+                                "type": "antd-table",
+                                "channel": "myantd-table",
+                                "channels": ["mybuttons"],
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    Mouse = test_group1_simple.Mouse\n    return dict(query=Mouse, fetch_args=[])\n"
+                            },
+                            "tableplots": {
+                                "route": "/plot1d",
+                                "type": "plot:plotly:stored_json",
+                                "x": 0,
+                                "y": 14,
+                                "height": 6,
+                                "width": 1,
+                                "channels": ["myantd-table"],
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    MousePlots = test_group1_simple.MousePlots\n    return dict(query=MousePlots, fetch_args=['plot'])\n"
+                            }
+                        }
+                    }
+                }
+            },
+            "Metadata": {
+                "route": "/metadata",
+                "grids": {
+                    "grid2": {
+                        "type": "fixed",
+                        "columns": 6,
+                        "row_height": 233,
+                        "components": {
+                            "comp": {
+                                "type": "metadata",
+                                "route": "/metadata1",
+                                "x": 1,
+                                "y": 1,
+                                "height": 1,
+                                "width": 1,
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs, b_id=19)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    TableA, TableB = (test_group1_simple.TableA,\n                      test_group1_simple.TableB)\n    return dict(query=(TableA * TableB), fetch_args=[])\n"
+                            },
+                            "desc": {
+                                "type": "markdown",
+                                "x": 3,
+                                "y": 0,
+                                "height": 3,
+                                "width": 3,
+                                "text": "# This is a metadata component\nit is not very useful by itself but when combined with the dynamic\ncomponent generator it can provide a useful description of what the other\ncomponents are.\n"
+                            }
+                        }
+                    }
+                }
+            },
+            "Dynamic Grid": {
+                "route": "/dynamicGrid",
+                "grids": {
+                    "dropdownGrid": {
+                        "type": "fixed",
+                        "columns": 1,
+                        "row_height": 80,
+                        "components": {
+                            "mydropdown": {
+                                "x": 1,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "dropdown-static",
+                                "channel": "testtest",
+                                "content": {
+                                    "none": "",
+                                    "jeff": "mouse_id=0",
+                                    "splinter": "mouse_id=1"
+                                }
+                            }
+                        }
+                    },
+                    "dgrid": {
+                        "route": "/dgrid",
+                        "type": "dynamic",
+                        "channels": ["testtest"],
+                        "columns": 1,
+                        "row_height": 600,
+                        "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                        "dj_query": "def dj_query(test_group1_simple):\n    Mouse = test_group1_simple.Mouse\n    return dict(query=(Mouse.proj()), fetch_args=[])\n",
+                        "component_templates": {
+                            "comp2": {
+                                "route": "/myMeta",
+                                "type": "metadata",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    Mouse = test_group1_simple.Mouse\n    return dict(query=(Mouse), fetch_args=[])\n"
+                            },
+                            "comp1": {
+                                "route": "/myPlot",
+                                "type": "plot:plotly:stored_json",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    MousePlots = test_group1_simple.MousePlots\n    return dict(query=(MousePlots), fetch_args=['plot'])\n"
+                            },
+                            "comp3": {
+                                "route": "/myTableD",
+                                "type": "table",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    MousePlots = test_group1_simple.MousePlots\n    return dict(query=(MousePlots), fetch_args=[])\n"
+                            }
+                        }
+                    }
+                }
+            },
+            "Dynamic Form": {
+                "route": "/dynamicForm",
+                "grids": {
+                    "grid1": {
+                        "type": "fixed",
+                        "columns": 2,
+                        "row_height": 375,
+                        "components": {
+                            "Table A": {
+                                "route": "/insert1",
+                                "x": 0,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "form",
+                                "tables": ["test_group1_simple.TableA"]
+                            },
+                            "Table B": {
+                                "route": "/insert2",
+                                "x": 1,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "form",
+                                "tables": ["test_group1_simple.TableB"]
+                            },
+                            "Table C": {
+                                "route": "/insert3",
+                                "x": 0,
+                                "y": 1,
+                                "height": 1,
+                                "width": 1,
+                                "type": "form",
+                                "tables": ["test_group1_simple.TableC"]
+                            },
+                            "B and C with mapping": {
+                                "route": "/insert4",
+                                "x": 1,
+                                "y": 1,
+                                "height": 1,
+                                "width": 1,
+                                "type": "form",
+                                "tables": [
+                                    "test_group1_simple.TableB",
+                                    "test_group1_simple.TableC"
+                                ],
+                                "map": [
+                                    {
+                                        "type": "attribute",
+                                        "input": "B Id",
+                                        "destination": "b_id"
+                                    },
+                                    {
+                                        "type": "attribute",
+                                        "input": "B Number",
+                                        "destination": "b_number"
+                                    },
+                                    {
+                                        "type": "table",
+                                        "input": "Table A",
+                                        "destination": "test_group1_simple.TableA",
+                                        "map": [
+                                            {
+                                                "type": "attribute",
+                                                "input": "A Id",
+                                                "destination": "a_id"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "attribute",
+                                        "input": "C Id",
+                                        "destination": "c_id"
+                                    }
+                                ]
+                            },
+                            "B and C with mapping except table map": {
+                                "route": "/insert5",
+                                "x": 0,
+                                "y": 2,
+                                "height": 1,
+                                "width": 1,
+                                "type": "form",
+                                "tables": [
+                                    "test_group1_simple.TableB",
+                                    "test_group1_simple.TableC"
+                                ],
+                                "map": [
+                                    {
+                                        "type": "attribute",
+                                        "input": "B Id",
+                                        "destination": "b_id"
+                                    },
+                                    {
+                                        "type": "attribute",
+                                        "input": "B Number",
+                                        "destination": "b_number"
+                                    },
+                                    {
+                                        "type": "table",
+                                        "input": "Table A",
+                                        "destination": "test_group1_simple.TableA"
+                                    },
+                                    {
+                                        "type": "attribute",
+                                        "input": "C Id",
+                                        "destination": "c_id"
+                                    }
+                                ]
+                            },
+                            "B and C with no mapping": {
+                                "route": "/insert6",
+                                "x": 1,
+                                "y": 2,
+                                "height": 1,
+                                "width": 1,
+                                "type": "form",
+                                "tables": [
+                                    "test_group1_simple.TableB",
+                                    "test_group1_simple.TableC"
+                                ]
+                            },
+                            "All supported input types": {
+                                "route": "/insert7",
+                                "x": 0,
+                                "y": 3,
+                                "height": 2,
+                                "width": 2,
+                                "type": "form",
+                                "tables": ["test_group1_simple.TableD"]
+                            },
+                            "Buttons": {
+                                "route": "/formButtons",
+                                "x": 0,
+                                "y": 5,
+                                "height": 1,
+                                "width": 1,
+                                "type": "radiobuttons",
+                                "channel": "formButtons",
+                                "content": {
+                                    "Table A": "table=TableA",
+                                    "Table B": "table=TableB",
+                                    "Table C": "table=TableC"
+                                }
+                            },
+                            "One-One Channeled Form": {
+                                "route": "/insert8",
+                                "x": 1,
+                                "y": 5,
+                                "height": 1,
+                                "width": 1,
+                                "type": "form",
+                                "channels": ["formButtons"],
+                                "tables": ["test_group1_simple.{table}"]
+                            },
+                            "Dropdown": {
+                                "route": "/formDropdown",
+                                "x": 0,
+                                "y": 6,
+                                "height": 1,
+                                "width": 1,
+                                "type": "dropdown-static",
+                                "channel": "formDropdown",
+                                "content": {
+                                    "Schema 1": "schema=test_group1_simple",
+                                    "Schema 2": "schema=test_group2_simple"
+                                }
+                            },
+                            "Many-One Channeled Form": {
+                                "route": "/insert9",
+                                "x": 1,
+                                "y": 6,
+                                "height": 1,
+                                "width": 1,
+                                "type": "form",
+                                "channels": ["formButtons", "formDropdown"],
+                                "tables": ["{schema}.{table}"]
+                            },
+                            "Buttons2": {
+                                "route": "/formButtons2",
+                                "x": 0,
+                                "y": 7,
+                                "height": 1,
+                                "width": 1,
+                                "type": "radiobuttons",
+                                "channel": "formButtons2",
+                                "content": {
+                                    "Table A": "table=test_group1_simple.TableA",
+                                    "Table B": "table=test_group1_simple.TableB",
+                                    "Table C": "table=test_group1_simple.TableC",
+                                    "Table A2": "table=test_group2_simple.TableA",
+                                    "Table B2": "table=test_group2_simple.TableB",
+                                    "Table C2": "table=test_group2_simple.TableC"
+                                }
+                            },
+                            "Buttons3": {
+                                "route": "/formButtons3",
+                                "x": 0,
+                                "y": 8,
+                                "height": 1,
+                                "width": 1,
+                                "type": "radiobuttons",
+                                "channel": "formButtons3",
+                                "content": {
+                                    "Table B": "table2=test_group1_simple.TableB",
+                                    "Table C": "table2=test_group1_simple.TableC",
+                                    "Table A2": "table2=test_group2_simple.TableA",
+                                    "Table B2": "table2=test_group2_simple.TableB",
+                                    "Table C2": "table2=test_group2_simple.TableC"
+                                }
+                            },
+                            "Buttons4": {
+                                "route": "/formButtons4",
+                                "x": 0,
+                                "y": 9,
+                                "height": 1,
+                                "width": 1,
+                                "type": "radiobuttons",
+                                "channel": "formButtons4",
+                                "content": {
+                                    "Table C": "table3=test_group1_simple.TableC",
+                                    "Table A2": "table3=test_group2_simple.TableA",
+                                    "Table B2": "table3=test_group2_simple.TableB",
+                                    "Table C2": "table3=test_group2_simple.TableC"
+                                }
+                            },
+                            "Channeled Multi Form": {
+                                "route": "/insert10",
+                                "x": 1,
+                                "y": 7,
+                                "height": 3,
+                                "width": 1,
+                                "type": "form",
+                                "channels": ["formButtons2", "formButtons3", "formButtons4"],
+                                "tables": ["{table}", "{table2}", "{table3}"]
+                            },
+                            "Datetime FPK Form": {
+                                "route": "/insert11",
+                                "x": 0,
+                                "y": 10,
+                                "height": 1,
+                                "width": 1,
+                                "type": "form",
+                                "tables": ["test_group1_simple.TableU"]
+                            }
+                        }
+                    }
+                }
+            },
+            "Hidden Page": {
+                "route": "/hiddenpage",
+                "hidden": true,
+                "grids": {
+                    "dgrid": {
+                        "route": "/dgridasdawdd",
+                        "type": "dynamic",
+                        "columns": 3,
+                        "row_height": 600,
+                        "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                        "dj_query": "def dj_query(test_group1_simple):\n    Mouse = test_group1_simple.Mouse\n    return dict(query=(Mouse.proj()), fetch_args=[])\n",
+                        "component_templates": {
+                            "comp2": {
+                                "route": "/myMetakkljj",
+                                "type": "metadata",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    Mouse = test_group1_simple.Mouse\n    return dict(query=(Mouse), fetch_args=[])\n"
+                            }
+                        }
+                    },
+                    "mygrid": {
+                        "type": "fixed",
+                        "columns": 3,
+                        "row_height": 600,
+                        "components": {
+                            "Example table (conditional row coloring)": {
+                                "route": "/nvoihfoewo",
+                                "x": 0,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "antd-table",
+                                "channel": "mytable",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)\n    q = ((TableA * TableB).proj(\n        ...,\n        #_sciviz_font='IF(a_name = \"Raphael\", \"rgb(255, 0, 0)\", NULL)',\n        _sciviz_background='IF(a_name = \"Raphael\", \"rgba(50, 255, 0, 0.16)\", \"NULL\")',\n        ))\n    return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}\n"
+                            },
+                            "Mouse metadata": {
+                                "route": "/dawdgar",
+                                "x": 1,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "metadata",
+                                "link": "/hiddenpage",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    Mouse = test_group1_simple.Mouse\n    return dict(query=(Mouse), fetch_args=[])\n"
+                            },
+                            "testplot": {
+                                "type": "plot:plotly:stored_json",
+                                "x": 0,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "route": "/someplotroute",
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    MousePlots = test_group1_simple.MousePlots\n    return dict(query=(MousePlots), fetch_args=['plot'])\n"
+                            },
+                            "picture": {
+                                "type": "file:image:attach",
+                                "route": "/picture",
+                                "height": 1,
+                                "width": 1,
+                                "x": 2,
+                                "y": 0,
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    MousePics = test_group1_simple.MousePics\n    return dict(query=MousePics, fetch_args=['image_payload'])\n"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
