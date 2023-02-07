@@ -59,7 +59,7 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 height={props.gridHeight * compData.height + (compData.height - 1) * 10}
                 restrictionList={[...props.restrictionList!]}
-                store={props.store ? Object.assign({}, props.store) : {}}
+                store={Object.assign({}, props.store)}
                 channelList={compData.channels}
             />
         )
@@ -113,7 +113,7 @@ function SciVizComponent(props: ComponentProps) {
                 height={props.gridHeight * compData.height + (compData.height - 1) * 10}
                 link={compData.link}
                 channel={compData.channel}
-                store={props.store ? Object.assign({}, props.store) : {}}
+                store={Object.assign({}, props.store)}
                 channelList={compData.channels}
                 restrictionList={[...props.restrictionList!]}
                 updatePageStore={props.updateStore!}
@@ -128,8 +128,8 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 name={props.name}
                 height={props.gridHeight * compData.height + (compData.height - 1) * 10}
-                store={props.store ? Object.assign({}, props.store) : {}}
-                channelList={compData.channels || []}
+                store={Object.assign({}, props.store)}
+                channelList={compData.channels}
             />
         )
     } else if (/^slider.*$/.test(type)) {
@@ -143,7 +143,7 @@ function SciVizComponent(props: ComponentProps) {
                 channel={compData.channel}
                 updatePageStore={props.updateStore!}
                 channelList={compData.channels}
-                store={props.store ? Object.assign({}, props.store) : {}}
+                store={Object.assign({}, props.store)}
             />
         )
     } else if (/^dropdown-static.*$/.test(type)) {

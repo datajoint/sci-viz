@@ -26,7 +26,7 @@ interface formProps {
     route: string
     name: string
     height: number
-    channelList: Array<string>
+    channelList?: Array<string>
     store?: RestrictionStore
 }
 
@@ -80,8 +80,8 @@ function DynamicForm(props: formProps) {
         'int unsigned': [0, 4294967295]
     }
     let queryParamList: string[] = []
-    if (props.store !== undefined) {
-        props.channelList!.forEach((element) => {
+    if (props.store && props.channelList && Object.keys(props.store).length) {
+        props.channelList.forEach((element) => {
             if (props.store![element] !== undefined) {
                 queryParamList = queryParamList.concat(props.store![element])
             }

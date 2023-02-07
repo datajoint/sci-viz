@@ -55,7 +55,7 @@ function SciVizGrid(props: GridProps) {
                                 jwtToken={props.jwtToken}
                                 gridHeight={gridData.row_height}
                                 restrictionList={[...props.restrictionList!]}
-                                store={props.store ? Object.assign({}, props.store) : {}}
+                                store={Object.assign({}, props.store)}
                                 updateRestrictionList={props.updateRestrictionList}
                                 updateStore={props.updateStore}
                             />
