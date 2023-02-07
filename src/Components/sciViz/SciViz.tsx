@@ -20,7 +20,9 @@ function SciViz(props: SciVizProps) {
                 <div>{name}</div>
             </span>
         ),
-        children: <SciVizPage key={name} jwtToken={props.jwtToken} page={page} />
+        children: (
+            <SciVizPage key={JSON.stringify(page)} jwtToken={props.jwtToken} page={page} />
+        )
     }))
     return (
         <Tabs

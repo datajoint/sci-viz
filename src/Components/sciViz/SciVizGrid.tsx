@@ -39,7 +39,7 @@ function SciVizGrid(props: GridProps) {
                 >
                     {Object.entries(gridData.components).map(([name, component]) => (
                         <div
-                            key={name}
+                            key={JSON.stringify(component)}
                             data-grid={{
                                 x: component.x,
                                 y: component.y,
@@ -49,7 +49,7 @@ function SciVizGrid(props: GridProps) {
                             }}
                         >
                             <SciVizComponent
-                                key={name}
+                                key={JSON.stringify(component)}
                                 name={name}
                                 component={component}
                                 jwtToken={props.jwtToken}

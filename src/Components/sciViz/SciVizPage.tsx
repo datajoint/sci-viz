@@ -8,8 +8,8 @@ interface PageProps {
 }
 
 function SciVizPage(props: PageProps) {
-    const [restrictionList, setRestrictionList] = useState<string[] | undefined>(undefined)
-    const [store, setStore] = useState<RestrictionStore | undefined>(undefined)
+    const [restrictionList, setRestrictionList] = useState<string[]>([])
+    const [store, setStore] = useState<RestrictionStore>({})
     const pageData = props.page
 
     useEffect(() => {
@@ -31,7 +31,7 @@ function SciVizPage(props: PageProps) {
                 <ul className='grid-list'>
                     {Object.entries(pageData.grids).map(([name, grid]) => (
                         <SciVizGrid
-                            key={name}
+                            key={JSON.stringify(grid)}
                             name={name}
                             grid={grid}
                             jwtToken={props.jwtToken}

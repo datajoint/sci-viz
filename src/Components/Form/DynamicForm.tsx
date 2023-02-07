@@ -26,7 +26,7 @@ interface formProps {
     route: string
     name: string
     height: number
-    channelList?: Array<string>
+    channelList: Array<string>
     store?: RestrictionStore
 }
 

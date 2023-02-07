@@ -42,6 +42,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as MarkDownComponent
         comp = (
             <Markdown
+                key={JSON.stringify(compData)}
                 content={compData.text}
                 imageRoute={
                     compData.image_route ? `require('${compData.image_route}')['default']` : ''
@@ -53,6 +54,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as PlotComponent
         comp = (
             <FullPlotly
+                key={JSON.stringify(compData)}
                 token={props.jwtToken!}
                 route={compData.route}
                 height={props.gridHeight * compData.height + (compData.height - 1) * 10}
@@ -66,6 +68,7 @@ function SciVizComponent(props: ComponentProps) {
         comp = (
             <div className='metadataContainer'>
                 <Metadata
+                    key={JSON.stringify(compData)}
                     token={props.jwtToken!}
                     route={compData.route}
                     name={props.name}
@@ -78,6 +81,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as ImageComponent
         comp = (
             <Image
+                key={JSON.stringify(compData)}
                 token={props.jwtToken!}
                 route={compData.route}
                 height={props.gridHeight * compData.height + (compData.height - 1) * 10}
@@ -88,6 +92,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as TableComponent
         comp = (
             <TableView
+                key={JSON.stringify(compData)}
                 token={props.jwtToken!}
                 route={compData.route}
                 tableName={props.name}
@@ -101,6 +106,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as TableComponent
         comp = (
             <DjTable
+                key={JSON.stringify(compData)}
                 token={props.jwtToken!}
                 route={compData.route}
                 name={props.name}
@@ -117,6 +123,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as FormComponent
         comp = (
             <DynamicForm
+                key={JSON.stringify(compData)}
                 token={props.jwtToken!}
                 route={compData.route}
                 name={props.name}
@@ -129,6 +136,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as SliderComponent
         comp = (
             <DjSlider
+                key={JSON.stringify(compData)}
                 token={props.jwtToken!}
                 route={compData.route}
                 restrictionList={props.restrictionList!}
@@ -142,6 +150,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as DropdownComponent
         comp = (
             <Dropdown
+                key={JSON.stringify(compData)}
                 height={props.gridHeight * compData.height + (compData.height - 1) * 10}
                 payload={compData.content}
                 channel={compData.channel}
@@ -152,6 +161,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as DropdownQueryComponent
         comp = (
             <DropdownQuery
+                key={JSON.stringify(compData)}
                 height={props.gridHeight * compData.height + (compData.height - 1) * 10}
                 channel={compData.channel}
                 route={compData.route}
@@ -163,6 +173,7 @@ function SciVizComponent(props: ComponentProps) {
         const compData = props.component as RadioComponent
         comp = (
             <RadioButtons
+                key={JSON.stringify(compData)}
                 height={props.gridHeight * compData.height + (compData.height - 1) * 10}
                 payload={compData.content}
                 channel={compData.channel}
