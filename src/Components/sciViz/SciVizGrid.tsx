@@ -54,8 +54,8 @@ function SciVizGrid(props: GridProps) {
                                 component={component}
                                 jwtToken={props.jwtToken}
                                 gridHeight={gridData.row_height}
-                                restrictionList={props.restrictionList}
-                                store={props.store || {}}
+                                restrictionList={[...props.restrictionList!]}
+                                store={props.store ? Object.assign({}, props.store) : {}}
                                 updateRestrictionList={props.updateRestrictionList}
                                 updateStore={props.updateStore}
                             />
@@ -81,9 +81,15 @@ function SciVizGrid(props: GridProps) {
                     rowHeight={gridData.row_height}
                     componentList={componentList}
                     routeList={routeList}
-                    queryParams={props.restrictionList}
+                    queryParams={[...props.restrictionList!]}
                     channelList={gridData.channels}
-                    store={gridData.channels ? props.store || {} : undefined}
+                    store={
+                        gridData.channels
+                            ? props.store
+                                ? Object.assign({}, props.store)
+                                : {}
+                            : undefined
+                    }
                 />
             </Suspense>
         )

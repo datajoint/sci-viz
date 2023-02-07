@@ -20,9 +20,10 @@ function SciVizPage(props: PageProps) {
         return queryParams
     }
     const updateStore = (key: string, record: string[]) => {
-        let myStore = store || { [key]: record }
-        myStore[key] = record
-        setStore(myStore)
+        setStore((prevStore) => ({
+            ...prevStore,
+            [key]: record
+        }))
     }
 
     return (
@@ -35,8 +36,8 @@ function SciVizPage(props: PageProps) {
                             name={name}
                             grid={grid}
                             jwtToken={props.jwtToken}
-                            restrictionList={restrictionList}
-                            store={store}
+                            restrictionList={[...restrictionList]}
+                            store={Object.assign({}, store)}
                             updateRestrictionList={updateRestrictionList}
                             updateStore={updateStore}
                         />
