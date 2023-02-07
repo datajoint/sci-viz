@@ -38,6 +38,8 @@ interface ComponentProps {
 function SciVizComponent(props: ComponentProps) {
     var comp: JSX.Element = <></>
     const type = props.component.type
+    const calculatedHeight =
+        props.gridHeight * props.component.height + (props.component.height - 1) * 10
     if (/^markdown.*$/.test(type)) {
         const compData = props.component as MarkDownComponent
         comp = (
@@ -47,7 +49,7 @@ function SciVizComponent(props: ComponentProps) {
                 imageRoute={
                     compData.image_route ? `require('${compData.image_route}')['default']` : ''
                 }
-                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                height={calculatedHeight}
             />
         )
     } else if (/^plot.*$/.test(type)) {
@@ -57,7 +59,7 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 token={props.jwtToken!}
                 route={compData.route}
-                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                height={calculatedHeight}
                 restrictionList={[...props.restrictionList!]}
                 store={Object.assign({}, props.store)}
                 channelList={compData.channels}
@@ -84,7 +86,7 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 token={props.jwtToken!}
                 route={compData.route}
-                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                height={calculatedHeight}
                 restrictionList={[...props.restrictionList!]}
             />
         )
@@ -110,7 +112,7 @@ function SciVizComponent(props: ComponentProps) {
                 token={props.jwtToken!}
                 route={compData.route}
                 name={props.name}
-                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                height={calculatedHeight}
                 link={compData.link}
                 channel={compData.channel}
                 store={Object.assign({}, props.store)}
@@ -127,7 +129,7 @@ function SciVizComponent(props: ComponentProps) {
                 token={props.jwtToken!}
                 route={compData.route}
                 name={props.name}
-                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                height={calculatedHeight}
                 store={Object.assign({}, props.store)}
                 channelList={compData.channels}
             />
@@ -151,7 +153,7 @@ function SciVizComponent(props: ComponentProps) {
         comp = (
             <Dropdown
                 key={JSON.stringify(compData)}
-                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                height={calculatedHeight}
                 payload={compData.content}
                 channel={compData.channel}
                 updatePageStore={props.updateStore!}
@@ -162,7 +164,7 @@ function SciVizComponent(props: ComponentProps) {
         comp = (
             <DropdownQuery
                 key={JSON.stringify(compData)}
-                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                height={calculatedHeight}
                 channel={compData.channel}
                 route={compData.route}
                 token={props.jwtToken!}
@@ -174,7 +176,7 @@ function SciVizComponent(props: ComponentProps) {
         comp = (
             <RadioButtons
                 key={JSON.stringify(compData)}
-                height={props.gridHeight * compData.height + (compData.height - 1) * 10}
+                height={calculatedHeight}
                 payload={compData.content}
                 channel={compData.channel}
                 updatePageStore={props.updateStore!}
