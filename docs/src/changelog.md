@@ -2,6 +2,13 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [1.1.0] - 02-06-23
+
+### Added
+
+- DateRangePicker component PR #72
+- Slideshow component PR #72
+
 ## [1.0.2] - 1-31-23
 
 ### Fixed
