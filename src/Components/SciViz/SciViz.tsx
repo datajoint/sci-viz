@@ -9,7 +9,7 @@ interface SciVizProps {
 
 function SciViz(props: SciVizProps) {
     const menuItems = Object.entries(props.spec.SciViz.pages).map(([name, page]) => ({
-        key: name,
+        key: JSON.stringify(page),
         label: (
             <span
                 style={{
