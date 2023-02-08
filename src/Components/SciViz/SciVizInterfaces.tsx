@@ -57,7 +57,13 @@ export type ComponentTypes =
     | PlotComponent
     | MarkDownComponent
     | TableComponent
+    | SlideshowComponent
+    | DateRangePickerComponent
 export type DynamicGridComponentTypes = MetadataComponent | PlotComponent
+
+export interface DateRangePickerComponent extends SciVizComponent {
+    channel: string
+}
 
 export interface DropdownQueryComponent extends SciVizComponent, SciVizQueried {
     channel: string
@@ -75,6 +81,14 @@ export interface RadioComponent extends SciVizComponent {
 
 export interface SliderComponent extends SciVizComponent, SciVizQueried {
     channel: string
+    channels?: string[]
+}
+
+export interface SlideshowComponent extends SciVizComponent, SciVizQueried {
+    batch_size: number
+    chunk_size: number
+    buffer_size: number
+    max_FPS: number
     channels?: string[]
 }
 

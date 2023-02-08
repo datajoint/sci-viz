@@ -10,6 +10,8 @@ import {
     PlotComponent,
     MarkDownComponent,
     TableComponent,
+    SlideshowComponent,
+    DateRangePickerComponent,
     RestrictionStore
 } from './SciVizInterfaces'
 import TableView from '../Table/TableView'
@@ -23,6 +25,8 @@ import DjSlider from '../Emitters/Slider'
 import Dropdown from '../Emitters/Dropdown'
 import DropdownQuery from '../Emitters/DropdownQuery'
 import RadioButtons from '../Emitters/RadioButtons'
+import Slideshow from '../Slideshow'
+import DateRangePicker from '../Emitters/DateRangePicker'
 
 interface ComponentProps {
     name: string
@@ -47,7 +51,7 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 content={compData.text}
                 imageRoute={
-                    compData.image_route ? `require('${compData.image_route}')['default']` : ''
+                    compData.image_route //? require(compData.image_route)['default'] : undefined
                 }
                 height={calculatedHeight}
             />
@@ -134,6 +138,23 @@ function SciVizComponent(props: ComponentProps) {
                 channelList={compData.channels}
             />
         )
+    } else if (/^slideshow.*$/.test(type)) {
+        const compData = props.component as SlideshowComponent
+        comp = (
+            <Slideshow
+                key={JSON.stringify(compData)}
+                token={props.jwtToken!}
+                route={compData.route}
+                height={calculatedHeight}
+                batchSize={compData.batch_size}
+                chunkSize={compData.chunk_size}
+                bufferSize={compData.buffer_size}
+                maxFPS={compData.max_FPS}
+                restrictionList={[...props.restrictionList!]}
+                store={Object.assign({}, props.store)}
+                channelList={compData.channels}
+            />
+        )
     } else if (/^slider.*$/.test(type)) {
         const compData = props.component as SliderComponent
         comp = (
@@ -178,6 +199,16 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 height={calculatedHeight}
                 payload={compData.content}
+                channel={compData.channel}
+                updatePageStore={props.updateStore!}
+            />
+        )
+    } else if (/^daterangepicker.*$/.test(type)) {
+        const compData = props.component as DateRangePickerComponent
+        comp = (
+            <DateRangePicker
+                key={JSON.stringify(compData)}
+                height={calculatedHeight}
                 channel={compData.channel}
                 updatePageStore={props.updateStore!}
             />

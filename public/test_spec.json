@@ -1,5 +1,6 @@
 {
     "version": "v0.0.0",
+    "LabBook": null,
     "SciViz": {
         "favicon_name": "favicon.ico",
         "auth": true,
@@ -35,6 +36,29 @@
                         "columns": 2,
                         "row_height": 680,
                         "components": {
+                            "mydatetime": {
+                                "x": 1,
+                                "y": 1,
+                                "height": 1,
+                                "width": 1,
+                                "type": "daterangepicker",
+                                "channel": "testtest"
+                            },
+                            "myslideshow": {
+                                "x": 1,
+                                "y": 0,
+                                "height": 1,
+                                "width": 1,
+                                "type": "slideshow",
+                                "route": "/slideshowtest",
+                                "batch_size": 3,
+                                "chunk_size": 50,
+                                "buffer_size": 30,
+                                "max_FPS": 50,
+                                "channels": ["testtest"],
+                                "restriction": "def restriction(**kwargs):\n    return dict(**kwargs)\n",
+                                "dj_query": "def dj_query(test_group1_simple):\n    # SOME QUERY THAT RETURNS ONLY ONE RECORD ONE COLUMN THAT IS THE VIDEO NAME\n    TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)\n    q = ((TableA * TableB).proj(\n        ...,\n        #_sciviz_font='IF(a_name = \"Raphael\", \"rgb(255, 0, 0)\", NULL)',\n        _sciviz_background='IF(a_name = \"Raphael\", \"rgba(50, 255, 0, 0.16)\", \"NULL\")',\n        ))\n    return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}\n"
+                            },
                             "component1": {
                                 "x": 0,
                                 "y": 0,
@@ -53,7 +77,6 @@
                 "grids": {
                     "grid1": {
                         "type": "fixed",
-                        "max_component_per_page": 20,
                         "columns": 2,
                         "row_height": 680,
                         "components": {
