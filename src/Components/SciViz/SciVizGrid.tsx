@@ -7,6 +7,8 @@ import {
     SciVizDynamicGrid,
     RestrictionStore
 } from './SciVizInterfaces'
+import './Page.css'
+
 const SciVizComponent = React.lazy(() => import('./SciVizComponent'))
 const DynamicGrid = React.lazy(() => import('../DynamicGrid'))
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { SciVizPageType, RestrictionStore } from './SciVizInterfaces'
 import SciVizGrid from './SciVizGrid'
+import './Page.css'
 
 interface PageProps {
     page: SciVizPageType

@@ -1,6 +1,7 @@
 import { Tabs } from 'antd'
 import { SciVizSpec } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
+import './Page.css'
 
 interface SciVizProps {
     spec: SciVizSpec

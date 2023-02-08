@@ -27,6 +27,7 @@ import DropdownQuery from '../Emitters/DropdownQuery'
 import RadioButtons from '../Emitters/RadioButtons'
 import Slideshow from '../Slideshow'
 import DateRangePicker from '../Emitters/DateRangePicker'
+import './Page.css'
 
 interface ComponentProps {
     name: string
