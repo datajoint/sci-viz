@@ -165,26 +165,29 @@ class TableC(dj.Lookup):
 @group1_simple
 class TableD(dj.Lookup):
     definition = """
-    tinyint: tinyint
+    a_tinyint: tinyint
     ---
-    tinyint_unsigned: tinyint unsigned
-    smallint: smallint
-    smallint_unsigned: smallint unsigned
-    mediumint: mediumint
-    mediumint_unsigned: mediumint unsigned
-    int_unsigned: int unsigned
-    int: int
-    char: char(10)
-    varchar: varchar(516)
-    date: date
-    time: time
-    datetime: datetime
-    timestamp: timestamp
-    enum: enum("option1", "option2", "option3")
-    float: float
-    double: double
-    decimal: decimal(5,3)
-    decimal_unsigned: decimal(6,4) unsigned
+    a_tinyint_unsigned: tinyint unsigned
+    a_smallint: smallint
+    a_smallint_unsigned: smallint unsigned
+    a_mediumint: mediumint
+    a_mediumint_unsigned: mediumint unsigned
+    a_int_unsigned: int unsigned
+    a_int: int
+    a_char: char(10)
+    a_varchar: varchar(516)
+    a_date: date
+    a_time: time
+    a_time_precision: time(6)
+    a_datetime: datetime
+    a_datetime_precision: datetime(6)
+    a_timestamp: timestamp
+    a_timestamp_precision: timestamp(6)
+    a_enum: enum("option1", "option2", "option3")
+    a_float: float
+    a_double: double
+    a_decimal: decimal(5,3)
+    a_decimal_unsigned: decimal(6,4) unsigned
     """
 
 
