@@ -72,7 +72,6 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
                         {this.state.jwtToken !== '' ? (
                             <>
                                 {window.history.pushState(null, '', this.state.baseURL)}
-                                {console.log(this.state.baseURL)}
                                 <SciViz
                                     spec={this.state.spec}
                                     baseURL={this.state.baseURL}
