@@ -161,11 +161,7 @@ function DynamicForm(props: formProps) {
             if (field.type === 'table') {
                 values = Object.assign(values, JSON.parse(values[field.name] as string))
                 delete values[field.name]
-            } else if (
-                ['datetime', 'timestamp', 'date', 'time'].includes(
-                    (field as attributeFieldData).datatype
-                )
-            )
+            } else if (/^date.*|time.*$/.test((field as attributeFieldData).datatype))
                 values[field.name] = convertDateTime(
                     field.store,
                     (field as attributeFieldData).datatype
@@ -179,17 +175,17 @@ function DynamicForm(props: formProps) {
 
     const convertDateTime = (value: string | number, type: string) => {
         if (!value) return value
-        else if (type === 'date') {
-            let date = new Date(value)
-            value = date.toISOString().split('T')[0]
-        } else if (type === 'time') {
-            let time = new Date(`1970-01-01 ${value}`)
-            value = time.toISOString().split('T')[1].split('.')[0]
-        } else if (type === 'datetime' || type === 'timestamp') {
+        else if (/^datetime.*|timestamp.*$/.test(type)) {
             let datetime = new Date(value)
             value = `${datetime.toISOString().split('T')[0]} ${
                 datetime.toISOString().split('T')[1].split('.')[0]
             }`
+        } else if (/^date.*$/.test(type)) {
+            let date = new Date(value)
+            value = date.toISOString().split('T')[0]
+        } else if (/^time.*$/.test(type)) {
+            let time = new Date(`1970-01-01 ${value}`)
+            value = time.toISOString().split('T')[1].split('.')[0]
         }
         return value
     }
@@ -208,18 +204,7 @@ function DynamicForm(props: formProps) {
             )
         }
         let attrField = field as attributeFieldData
-        if (
-            [
-                'tinyint',
-                'tinyint unsigned',
-                'smallint',
-                'smallint unsigned',
-                'mediumint',
-                'mediumint unsigned',
-                'int',
-                'int unsigned'
-            ].includes(attrField.datatype)
-        ) {
+        if (/^.*int.*$/.test(attrField.datatype)) {
             let range = intRangeMap[attrField.datatype]
             return (
                 <InputNumber
@@ -230,15 +215,9 @@ function DynamicForm(props: formProps) {
                     style={{ width: '100%' }}
                 />
             )
-        } else if (
-            ['float', 'double'].includes(attrField.datatype) ||
-            (attrField.datatype.split('(') && attrField.datatype.split('(')[0] === 'decimal')
-        ) {
+        } else if (/^float.*|double.*|decimal.*$/.test(attrField.datatype)) {
             return <InputNumber id={attrField.name} style={{ width: '100%' }} />
-        } else if (
-            attrField.datatype.split('(') &&
-            ['char', 'varchar'].includes(attrField.datatype.split('(')[0])
-        ) {
+        } else if (/^char.*|varchar.*$/.test(attrField.datatype)) {
             let size = Number(attrField.datatype.split('(')[1].replace(')', ''))
             if (size >= 255) {
                 return (
@@ -259,10 +238,7 @@ function DynamicForm(props: formProps) {
                     style={{ width: '100%' }}
                 />
             )
-        } else if (
-            attrField.datatype.split('(') &&
-            attrField.datatype.split('(')[0] === 'enum'
-        ) {
+        } else if (/^enum.*$/.test(attrField.datatype)) {
             let options = attrField.datatype
                 .split('(')[1]
                 .replace(')', '')
@@ -277,7 +253,7 @@ function DynamicForm(props: formProps) {
                     ))}
                 </Select>
             )
-        } else if (['datetime', 'timestamp'].includes(attrField.datatype))
+        } else if (/^datetime.*|timestamp.*$/.test(attrField.datatype))
             return (
                 <DatePicker
                     showTime
@@ -286,7 +262,7 @@ function DynamicForm(props: formProps) {
                     onChange={(value, dateString) => (field.store = dateString)}
                 />
             )
-        else if (attrField.datatype === 'date')
+        else if (/^date.*$/.test(attrField.datatype))
             return (
                 <DatePicker
                     id={attrField.name}
@@ -294,7 +270,7 @@ function DynamicForm(props: formProps) {
                     onChange={(value, dateString) => (field.store = dateString)}
                 />
             )
-        else if (attrField.datatype === 'time')
+        else if (/^time.*$/.test(attrField.datatype))
             return (
                 <TimePicker
                     id={attrField.name}
@@ -347,6 +323,7 @@ function DynamicForm(props: formProps) {
                     {fieldData!.fields.map((field) => (
                         <div key={field.name}>
                             <Form.Item
+                                style={{ margin: 0, padding: 0 }}
                                 label={field.name}
                                 name={field.name}
                                 rules={[
@@ -357,6 +334,18 @@ function DynamicForm(props: formProps) {
                             >
                                 {generateFieldItem(field)}
                             </Form.Item>
+                            {field.hasOwnProperty('datatype') &&
+                            /^datetime\(\d+\)|time.*\(\d+\)$/.test(
+                                (field as attributeFieldData).datatype
+                            ) ? (
+                                <Alert
+                                    style={{ margin: 0, padding: 0 }}
+                                    message='Time precision will be rounded to the second'
+                                    type='warning'
+                                />
+                            ) : (
+                                <></>
+                            )}
                         </div>
                     ))}
                 </ResponsiveGridLayout>
