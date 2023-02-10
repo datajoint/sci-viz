@@ -515,15 +515,29 @@ SciViz: # top level tab
               route: /insert7
               x: 0
               y: 3
-              height: 2
-              width: 2
+              height: 3
+              width: 1
               type: form
               tables:
                 - test_group1_simple.TableD
+            All Supported Input Types Table:
+              route: /all_support_types_table
+              x: 1
+              y: 3
+              height: 3
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    TableD = test_group1_simple.TableD
+                    return dict(query=TableD, fetch_args=[])
             Buttons:
               route: /formButtons
               x: 0
-              y: 5
+              y: 6
               height: 1
               width: 1
               type: radiobuttons
@@ -535,7 +549,7 @@ SciViz: # top level tab
             One-One Channeled Form:
               route: /insert8
               x: 1
-              y: 5
+              y: 6
               height: 1
               width: 1
               type: form
@@ -545,7 +559,7 @@ SciViz: # top level tab
             Dropdown:
               route: /formDropdown
               x: 0
-              y: 6
+              y: 7
               height: 1
               width: 1
               type: dropdown-static
@@ -556,7 +570,7 @@ SciViz: # top level tab
             Many-One Channeled Form:
               route: /insert9
               x: 1
-              y: 6
+              y: 7
               height: 1
               width: 1
               type: form
@@ -566,7 +580,7 @@ SciViz: # top level tab
             Buttons2:
               route: /formButtons2
               x: 0
-              y: 7
+              y: 8
               height: 1
               width: 1
               type: radiobuttons
@@ -581,7 +595,7 @@ SciViz: # top level tab
             Buttons3:
               route: /formButtons3
               x: 0
-              y: 8
+              y: 9
               height: 1
               width: 1
               type: radiobuttons
@@ -595,7 +609,7 @@ SciViz: # top level tab
             Buttons4:
               route: /formButtons4
               x: 0
-              y: 9
+              y: 10
               height: 1
               width: 1
               type: radiobuttons
@@ -608,7 +622,7 @@ SciViz: # top level tab
             Channeled Multi Form:
               route: /insert10
               x: 1
-              y: 7
+              y: 8
               height: 3
               width: 1
               type: form
@@ -620,7 +634,7 @@ SciViz: # top level tab
             Datetime FPK Form:
               route: /insert11
               x: 0
-              y: 10
+              y: 11
               height: 1
               width: 1
               type: form
