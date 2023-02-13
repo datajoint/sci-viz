@@ -24,6 +24,20 @@ interface GridProps {
     updateStore?: (key: string, record: string[]) => void
 }
 
+/**
+ * Dynamically creates a SciViz grid
+ *
+ * @param {string} name - The name of the grid
+ * @param {ComponentTypes} grid - The data of the grid
+ * @param {string=} jwtToken - A JWT token to perform queries
+ * @param {string[]=} restrictionList - A list of restrictions for grids with queried components
+ * @param {RestrictionStore=} store - An information store for grids with linked components
+ * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
+ * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
+ *
+ *
+ * @returns A SciViz grid
+ */
 function SciVizGrid(props: GridProps) {
     var grid: JSX.Element = <></>
     const type = props.grid.type
@@ -55,7 +69,7 @@ function SciVizGrid(props: GridProps) {
                                 name={name}
                                 component={component}
                                 jwtToken={props.jwtToken}
-                                gridHeight={gridData.row_height}
+                                height={gridData.row_height}
                                 restrictionList={[...props.restrictionList!]}
                                 store={Object.assign({}, props.store)}
                                 updateRestrictionList={props.updateRestrictionList}

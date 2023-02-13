@@ -7,6 +7,14 @@ interface SciVizProps {
     jwtToken?: string
 }
 
+/**
+ * Dynamically creates a SciViz app
+ *
+ * @param {SciVizSpec} spec - The SciViz spec sheet
+ * @param {string=} jwtToken - A JWT token to perform queries
+ *
+ * @returns A SciViz app
+ */
 function SciViz(props: SciVizProps) {
     const menuItems = Object.entries(props.spec.SciViz.pages).map(([name, page]) => ({
         key: JSON.stringify(page),

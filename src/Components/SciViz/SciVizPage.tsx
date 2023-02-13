@@ -8,6 +8,14 @@ interface PageProps {
     jwtToken?: string
 }
 
+/**
+ * Dynamically creates a SciViz page
+ *
+ * @param {SciVizPageType} page - The data of the page
+ * @param {string=} jwtToken - A JWT token to perform queries
+ *
+ * @returns A SciViz page
+ */
 function SciVizPage(props: PageProps) {
     const [restrictionList, setRestrictionList] = useState<string[]>([])
     const [store, setStore] = useState<RestrictionStore>({})

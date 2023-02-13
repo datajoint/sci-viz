@@ -32,19 +32,34 @@ import './Page.css'
 interface ComponentProps {
     name: string
     component: ComponentTypes
+    height: number
     jwtToken?: string
-    gridHeight: number
     restrictionList?: string[]
     store?: RestrictionStore
     updateRestrictionList?: (queryParams: string) => string
     updateStore?: (key: string, record: string[]) => void
 }
 
+/**
+ * Dynamically creates a SciViz component
+ *
+ * @param {string} name - The name of the component
+ * @param {ComponentTypes} component - The data of the component
+ * @param {number} height - The height of the component
+ * @param {string=} jwtToken - A JWT token to perform queries
+ * @param {string[]=} restrictionList - A list of restrictions for queried components
+ * @param {RestrictionStore=} store - An information store for linked components
+ * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
+ * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
+ *
+ *
+ * @returns A SciViz component
+ */
 function SciVizComponent(props: ComponentProps) {
     var comp: JSX.Element = <></>
     const type = props.component.type
     const calculatedHeight =
-        props.gridHeight * props.component.height + (props.component.height - 1) * 10
+        props.height * props.component.height + (props.component.height - 1) * 10
     if (/^markdown.*$/.test(type)) {
         const compData = props.component as MarkDownComponent
         comp = (
@@ -79,7 +94,7 @@ function SciVizComponent(props: ComponentProps) {
                     token={props.jwtToken!}
                     route={compData.route}
                     name={props.name}
-                    height={props.gridHeight}
+                    height={props.height}
                     restrictionList={[...props.restrictionList!]}
                 />
             </div>
