@@ -53,7 +53,7 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
         }
     }
     componentDidMount(): void {
-        fetch('./test_spec.json')
+        fetch('./sciviz_spec.json')
             .then((response) => {
                 return response.json()
             })
