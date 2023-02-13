@@ -2,6 +2,7 @@ version: 'v0.0.0'
 LabBook: null
 SciViz: # top level tab
   # website_title: whatever you want your website to be called in the browser tab
+  route: /some-route
   favicon_name: favicon.ico
   auth: True
   # header:
