@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Tabs } from 'antd'
 import { SciVizSpec } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
@@ -16,36 +16,30 @@ interface PageItem {
 }
 
 function SciViz(props: SciVizProps) {
-    const [hiddenPage, setHiddenPage] = useState('')
+    const [hiddenItems, setHiddenItems] = useState<PageItem[][]>([])
     let pageMap: {
         [key: string]: PageItem
     } = {}
     let menuItems: PageItem[] = []
-    const changeURL = (path: string) => {
+    const changeURL = (path?: string) => {
         var URL = window.location.href
-        if (props.baseURL === URL) {
-            var newURL = URL.replace(/\/$/, '') + menuItems[0].key
-            window.history.pushState(null, '', newURL)
-            return
-        } else {
-            var RegexLastWord = new RegExp('/([^/]+)/?$')
-            var newURL = URL.replace(RegexLastWord, path)
-            window.history.pushState(null, '', newURL)
-            return
-        }
+        var RegexLastWord = new RegExp('/([^/]+)/?$')
+        var newURL = URL.replace(RegexLastWord, path!)
+        window.history.pushState(null, '', newURL)
     }
     const getRoute = () => {
         var URL = window.location.href
         if (props.baseURL === URL) {
             return menuItems[0].key
         }
-        var RegexLastWord = new RegExp('/([^/]+)/?$')
+        var RegexLastWord = /\/([\w-]+)(?=\?|$)/
         var lastWord = URL.match(RegexLastWord)![0]
         return lastWord
     }
     const updateHiddenPage = (route: string, queryParams: string) => {
+        var currRoute = getRoute()
         changeURL(`${route}?${queryParams}`)
-        setHiddenPage(route)
+        setHiddenItems((prevItems) => [[pageMap[currRoute], pageMap[route]], ...prevItems])
     }
     Object.entries(props.spec.SciViz.pages).forEach(([name, page]) => {
         pageMap[page.route] = {
@@ -93,21 +87,24 @@ function SciViz(props: SciVizProps) {
                 )
             })
     })
-    if (hiddenPage) menuItems.push(pageMap[hiddenPage])
-    changeURL(getRoute())
+
+    useEffect(() => {
+        var URL = window.location.href
+        var newURL = URL.replace(/\/$/, '') + menuItems[0].key
+        window.history.pushState(null, '', newURL)
+    }, [])
 
     return (
         <Tabs
             centered
             type='line'
             size='large'
-            items={menuItems}
+            items={hiddenItems.length ? hiddenItems[0] : menuItems}
             defaultActiveKey={getRoute()}
-            activeKey={hiddenPage ? hiddenPage : undefined}
+            activeKey={hiddenItems.length ? getRoute() : undefined}
             onChange={(activeKey) => {
-                if (hiddenPage) {
-                    menuItems.pop()
-                    setHiddenPage('')
+                if (hiddenItems.length) {
+                    setHiddenItems(hiddenItems.slice(1))
                 }
                 changeURL(pageMap[activeKey].key)
             }}
