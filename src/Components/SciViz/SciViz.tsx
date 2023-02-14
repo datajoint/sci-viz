@@ -87,7 +87,6 @@ function SciViz(props: SciVizProps) {
                 )
             })
     })
-
     useEffect(() => {
         var URL = window.location.href
         var newURL = URL.replace(/\/$/, '') + menuItems[0].key
