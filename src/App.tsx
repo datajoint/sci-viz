@@ -100,7 +100,7 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
                         <Footer />{' '}
                     </>
                 ) : (
-                    <>loading</>
+                    <>Retrieving Spec file</>
                 )}
             </div>
         )
