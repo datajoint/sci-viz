@@ -3,9 +3,7 @@ import { version } from '../../../package.json'
 
 import './Footer.css'
 
-interface FooterProps {
-    databaseHost?: 'CHETANA'
-}
+interface FooterProps {}
 
 interface FooterState {
     backendVersion: string
@@ -27,13 +25,7 @@ export default class Footer extends React.Component<FooterProps, FooterState> {
      * Get the version number upon being mounted.
      */
     componentDidMount() {
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/version`
-
-        if (this.props.databaseHost) {
-            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
-        }
-
-        fetch(apiUrl, {
+        fetch(`${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/version`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
