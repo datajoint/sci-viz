@@ -21,9 +21,9 @@
 .env.production.local
 .env
 src/Components/Pages/*.tsx
-src/App.tsx
 src/Components/MenuBar/MenuBarData.tsx
 *.pem
+public/sciviz_spec.json
 
 npm-debug.log*
 yarn-debug.log*

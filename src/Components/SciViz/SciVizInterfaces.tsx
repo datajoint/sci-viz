@@ -6,6 +6,7 @@ export interface SciVizSpec {
     SciViz: {
         pages: { [key: string]: SciVizPageType }
         auth: boolean
+        route?: string
         website_title?: string
         favicon_name?: string
         header?: {

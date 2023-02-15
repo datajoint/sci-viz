@@ -22,6 +22,7 @@ interface GridProps {
     store?: RestrictionStore
     updateRestrictionList?: (queryParams: string) => string
     updateStore?: (key: string, record: string[]) => void
+    updateHiddenPage?: (route: string, queryParams: string) => void
 }
 
 function SciVizGrid(props: GridProps) {
@@ -60,6 +61,7 @@ function SciVizGrid(props: GridProps) {
                                 store={Object.assign({}, props.store)}
                                 updateRestrictionList={props.updateRestrictionList}
                                 updateStore={props.updateStore}
+                                updateHiddenPage={props.updateHiddenPage}
                             />
                         </div>
                     ))}

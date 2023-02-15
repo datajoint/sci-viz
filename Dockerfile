@@ -7,6 +7,8 @@ RUN yarn install
 
 RUN apk update
 RUN apk add nginx
+RUN apk add jq
+RUN apk add yq
 
 ENV PYTHONUNBUFFERED=1
 RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
