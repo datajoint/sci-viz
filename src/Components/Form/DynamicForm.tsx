@@ -28,6 +28,7 @@ interface formProps {
     height: number
     channelList?: Array<string>
     store?: RestrictionStore
+    databaseHost?: string
 }
 
 interface attributeFieldData {
@@ -92,6 +93,11 @@ function DynamicForm(props: formProps) {
         let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${
             props.route
         }?${queryParamList.join('&')}`
+
+        if (props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
+        }
+
         return fetch(apiUrl, {
             method: 'POST',
             headers: {
@@ -135,6 +141,11 @@ function DynamicForm(props: formProps) {
         let apiUrl = `${
             process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX
         }${props.route!}/fields?${queryParamList.join('&')}`
+
+        if (props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
+        }
+
         return fetch(apiUrl, {
             method: 'GET',
             headers: {
