@@ -114,6 +114,22 @@ The Form can also take 2 optional arguments:
 
 - `channels:` an array of channels to listen to for templated table name values.
 
+## Slideshow component
+
+`type:` slideshow
+
+The Slideshow component takes 4 additional arguments:
+
+- `batch_size:` The number of concurrent requests
+- `chunk_size:` The number of frames per request
+- `buffer_size:` The number of requests kept in memory
+- `max_FPS:` The max frames per second to display
+
+The Slideshow can also take 1 optional argument:
+
+- `channels`: an array of channels to listen to for setting the date range
+
+
 ## Slider component
 
 The Slider is a component that takes a datajoint query and creates a slider based off the payload that the query returns. It turns each record into an index on the slider and also emits the currently selected record on its channel as a restriction to other components.
@@ -161,3 +177,13 @@ The Dropdown-query component takes three additional arguments:
 - `restriction:` the restriction for the datajoint query.
 - `dj_query:` the datajoint query for for the table data.
 - `channel:` the name of the channel that the slider outputs its restriction on.
+
+## Date-Range-Picker component
+
+The Date-Range-Picker component emits a `startTime` and `endTime` datetime value to channeled components
+
+`type:` daterangepicker
+
+The Date-Range-Picker takes 1 additional argument:
+
+- `channel:` the name of the channel that the date range picker outputs its restriction on.
