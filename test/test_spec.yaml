@@ -2,6 +2,7 @@ version: 'v0.0.0'
 LabBook: null
 SciViz: # top level tab
   # website_title: whatever you want your website to be called in the browser tab
+  route: /some-route/another-route
   favicon_name: favicon.ico
   auth: True
   # header:
@@ -735,3 +736,118 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePics = test_group1_simple.MousePics
                     return dict(query=MousePics, fetch_args=['image_payload'])
+            Nested Linked Table:
+              route: /nestedlinked
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: antd-table
+              link: /hiddenpage2
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)
+                    q = ((TableA * TableB).proj(
+                        ...,
+                        #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
+                        _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "NULL")',
+                        ))
+                    return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}
+    Hidden Page2:
+        route: /hiddenpage2
+        hidden: True
+        grids:
+          dgrid:
+            route: /dgridasdawddsfsdf
+            type: dynamic
+            columns: 3
+            row_height: 600
+            restriction: >
+              def restriction(**kwargs):
+                  return dict(**kwargs)
+            dj_query: >
+              def dj_query(test_group1_simple):
+                  Mouse = test_group1_simple.Mouse
+                  return dict(query=(Mouse.proj()), fetch_args=[])
+            component_templates:
+              comp2:
+                route: /myMetakkljjsdfsd
+                type: metadata
+                restriction: >
+                  def restriction(**kwargs):
+                      return dict(**kwargs)
+                dj_query: >
+                  def dj_query(test_group1_simple):
+                      Mouse = test_group1_simple.Mouse
+                      return dict(query=(Mouse), fetch_args=[])
+          mygrid:
+            type: fixed
+            columns: 3
+            row_height: 600
+            components:
+              Example table (conditional row coloring): # yaml allows keys with spaces!
+                route: /nvoihfoewosdfsf
+                x: 0
+                y: 0
+                height: 1
+                width: 1
+                type: antd-table
+                channel: mytable
+                restriction: >
+                  def restriction(**kwargs):
+                      return dict(**kwargs)
+                dj_query: >
+                  def dj_query(test_group1_simple):
+                      TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)
+                      q = ((TableA * TableB).proj(
+                          ...,
+                          #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
+                          _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "NULL")',
+                          ))
+                      return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}
+              Mouse metadata:
+                route: /dawdgarsdfsdf
+                x: 1
+                y: 0
+                height: 1
+                width: 1
+                type: metadata
+                link: /hiddenpage2
+                restriction: >
+                  def restriction(**kwargs):
+                      return dict(**kwargs)
+                dj_query: >
+                  def dj_query(test_group1_simple):
+                      Mouse = test_group1_simple.Mouse
+                      return dict(query=(Mouse), fetch_args=[])
+              testplot:
+                type: plot:plotly:stored_json
+                x: 0
+                y: 0
+                height: 1
+                width: 1
+                route: /someplotroutesdfsdf
+                restriction: >
+                  def restriction(**kwargs):
+                      return dict(**kwargs)
+                dj_query: >
+                  def dj_query(test_group1_simple):
+                      MousePlots = test_group1_simple.MousePlots
+                      return dict(query=(MousePlots), fetch_args=['plot'])
+              picture:
+                type: file:image:attach
+                route: /picturesdfsd
+                height: 1
+                width: 1
+                x: 2
+                y: 0
+                restriction: >
+                  def restriction(**kwargs):
+                      return dict(**kwargs)
+                dj_query: >
+                  def dj_query(test_group1_simple):
+                      MousePics = test_group1_simple.MousePics
+                      return dict(query=MousePics, fetch_args=['image_payload'])

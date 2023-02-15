@@ -2,7 +2,7 @@
 sciviz_update() {
 	[ -z "$NGINX_PID" ] || kill $$NGINX_PID
 	rm -R /usr/share/nginx/html
-	python frontend_gen.py
+	yq eval -o=json $DJSCIVIZ_SPEC_PATH | jq . > ./public/sciviz_spec.json
 	yarn build
 	mv ./build /usr/share/nginx/html
 	nginx -g "daemon off;" &

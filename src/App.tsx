@@ -1,14 +1,12 @@
 import React from 'react'
-import './App.css'
 import Login from './Components/Login/Login'
-
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
+import SciViz from './Components/SciViz/SciViz'
+import { SciVizSpec } from './Components/SciViz/SciVizInterfaces'
+import './App.css'
 import '../node_modules/react-grid-layout/css/styles.css'
 import '../node_modules/react-resizable/css/styles.css'
-
-import { SciVizSpec } from './Components/SciViz/SciVizInterfaces'
-import SciViz from './Components/SciViz/SciViz'
 
 window.onbeforeunload = () => ''
 
@@ -28,7 +26,7 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
             jwtToken: '',
             hostname: '',
             spec: undefined,
-            baseURL: `https://${window.location.hostname}/`
+            baseURL: ``
         }
 
         this.setJWTTokenAndHostName = this.setJWTTokenAndHostName.bind(this)
@@ -53,11 +51,18 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
         }
     }
     componentDidMount(): void {
-        fetch('./test_spec.json')
+        fetch(`https://${window.location.hostname}/sciviz_spec.json`)
             .then((response) => {
                 return response.json()
             })
-            .then((data) => this.setState({ spec: data as SciVizSpec }))
+            .then((data) => {
+                this.setState({ spec: data as SciVizSpec })
+                this.setState({
+                    baseURL: `https://${window.location.hostname}${
+                        this.state.spec?.SciViz.route || ''
+                    }/`
+                })
+            })
     }
 
     render() {
@@ -83,7 +88,7 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
                                 {window.history.pushState(
                                     null,
                                     '',
-                                    this.state.baseURL.replace(/\/$/, '') + '/login'
+                                    `${this.state.baseURL}login`
                                 )}
                                 <Login
                                     setJWTTokenAndHostName={this.setJWTTokenAndHostName}
@@ -95,7 +100,7 @@ export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
                         <Footer />{' '}
                     </>
                 ) : (
-                    <>loading</>
+                    <>Retrieving Spec file</>
                 )}
             </div>
         )
