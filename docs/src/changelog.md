@@ -8,6 +8,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - Replaced build step with hot-reload yaml spec conversion to json spec in public folder PR [#77](https://github.com/datajoint/sci-viz/pull/77)
 - Replaced built pages with SciViz component PR [#77](https://github.com/datajoint/sci-viz/pull/77)
+- OIDC Support for individual components [#79](https://github.com/datajoint/sci-viz/pull/79)
 
 ## [1.1.1] - 02-09-23
 

@@ -20,6 +20,7 @@ interface DjSliderProps {
     vertical?: boolean
     /**Determines whether the slider will also display what record is selected */
     showRecord?: boolean
+    databaseHost?: string
     updatePageStore: (key: string, record: Array<string>) => void
 }
 
@@ -65,6 +66,11 @@ export default class DjSlider extends React.Component<DjSliderProps, DjSliderSta
             })
         }
         apiUrl = apiUrl + '?' + queryParamList.join('&')
+
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        }
+
         return fetch(apiUrl, {
             method: 'GET',
             headers: {

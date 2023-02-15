@@ -14,6 +14,7 @@ interface DropdownQueryProps {
     height: number
     route: string
     token: string
+    databaseHost?: string
     updatePageStore: (key: string, record: Array<string>) => void
 }
 
@@ -39,6 +40,11 @@ export default class DjDropdownQuery extends React.Component<
     }
     getRecords(): Promise<djRecords> {
         let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
+
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        }
+
         return fetch(apiUrl, {
             method: 'GET',
             headers: {

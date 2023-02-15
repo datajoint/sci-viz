@@ -16,6 +16,7 @@ interface DynamicGridProps {
     queryParams?: Array<string>
     channelList?: Array<string>
     store?: RestrictionStore
+    databaseHost?: string
 }
 
 interface RestrictionStore {
@@ -75,6 +76,10 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
 
         if (storeParams.length > 0) {
             apiUrl = apiUrl + '&' + storeParams.join('&')
+        }
+
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
         }
 
         fetch(apiUrl, {

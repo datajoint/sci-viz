@@ -19,6 +19,7 @@ interface DjTableProps {
     channel?: string
     channelList?: Array<string>
     store?: RestrictionStore
+    databaseHost?: string
 }
 
 interface DjTableState {
@@ -202,6 +203,11 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                 apiUrl = apiUrl + '&' + this.state.filter[key].restriction
             }
         }
+
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        }
+
         return fetch(apiUrl, {
             method: 'GET',
             headers: {
@@ -262,6 +268,11 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                 }
             }
         }
+
+        if (this.props.databaseHost) {
+            apiUrlAttr = apiUrlAttr.concat(`&database_host=${this.props.databaseHost}`)
+        }
+
         return fetch(apiUrlAttr, {
             method: 'GET',
             headers: {

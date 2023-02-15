@@ -9,6 +9,7 @@ interface LoginProps {
     setJWTTokenAndHostName: (jwt: string, hostname: string) => void // Call back function to setting the jwtToken
     imageRoute?: string
     defaultAddress?: string
+    databaseHost?: string
 }
 
 interface LoginState {
@@ -136,19 +137,20 @@ export default class Login extends Component<LoginProps, LoginState> {
             Cookies.set('username', this.state.username)
         }
 
+        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/login`
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        }
         // Attempt to authenticate
-        const response = await fetch(
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/login`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    databaseAddress: this.state.databaseAddress,
-                    username: this.state.username,
-                    password: this.state.password
-                })
-            }
-        )
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                databaseAddress: this.state.databaseAddress,
+                username: this.state.username,
+                password: this.state.password
+            })
+        })
 
         if (response.status === 500) {
             const errorMessage = await response.text()
