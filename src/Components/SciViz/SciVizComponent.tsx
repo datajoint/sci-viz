@@ -38,6 +38,7 @@ interface ComponentProps {
     store?: RestrictionStore
     updateRestrictionList?: (queryParams: string) => string
     updateStore?: (key: string, record: string[]) => void
+    updateHiddenPage?: (route: string, queryParams: string) => void
 }
 
 function SciVizComponent(props: ComponentProps) {
@@ -124,6 +125,7 @@ function SciVizComponent(props: ComponentProps) {
                 channelList={compData.channels}
                 restrictionList={[...props.restrictionList!]}
                 updatePageStore={props.updateStore!}
+                updateHiddenPage={props.updateHiddenPage}
             />
         )
     } else if (/^form.*$/.test(type)) {

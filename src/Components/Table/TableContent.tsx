@@ -528,7 +528,7 @@ export default class TableContent extends React.Component<
                                                                     key={`${column}-${index}`}
                                                                     className='tableCell'
                                                                 >
-                                                                    <Link
+                                                                    {/* <Link
                                                                         to={{
                                                                             pathname:
                                                                                 this.props
@@ -554,7 +554,7 @@ export default class TableContent extends React.Component<
                                                                         }}
                                                                     >
                                                                         {column}
-                                                                    </Link>
+                                                                    </Link> */}
                                                                 </td>
                                                             )
                                                         } else if (

@@ -1,7 +1,7 @@
 #!/bin/sh
 sciviz_update() {
 	[ -z "$YARN_PID" ] || kill $YARN_PID
-	python frontend_gen.py
+	yq eval -o=json $DJSCIVIZ_SPEC_PATH | jq . > ./public/sciviz_spec.json
 	(yarn start&)
 	YARN_PID=$!
 }

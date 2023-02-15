@@ -15,6 +15,7 @@ interface DjTableProps {
     restrictionList: Array<string>
     link?: string
     updatePageStore: (key: string, record: Array<string>) => void
+    updateHiddenPage?: (route: string, queryParams: string) => void
     channel?: string
     channelList?: Array<string>
     store?: RestrictionStore
@@ -85,7 +86,6 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
         this.getRecords = this.getRecords.bind(this)
         this.getAttributes = this.getAttributes.bind(this)
         this.compileTable = this.compileTable.bind(this)
-        this.redirect = this.redirect.bind(this)
     }
 
     handleChange(
@@ -315,6 +315,10 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
     }
 
     componentDidUpdate(prevProps: DjTableProps, prevState: DjTableState): void {
+        if (this.state.keys && this.props.link && this.props.updateHiddenPage) {
+            this.props.updateHiddenPage(this.props.link, this.state.keys.join('&'))
+            this.setState({ keys: undefined })
+        }
         if (
             prevState.offset !== this.state.offset ||
             this.state.filter !== prevState.filter ||
@@ -385,18 +389,6 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                         this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
                     })
                 })
-        }
-    }
-
-    redirect() {
-        if (this.state.keys !== undefined) {
-            return this.props.link ? (
-                <Redirect
-                    to={{ pathname: `${this.props.link}?${this.state.keys.join('&')}` }}
-                />
-            ) : (
-                <></>
-            )
         }
     }
 
@@ -547,10 +539,7 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                 bodyStyle={{ height: '100%', overflowY: 'auto' }}
                 hoverable={true}
             >
-                <>
-                    {this.redirect()}
-                    {this.compileTable()}
-                </>
+                <>{this.compileTable()}</>
             </Card>
         )
     }
