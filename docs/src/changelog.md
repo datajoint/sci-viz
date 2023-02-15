@@ -2,11 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [1.1.2] - 02-13-23
+## [1.2.0] - 02-15-23
 
-### Added
+### Changed
 
-- Sci-Viz Routing PR [#77](https://github.com/datajoint/sci-viz/pull/77)
+- Replaced build step with hot-reload yaml spec conversion to json spec in public folder PR [#77](https://github.com/datajoint/sci-viz/pull/77)
+- Replaced built pages with SciViz component PR [#77](https://github.com/datajoint/sci-viz/pull/77)
 
 ## [1.1.1] - 02-09-23
 
@@ -73,7 +74,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Initial framework for jest testing (#27) PR #33
 - loginless mode PR #41
 
-[1.1.2]: https://github.com/datajoint/sci-viz/compare/1.1.1...1.1.2
+[1.2.0]: https://github.com/datajoint/sci-viz/compare/1.1.1...1.2.0
 [1.1.1]: https://github.com/datajoint/sci-viz/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/datajoint/sci-viz/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/datajoint/sci-viz/compare/1.0.1...1.0.2
