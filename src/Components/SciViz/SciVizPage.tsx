@@ -6,6 +6,7 @@ import './Page.css'
 interface PageProps {
     page: SciVizPageType
     jwtToken?: string
+    updateHiddenPage?: (route: string, queryParams: string) => void
 }
 
 /**
@@ -34,7 +35,6 @@ function SciVizPage(props: PageProps) {
             [key]: record
         }))
     }
-
     return (
         <div>
             <div className='grid-container'>
@@ -49,6 +49,7 @@ function SciVizPage(props: PageProps) {
                             store={Object.assign({}, store)}
                             updateRestrictionList={updateRestrictionList}
                             updateStore={updateStore}
+                            updateHiddenPage={props.updateHiddenPage}
                         />
                     ))}
                 </ul>
