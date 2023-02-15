@@ -8,21 +8,21 @@ interface SciVizProps {
     baseURL: string
     jwtToken?: string
 }
-
-/**
- * Dynamically creates a SciViz app
- *
- * @param {SciVizSpec} spec - The SciViz spec sheet
- * @param {string=} jwtToken - A JWT token to perform queries
- *
- * @returns A SciViz app
- */
 interface PageItem {
     key: string
     label: JSX.Element
     children: JSX.Element
 }
 
+/**
+ * Dynamically creates a SciViz app
+ *
+ * @param {SciVizSpec} spec - The SciViz spec sheet
+ * @param {string} baseURL - The URL that SciViz will be hosted at
+ * @param {string=} [jwtToken] - A JWT token to perform queries
+ *
+ * @returns A SciViz app
+ */
 function SciViz(props: SciVizProps) {
     const [hiddenItems, setHiddenItems] = useState<PageItem[][]>([])
     let pageMap: {

@@ -52,7 +52,7 @@ interface ComponentProps {
  * @param {RestrictionStore=} store - An information store for linked components
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
  * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
- *
+ * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz component
  */
