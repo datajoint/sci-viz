@@ -13,6 +13,7 @@ interface FullPlotlyProps {
     channelList?: Array<string>
     store?: RestrictionStore
     needQueryParams?: boolean
+    databaseHost?: string
 }
 interface PlotlyPayload {
     data: Array<{}>
@@ -76,6 +77,9 @@ export default class FullPlotly extends React.Component<FullPlotlyProps, FullPlo
 
         queryParamList = queryParamList.filter((v, i, a) => a.indexOf(v) === i)
         apiUrl = apiUrl + '?' + queryParamList.join('&')
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        }
         return fetch(apiUrl, {
             method: 'GET',
             headers: {

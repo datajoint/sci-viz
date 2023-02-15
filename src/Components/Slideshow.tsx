@@ -17,6 +17,7 @@ interface SlideshowProps {
     chunkSize: number // Number of frames per request
     bufferSize: number // Number of chunks to buffer
     batchSize: number // Number of concurrent requests
+    databaseHost?: string
 }
 
 interface FrameChunk {
@@ -56,6 +57,11 @@ function Slideshow(props: SlideshowProps) {
             apiUrl = apiUrl + '&' + queryParamList.join('&')
         }
         numFramesQueried += props.chunkSize
+
+        if (props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
+        }
+
         return fetch(apiUrl, {
             method: 'GET',
             headers: {

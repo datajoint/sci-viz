@@ -23,6 +23,7 @@ interface TableViewProps {
     tableName: string
     link?: string
     channel?: string
+    databaseHost?: string
     updateRestrictionList: (queryParams: string) => string
     updatePageStore: (key: string, record: Array<string>) => void
 }
@@ -189,18 +190,22 @@ export default class TableView extends React.Component<TableViewProps, TableView
      * Function to query the back end to get infomation about the table attributes
      */
     fetchTableAttribute() {
-        fetch(
+        let apiUrl =
             `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
-                this.props.route +
-                '/attributes',
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + this.props.token
-                }
+            this.props.route +
+            '/attributes'
+
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        }
+
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + this.props.token
             }
-        )
+        })
             .then((result) => {
                 if (!result.ok) {
                     result
@@ -288,7 +293,9 @@ export default class TableView extends React.Component<TableViewProps, TableView
                 apiUrl += '&' + urlParams[i]
             }
         }
-
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        }
         // Call get fetch_tuple with params
         fetch(apiUrl, {
             method: 'GET',

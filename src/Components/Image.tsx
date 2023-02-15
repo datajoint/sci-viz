@@ -6,6 +6,7 @@ interface ImageProps {
     token: string
     restrictionList: Array<string>
     height: number | string
+    databaseHost?: string
 }
 
 interface ImageState {
@@ -32,6 +33,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
             }
         }
+
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        }
+
         fetch(apiUrl, {
             method: 'GET',
             headers: {

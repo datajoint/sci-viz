@@ -8,6 +8,7 @@ interface MetadataProps {
     name: string
     height: number
     restrictionList: Array<string>
+    databaseHost?: string
 }
 
 interface MetadataState {
@@ -62,6 +63,11 @@ export default class Metadata extends React.Component<MetadataProps, MetadataSta
                 apiUrl = apiUrl + '&' + this.props.restrictionList.shift()
             }
         }
+
+        if (this.props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        }
+
         return fetch(apiUrl, {
             method: 'GET',
             headers: {
@@ -82,6 +88,11 @@ export default class Metadata extends React.Component<MetadataProps, MetadataSta
             `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
             this.props.route +
             '/attributes'
+
+        if (this.props.databaseHost) {
+            apiUrlAttr = apiUrlAttr.concat(`&database_host=${this.props.databaseHost}`)
+        }
+
         return fetch(apiUrlAttr, {
             method: 'GET',
             headers: {
