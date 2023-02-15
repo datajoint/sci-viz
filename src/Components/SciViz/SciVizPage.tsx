@@ -3,9 +3,15 @@ import { SciVizPageType, RestrictionStore } from './SciVizInterfaces'
 import SciVizGrid from './SciVizGrid'
 import './Page.css'
 
+/** The interface for the SciVizPage props */
 interface PageProps {
+    /** The data of the page */
     page: SciVizPageType
+
+    /** A JWT token to perform queries */
     jwtToken?: string
+
+    /** A callback function for handling hidden pages */
     updateHiddenPage?: (route: string, queryParams: string) => void
 }
 

@@ -14,14 +14,30 @@ const DynamicGrid = React.lazy(() => import('../DynamicGrid'))
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
+/** The interface for the SciVizGrid props */
 interface GridProps {
+    /** The name of the grid */
     name: string
+
+    /** The data of the grid */
     grid: GridTypes
+
+    /** A JWT token to perform queries */
     jwtToken?: string
+
+    /** A list of restrictions for grids with queried components */
     restrictionList?: string[]
+
+    /** An information store for grids with linked components */
     store?: RestrictionStore
+
+    /** A callback function to refresh the restriction list */
     updateRestrictionList?: (queryParams: string) => string
+
+    /** A callback function to refresh the store */
     updateStore?: (key: string, record: string[]) => void
+
+    /** A callback function for handling hidden pages */
     updateHiddenPage?: (route: string, queryParams: string) => void
 }
 

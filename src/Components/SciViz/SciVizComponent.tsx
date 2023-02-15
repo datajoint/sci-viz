@@ -29,15 +29,33 @@ import Slideshow from '../Slideshow'
 import DateRangePicker from '../Emitters/DateRangePicker'
 import './Page.css'
 
+/** The interface for the SciVizComponent props */
 interface ComponentProps {
+    /** The name of the component */
     name: string
+
+    /** The data of the component */
     component: ComponentTypes
+
+    /** The height of the component */
     height: number
+
+    /** A JWT token to perform queries */
     jwtToken?: string
+
+    /** A list of restrictions for queried components */
     restrictionList?: string[]
+
+    /** An information store for linked components */
     store?: RestrictionStore
+
+    /** A callback function to refresh the restriction list */
     updateRestrictionList?: (queryParams: string) => string
+
+    /** A callback function to refresh the store */
     updateStore?: (key: string, record: string[]) => void
+
+    /** A callback function for handling hidden pages */
     updateHiddenPage?: (route: string, queryParams: string) => void
 }
 
