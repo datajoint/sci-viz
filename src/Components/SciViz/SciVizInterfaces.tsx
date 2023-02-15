@@ -1,6 +1,6 @@
 /** The interface for a SciViz page's restriction storage */
 export interface RestrictionStore {
-    /** The `channel` to `restriction list` dictionary */
+    /** The `channel` to `restriction list` */
     [key: string]: string[]
 }
 
