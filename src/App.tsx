@@ -65,7 +65,7 @@ function App() {
                             {window.history.pushState(null, '', `${state.baseURL}login`)}
                             <Login
                                 setJWTTokenAndHostName={setJWTTokenAndHostName}
-                                defaultAddress={state.spec.SciViz.hostname}
+                                defaultAddress={state.spec.SciViz.hostname || state.hostname}
                                 imageRoute={
                                     state.spec.SciViz.login?.image_route
                                         ? require(state.spec.SciViz.login.image_route)[
