@@ -24,6 +24,10 @@ function App() {
         spec: undefined,
         baseURL: ``
     })
+    document.title = state.spec?.SciViz.website_title || 'SciViz'
+    document
+        .getElementById('favicon')!
+        .setAttribute('href', `/${state.spec?.SciViz.favicon_name || 'favicon.ico'}`)
 
     /**
      * A callback function to set jwt token and host name
