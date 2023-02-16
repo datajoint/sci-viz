@@ -14,17 +14,47 @@ const DynamicGrid = React.lazy(() => import('../DynamicGrid'))
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
+/** The interface for the SciVizGrid props */
 interface GridProps {
+    /** The name of the grid */
     name: string
+
+    /** The data of the grid */
     grid: GridTypes
+
+    /** A JWT token to perform queries */
     jwtToken?: string
+
+    /** A list of restrictions for grids with queried components */
     restrictionList?: string[]
+
+    /** An information store for grids with linked components */
     store?: RestrictionStore
+
+    /** A callback function to refresh the restriction list */
     updateRestrictionList?: (queryParams: string) => string
+
+    /** A callback function to refresh the store */
     updateStore?: (key: string, record: string[]) => void
+
+    /** A callback function for handling hidden pages */
     updateHiddenPage?: (route: string, queryParams: string) => void
 }
 
+/**
+ * Dynamically creates a SciViz grid
+ *
+ * @param {string} name - The name of the grid
+ * @param {ComponentTypes} grid - The data of the grid
+ * @param {string=} jwtToken - A JWT token to perform queries
+ * @param {string[]=} restrictionList - A list of restrictions for grids with queried components
+ * @param {RestrictionStore=} store - An information store for grids with linked components
+ * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
+ * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
+ * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
+ *
+ * @returns A SciViz grid
+ */
 function SciVizGrid(props: GridProps) {
     var grid: JSX.Element = <></>
     const type = props.grid.type
@@ -56,7 +86,7 @@ function SciVizGrid(props: GridProps) {
                                 name={name}
                                 component={component}
                                 jwtToken={props.jwtToken}
-                                gridHeight={gridData.row_height}
+                                height={gridData.row_height}
                                 restrictionList={[...props.restrictionList!]}
                                 store={Object.assign({}, props.store)}
                                 updateRestrictionList={props.updateRestrictionList}

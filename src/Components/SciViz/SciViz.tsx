@@ -3,24 +3,45 @@ import { Tabs } from 'antd'
 import { SciVizSpec } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
 
+/** The interface for the SciVizPage props */
 interface SciVizProps {
+    /** The SciViz spec sheet */
     spec: SciVizSpec
+
+    /** The URL that SciViz will be hosted at */
     baseURL: string
+
+    /** A JWT token to perform queries */
     jwtToken?: string
 }
 
-interface PageItem {
+/** The interface for an antd Tab item */
+interface TabItem {
+    /** The key of the tab */
     key: string
+
+    /** The label of the tab */
     label: JSX.Element
+
+    /** The content of the tab */
     children: JSX.Element
 }
 
+/**
+ * Dynamically creates a SciViz app
+ *
+ * @param {SciVizSpec} spec - The SciViz spec sheet
+ * @param {string} baseURL - The URL that SciViz will be hosted at
+ * @param {string=} [jwtToken] - A JWT token to perform queries
+ *
+ * @returns A SciViz app
+ */
 function SciViz(props: SciVizProps) {
-    const [hiddenItems, setHiddenItems] = useState<PageItem[][]>([])
+    const [hiddenItems, setHiddenItems] = useState<TabItem[][]>([])
     let pageMap: {
-        [key: string]: PageItem
+        [key: string]: TabItem
     } = {}
-    let menuItems: PageItem[] = []
+    let menuItems: TabItem[] = []
     const changeURL = (path?: string) => {
         var URL = window.location.href
         var RegexLastWord = new RegExp('/([^/]+)/?$')

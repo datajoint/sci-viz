@@ -29,23 +29,56 @@ import Slideshow from '../Slideshow'
 import DateRangePicker from '../Emitters/DateRangePicker'
 import './Page.css'
 
+/** The interface for the SciVizComponent props */
 interface ComponentProps {
+    /** The name of the component */
     name: string
+
+    /** The data of the component */
     component: ComponentTypes
+
+    /** The height of the component */
+    height: number
+
+    /** A JWT token to perform queries */
     jwtToken?: string
-    gridHeight: number
+
+    /** A list of restrictions for queried components */
     restrictionList?: string[]
+
+    /** An information store for linked components */
     store?: RestrictionStore
+
+    /** A callback function to refresh the restriction list */
     updateRestrictionList?: (queryParams: string) => string
+
+    /** A callback function to refresh the store */
     updateStore?: (key: string, record: string[]) => void
+
+    /** A callback function for handling hidden pages */
     updateHiddenPage?: (route: string, queryParams: string) => void
 }
 
+/**
+ * Dynamically creates a SciViz component
+ *
+ * @param {string} name - The name of the component
+ * @param {ComponentTypes} component - The data of the component
+ * @param {number} height - The height of the component
+ * @param {string=} jwtToken - A JWT token to perform queries
+ * @param {string[]=} restrictionList - A list of restrictions for queried components
+ * @param {RestrictionStore=} store - An information store for linked components
+ * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
+ * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
+ * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
+ *
+ * @returns A SciViz component
+ */
 function SciVizComponent(props: ComponentProps) {
     var comp: JSX.Element = <></>
     const type = props.component.type
     const calculatedHeight =
-        props.gridHeight * props.component.height + (props.component.height - 1) * 10
+        props.height * props.component.height + (props.component.height - 1) * 10
     if (/^markdown.*$/.test(type)) {
         const compData = props.component as MarkDownComponent
         comp = (
@@ -80,7 +113,7 @@ function SciVizComponent(props: ComponentProps) {
                     token={props.jwtToken!}
                     route={compData.route}
                     name={props.name}
-                    height={props.gridHeight}
+                    height={props.height}
                     restrictionList={[...props.restrictionList!]}
                 />
             </div>
