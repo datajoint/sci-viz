@@ -77,7 +77,6 @@ function App() {
                         </>
                     ) : (
                         <>
-                            {window.history.pushState(null, '', state.baseURL)}
                             <SciViz
                                 spec={state.spec}
                                 baseURL={state.baseURL}
