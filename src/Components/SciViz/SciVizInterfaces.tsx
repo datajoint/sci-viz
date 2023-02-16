@@ -122,7 +122,7 @@ export type DynamicGridComponentTypes = MetadataComponent | PlotComponent
  * @extends {SciVizComponent} - The base interface
  */
 export interface DateRangePickerComponent extends SciVizComponent {
-    /** The name of the components channel */
+    /** The name of the component's channel */
     channel: string
 }
 
@@ -132,7 +132,7 @@ export interface DateRangePickerComponent extends SciVizComponent {
  * @extends {SciVizQueried} - The queried interface
  */
 export interface DropdownQueryComponent extends SciVizComponent, SciVizQueried {
-    /** The name of the components channel */
+    /** The name of the component's channel */
     channel: string
 }
 
@@ -141,7 +141,7 @@ export interface DropdownQueryComponent extends SciVizComponent, SciVizQueried {
  * @extends {SciVizComponent} - The base interface
  */
 export interface DropdownComponent extends SciVizComponent {
-    /** The name of the components channel */
+    /** The name of the component's channel */
     channel: string
 
     /** The `label` to `value` content dictionary */
@@ -153,7 +153,7 @@ export interface DropdownComponent extends SciVizComponent {
  * @extends {SciVizComponent} - The base interface
  */
 export interface RadioComponent extends SciVizComponent {
-    /** The name of the components channel */
+    /** The name of the component's channel */
     channel: string
 
     /** The `label` to `value` content dictionary */
@@ -166,7 +166,7 @@ export interface RadioComponent extends SciVizComponent {
  * @extends {SciVizQueried} - The queried interface
  */
 export interface SliderComponent extends SciVizComponent, SciVizQueried {
-    /** The name of the components channel */
+    /** The name of the component's channel */
     channel: string
 
     /** The list of channels to listen to */
@@ -276,7 +276,7 @@ export interface TableComponent extends SciVizComponent, SciVizQueried {
     /** The route of the hidden page to link rows to */
     link?: string
 
-    /** The name of the components channel */
+    /** The name of the component's channel */
     channel?: string
 
     /** The list of channels to listen to */
