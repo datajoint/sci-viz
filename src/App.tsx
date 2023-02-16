@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Login from './Components/Login/Login'
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
@@ -10,8 +10,6 @@ import '../node_modules/react-resizable/css/styles.css'
 
 window.onbeforeunload = () => ''
 
-interface DJGUIAppProps {}
-
 interface DJGUIAppState {
     jwtToken: string // Storage object for JWT token obtain after logging in successfully
     hostname: string // Name of the database that the user is connected to
@@ -19,90 +17,81 @@ interface DJGUIAppState {
     baseURL: string
 }
 
-export default class App extends React.Component<DJGUIAppProps, DJGUIAppState> {
-    constructor(props: DJGUIAppProps) {
-        super(props)
-        this.state = {
-            jwtToken: '',
-            hostname: '',
-            spec: undefined,
-            baseURL: ``
-        }
-
-        this.setJWTTokenAndHostName = this.setJWTTokenAndHostName.bind(this)
-        this.getBasename = this.getBasename.bind(this)
-    }
+function App() {
+    const [state, setState] = useState<DJGUIAppState>({
+        jwtToken: '',
+        hostname: '',
+        spec: undefined,
+        baseURL: ``
+    })
 
     /**
-     * Setter function for jwt token and host name
+     * A callback function to set jwt token and host name
      * @param jwt JWT token obtain after logging sucessfully from the backend
      * @param hostname Hostname of the database that is being connected to
      */
-    setJWTTokenAndHostName(jwt: string, hostname: string) {
-        this.setState({ jwtToken: jwt, hostname: hostname })
+    const setJWTTokenAndHostName = (jwt: string, hostname: string) => {
+        setState((prevState) => ({ ...prevState, jwtToken: jwt, hostname: hostname }))
     }
-    getBasename() {
-        if (window.location.href.split('/').length == 4) {
-            return ''
-        } else {
-            let arr = window.location.href.split('/').splice(3)
-            arr.pop() // pop the empty string
-            return '/' + arr.join('/')
-        }
-    }
-    componentDidMount(): void {
+
+    useEffect(() => {
         fetch(`https://${window.location.hostname}/sciviz_spec.json`)
             .then((response) => {
                 return response.json()
             })
             .then((data) => {
-                this.setState({ spec: data as SciVizSpec })
-                this.setState({
-                    baseURL: `https://${window.location.hostname}${
-                        this.state.spec?.SciViz.route || ''
-                    }/`
-                })
+                setState((prevState) => ({
+                    ...prevState,
+                    spec: data as SciVizSpec,
+                    baseURL: `https://${window.location.hostname}${data?.SciViz.route || ''}/`
+                }))
             })
-    }
+    }, [])
 
-    render() {
-        return (
-            <div>
-                {this.state.spec ? (
-                    <>
-                        <Header
-                            text='Powered by datajoint'
-                            imageRoute={require('./logo.svg')['default']}
-                        />
-                        {this.state.jwtToken !== '' ? (
-                            <>
-                                {window.history.pushState(null, '', this.state.baseURL)}
-                                <SciViz
-                                    spec={this.state.spec}
-                                    baseURL={this.state.baseURL}
-                                    jwtToken={this.state.jwtToken}
-                                />
-                            </>
-                        ) : (
-                            <>
-                                {window.history.pushState(
-                                    null,
-                                    '',
-                                    `${this.state.baseURL}login`
-                                )}
-                                <Login
-                                    setJWTTokenAndHostName={this.setJWTTokenAndHostName}
-                                    defaultAddress='localdb'
-                                    imageRoute={require('./logo.svg')['default']}
-                                ></Login>
-                            </>
-                        )}
-                        <Footer />{' '}
-                    </>
-                ) : (
-                    <>Retrieving Spec file</>
-                )}
-            </div>
-        )
-    }
+    return (
+        <div>
+            {state.spec ? (
+                <>
+                    <Header
+                        text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
+                        imageRoute={
+                            state.spec.SciViz.header?.image_route
+                                ? require(state.spec.SciViz.header.image_route)['default']
+                                : require('./logo.svg')['default']
+                        }
+                    />
+                    {state.spec.SciViz.auth && !state.jwtToken ? (
+                        <>
+                            {window.history.pushState(null, '', `${state.baseURL}login`)}
+                            <Login
+                                setJWTTokenAndHostName={setJWTTokenAndHostName}
+                                defaultAddress={state.spec.SciViz.hostname}
+                                imageRoute={
+                                    state.spec.SciViz.login?.image_route
+                                        ? require(state.spec.SciViz.login.image_route)[
+                                              'default'
+                                          ]
+                                        : require('./logo.svg')['default']
+                                }
+                            ></Login>
+                        </>
+                    ) : (
+                        <>
+                            {window.history.pushState(null, '', state.baseURL)}
+                            <SciViz
+                                spec={state.spec}
+                                baseURL={state.baseURL}
+                                jwtToken={state.jwtToken}
+                            />
+                        </>
+                    )}
+                    <Footer />
+                </>
+            ) : (
+                <>Retrieving Spec file</>
+            )}
+        </div>
+    )
 }
+
+export default App

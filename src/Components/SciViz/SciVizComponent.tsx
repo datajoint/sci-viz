@@ -86,7 +86,8 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 content={compData.text}
                 imageRoute={
-                    compData.image_route //? require(compData.image_route)['default'] : undefined
+                    // compData.image_route ? require(compData.image_route)['default'] :
+                    undefined
                 }
                 height={calculatedHeight}
             />
