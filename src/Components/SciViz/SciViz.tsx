@@ -42,12 +42,22 @@ function SciViz(props: SciVizProps) {
         [key: string]: TabItem
     } = {}
     let menuItems: TabItem[] = []
-    const changeURL = (path?: string) => {
+
+    /**
+     * A function to set the current SciViz page route
+     * @param {string} path - The route to set
+     */
+    const setRoute = (path: string) => {
         var URL = window.location.href
         var RegexLastWord = new RegExp('/([^/]+)/?$')
         var newURL = URL.replace(RegexLastWord, path!)
         window.history.pushState(null, '', newURL)
     }
+
+    /**
+     * A function to get the current SciViz page route
+     * @returns The last route of the current URL
+     */
     const getRoute = () => {
         var URL = window.location.href
         if (props.baseURL === URL) {
@@ -57,9 +67,16 @@ function SciViz(props: SciVizProps) {
         var lastWord = URL.match(RegexLastWord)![0]
         return lastWord
     }
+
+    /**
+     * A callback function to display a SciViz hidden page.
+     * Replaces the current tab bar with a new temporary one with just the hidden page and the previous page
+     * @param route - The route of the hidden page
+     * @param queryParams - The query params to restrict the components of the page by
+     */
     const updateHiddenPage = (route: string, queryParams: string) => {
         var currRoute = getRoute()
-        changeURL(`${route}?${queryParams}`)
+        setRoute(`${route}?${queryParams}`)
         setHiddenItems((prevItems) => [[pageMap[currRoute], pageMap[route]], ...prevItems])
     }
     Object.entries(props.spec.SciViz.pages).forEach(([name, page]) => {
@@ -109,8 +126,7 @@ function SciViz(props: SciVizProps) {
             })
     })
     useEffect(() => {
-        var URL = window.location.href
-        var newURL = URL.replace(/\/$/, '') + menuItems[0].key
+        var newURL = props.baseURL.replace(/\/$/, '') + menuItems[0].key
         window.history.pushState(null, '', newURL)
     }, [])
 
@@ -126,7 +142,7 @@ function SciViz(props: SciVizProps) {
                 if (hiddenItems.length) {
                     setHiddenItems(hiddenItems.slice(1))
                 }
-                changeURL(pageMap[activeKey].key)
+                setRoute(pageMap[activeKey].key)
             }}
         />
     )

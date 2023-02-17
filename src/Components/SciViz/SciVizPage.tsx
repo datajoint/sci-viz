@@ -32,16 +32,29 @@ function SciVizPage(props: PageProps) {
     useEffect(() => {
         setRestrictionList(new URLSearchParams(window.location.search).toString().split('&'))
     }, [])
+
+    /**
+     * A callback function to refresh the restriction list
+     * @param {string} queryParam - The query paramters to set the restriciton list as
+     * @returns The query params
+     */
     const updateRestrictionList = (queryParams: string): string => {
         setRestrictionList(new URLSearchParams(queryParams).toString().split('&'))
         return queryParams
     }
+
+    /**
+     * A callback function to refresh the page store
+     * @param {string} key - The key of the component that the store object belongs to
+     * @param {string[]} record - The list of key-values as strings to add to the store
+     */
     const updateStore = (key: string, record: string[]) => {
         setStore((prevStore) => ({
             ...prevStore,
             [key]: record
         }))
     }
+
     return (
         <div>
             <div className='grid-container'>

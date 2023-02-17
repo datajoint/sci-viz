@@ -128,6 +128,7 @@ function SciVizGrid(props: GridProps) {
             </Suspense>
         )
     }
+
     return grid
 }
 

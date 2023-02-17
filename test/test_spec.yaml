@@ -1,16 +1,16 @@
 version: 'v0.0.0'
 LabBook: null
 SciViz: # top level tab
-  # website_title: whatever you want your website to be called in the browser tab
+  website_title: SciViz Title
   route: /some-route/another-route
-  favicon_name: favicon.ico
-  auth: True
-  # header:
-  #   image_route: ./IBLlogo.png
-  #   text: Data Portal
+  favicon_name: /favicon.ico # In /public dir
+  header:
+    image_route: /logo.svg # In /public dir
+    text: Data Portal
   hostname: 'localdb'
-  # login:
-  #   image_route: ./IBLlogo.png
+  login:
+    image_route: /logo.svg # In /public dir
+  auth: True
   pages: # individual pages
     # The first page in the list of pages is the splash page after login
     # By convention this should be a home page with a markdown component
@@ -28,8 +28,8 @@ SciViz: # top level tab
               height: 1
               width: 1
               type: markdown
-              # this example of image_route has the image in the /src dir
-              image_route: ../../logo.svg
+              # this example of image_route has the image in the /public dir
+              image_route: /logo.svg
               text: |
                 # Welcome!
 

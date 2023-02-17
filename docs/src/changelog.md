@@ -2,17 +2,16 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.0.0] - TBD
+## [2.0.0] - 02-17-23
 
 ### Changed
 
 - Replaced build step with hot-reload yaml spec conversion to json spec in public folder PR [#77](https://github.com/datajoint/sci-viz/pull/77)
-- Replaced built pages with SciViz component PR [#77](https://github.com/datajoint/sci-viz/pull/77)
+- Replaced built pages with SciViz component PR [#77](https://github.com/datajoint/sci-viz/pull/77), [#81](https://github.com/datajoint/sci-viz/pull/81)
 
 ### Added
 
 - OIDC Support for individual components PR [#79](https://github.com/datajoint/sci-viz/pull/79)
-
 - Docstrings for new components PR [#78](https://github.com/datajoint/sci-viz/pull/78)
 
 ## [1.1.1] - 02-09-23
@@ -21,15 +20,12 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - Form inputs for attributes with time precision e.g: `datetime(6)` ([#65](https://github.com/datajoint/sci-viz/issues/65)) PR [#75](https://github.com/datajoint/sci-viz/pull/75)
 
-
 ## [1.1.0] - 02-06-23
 
 ### Added
 
 - DateRangePicker component PR [#72](https://github.com/datajoint/sci-viz/pull/72)
-
 - Slideshow component PR [#72](https://github.com/datajoint/sci-viz/pull/72)
-
 
 ## [1.0.2] - 1-31-23
 

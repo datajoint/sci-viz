@@ -85,9 +85,7 @@ function SciVizComponent(props: ComponentProps) {
             <Markdown
                 key={JSON.stringify(compData)}
                 content={compData.text}
-                imageRoute={
-                    compData.image_route //? require(compData.image_route)['default'] : undefined
-                }
+                imageRoute={compData.image_route}
                 height={calculatedHeight}
             />
         )
@@ -250,7 +248,8 @@ function SciVizComponent(props: ComponentProps) {
             />
         )
     }
-    return <>{comp}</>
+
+    return comp
 }
 
 export default SciVizComponent
