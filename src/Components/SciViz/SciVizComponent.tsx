@@ -248,7 +248,8 @@ function SciVizComponent(props: ComponentProps) {
             />
         )
     }
-    return <>{comp}</>
+
+    return comp
 }
 
 export default SciVizComponent
