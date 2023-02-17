@@ -27,7 +27,7 @@ function App() {
     document.title = state.spec?.SciViz.website_title || 'SciViz'
     document
         .getElementById('favicon')!
-        .setAttribute('href', `/${state.spec?.SciViz.favicon_name || 'favicon.ico'}`)
+        .setAttribute('href', `${state.spec?.SciViz.favicon_name || '/favicon.ico'}`)
 
     /**
      * A callback function to set jwt token and host name
@@ -58,11 +58,7 @@ function App() {
                 <>
                     <Header
                         text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
-                        imageRoute={
-                            state.spec.SciViz.header?.image_route
-                                ? require(state.spec.SciViz.header.image_route)['default']
-                                : require('./logo.svg')['default']
-                        }
+                        imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}
                     />
                     {state.spec.SciViz.auth && !state.jwtToken ? (
                         <>
@@ -71,11 +67,7 @@ function App() {
                                 setJWTTokenAndHostName={setJWTTokenAndHostName}
                                 defaultAddress={state.spec.SciViz.hostname || state.hostname}
                                 imageRoute={
-                                    state.spec.SciViz.login?.image_route
-                                        ? require(state.spec.SciViz.login.image_route)[
-                                              'default'
-                                          ]
-                                        : require('./logo.svg')['default']
+                                    state.spec.SciViz.login?.image_route || '/logo.svg'
                                 }
                             ></Login>
                         </>
