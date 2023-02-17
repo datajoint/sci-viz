@@ -7,7 +7,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 ### Changed
 
 - Replaced build step with hot-reload yaml spec conversion to json spec in public folder PR [#77](https://github.com/datajoint/sci-viz/pull/77)
-- Replaced built pages with SciViz component PR [#77](https://github.com/datajoint/sci-viz/pull/77)
+- Replaced built pages with SciViz component PR [#77](https://github.com/datajoint/sci-viz/pull/77), [#81](https://github.com/datajoint/sci-viz/pull/81)
 
 ### Added
 
