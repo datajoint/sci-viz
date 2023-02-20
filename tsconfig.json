@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "outDir": "dist",
         "target": "es5",
         "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": true,
@@ -14,7 +15,10 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "declaration": true,
+        "declarationDir": "dist"
     },
-    "include": ["src"]
+    "include": ["src/Components/SciViz/SciViz.tsx"],
+    "exclude": ["node_modules"]
 }

@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import Cookies from 'js-cookie'
 import './Login.css'
 
-// Assets
-import logo from '../../logo.svg'
-
 interface LoginProps {
     setJWTTokenAndHostName: (jwt: string, hostname: string) => void // Call back function to setting the jwtToken
     imageRoute?: string
