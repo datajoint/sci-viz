@@ -55,7 +55,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "prepublish": "rollup -c",
+        "manualpackage": "rollup -c",
         "test": "jest",
         "eject": "react-scripts eject"
     },
