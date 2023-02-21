@@ -1,2 +1,3 @@
 import SciViz from './SciViz'
-export { SciViz }
+import SciVizPage from './SciVizPage'
+export { SciViz, SciVizPage }
