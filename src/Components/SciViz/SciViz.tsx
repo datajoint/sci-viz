@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Tabs } from 'antd'
+import { useDispatch } from 'react-redux'
+import { setUpdateHiddenPage } from './Redux/HiddenPageSlice/hiddenPageSlice'
+import { AppDispatch } from './Redux/store'
 import { SciVizSpec } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
 
@@ -37,6 +40,7 @@ interface TabItem {
  * @returns A SciViz app
  */
 function SciViz(props: SciVizProps) {
+    const dispatch = useDispatch<AppDispatch>()
     const [hiddenItems, setHiddenItems] = useState<TabItem[][]>([])
     let pageMap: {
         [key: string]: TabItem
@@ -68,17 +72,6 @@ function SciViz(props: SciVizProps) {
         return lastWord
     }
 
-    /**
-     * A callback function to display a SciViz hidden page.
-     * Replaces the current tab bar with a new temporary one with just the hidden page and the previous page
-     * @param route - The route of the hidden page
-     * @param queryParams - The query params to restrict the components of the page by
-     */
-    const updateHiddenPage = (route: string, queryParams: string) => {
-        var currRoute = getRoute()
-        setRoute(`${route}?${queryParams}`)
-        setHiddenItems((prevItems) => [[pageMap[currRoute], pageMap[route]], ...prevItems])
-    }
     Object.entries(props.spec.SciViz.pages).forEach(([name, page]) => {
         pageMap[page.route] = {
             key: page.route,
@@ -93,12 +86,7 @@ function SciViz(props: SciVizProps) {
                 </span>
             ),
             children: (
-                <SciVizPage
-                    key={JSON.stringify(page)}
-                    jwtToken={props.jwtToken}
-                    page={page}
-                    updateHiddenPage={updateHiddenPage}
-                />
+                <SciVizPage key={JSON.stringify(page)} jwtToken={props.jwtToken} page={page} />
             )
         }
 
@@ -120,12 +108,22 @@ function SciViz(props: SciVizProps) {
                         key={JSON.stringify(page)}
                         jwtToken={props.jwtToken}
                         page={page}
-                        updateHiddenPage={updateHiddenPage}
                     />
                 )
             })
     })
     useEffect(() => {
+        dispatch(
+            setUpdateHiddenPage((route: string, queryParams: string) => {
+                var currRoute = getRoute()
+                setRoute(`${route}?${queryParams}`)
+                setHiddenItems((prevItems) => [
+                    [pageMap[currRoute], pageMap[route]],
+                    ...prevItems
+                ])
+            })
+        )
+
         var newURL = props.baseURL.replace(/\/$/, '') + menuItems[0].key
         window.history.pushState(null, '', newURL)
     }, [])

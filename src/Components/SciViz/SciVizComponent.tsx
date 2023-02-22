@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux'
+import { RootState } from './Redux/store'
 import {
     ComponentTypes,
     DropdownQueryComponent,
@@ -76,6 +78,9 @@ interface ComponentProps {
  */
 function SciVizComponent(props: ComponentProps) {
     var comp: JSX.Element = <></>
+    const updateHiddenPage = useSelector(
+        (state: RootState) => state.hiddenPage.updateHiddenPage
+    )
     const type = props.component.type
     const calculatedHeight =
         props.height * props.component.height + (props.component.height - 1) * 10
@@ -156,7 +161,7 @@ function SciVizComponent(props: ComponentProps) {
                 channelList={compData.channels}
                 restrictionList={[...props.restrictionList!]}
                 updatePageStore={props.updateStore!}
-                updateHiddenPage={props.updateHiddenPage}
+                updateHiddenPage={props.updateHiddenPage || updateHiddenPage}
             />
         )
     } else if (/^form.*$/.test(type)) {
