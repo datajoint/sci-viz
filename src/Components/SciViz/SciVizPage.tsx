@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { setUpdatePageStore } from './Redux/Slices/pageStoreSlice'
+import { setUpdatePageStore, setPageStore } from './Redux/Slices/pageStoreSlice'
 import { AppDispatch } from './Redux/store'
 import { SciVizPageType, RestrictionStore } from './SciVizInterfaces'
 import SciVizGrid from './SciVizGrid'
@@ -33,6 +33,7 @@ function SciVizPage(props: PageProps) {
     const [store, setStore] = useState<RestrictionStore>({})
     const pageData = props.page
 
+    dispatch(setPageStore(store))
     useEffect(() => {
         dispatch(
             setUpdatePageStore((key: string, record: string[]) => {
@@ -57,7 +58,6 @@ function SciVizPage(props: PageProps) {
                             grid={grid}
                             jwtToken={props.jwtToken}
                             restrictionList={[...restrictionList]}
-                            store={Object.assign({}, store)}
                             updateHiddenPage={props.updateHiddenPage}
                         />
                     ))}
