@@ -36,7 +36,6 @@ interface TableContentProps {
     fetchTableContent: () => void // Callback function to tell the parent component to update the contentData
     setRestrictions: (restrictions: Array<Restriction>) => void
     setOrders: (Order: string) => void
-    updateRestrictionList: (queryParams: string) => string
     updatePageStore: (key: string, record: Array<string>) => void
 }
 

@@ -34,16 +34,6 @@ function SciVizPage(props: PageProps) {
     }, [])
 
     /**
-     * A callback function to refresh the restriction list
-     * @param {string} queryParam - The query paramters to set the restriciton list as
-     * @returns The query params
-     */
-    const updateRestrictionList = (queryParams: string): string => {
-        setRestrictionList(new URLSearchParams(queryParams).toString().split('&'))
-        return queryParams
-    }
-
-    /**
      * A callback function to refresh the page store
      * @param {string} key - The key of the component that the store object belongs to
      * @param {string[]} record - The list of key-values as strings to add to the store
@@ -67,7 +57,6 @@ function SciVizPage(props: PageProps) {
                             jwtToken={props.jwtToken}
                             restrictionList={[...restrictionList]}
                             store={Object.assign({}, store)}
-                            updateRestrictionList={updateRestrictionList}
                             updateStore={updateStore}
                             updateHiddenPage={props.updateHiddenPage}
                         />

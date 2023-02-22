@@ -51,9 +51,6 @@ interface ComponentProps {
     /** An information store for linked components */
     store?: RestrictionStore
 
-    /** A callback function to refresh the restriction list */
-    updateRestrictionList?: (queryParams: string) => string
-
     /** A callback function to refresh the store */
     updateStore?: (key: string, record: string[]) => void
 
@@ -70,7 +67,6 @@ interface ComponentProps {
  * @param {string=} jwtToken - A JWT token to perform queries
  * @param {string[]=} restrictionList - A list of restrictions for queried components
  * @param {RestrictionStore=} store - An information store for linked components
- * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
  * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
  * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
@@ -142,7 +138,6 @@ function SciVizComponent(props: ComponentProps) {
                 tableName={props.name}
                 link={compData.link}
                 channel={compData.channel}
-                updateRestrictionList={props.updateRestrictionList!}
                 updatePageStore={props.updateStore!}
             />
         )

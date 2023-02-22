@@ -24,7 +24,6 @@ interface TableViewProps {
     link?: string
     channel?: string
     databaseHost?: string
-    updateRestrictionList: (queryParams: string) => string
     updatePageStore: (key: string, record: Array<string>) => void
 }
 
@@ -636,7 +635,6 @@ export default class TableView extends React.Component<TableViewProps, TableView
                     fetchTableContent={this.fetchTableContent}
                     setRestrictions={this.setRestrictions}
                     setOrders={this.setOrders}
-                    updateRestrictionList={this.props.updateRestrictionList}
                     updatePageStore={this.props.updatePageStore}
                     channel={this.props.channel}
                 />
