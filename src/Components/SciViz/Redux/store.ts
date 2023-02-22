@@ -1,10 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import hiddenPageReducer from './Slices/hiddenPageSlice'
+import pageStoreReducer from './Slices/pageStoreSlice'
+
+const rootReducer = combineReducers({
+    hiddenPage: hiddenPageReducer,
+    pageStore: pageStoreReducer
+})
 
 const store = configureStore({
-    reducer: {
-        hiddenPage: hiddenPageReducer
-    }
+    reducer: rootReducer
 })
 
 export type AppDispatch = typeof store.dispatch

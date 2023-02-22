@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { setUpdatePageStore } from './Redux/Slices/pageStoreSlice'
+import { AppDispatch } from './Redux/store'
 import { SciVizPageType, RestrictionStore } from './SciVizInterfaces'
 import SciVizGrid from './SciVizGrid'
 import './Page.css'
@@ -25,25 +28,23 @@ interface PageProps {
  * @returns A SciViz page
  */
 function SciVizPage(props: PageProps) {
+    const dispatch = useDispatch<AppDispatch>()
     const [restrictionList, setRestrictionList] = useState<string[]>([])
     const [store, setStore] = useState<RestrictionStore>({})
     const pageData = props.page
 
     useEffect(() => {
+        dispatch(
+            setUpdatePageStore((key: string, record: string[]) => {
+                setStore((prevStore) => ({
+                    ...prevStore,
+                    [key]: record
+                }))
+            })
+        )
+
         setRestrictionList(new URLSearchParams(window.location.search).toString().split('&'))
     }, [])
-
-    /**
-     * A callback function to refresh the page store
-     * @param {string} key - The key of the component that the store object belongs to
-     * @param {string[]} record - The list of key-values as strings to add to the store
-     */
-    const updateStore = (key: string, record: string[]) => {
-        setStore((prevStore) => ({
-            ...prevStore,
-            [key]: record
-        }))
-    }
 
     return (
         <div>
@@ -57,7 +58,6 @@ function SciVizPage(props: PageProps) {
                             jwtToken={props.jwtToken}
                             restrictionList={[...restrictionList]}
                             store={Object.assign({}, store)}
-                            updateStore={updateStore}
                             updateHiddenPage={props.updateHiddenPage}
                         />
                     ))}

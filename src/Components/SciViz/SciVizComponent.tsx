@@ -77,6 +77,7 @@ function SciVizComponent(props: ComponentProps) {
     const updateHiddenPage = useSelector(
         (state: RootState) => state.hiddenPage.updateHiddenPage
     )
+    const updatePageStore = useSelector((state: RootState) => state.pageStore.updatePageStore)
     const type = props.component.type
     const calculatedHeight =
         props.height * props.component.height + (props.component.height - 1) * 10
@@ -138,7 +139,7 @@ function SciVizComponent(props: ComponentProps) {
                 tableName={props.name}
                 link={compData.link}
                 channel={compData.channel}
-                updatePageStore={props.updateStore!}
+                updatePageStore={props.updateStore || updatePageStore!}
             />
         )
     } else if (/^antd-table.*$/.test(type)) {
@@ -155,7 +156,7 @@ function SciVizComponent(props: ComponentProps) {
                 store={Object.assign({}, props.store)}
                 channelList={compData.channels}
                 restrictionList={[...props.restrictionList!]}
-                updatePageStore={props.updateStore!}
+                updatePageStore={props.updateStore || updatePageStore!}
                 updateHiddenPage={props.updateHiddenPage || updateHiddenPage}
             />
         )
@@ -198,7 +199,7 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 restrictionList={[...props.restrictionList!]}
                 channel={compData.channel}
-                updatePageStore={props.updateStore!}
+                updatePageStore={props.updateStore || updatePageStore!}
                 channelList={compData.channels}
                 store={Object.assign({}, props.store)}
             />
@@ -211,7 +212,7 @@ function SciVizComponent(props: ComponentProps) {
                 height={calculatedHeight}
                 payload={compData.content}
                 channel={compData.channel}
-                updatePageStore={props.updateStore!}
+                updatePageStore={props.updateStore || updatePageStore!}
             />
         )
     } else if (/^dropdown-query.*$/.test(type)) {
@@ -223,7 +224,7 @@ function SciVizComponent(props: ComponentProps) {
                 channel={compData.channel}
                 route={compData.route}
                 token={props.jwtToken!}
-                updatePageStore={props.updateStore!}
+                updatePageStore={props.updateStore || updatePageStore!}
             />
         )
     } else if (/^radiobuttons.*$/.test(type)) {
@@ -234,7 +235,7 @@ function SciVizComponent(props: ComponentProps) {
                 height={calculatedHeight}
                 payload={compData.content}
                 channel={compData.channel}
-                updatePageStore={props.updateStore!}
+                updatePageStore={props.updateStore || updatePageStore!}
             />
         )
     } else if (/^daterangepicker.*$/.test(type)) {
@@ -244,7 +245,7 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 height={calculatedHeight}
                 channel={compData.channel}
-                updatePageStore={props.updateStore!}
+                updatePageStore={props.updateStore || updatePageStore!}
             />
         )
     }
