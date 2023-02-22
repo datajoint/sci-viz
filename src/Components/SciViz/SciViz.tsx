@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Tabs } from 'antd'
 import { useDispatch } from 'react-redux'
-import { setUpdateHiddenPage } from './Redux/HiddenPageSlice/hiddenPageSlice'
+import { setUpdateHiddenPage } from './Redux/Slices/hiddenPageSlice'
 import { AppDispatch } from './Redux/store'
 import { SciVizSpec } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
@@ -112,6 +112,7 @@ function SciViz(props: SciVizProps) {
                 )
             })
     })
+
     useEffect(() => {
         dispatch(
             setUpdateHiddenPage((route: string, queryParams: string) => {

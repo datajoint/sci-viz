@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import hiddenPageReducer from './HiddenPageSlice/hiddenPageSlice'
+import hiddenPageReducer from './Slices/hiddenPageSlice'
 
 const store = configureStore({
     reducer: {
