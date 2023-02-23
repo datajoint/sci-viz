@@ -15,7 +15,6 @@ import {
     SlideshowComponent,
     DateRangePickerComponent
 } from './SciVizInterfaces'
-import TableView from '../Table/TableView'
 import DjTable from '../Table/DjTable'
 import FullPlotly from '../Plots/FullPlotly'
 import Metadata from '../Table/Metadata'
