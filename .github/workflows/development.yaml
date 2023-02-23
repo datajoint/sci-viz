@@ -93,6 +93,9 @@ jobs:
           prerelease: ${{steps.changelog_reader.outputs.status == 'prereleased'}}
           draft: ${{steps.changelog_reader.outputs.status == 'unreleased'}}
   publish-release-npm:
+    on:
+      push:
+        branches: [main]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
