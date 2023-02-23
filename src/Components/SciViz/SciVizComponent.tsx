@@ -117,19 +117,6 @@ function SciVizComponent(props: ComponentProps) {
                 restrictionList={[...props.restrictionList!]}
             />
         )
-    } else if (/^table.*$/.test(type)) {
-        const compData = props.component as TableComponent
-        comp = (
-            <TableView
-                key={JSON.stringify(compData)}
-                token={props.jwtToken!}
-                route={compData.route}
-                tableName={props.name}
-                link={compData.link}
-                channel={compData.channel}
-                updatePageStore={updatePageStore!}
-            />
-        )
     } else if (/^antd-table.*$/.test(type)) {
         const compData = props.component as TableComponent
         comp = (
