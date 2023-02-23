@@ -8,6 +8,8 @@ import {
     RestrictionStore
 } from './SciVizInterfaces'
 import './Page.css'
+import { useSelector } from 'react-redux'
+import { RootState } from './Redux/store'
 
 const SciVizComponent = React.lazy(() => import('./SciVizComponent'))
 const DynamicGrid = React.lazy(() => import('../DynamicGrid'))
@@ -27,15 +29,6 @@ interface GridProps {
 
     /** A list of restrictions for grids with queried components */
     restrictionList?: string[]
-
-    /** An information store for grids with linked components */
-    store?: RestrictionStore
-
-    /** A callback function to refresh the store */
-    updateStore?: (key: string, record: string[]) => void
-
-    /** A callback function for handling hidden pages */
-    updateHiddenPage?: (route: string, queryParams: string) => void
 }
 
 /**
@@ -84,9 +77,6 @@ function SciVizGrid(props: GridProps) {
                                 jwtToken={props.jwtToken}
                                 height={gridData.row_height}
                                 restrictionList={[...props.restrictionList!]}
-                                store={Object.assign({}, props.store)}
-                                updateStore={props.updateStore}
-                                updateHiddenPage={props.updateHiddenPage}
                             />
                         </div>
                     ))}
@@ -112,13 +102,7 @@ function SciVizGrid(props: GridProps) {
                     routeList={routeList}
                     queryParams={[...props.restrictionList!]}
                     channelList={gridData.channels}
-                    store={
-                        gridData.channels
-                            ? props.store
-                                ? Object.assign({}, props.store)
-                                : {}
-                            : undefined
-                    }
+                    store={useSelector((state: RootState) => state.pageStore.pageStore)}
                 />
             </Suspense>
         )

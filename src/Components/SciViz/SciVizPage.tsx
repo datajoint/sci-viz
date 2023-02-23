@@ -13,9 +13,6 @@ interface PageProps {
 
     /** A JWT token to perform queries */
     jwtToken?: string
-
-    /** A callback function for handling hidden pages */
-    updateHiddenPage?: (route: string, queryParams: string) => void
 }
 
 /**
@@ -58,7 +55,6 @@ function SciVizPage(props: PageProps) {
                             grid={grid}
                             jwtToken={props.jwtToken}
                             restrictionList={[...restrictionList]}
-                            updateHiddenPage={props.updateHiddenPage}
                         />
                     ))}
                 </ul>

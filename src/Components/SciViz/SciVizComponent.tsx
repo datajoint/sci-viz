@@ -13,8 +13,7 @@ import {
     MarkDownComponent,
     TableComponent,
     SlideshowComponent,
-    DateRangePickerComponent,
-    RestrictionStore
+    DateRangePickerComponent
 } from './SciVizInterfaces'
 import TableView from '../Table/TableView'
 import DjTable from '../Table/DjTable'
@@ -47,15 +46,6 @@ interface ComponentProps {
 
     /** A list of restrictions for queried components */
     restrictionList?: string[]
-
-    /** An information store for linked components */
-    store?: RestrictionStore
-
-    /** A callback function to refresh the store */
-    updateStore?: (key: string, record: string[]) => void
-
-    /** A callback function for handling hidden pages */
-    updateHiddenPage?: (route: string, queryParams: string) => void
 }
 
 /**
@@ -101,7 +91,7 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 height={calculatedHeight}
                 restrictionList={[...props.restrictionList!]}
-                store={Object.assign({}, pageStore || props.store)}
+                store={Object.assign({}, pageStore)}
                 channelList={compData.channels}
             />
         )
@@ -140,7 +130,7 @@ function SciVizComponent(props: ComponentProps) {
                 tableName={props.name}
                 link={compData.link}
                 channel={compData.channel}
-                updatePageStore={updatePageStore || props.updateStore!}
+                updatePageStore={updatePageStore!}
             />
         )
     } else if (/^antd-table.*$/.test(type)) {
@@ -154,11 +144,11 @@ function SciVizComponent(props: ComponentProps) {
                 height={calculatedHeight}
                 link={compData.link}
                 channel={compData.channel}
-                store={Object.assign({}, pageStore || props.store)}
+                store={Object.assign({}, pageStore)}
                 channelList={compData.channels}
                 restrictionList={[...props.restrictionList!]}
-                updatePageStore={updatePageStore || props.updateStore!}
-                updateHiddenPage={updateHiddenPage || props.updateHiddenPage}
+                updatePageStore={updatePageStore!}
+                updateHiddenPage={updateHiddenPage}
             />
         )
     } else if (/^form.*$/.test(type)) {
@@ -170,7 +160,7 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 name={props.name}
                 height={calculatedHeight}
-                store={Object.assign({}, pageStore || props.store)}
+                store={Object.assign({}, pageStore)}
                 channelList={compData.channels}
             />
         )
@@ -187,7 +177,7 @@ function SciVizComponent(props: ComponentProps) {
                 bufferSize={compData.buffer_size}
                 maxFPS={compData.max_FPS}
                 restrictionList={[...props.restrictionList!]}
-                store={Object.assign({}, pageStore || props.store)}
+                store={Object.assign({}, pageStore)}
                 channelList={compData.channels}
             />
         )
@@ -200,9 +190,9 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 restrictionList={[...props.restrictionList!]}
                 channel={compData.channel}
-                updatePageStore={updatePageStore || props.updateStore!}
+                updatePageStore={updatePageStore!}
                 channelList={compData.channels}
-                store={Object.assign({}, pageStore || props.store)}
+                store={Object.assign({}, pageStore)}
             />
         )
     } else if (/^dropdown-static.*$/.test(type)) {
@@ -213,7 +203,7 @@ function SciVizComponent(props: ComponentProps) {
                 height={calculatedHeight}
                 payload={compData.content}
                 channel={compData.channel}
-                updatePageStore={updatePageStore || props.updateStore!}
+                updatePageStore={updatePageStore!}
             />
         )
     } else if (/^dropdown-query.*$/.test(type)) {
@@ -225,7 +215,7 @@ function SciVizComponent(props: ComponentProps) {
                 channel={compData.channel}
                 route={compData.route}
                 token={props.jwtToken!}
-                updatePageStore={updatePageStore || props.updateStore!}
+                updatePageStore={updatePageStore!}
             />
         )
     } else if (/^radiobuttons.*$/.test(type)) {
@@ -236,7 +226,7 @@ function SciVizComponent(props: ComponentProps) {
                 height={calculatedHeight}
                 payload={compData.content}
                 channel={compData.channel}
-                updatePageStore={updatePageStore || props.updateStore!}
+                updatePageStore={updatePageStore!}
             />
         )
     } else if (/^daterangepicker.*$/.test(type)) {
@@ -246,7 +236,7 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 height={calculatedHeight}
                 channel={compData.channel}
-                updatePageStore={updatePageStore || props.updateStore!}
+                updatePageStore={updatePageStore!}
             />
         )
     }
