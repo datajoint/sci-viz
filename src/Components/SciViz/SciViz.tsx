@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, createContext } from 'react'
 import { Tabs } from 'antd'
-import { useDispatch } from 'react-redux'
-import { setUpdateHiddenPage } from './Redux/Slices/hiddenPageSlice'
-import { AppDispatch } from './Redux/store'
 import { SciVizSpec } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
+
+export interface HiddenPageContextType {
+    updateHiddenPage: (route: string, queryParams: string) => void
+}
+
+export const HiddenPageContext = createContext<HiddenPageContextType>({
+    updateHiddenPage: () => {}
+})
 
 /** The interface for the SciVizPage props */
 interface SciVizProps {
@@ -40,7 +45,6 @@ interface TabItem {
  * @returns A SciViz app
  */
 function SciViz(props: SciVizProps) {
-    const dispatch = useDispatch<AppDispatch>()
     const [hiddenItems, setHiddenItems] = useState<TabItem[][]>([])
     let pageMap: {
         [key: string]: TabItem
@@ -70,6 +74,18 @@ function SciViz(props: SciVizProps) {
         var RegexLastWord = /\/([\w-]+)(?=\?|$)/
         var lastWord = URL.match(RegexLastWord)![0]
         return lastWord
+    }
+
+    /**
+     * A callback function to display a SciViz hidden page.
+     * Replaces the current tab bar with a new temporary one with just the hidden page and the previous page
+     * @param route - The route of the hidden page
+     * @param queryParams - The query params to restrict the components of the page by
+     */
+    const updateHiddenPage = (route: string, queryParams: string) => {
+        var currRoute = getRoute()
+        setRoute(`${route}?${queryParams}`)
+        setHiddenItems((prevItems) => [[pageMap[currRoute], pageMap[route]], ...prevItems])
     }
 
     Object.entries(props.spec.SciViz.pages).forEach(([name, page]) => {
@@ -114,36 +130,27 @@ function SciViz(props: SciVizProps) {
     })
 
     useEffect(() => {
-        dispatch(
-            setUpdateHiddenPage((route: string, queryParams: string) => {
-                var currRoute = getRoute()
-                setRoute(`${route}?${queryParams}`)
-                setHiddenItems((prevItems) => [
-                    [pageMap[currRoute], pageMap[route]],
-                    ...prevItems
-                ])
-            })
-        )
-
         var newURL = props.baseURL.replace(/\/$/, '') + menuItems[0].key
         window.history.pushState(null, '', newURL)
     }, [])
 
     return (
-        <Tabs
-            centered
-            type='line'
-            size='large'
-            items={hiddenItems.length ? hiddenItems[0] : menuItems}
-            defaultActiveKey={getRoute()}
-            activeKey={hiddenItems.length ? getRoute() : undefined}
-            onChange={(activeKey) => {
-                if (hiddenItems.length) {
-                    setHiddenItems(hiddenItems.slice(1))
-                }
-                setRoute(pageMap[activeKey].key)
-            }}
-        />
+        <HiddenPageContext.Provider value={{ updateHiddenPage }}>
+            <Tabs
+                centered
+                type='line'
+                size='large'
+                items={hiddenItems.length ? hiddenItems[0] : menuItems}
+                defaultActiveKey={getRoute()}
+                activeKey={hiddenItems.length ? getRoute() : undefined}
+                onChange={(activeKey) => {
+                    if (hiddenItems.length) {
+                        setHiddenItems(hiddenItems.slice(1))
+                    }
+                    setRoute(pageMap[activeKey].key)
+                }}
+            />
+        </HiddenPageContext.Provider>
     )
 }
 

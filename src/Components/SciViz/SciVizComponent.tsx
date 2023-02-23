@@ -1,5 +1,6 @@
-import { useSelector } from 'react-redux'
-import { RootState } from './Redux/store'
+import { useContext } from 'react'
+import { StoreContext, StoreContextType } from './SciVizPage'
+import { HiddenPageContext, HiddenPageContextType } from './SciViz'
 import {
     ComponentTypes,
     DropdownQueryComponent,
@@ -56,19 +57,13 @@ interface ComponentProps {
  * @param {number} height - The height of the component
  * @param {string=} jwtToken - A JWT token to perform queries
  * @param {string[]=} restrictionList - A list of restrictions for queried components
- * @param {RestrictionStore=} store - An information store for linked components
- * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
- * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz component
  */
 function SciVizComponent(props: ComponentProps) {
     var comp: JSX.Element = <></>
-    const updateHiddenPage = useSelector(
-        (state: RootState) => state.hiddenPage.updateHiddenPage
-    )
-    const updatePageStore = useSelector((state: RootState) => state.pageStore.updatePageStore)
-    const pageStore = useSelector((state: RootState) => state.pageStore.pageStore)
+    const { updateHiddenPage } = useContext<HiddenPageContextType>(HiddenPageContext)
+    const { store, updateStore } = useContext<StoreContextType>(StoreContext)
     const type = props.component.type
     const calculatedHeight =
         props.height * props.component.height + (props.component.height - 1) * 10
@@ -91,7 +86,7 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 height={calculatedHeight}
                 restrictionList={[...props.restrictionList!]}
-                store={Object.assign({}, pageStore)}
+                store={Object.assign({}, store)}
                 channelList={compData.channels}
             />
         )
@@ -120,19 +115,6 @@ function SciVizComponent(props: ComponentProps) {
                 restrictionList={[...props.restrictionList!]}
             />
         )
-    } else if (/^table.*$/.test(type)) {
-        const compData = props.component as TableComponent
-        comp = (
-            <TableView
-                key={JSON.stringify(compData)}
-                token={props.jwtToken!}
-                route={compData.route}
-                tableName={props.name}
-                link={compData.link}
-                channel={compData.channel}
-                updatePageStore={updatePageStore!}
-            />
-        )
     } else if (/^antd-table.*$/.test(type)) {
         const compData = props.component as TableComponent
         comp = (
@@ -144,10 +126,10 @@ function SciVizComponent(props: ComponentProps) {
                 height={calculatedHeight}
                 link={compData.link}
                 channel={compData.channel}
-                store={Object.assign({}, pageStore)}
+                store={Object.assign({}, store)}
                 channelList={compData.channels}
                 restrictionList={[...props.restrictionList!]}
-                updatePageStore={updatePageStore!}
+                updatePageStore={updateStore}
                 updateHiddenPage={updateHiddenPage}
             />
         )
@@ -160,7 +142,7 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 name={props.name}
                 height={calculatedHeight}
-                store={Object.assign({}, pageStore)}
+                store={Object.assign({}, store)}
                 channelList={compData.channels}
             />
         )
@@ -177,7 +159,7 @@ function SciVizComponent(props: ComponentProps) {
                 bufferSize={compData.buffer_size}
                 maxFPS={compData.max_FPS}
                 restrictionList={[...props.restrictionList!]}
-                store={Object.assign({}, pageStore)}
+                store={Object.assign({}, store)}
                 channelList={compData.channels}
             />
         )
@@ -190,9 +172,9 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 restrictionList={[...props.restrictionList!]}
                 channel={compData.channel}
-                updatePageStore={updatePageStore!}
+                updatePageStore={updateStore!}
                 channelList={compData.channels}
-                store={Object.assign({}, pageStore)}
+                store={Object.assign({}, store)}
             />
         )
     } else if (/^dropdown-static.*$/.test(type)) {
@@ -203,7 +185,7 @@ function SciVizComponent(props: ComponentProps) {
                 height={calculatedHeight}
                 payload={compData.content}
                 channel={compData.channel}
-                updatePageStore={updatePageStore!}
+                updatePageStore={updateStore!}
             />
         )
     } else if (/^dropdown-query.*$/.test(type)) {
@@ -215,7 +197,7 @@ function SciVizComponent(props: ComponentProps) {
                 channel={compData.channel}
                 route={compData.route}
                 token={props.jwtToken!}
-                updatePageStore={updatePageStore!}
+                updatePageStore={updateStore!}
             />
         )
     } else if (/^radiobuttons.*$/.test(type)) {
@@ -226,7 +208,7 @@ function SciVizComponent(props: ComponentProps) {
                 height={calculatedHeight}
                 payload={compData.content}
                 channel={compData.channel}
-                updatePageStore={updatePageStore!}
+                updatePageStore={updateStore!}
             />
         )
     } else if (/^daterangepicker.*$/.test(type)) {
@@ -236,7 +218,7 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 height={calculatedHeight}
                 channel={compData.channel}
-                updatePageStore={updatePageStore!}
+                updatePageStore={updateStore!}
             />
         )
     }

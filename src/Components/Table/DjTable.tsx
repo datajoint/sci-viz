@@ -14,7 +14,7 @@ interface DjTableProps {
     height: number
     restrictionList: Array<string>
     link?: string
-    updatePageStore: (key: string, record: Array<string>) => void
+    updatePageStore?: (key: string, record: Array<string>) => void
     updateHiddenPage?: (route: string, queryParams: string) => void
     channel?: string
     channelList?: Array<string>
@@ -320,8 +320,8 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                         }
                     })
                 }
-
-                this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
+                if (this.props.updatePageStore)
+                    this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
             })
     }
 
@@ -396,8 +396,8 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                                 }
                             })
                         }
-
-                        this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
+                        if (this.props.updatePageStore)
+                            this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
                     })
                 })
         }
@@ -507,8 +507,8 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                                           }
                                       })
                                   }
-
-                                  this.props.updatePageStore(this.props.channel!, record)
+                                  if (this.props.updatePageStore)
+                                      this.props.updatePageStore(this.props.channel!, record)
 
                                   this.setState({ selectedRow: [...selectedRowKeys] })
                               }

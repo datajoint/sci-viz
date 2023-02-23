@@ -6,17 +6,13 @@ import './index.css'
 import 'antd/dist/antd.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { Provider } from 'react-redux'
-import store from './Components/SciViz/Redux/store'
 
 const queryClient = new QueryClient()
 
 ReactDOM.render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-            <Provider store={store}>
-                <App />
-            </Provider>
+            <App />
             <ReactQueryDevtools />
         </QueryClientProvider>
     </React.StrictMode>,
