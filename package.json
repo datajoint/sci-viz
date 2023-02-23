@@ -1,7 +1,7 @@
 {
     "name": "datajoint_sciviz",
     "version": "2.0.0",
-    "private": true,
+    "private": false,
     "homepage": ".",
     "main": "dist/src/Components/SciViz/index.d.ts",
     "files": [
