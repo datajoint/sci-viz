@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react'
 import { Spin } from 'antd'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import { GridTypes, SciVizFixedGrid, SciVizDynamicGrid } from './SciVizInterfaces'
-import './Page.css'
 import { useSelector } from 'react-redux'
 import { RootState } from './Redux/store'
+import { GridTypes, SciVizFixedGrid, SciVizDynamicGrid } from './SciVizInterfaces'
+import './Page.css'
 
 const SciVizComponent = React.lazy(() => import('./SciVizComponent'))
 const DynamicGrid = React.lazy(() => import('../DynamicGrid'))
