@@ -56,9 +56,6 @@ interface ComponentProps {
  * @param {number} height - The height of the component
  * @param {string=} jwtToken - A JWT token to perform queries
  * @param {string[]=} restrictionList - A list of restrictions for queried components
- * @param {RestrictionStore=} store - An information store for linked components
- * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
- * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz component
  */

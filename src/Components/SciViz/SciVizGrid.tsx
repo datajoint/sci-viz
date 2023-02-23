@@ -1,12 +1,7 @@
 import React, { Suspense } from 'react'
 import { Spin } from 'antd'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import {
-    GridTypes,
-    SciVizFixedGrid,
-    SciVizDynamicGrid,
-    RestrictionStore
-} from './SciVizInterfaces'
+import { GridTypes, SciVizFixedGrid, SciVizDynamicGrid } from './SciVizInterfaces'
 import './Page.css'
 import { useSelector } from 'react-redux'
 import { RootState } from './Redux/store'
@@ -38,14 +33,12 @@ interface GridProps {
  * @param {ComponentTypes} grid - The data of the grid
  * @param {string=} jwtToken - A JWT token to perform queries
  * @param {string[]=} restrictionList - A list of restrictions for grids with queried components
- * @param {RestrictionStore=} store - An information store for grids with linked components
- * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
- * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz grid
  */
 function SciVizGrid(props: GridProps) {
     var grid: JSX.Element = <></>
+    const store = useSelector((state: RootState) => state.pageStore.pageStore)
     const type = props.grid.type
     if (type === 'fixed') {
         const gridData = props.grid as SciVizFixedGrid
@@ -102,7 +95,7 @@ function SciVizGrid(props: GridProps) {
                     routeList={routeList}
                     queryParams={[...props.restrictionList!]}
                     channelList={gridData.channels}
-                    store={useSelector((state: RootState) => state.pageStore.pageStore)}
+                    store={store}
                 />
             </Suspense>
         )
