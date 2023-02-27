@@ -17,11 +17,7 @@ services:
     working_dir: /app
     user: '${HOST_UID}:${HOST_GID}'
     # use sci-viz-hotreload-prod.sh for production nginx deploment
-    command:
-      - sh
-      - -lc
-      - |
-        sh sci-viz-hotreload-dev.sh
+    command: yarn rollup -c
   localdb:
     image: datajoint/mysql:5.7
     environment:

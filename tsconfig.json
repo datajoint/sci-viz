@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES6",
         "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": false,
         "skipLibCheck": true,
@@ -12,13 +12,14 @@
         "module": "esnext",
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "isolatedModules": true,
+        "isolatedModules": false,
         "noEmit": false,
         "jsx": "react-jsx",
         "outDir": "./dist/esm",
         "declaration": true,
         "importHelpers": true,
         "sourceMap": true
+        // "rootDir": "src"
     },
     "include": ["src"],
     "exclude": [
