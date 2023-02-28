@@ -3,6 +3,7 @@ import typescript from 'rollup-plugin-typescript2'
 import postcss from 'rollup-plugin-postcss'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
+import nodePolyfills from 'rollup-plugin-polyfill-node'
 
 export default {
     input: './src/Components/SciViz/PkgExports.tsx',
@@ -13,7 +14,8 @@ export default {
         postcss({
             extensions: ['.css']
         }),
-        json()
+        json(),
+        nodePolyfills({ include: null })
     ],
     output: { dir: 'dist', format: 'es', sourcemap: true, name: 'datajoint-sciviz' }
 }
