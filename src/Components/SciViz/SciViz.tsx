@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Tabs } from 'antd'
+import { QueryClient } from 'react-query'
 import { SciVizSpec } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
 
@@ -13,6 +14,9 @@ interface SciVizProps {
 
     /** A JWT token to perform queries */
     jwtToken?: string
+
+    /** The query client to use for dynamic form queries */
+    queryClient?: QueryClient
 }
 
 /** The interface for an antd Tab item */
@@ -33,6 +37,7 @@ interface TabItem {
  * @param {SciVizSpec} spec - The SciViz spec sheet
  * @param {string} baseURL - The URL that SciViz will be hosted at
  * @param {string=} [jwtToken] - A JWT token to perform queries
+ * @param {QueryClient=} queryClient - The query client to use for dynamic form queries
  *
  * @returns A SciViz app
  */
