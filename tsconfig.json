@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES6",
         "lib": ["dom", "dom.iterable", "esnext"],
-        "allowJs": true,
+        "allowJs": false,
         "skipLibCheck": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
@@ -12,9 +12,20 @@
         "module": "esnext",
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
-        "jsx": "react-jsx"
+        "isolatedModules": false,
+        "noEmit": false,
+        "jsx": "react-jsx",
+        "outDir": "./dist/esm",
+        "declaration": true,
+        "importHelpers": true,
+        "sourceMap": true
+        // "rootDir": "src"
     },
-    "include": ["src"]
+    "include": ["src"],
+    "exclude": [
+        "node_modules",
+        "./src/__tests__",
+        "./src/reportWebVitals.js",
+        "./src/setupTests.js"
+    ]
 }

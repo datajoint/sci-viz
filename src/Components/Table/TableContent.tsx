@@ -14,7 +14,6 @@ import BasicLoadingIcon from './LoadingAnimation/BasicLoadingIcon'
 import Restriction from './DataStorageClasses/Restriction'
 import SortButton from './Sort/SortButton'
 import './TableContent.css'
-import { Link } from 'react-router-dom'
 
 enum TableActionType {
     FILTER
