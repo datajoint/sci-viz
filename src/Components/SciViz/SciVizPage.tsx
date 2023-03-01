@@ -72,6 +72,7 @@ function SciVizPage(props: PageProps) {
                             jwtToken={props.jwtToken}
                             restrictionList={[...restrictionList]}
                             store={Object.assign({}, store)}
+                            queryClient={props.queryClient}
                             updateRestrictionList={updateRestrictionList}
                             updateStore={updateStore}
                             updateHiddenPage={props.updateHiddenPage}

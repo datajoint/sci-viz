@@ -94,6 +94,7 @@ function SciVizGrid(props: GridProps) {
                                 height={gridData.row_height}
                                 restrictionList={[...props.restrictionList!]}
                                 store={Object.assign({}, props.store)}
+                                queryClient={props.queryClient}
                                 updateRestrictionList={props.updateRestrictionList}
                                 updateStore={props.updateStore}
                                 updateHiddenPage={props.updateHiddenPage}

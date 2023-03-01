@@ -102,6 +102,7 @@ function SciViz(props: SciVizProps) {
                     key={JSON.stringify(page)}
                     jwtToken={props.jwtToken}
                     page={page}
+                    queryClient={props.queryClient}
                     updateHiddenPage={updateHiddenPage}
                 />
             )
@@ -125,6 +126,7 @@ function SciViz(props: SciVizProps) {
                         key={JSON.stringify(page)}
                         jwtToken={props.jwtToken}
                         page={page}
+                        queryClient={props.queryClient}
                         updateHiddenPage={updateHiddenPage}
                     />
                 )
