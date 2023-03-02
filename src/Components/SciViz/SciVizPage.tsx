@@ -15,6 +15,15 @@ interface PageProps {
     /** The query client to use for dynamic form queries */
     queryClient?: QueryClient
 
+    /** An override for the query prefix */
+    apiPrefix?: string
+
+    /** An override for the query suffix */
+    apiSuffix?: string
+
+    /** An override for the loading spinner */
+    spinner?: JSX.Element
+
     /** A callback function for handling hidden pages */
     updateHiddenPage?: (route: string, queryParams: string) => void
 }
@@ -25,6 +34,9 @@ interface PageProps {
  * @param {SciVizPageType} page - The data of the page
  * @param {string=} [jwtToken] - A JWT token to perform queries
  * @param {QueryClient=} queryClient - The query client to use for dynamic form queries
+ * @param {string=} apiPrefix - An override for the query prefix
+ * @param {string=} apiSuffix - An override for the query suffix
+ * @param {JSX.Element=} spinner - An override for the loading spinner
  * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz page
@@ -73,6 +85,9 @@ function SciVizPage(props: PageProps) {
                             restrictionList={[...restrictionList]}
                             store={Object.assign({}, store)}
                             queryClient={props.queryClient}
+                            apiPrefix={props.apiPrefix}
+                            apiSuffix={props.apiSuffix}
+                            spinner={props.spinner}
                             updateRestrictionList={updateRestrictionList}
                             updateStore={updateStore}
                             updateHiddenPage={props.updateHiddenPage}

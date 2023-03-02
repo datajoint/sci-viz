@@ -30,6 +30,9 @@ interface formProps {
     channelList?: Array<string>
     store?: RestrictionStore
     databaseHost?: string
+    apiPrefix?: string
+    apiSuffix?: string
+    spinner?: JSX.Element
 }
 
 interface attributeFieldData {
@@ -90,13 +93,9 @@ function DynamicForm(props: formProps) {
     }
 
     const insertPayload = async (payload: { submissions: formPayloadData[] }) => {
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${
+        let apiUrl = `${props.apiPrefix || process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${
             props.route
-        }?${queryParamList.join('&')}`
-
-        if (props.databaseHost) {
-            apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
-        }
+        }${props.apiSuffix || (queryParamList.length ? `?${queryParamList.join('&')}` : '')}`
 
         return fetch(apiUrl, {
             method: 'POST',
@@ -138,9 +137,11 @@ function DynamicForm(props: formProps) {
     })
 
     const getFormFieldData = async (): Promise<fieldsData> => {
-        let apiUrl = `${
-            process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX
-        }${props.route!}/fields?${queryParamList.join('&')}`
+        let apiUrl = `${props.apiPrefix || process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${
+            props.route
+        }/fields${
+            props.apiSuffix || (queryParamList.length ? `?${queryParamList.join('&')}` : '')
+        }`
 
         if (props.databaseHost) {
             apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
@@ -292,22 +293,9 @@ function DynamicForm(props: formProps) {
         else return <>Datatype not yet supported</>
     }
 
-    if (
-        status === 'loading' ||
-        (props.store &&
-            props.channelList &&
-            !props.channelList.every((val) => Object.keys(props.store!).includes(val)))
-    ) {
-        return <Spin size='default' />
-    } else if (status === 'error') {
+    if (status === 'error') {
         return <Alert message='Form failed to generate' type='error' />
     }
-    let layout5 = fieldData!.fields.map((field, i) => {
-        return { i: field.name, x: i % 5, y: Math.floor(i / 5), w: 1, h: 1 }
-    })
-    let layout3 = fieldData!.fields.map((field, i) => {
-        return { i: field.name, x: i % 3, y: Math.floor(i / 3), w: 1, h: 1 }
-    })
     return (
         <Card
             title={props.name}
@@ -315,63 +303,90 @@ function DynamicForm(props: formProps) {
             bodyStyle={{ height: '100%' }}
             hoverable={true}
         >
-            <Form
-                name='Multi-table Insert'
-                layout='vertical'
-                onFinish={handleSubmit}
-                disabled={insertLoading}
-            >
-                <ResponsiveGridLayout
-                    className='formGrid'
-                    rowHeight={100}
-                    autoSize={true}
-                    isDraggable={false}
-                    isResizable={false}
-                    breakpoints={{ lg: 1200, md: 800 }}
-                    cols={{ lg: 5, md: 3 }}
-                    layouts={{ lg: layout5, md: layout3 }}
+            {status === 'loading' ||
+            (props.store &&
+                props.channelList &&
+                !props.channelList.every((val) => Object.keys(props.store!).includes(val))) ? (
+                props.spinner || <Spin size='default' />
+            ) : (
+                <Form
+                    name='Multi-table Insert'
+                    layout='vertical'
+                    onFinish={handleSubmit}
+                    disabled={insertLoading}
                 >
-                    {fieldData!.fields.map((field) => (
-                        <div key={field.name}>
-                            <Form.Item
-                                style={{ margin: 0, padding: 0 }}
-                                label={field.name}
-                                name={field.name}
-                                rules={[
-                                    {
-                                        required: !field.default
-                                    }
-                                ]}
-                            >
-                                {generateFieldItem(field)}
-                            </Form.Item>
-                            {field.hasOwnProperty('datatype') &&
-                            /^datetime\(\d+\)|time.*\(\d+\)$/.test(
-                                (field as attributeFieldData).datatype
-                            ) ? (
-                                <Alert
-                                    style={{ margin: 0, padding: 0 }}
-                                    message='Time precision will be rounded to the second'
-                                    type='warning'
-                                />
-                            ) : (
-                                <></>
-                            )}
-                        </div>
-                    ))}
-                </ResponsiveGridLayout>
-                <Form.Item>
-                    <Button
-                        type='primary'
-                        size='large'
-                        shape='round'
-                        htmlType='submit'
-                        loading={insertLoading}
+                    <ResponsiveGridLayout
+                        className='formGrid'
+                        rowHeight={100}
+                        autoSize={true}
+                        isDraggable={false}
+                        isResizable={false}
+                        breakpoints={{ lg: 1200, md: 800 }}
+                        cols={{ lg: 5, md: 3 }}
+                        layouts={{
+                            lg: fieldData!.fields.map((field, i) => {
+                                return {
+                                    i: field.name,
+                                    x: i % 5,
+                                    y: Math.floor(i / 5),
+                                    w: 1,
+                                    h: 1
+                                }
+                            }),
+                            md: fieldData!.fields.map((field, i) => {
+                                return {
+                                    i: field.name,
+                                    x: i % 3,
+                                    y: Math.floor(i / 3),
+                                    w: 1,
+                                    h: 1
+                                }
+                            })
+                        }}
                     >
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
+                        {fieldData!.fields.map((field) => (
+                            <div key={field.name}>
+                                <Form.Item
+                                    style={{ margin: 0, padding: 0 }}
+                                    label={field.name}
+                                    name={field.name}
+                                    rules={[
+                                        {
+                                            required: !field.default
+                                        }
+                                    ]}
+                                >
+                                    {generateFieldItem(field)}
+                                </Form.Item>
+                                {field.hasOwnProperty('datatype') &&
+                                /^datetime\(\d+\)|time.*\(\d+\)$/.test(
+                                    (field as attributeFieldData).datatype
+                                ) ? (
+                                    <Alert
+                                        style={{ margin: 0, padding: 0 }}
+                                        message='Time precision will be rounded to the second'
+                                        type='warning'
+                                    />
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
+                        ))}
+                    </ResponsiveGridLayout>
+                    <Form.Item style={{ position: 'fixed', bottom: '30px' }}>
+                        <Button
+                            style={{ position: 'fixed', bottom: '30px' }}
+                            type='primary'
+                            size='large'
+                            shape='round'
+                            htmlType='submit'
+                            loading={insertLoading}
+                        >
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            )}
         </Card>
     )
 }

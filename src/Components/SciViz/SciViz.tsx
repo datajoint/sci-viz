@@ -17,6 +17,15 @@ interface SciVizProps {
 
     /** The query client to use for dynamic form queries */
     queryClient?: QueryClient
+
+    /** An override for the query prefix */
+    apiPrefix?: string
+
+    /** An override for the query suffix */
+    apiSuffix?: string
+
+    /** An override for the loading spinner */
+    spinner?: JSX.Element
 }
 
 /** The interface for an antd Tab item */
@@ -38,6 +47,10 @@ interface TabItem {
  * @param {string} baseURL - The URL that SciViz will be hosted at
  * @param {string=} [jwtToken] - A JWT token to perform queries
  * @param {QueryClient=} queryClient - The query client to use for dynamic form queries
+ * @param {QueryClient=} queryClient - The query client to use for dynamic form queries
+ * @param {string=} apiPrefix - An override for the query prefix
+ * @param {string=} apiSuffix - An override for the query suffix
+ * @param {JSX.Element=} spinner - An override for the loading spinner
  *
  * @returns A SciViz app
  */
@@ -103,6 +116,9 @@ function SciViz(props: SciVizProps) {
                     jwtToken={props.jwtToken}
                     page={page}
                     queryClient={props.queryClient}
+                    apiPrefix={props.apiPrefix}
+                    apiSuffix={props.apiSuffix}
+                    spinner={props.spinner}
                     updateHiddenPage={updateHiddenPage}
                 />
             )
@@ -127,6 +143,9 @@ function SciViz(props: SciVizProps) {
                         jwtToken={props.jwtToken}
                         page={page}
                         queryClient={props.queryClient}
+                        apiPrefix={props.apiPrefix}
+                        apiSuffix={props.apiSuffix}
+                        spinner={props.spinner}
                         updateHiddenPage={updateHiddenPage}
                     />
                 )
