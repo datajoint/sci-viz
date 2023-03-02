@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from 'react-query'
 import {
     ComponentTypes,
     DropdownQueryComponent,
@@ -49,6 +50,9 @@ interface ComponentProps {
     /** An information store for linked components */
     store?: RestrictionStore
 
+    /** The query client to use for dynamic form queries */
+    queryClient?: QueryClient
+
     /** A callback function to refresh the restriction list */
     updateRestrictionList?: (queryParams: string) => string
 
@@ -68,6 +72,7 @@ interface ComponentProps {
  * @param {string=} jwtToken - A JWT token to perform queries
  * @param {string[]=} restrictionList - A list of restrictions for queried components
  * @param {RestrictionStore=} store - An information store for linked components
+ * @param {QueryClient=} queryClient - The query client to use for dynamic form queries
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
  * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
  * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
@@ -162,15 +167,18 @@ function SciVizComponent(props: ComponentProps) {
     } else if (/^form.*$/.test(type)) {
         const compData = props.component as FormComponent
         comp = (
-            <DynamicForm
-                key={JSON.stringify(compData)}
-                token={props.jwtToken!}
-                route={compData.route}
-                name={props.name}
-                height={calculatedHeight}
-                store={Object.assign({}, props.store)}
-                channelList={compData.channels}
-            />
+            <QueryClientProvider client={props.queryClient!}>
+                <DynamicForm
+                    key={JSON.stringify(compData)}
+                    token={props.jwtToken!}
+                    route={compData.route}
+                    name={props.name}
+                    height={calculatedHeight}
+                    queryClient={props.queryClient!}
+                    store={Object.assign({}, props.store)}
+                    channelList={compData.channels}
+                />
+            </QueryClientProvider>
         )
     } else if (/^slideshow.*$/.test(type)) {
         const compData = props.component as SlideshowComponent

@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import { Spin } from 'antd'
 import { Responsive, WidthProvider } from 'react-grid-layout'
+import { QueryClient } from 'react-query'
 import {
     GridTypes,
     SciVizFixedGrid,
@@ -31,6 +32,9 @@ interface GridProps {
     /** An information store for grids with linked components */
     store?: RestrictionStore
 
+    /** The query client to use for dynamic form queries */
+    queryClient?: QueryClient
+
     /** A callback function to refresh the restriction list */
     updateRestrictionList?: (queryParams: string) => string
 
@@ -49,6 +53,7 @@ interface GridProps {
  * @param {string=} jwtToken - A JWT token to perform queries
  * @param {string[]=} restrictionList - A list of restrictions for grids with queried components
  * @param {RestrictionStore=} store - An information store for grids with linked components
+ * @param {QueryClient=} queryClient - The query client to use for dynamic form queries
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
  * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
  * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
@@ -89,6 +94,7 @@ function SciVizGrid(props: GridProps) {
                                 height={gridData.row_height}
                                 restrictionList={[...props.restrictionList!]}
                                 store={Object.assign({}, props.store)}
+                                queryClient={props.queryClient}
                                 updateRestrictionList={props.updateRestrictionList}
                                 updateStore={props.updateStore}
                                 updateHiddenPage={props.updateHiddenPage}

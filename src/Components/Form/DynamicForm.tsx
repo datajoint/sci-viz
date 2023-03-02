@@ -12,7 +12,7 @@ import {
     Spin
 } from 'antd'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useQuery, useMutation, QueryClient } from 'react-query'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 const { TextArea } = Input
@@ -26,6 +26,7 @@ interface formProps {
     route: string
     name: string
     height: number
+    queryClient: QueryClient
     channelList?: Array<string>
     store?: RestrictionStore
     databaseHost?: string
@@ -56,7 +57,6 @@ interface formPayloadData {
 }
 
 function DynamicForm(props: formProps) {
-    const queryClient = useQueryClient()
     const openNotification = (
         type: 'success' | 'info' | 'warning' | 'error',
         title: string,
@@ -131,7 +131,7 @@ function DynamicForm(props: formProps) {
     }
     const { mutate: insert, isLoading: insertLoading } = useMutation(insertPayload, {
         onSuccess: () => {
-            queryClient.refetchQueries({
+            props.queryClient.refetchQueries({
                 predicate: (query) => query.queryKey.includes('_form') && query.isActive()
             })
         }
