@@ -1,7 +1,6 @@
 import React from 'react'
 import { Card, Table, TablePaginationConfig } from 'antd'
 import type { FilterValue } from 'antd/es/table/interface'
-import { Redirect } from 'react-router-dom'
 
 interface RestrictionStore {
     [key: string]: Array<string>
