@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import Cookies from 'js-cookie'
 import './Login.css'
 
-// Assets
-import logo from '../../logo.svg'
-
 interface LoginProps {
     setJWTTokenAndHostName: (jwt: string, hostname: string) => void // Call back function to setting the jwtToken
     imageRoute?: string
@@ -59,14 +56,13 @@ export default class Login extends Component<LoginProps, LoginState> {
      */
     componentDidMount() {
         // Load databaseAddress and usernameCookie from cookies
+        var usernameCookie = Cookies.get('username')
         if (this.props.defaultAddress) {
-            var usernameCookie = Cookies.get('username')
             this.setState({
                 username: usernameCookie === undefined ? '' : usernameCookie
             })
         } else {
             var databaseAddressCookie = Cookies.get('databaseAddress')
-            var usernameCookie = Cookies.get('username')
 
             this.setState({
                 databaseAddress:
