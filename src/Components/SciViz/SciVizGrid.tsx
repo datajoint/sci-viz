@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import { Spin } from 'antd'
 import { Responsive, WidthProvider } from 'react-grid-layout'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import {
     GridTypes,
     SciVizFixedGrid,
@@ -31,6 +32,18 @@ interface GridProps {
     /** An information store for grids with linked components */
     store?: RestrictionStore
 
+    /** The query client to use for dynamic form queries */
+    queryClient?: QueryClient
+
+    /** An override for the query prefix */
+    apiPrefix?: string
+
+    /** An override for the query suffix */
+    apiSuffix?: string
+
+    /** An override for the loading spinner */
+    spinner?: JSX.Element
+
     /** A callback function to refresh the restriction list */
     updateRestrictionList?: (queryParams: string) => string
 
@@ -49,6 +62,10 @@ interface GridProps {
  * @param {string=} jwtToken - A JWT token to perform queries
  * @param {string[]=} restrictionList - A list of restrictions for grids with queried components
  * @param {RestrictionStore=} store - An information store for grids with linked components
+ * @param {QueryClient=} queryClient - The query client to use for dynamic form queries
+ * @param {string=} apiPrefix - An override for the query prefix
+ * @param {string=} apiSuffix - An override for the query suffix
+ * @param {JSX.Element=} spinner - An override for the loading spinner
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
  * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
  * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
@@ -81,18 +98,24 @@ function SciVizGrid(props: GridProps) {
                                 static: true
                             }}
                         >
-                            <SciVizComponent
-                                key={JSON.stringify(component)}
-                                name={name}
-                                component={component}
-                                jwtToken={props.jwtToken}
-                                height={gridData.row_height}
-                                restrictionList={[...props.restrictionList!]}
-                                store={Object.assign({}, props.store)}
-                                updateRestrictionList={props.updateRestrictionList}
-                                updateStore={props.updateStore}
-                                updateHiddenPage={props.updateHiddenPage}
-                            />
+                            <QueryClientProvider client={props.queryClient!}>
+                                <SciVizComponent
+                                    key={JSON.stringify(component)}
+                                    name={name}
+                                    component={component}
+                                    jwtToken={props.jwtToken}
+                                    height={gridData.row_height}
+                                    restrictionList={[...props.restrictionList!]}
+                                    store={Object.assign({}, props.store)}
+                                    queryClient={props.queryClient}
+                                    apiPrefix={props.apiPrefix}
+                                    apiSuffix={props.apiSuffix}
+                                    spinner={props.spinner}
+                                    updateRestrictionList={props.updateRestrictionList}
+                                    updateStore={props.updateStore}
+                                    updateHiddenPage={props.updateHiddenPage}
+                                />
+                            </QueryClientProvider>
                         </div>
                     ))}
                 </ResponsiveGridLayout>

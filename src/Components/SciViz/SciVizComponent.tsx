@@ -1,3 +1,4 @@
+import { QueryClient } from 'react-query'
 import {
     ComponentTypes,
     DropdownQueryComponent,
@@ -48,6 +49,18 @@ interface ComponentProps {
     /** An information store for linked components */
     store?: RestrictionStore
 
+    /** The query client to use for dynamic form queries */
+    queryClient?: QueryClient
+
+    /** An override for the query prefix */
+    apiPrefix?: string
+
+    /** An override for the query suffix */
+    apiSuffix?: string
+
+    /** An override for the loading spinner */
+    spinner?: JSX.Element
+
     /** A callback function to refresh the restriction list */
     updateRestrictionList?: (queryParams: string) => string
 
@@ -67,6 +80,10 @@ interface ComponentProps {
  * @param {string=} jwtToken - A JWT token to perform queries
  * @param {string[]=} restrictionList - A list of restrictions for queried components
  * @param {RestrictionStore=} store - An information store for linked components
+ * @param {QueryClient=} queryClient - The query client to use for dynamic form queries
+ * @param {string=} apiPrefix - An override for the query prefix
+ * @param {string=} apiSuffix - An override for the query suffix
+ * @param {JSX.Element=} spinner - An override for the loading spinner
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
  * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
  * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
@@ -153,6 +170,10 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 name={props.name}
                 height={calculatedHeight}
+                queryClient={props.queryClient!}
+                apiPrefix={props.apiPrefix}
+                apiSuffix={props.apiSuffix}
+                spinner={props.spinner}
                 store={Object.assign({}, props.store)}
                 channelList={compData.channels}
             />
