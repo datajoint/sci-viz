@@ -201,7 +201,7 @@ SciViz: # top level tab
               y: 1
               height: 1
               width: 1
-              type: table
+              type: antd-table
               link: /hiddenpage
               restriction: >
                 def restriction(**kwargs):
@@ -246,7 +246,7 @@ SciViz: # top level tab
               y: 1
               height: 1
               width: 1
-              type: table
+              type: antd-table
               link: /hiddenpage
               restriction: >
                 def restriction(**kwargs):
@@ -411,7 +411,7 @@ SciViz: # top level tab
                     return dict(query=(MousePlots), fetch_args=['plot'])
             comp3:
               route: /myTableD
-              type: table
+              type: antd-table
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -471,7 +471,7 @@ SciViz: # top level tab
                 - type: attribute
                   input: B Number
                   destination: b_number
-                - type: table
+                - type: antd-table
                   input: Table A
                   destination: test_group1_simple.TableA
                   map:
@@ -498,7 +498,7 @@ SciViz: # top level tab
                 - type: attribute
                   input: B Number
                   destination: b_number
-                - type: table
+                - type: antd-table
                   input: Table A
                   destination: test_group1_simple.TableA
                 - type: attribute

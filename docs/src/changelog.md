@@ -2,6 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [2.0.1] - TBD
+
+### Removed
+
+- All deprecated files from source
+
 ## [2.0.0] - 02-17-23
 
 ### Changed

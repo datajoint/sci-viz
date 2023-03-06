@@ -15,7 +15,6 @@ import {
     DateRangePickerComponent,
     RestrictionStore
 } from './SciVizInterfaces'
-import TableView from '../Table/TableView'
 import DjTable from '../Table/DjTable'
 import FullPlotly from '../Plots/FullPlotly'
 import Metadata from '../Table/Metadata'
@@ -142,20 +141,6 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 height={calculatedHeight}
                 restrictionList={[...props.restrictionList!]}
-            />
-        )
-    } else if (/^table.*$/.test(type)) {
-        const compData = props.component as TableComponent
-        comp = (
-            <TableView
-                key={JSON.stringify(compData)}
-                token={props.jwtToken!}
-                route={compData.route}
-                tableName={props.name}
-                link={compData.link}
-                channel={compData.channel}
-                updateRestrictionList={props.updateRestrictionList!}
-                updatePageStore={props.updateStore!}
             />
         )
     } else if (/^antd-table.*$/.test(type)) {
