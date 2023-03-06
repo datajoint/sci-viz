@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useQueryClient } from 'react-query'
 import Login from './Components/Login/Login'
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
@@ -18,6 +19,7 @@ interface DJGUIAppState {
 }
 
 function App() {
+    const queryClient = useQueryClient()
     const [state, setState] = useState<DJGUIAppState>({
         jwtToken: '',
         hostname: '',
@@ -77,6 +79,7 @@ function App() {
                                 spec={state.spec}
                                 baseURL={state.baseURL}
                                 jwtToken={state.jwtToken}
+                                queryClient={queryClient}
                             />
                         </>
                     )}
