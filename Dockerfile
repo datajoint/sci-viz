@@ -17,7 +17,6 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 RUN pip3 install pyyaml
 
 COPY ./tsconfig.json /main
-COPY ./frontend_gen.py .
 COPY ./src /main/src
 COPY ./public /main/public
 COPY ./default.conf /etc/nginx/http.d/
