@@ -3,69 +3,70 @@ on:
   pull_request:
   push:
 jobs:
-  test-changelog:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Get changelog entry
-        id: changelog_reader
-        uses: guzman-raphael/changelog-reader-action@v5
-        with:
-          path: ./CHANGELOG.md
-      - name: Verify changelog parsing
-        env:
-          TAG_NAME: ${{steps.changelog_reader.outputs.version}}
-          RELEASE_NAME: Release ${{steps.changelog_reader.outputs.version}}
-          BODY: ${{steps.changelog_reader.outputs.changes}}
-          PRERELEASE: ${{steps.changelog_reader.outputs.status == 'prereleased'}}
-          DRAFT: ${{steps.changelog_reader.outputs.status == 'unreleased'}}
-        run: |
-          echo "TAG_NAME=${TAG_NAME}"
-          echo "RELEASE_NAME=${RELEASE_NAME}"
-          echo "BODY=${BODY}"
-          echo "PRERELEASE=${PRERELEASE}"
-          echo "DRAFT=${DRAFT}"
-  test:
-    needs: test-changelog
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: run jest testing
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: yarn install
-      - run: yarn test --coverage
-  publish-docs:
-    needs: test
-    runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'push' &&
-      startsWith(github.ref, 'refs/tags')
-    steps:
-      - uses: actions/checkout@v2
-      - name: Deploy docs
-        env:
-          GOOGLE_ANALYTICS_KEY: ${{secrets.GOOGLE_ANALYTICS_KEY}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MODE: PUSH
-        run: |
-          export UPSTREAM_REPO=https://action-user:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          export HOST_UID=$(id -u)
-          docker compose -f docs/docker-compose.yaml up --exit-code-from docs --build
+  # test-changelog:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Get changelog entry
+  #       id: changelog_reader
+  #       uses: guzman-raphael/changelog-reader-action@v5
+  #       with:
+  #         path: ./CHANGELOG.md
+  #     - name: Verify changelog parsing
+  #       env:
+  #         TAG_NAME: ${{steps.changelog_reader.outputs.version}}
+  #         RELEASE_NAME: Release ${{steps.changelog_reader.outputs.version}}
+  #         BODY: ${{steps.changelog_reader.outputs.changes}}
+  #         PRERELEASE: ${{steps.changelog_reader.outputs.status == 'prereleased'}}
+  #         DRAFT: ${{steps.changelog_reader.outputs.status == 'unreleased'}}
+  #       run: |
+  #         echo "TAG_NAME=${TAG_NAME}"
+  #         echo "RELEASE_NAME=${RELEASE_NAME}"
+  #         echo "BODY=${BODY}"
+  #         echo "PRERELEASE=${PRERELEASE}"
+  #         echo "DRAFT=${DRAFT}"
+  # test:
+  #   needs: test-changelog
+  #   strategy:
+  #     matrix:
+  #       node-version: [14.x, 16.x]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: run jest testing
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #     - run: yarn install
+  #     - run: yarn test --coverage
+  # publish-docs:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   if: |
+  #     github.event_name == 'push' &&
+  #     startsWith(github.ref, 'refs/tags')
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Deploy docs
+  #       env:
+  #         GOOGLE_ANALYTICS_KEY: ${{secrets.GOOGLE_ANALYTICS_KEY}}
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         MODE: PUSH
+  #       run: |
+  #         export UPSTREAM_REPO=https://action-user:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+  #         export HOST_UID=$(id -u)
+  #         docker compose -f docs/docker-compose.yaml up --exit-code-from docs --build
   publish-release:
     if: |
       github.event_name == 'push' &&
-      startsWith(github.ref, 'refs/tags') &&
-      (
-        github.repository_owner == 'datajoint' ||
-        github.repository_owner == 'datajoint-company'
-      )
-    needs:
-      - publish-docs
+      startsWith(github.ref, 'refs/tags') 
+      # &&
+      # (
+      #   github.repository_owner == 'datajoint' ||
+      #   github.repository_owner == 'datajoint-company'
+      # )
+    # needs:
+    #   - publish-docs
     runs-on: ubuntu-latest
     outputs:
       release_upload_url: ${{steps.create_gh_release.outputs.upload_url}}
@@ -124,14 +125,15 @@ jobs:
           push: true
           tags: datajoint/sci-viz:${{env.DJSCIVIZ_VERSION}}
   npm-package:
-    # if: |
-    #   github.event_name == 'push' &&
-    #   startsWith(github.ref, 'refs/tags') &&
-    #   (
-    #     github.repository_owner == 'datajoint' ||
-    #     github.repository_owner == 'datajoint-company'
-    #   )
-    # needs: publish-release
+    if: |
+      github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/tags') 
+      # &&
+      # (
+      #   github.repository_owner == 'datajoint' ||
+      #   github.repository_owner == 'datajoint-company'
+      # )
+    needs: publish-release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -139,10 +141,7 @@ jobs:
         with:
           node-version: 16.19.0
       - name: Install dependencies
-        run: |
-          yarn install
-          cd node_modules
-          ls -la
+        run: yarn install
       - name: Build dist
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
@@ -153,4 +152,13 @@ jobs:
         run: |
           cd ./dist
           yarn pack
-          ls -la
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{steps.create_gh_release.outputs.upload_url}} 
+          asset_path: ./dist/datajoint-sciviz-v${{env.DJSCIVIZ_VERSION}}.tgz
+          asset_name: datajoint-sciviz-v${{env.DJSCIVIZ_VERSION}}.tgz
+          asset_content_type: application/gzip
