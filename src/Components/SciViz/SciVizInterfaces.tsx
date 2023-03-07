@@ -12,7 +12,7 @@ export interface SciVizSpec {
         pages: { [key: string]: SciVizPageType }
 
         /** A flag to set authentication */
-        auth: {
+        auth?: {
             /** The authentication method to use */
             mode: 'database' | 'oidc' | 'none'
             /** The authentication endpoint for OIDC */
