@@ -10,7 +10,11 @@ SciViz: # top level tab
   hostname: 'localdb'
   login:
     image_route: /logo.svg # In /public dir
-  auth: True
+  auth: 
+    mode: 'database'
+    endpoint: https://keycloak.dev.datajoint.io/realms/master
+    database: xtradb.dev.datajoint.io
+    client_id: my-client
   pages: # individual pages
     # The first page in the list of pages is the splash page after login
     # By convention this should be a home page with a markdown component
