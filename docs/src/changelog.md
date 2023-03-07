@@ -10,7 +10,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ### Removed
 
-- All deprecated files from source
+- All deprecated files from source PR [#90](https://github.com/datajoint/sci-viz/pull/90)
 
 ## [2.0.0] - 02-17-23
 
