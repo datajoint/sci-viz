@@ -59,6 +59,14 @@ services:
       - PHARUS_USER
       - PHARUS_HOST
       - PHARUS_PASSWORD
+      - PHARUS_OIDC_CLIENT_SECRET
+      - PHARUS_OIDC_CLIENT_ID
+      - PHARUS_OIDC_REDIRECT_URI
+      - PHARUS_OIDC_CODE_VERIFIER
+      - PHARUS_OIDC_TOKEN_URL
+      - PHARUS_OIDC_PUBLIC_KEY
+      - PHARUS_OIDC_SUBJECT_KEY=preferred_username
+    env_file: ./.env
     volumes:
       - ./test:/tmp/test
       - ./test/test_spec.yaml:/main/specs/test_spec.yaml
