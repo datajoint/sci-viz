@@ -668,7 +668,7 @@ SciViz: # top level tab
               height: 1
               width: 1
               type: iframe
-              url: https://www.youtube.com/embed/0YGzlNEUwuU
+              url: https://guzman-raphael-streamlit-examp-authenticated-appsapp1app-3jm4w7.streamlit.app/?database_host=xtradb.dev.datajoint.io&context={%22try%22:%20%22this%22,%20%22for%22:%20%22once%22}&embed=true
 
     Hidden Page:
       route: /hiddenpage
