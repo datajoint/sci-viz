@@ -71,14 +71,14 @@ function App() {
     }, [])
 
     if (!state.spec) return <Spin tip='Retrieving SciViz Spec' size='large' />
-    else if (state.spec.SciViz.auth.oidc && !state.code && !state.jwtToken) {
+    else if (state.spec.SciViz.auth.mode === 'oidc' && !state.code && !state.jwtToken) {
         const redirect = window.location.hostname
         let transmitted_state: string = encodeURIComponent(
             JSON.stringify({ nextUrl: `${window.location.pathname}${window.location.search}` })
         )
         window.location.href = `${state.spec.SciViz.auth.endpoint}/protocol/openid-connect/auth?scope=openid&response_type=code&client_id=${state.spec.SciViz.auth.client_id}&code_challenge=ubNp9Y0Y_FOENQ_Pz3zppyv2yyt0XtJsaPqUgGW9heA&code_challenge_method=S256&redirect_uri=https://${redirect}&state=${transmitted_state}`
         return <Spin size='large' />
-    } else if (!state.spec.SciViz.auth.oidc && !state.jwtToken) {
+    } else if (state.spec.SciViz.auth.mode === 'database' && !state.jwtToken) {
         return (
             <React.StrictMode>
                 <Header

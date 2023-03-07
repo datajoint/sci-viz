@@ -11,7 +11,7 @@ SciViz: # top level tab
   login:
     image_route: /logo.svg # In /public dir
   auth: 
-    oidc: True
+    mode: 'database'
     endpoint: https://keycloak.dev.datajoint.io/realms/master
     database: xtradb.dev.datajoint.io
     client_id: my-client

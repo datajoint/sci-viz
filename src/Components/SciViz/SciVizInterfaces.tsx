@@ -13,8 +13,8 @@ export interface SciVizSpec {
 
         /** A flag to set authentication */
         auth: {
-            /** Whether or not to use OIDC authentication */
-            oidc: boolean
+            /** The authentication method to use */
+            mode: 'database' | 'oidc' | 'none'
             /** The authentication endpoint for OIDC */
             endpoint?: string
             /** The authentication database for OIDC */
