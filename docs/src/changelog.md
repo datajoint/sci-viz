@@ -4,6 +4,10 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ## [2.0.1] - TBD
 
+## Added
+
+- OIDC authentication ([#68](https://github.com/datajoint/sci-viz/issues/68)) PR [#91](https://github.com/datajoint/sci-viz/pull/91)
+
 ### Removed
 
 - All deprecated files from source
