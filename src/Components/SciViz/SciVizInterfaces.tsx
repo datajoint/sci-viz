@@ -122,6 +122,7 @@ export type ComponentTypes =
     | TableComponent
     | SlideshowComponent
     | DateRangePickerComponent
+    | IFrameComponent
 
 /** All SciViz components that are compatible with dynamic grids */
 export type DynamicGridComponentTypes = MetadataComponent | PlotComponent
@@ -180,6 +181,15 @@ export interface SliderComponent extends SciVizComponent, SciVizQueried {
 
     /** The list of channels to listen to */
     channels?: string[]
+}
+
+/**
+ * The interface for IFrame components
+ * @extends {SciVizComponent} - The base interface
+ */
+export interface IFrameComponent extends SciVizComponent {
+    /** The URL to embed in the iframe */
+    url: string
 }
 
 /**

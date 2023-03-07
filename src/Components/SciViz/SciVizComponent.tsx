@@ -12,6 +12,7 @@ import {
     TableComponent,
     SlideshowComponent,
     DateRangePickerComponent,
+    IFrameComponent,
     RestrictionStore
 } from './SciVizInterfaces'
 import DjTable from '../Table/DjTable'
@@ -26,6 +27,7 @@ import DropdownQuery from '../Emitters/DropdownQuery'
 import RadioButtons from '../Emitters/RadioButtons'
 import Slideshow from '../Slideshow'
 import DateRangePicker from '../Emitters/DateRangePicker'
+import SciVizIFrame from '../IFrame/SciVizIFrame'
 import './Page.css'
 
 /** The interface for the SciVizComponent props */
@@ -172,6 +174,15 @@ function SciVizComponent(props: ComponentProps) {
                 restrictionList={[...props.restrictionList!]}
                 store={Object.assign({}, props.store)}
                 channelList={compData.channels}
+            />
+        )
+    } else if (/^iframe.*$/.test(type)) {
+        const compData = props.component as IFrameComponent
+        comp = (
+            <SciVizIFrame
+                key={JSON.stringify(compData)}
+                height={calculatedHeight}
+                url={compData.url}
             />
         )
     } else if (/^slider.*$/.test(type)) {
