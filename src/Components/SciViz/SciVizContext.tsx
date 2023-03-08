@@ -1,6 +1,6 @@
 import { createContext } from 'react'
-import { SciVizContextType } from './SciVizInterfaces'
+import { ExternalContextType } from './SciVizInterfaces'
 
-export const SciVizContext = createContext<SciVizContextType>({
+export const ExternalContext = createContext<ExternalContextType>({
     componentContext: undefined
 })

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Spin } from 'antd'
 import { SciVizSpec } from './Components/SciViz/SciVizInterfaces'
-import { SciVizContext } from './Components/SciViz/SciVizContext'
+import { ExternalContext } from './Components/SciViz/SciVizContext'
 import Login from './Components/Login/Login'
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
@@ -137,7 +137,7 @@ function App() {
     } else {
         return (
             <React.StrictMode>
-                <SciVizContext.Provider value={{ componentContext }}>
+                <ExternalContext.Provider value={{ componentContext }}>
                     <Header
                         text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
                         imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}
@@ -148,7 +148,7 @@ function App() {
                         jwtToken={state.jwtToken}
                     />
                     <Footer />
-                </SciVizContext.Provider>
+                </ExternalContext.Provider>
             </React.StrictMode>
         )
     }

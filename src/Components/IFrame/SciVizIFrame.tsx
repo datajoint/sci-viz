@@ -1,14 +1,15 @@
 import { useContext } from 'react'
 import { Card } from 'antd'
-import { SciVizContext } from '../SciViz/SciVizContext'
+import { ExternalContext } from '../SciViz/SciVizContext'
 
 interface iFrameProps {
     height: number
     url: string
+    databaseHost?: string
 }
 
 function SciVizIFrame(props: iFrameProps) {
-    const { componentContext } = useContext(SciVizContext)
+    const { componentContext } = useContext(ExternalContext)
     return (
         <Card
             style={{ width: '100%', height: props.height }}

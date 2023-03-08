@@ -1,6 +1,6 @@
 /** The interface for external SciViz context storage */
-export interface SciVizContextType {
-    componentContext?: any
+export interface ExternalContextType {
+    componentContext: any
 }
 
 /** The interface for a SciViz page's restriction storage */
