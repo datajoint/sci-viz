@@ -5,7 +5,8 @@ import {
     GridTypes,
     SciVizFixedGrid,
     SciVizDynamicGrid,
-    RestrictionStore
+    RestrictionStore,
+    SciVizSpec
 } from './SciVizInterfaces'
 import './Page.css'
 
@@ -18,6 +19,9 @@ const ResponsiveGridLayout = WidthProvider(Responsive)
 interface GridProps {
     /** The name of the grid */
     name: string
+
+    /** The top level SciViz spec */
+    spec: SciVizSpec
 
     /** The data of the grid */
     grid: GridTypes
@@ -45,6 +49,7 @@ interface GridProps {
  * Dynamically creates a SciViz grid
  *
  * @param {string} name - The name of the grid
+ * @param {SciVizSpec} spec - The top level SciViz spec
  * @param {ComponentTypes} grid - The data of the grid
  * @param {string=} jwtToken - A JWT token to perform queries
  * @param {string[]=} restrictionList - A list of restrictions for grids with queried components
@@ -84,6 +89,7 @@ function SciVizGrid(props: GridProps) {
                             <SciVizComponent
                                 key={JSON.stringify(component)}
                                 name={name}
+                                spec={props.spec}
                                 component={component}
                                 jwtToken={props.jwtToken}
                                 height={gridData.row_height}

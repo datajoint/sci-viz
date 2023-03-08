@@ -13,7 +13,8 @@ import {
     SlideshowComponent,
     DateRangePickerComponent,
     IFrameComponent,
-    RestrictionStore
+    RestrictionStore,
+    SciVizSpec
 } from './SciVizInterfaces'
 import DjTable from '../Table/DjTable'
 import FullPlotly from '../Plots/FullPlotly'
@@ -34,6 +35,9 @@ import './Page.css'
 interface ComponentProps {
     /** The name of the component */
     name: string
+
+    /** The top level SciViz spec */
+    spec: SciVizSpec
 
     /** The data of the component */
     component: ComponentTypes
@@ -64,6 +68,7 @@ interface ComponentProps {
  * Dynamically creates a SciViz component
  *
  * @param {string} name - The name of the component
+ * @param {SciVizSpec} spec - The top level SciViz spec
  * @param {ComponentTypes} component - The data of the component
  * @param {number} height - The height of the component
  * @param {string=} jwtToken - A JWT token to perform queries
@@ -183,6 +188,7 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 height={calculatedHeight}
                 url={compData.url}
+                databaseHost={props.spec.SciViz.auth?.database}
             />
         )
     } else if (/^slider.*$/.test(type)) {
