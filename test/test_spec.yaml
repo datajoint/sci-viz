@@ -658,17 +658,17 @@ SciViz: # top level tab
       grids:
         grid1:
           type: fixed
-          columns: 2
+          columns: 3
           row_height: 500
           components:
             IFrame Example:
               route: /iFrameExample
-              x: 0
+              x: 1
               y: 0
               height: 1
               width: 1
               type: iframe
-              url: https://guzman-raphael-streamlit-examp-authenticated-appsapp1app-3jm4w7.streamlit.app/?database_host=xtradb.dev.datajoint.io&context={%22try%22:%20%22this%22,%20%22for%22:%20%22once%22}&embed=true
+              url: https://guzman-raphael-streamlit-examp-authenticated-appsapp1app-3jm4w7.streamlit.app/?embed=true
 
     Hidden Page:
       route: /hiddenpage
