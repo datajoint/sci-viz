@@ -1,4 +1,6 @@
+import { useContext } from 'react'
 import { Card } from 'antd'
+import { SciVizContext } from '../SciViz/SciVizContext'
 
 interface iFrameProps {
     height: number
@@ -6,6 +8,7 @@ interface iFrameProps {
 }
 
 function SciVizIFrame(props: iFrameProps) {
+    const { componentContext } = useContext(SciVizContext)
     return (
         <Card
             style={{ width: '100%', height: props.height }}

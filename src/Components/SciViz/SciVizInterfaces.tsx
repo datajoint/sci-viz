@@ -1,3 +1,8 @@
+/** The interface for external SciViz context storage */
+export interface SciVizContextType {
+    componentContext?: any
+}
+
 /** The interface for a SciViz page's restriction storage */
 export interface RestrictionStore {
     /** The `channel` to `restriction list` */
@@ -11,7 +16,7 @@ export interface SciVizSpec {
         /** The dictionary of pages */
         pages: { [key: string]: SciVizPageType }
 
-        /** A flag to set authentication */
+        /** A SciViz deployment-specific key to set the authentication details */
         auth?: {
             /** The authentication method to use */
             mode: 'database' | 'oidc' | 'none'

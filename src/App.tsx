@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Spin } from 'antd'
 import { SciVizSpec } from './Components/SciViz/SciVizInterfaces'
+import { SciVizContext } from './Components/SciViz/SciVizContext'
 import Login from './Components/Login/Login'
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
@@ -46,6 +47,7 @@ function App() {
     document
         .getElementById('favicon')!
         .setAttribute('href', `${state.spec?.SciViz.favicon_name || '/favicon.ico'}`)
+    const componentContext = { context: 'hello' }
 
     /**
      * A callback function to set jwt token and host name
@@ -135,12 +137,18 @@ function App() {
     } else {
         return (
             <React.StrictMode>
-                <Header
-                    text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
-                    imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}
-                />
-                <SciViz spec={state.spec} baseURL={state.baseURL} jwtToken={state.jwtToken} />
-                <Footer />
+                <SciVizContext.Provider value={{ componentContext }}>
+                    <Header
+                        text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
+                        imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}
+                    />
+                    <SciViz
+                        spec={state.spec}
+                        baseURL={state.baseURL}
+                        jwtToken={state.jwtToken}
+                    />
+                    <Footer />
+                </SciVizContext.Provider>
             </React.StrictMode>
         )
     }
