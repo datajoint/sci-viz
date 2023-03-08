@@ -668,7 +668,7 @@ SciViz: # top level tab
               height: 1
               width: 1
               type: iframe
-              url: https://guzman-raphael-streamlit-examp-authenticated-appsapp1app-3jm4w7.streamlit.app/?embed=true
+              url: https://guzman-raphael-streamlit-examp-authenticated-appsapp1app-3jm4w7.streamlit.app/?embedded=true
 
     Hidden Page:
       route: /hiddenpage
