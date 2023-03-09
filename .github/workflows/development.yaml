@@ -147,4 +147,3 @@ jobs:
         with:
           push: true
           tags: datajoint/sci-viz:${{env.DJSCIVIZ_VERSION}}
-          
