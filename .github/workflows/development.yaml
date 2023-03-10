@@ -64,13 +64,15 @@ jobs:
         github.repository_owner == 'datajoint' ||
         github.repository_owner == 'datajoint-company'
       )
-    needs:
-      - publish-docs
+    needs: publish-docs
     runs-on: ubuntu-latest
     outputs:
       release_upload_url: ${{steps.create_gh_release.outputs.upload_url}}
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.19.0
       - name: Determine package version
         run: |
           DJSCIVIZ_VERSION=$(cat package.json | grep \"version\" | awk -F\" '{print $4}')
@@ -92,6 +94,28 @@ jobs:
           body: ${{steps.changelog_reader.outputs.changes}}
           prerelease: ${{steps.changelog_reader.outputs.status == 'prereleased'}}
           draft: ${{steps.changelog_reader.outputs.status == 'unreleased'}}
+      - name: Install dependencies
+        run: yarn install
+      - name: Build dist
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+        run: yarn rollup -c
+      - name: Copy package.json
+        run: cp ./package.json ./dist
+      - name: Package Dist
+        run: |
+          cd ./dist
+          yarn pack
+      - name: Upload npm package
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{steps.create_gh_release.outputs.upload_url}} 
+          asset_path: ./dist/datajoint-sciviz-v${{env.DJSCIVIZ_VERSION}}.tgz
+          asset_name: datajoint-sciviz-v${{env.DJSCIVIZ_VERSION}}.tgz
+          asset_content_type: application/gzip
   publish-images:
     if: |
       github.event_name == 'push' &&
