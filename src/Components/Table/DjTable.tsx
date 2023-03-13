@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Table, TablePaginationConfig } from 'antd'
+import { Card, PaginationProps, Table, TablePaginationConfig } from 'antd'
 import type { FilterValue } from 'antd/es/table/interface'
 
 interface RestrictionStore {
@@ -19,6 +19,7 @@ interface DjTableProps {
     channelList?: Array<string>
     store?: RestrictionStore
     databaseHost?: string
+    pageSizeDefault?: number
 }
 
 interface DjTableState {
@@ -74,7 +75,7 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                 attributeHeaders: [],
                 attributes: { primary: [], secondary: [] }
             },
-            numberOfTuples: 5, //limit
+            numberOfTuples: props.pageSizeDefault || 5, //limit
             offset: 1, //offset
             filter: {},
             sorter: [],
@@ -402,6 +403,10 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
         }
     }
 
+    onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+        this.setState({ numberOfTuples: pageSize })
+    }
+
     parseDate(dateTimeString: string) {
         // Handle case with null
         let microseconds = ''
@@ -536,7 +541,22 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                     total: this.state.data.totalCount,
                     pageSize: this.state.numberOfTuples,
                     current: this.state.offset,
-                    showTotal: (total: number) => `Total records: ${total}`
+                    showTotal: (total: number) => `Total records: ${total}`,
+                    showSizeChanger:
+                        this.state.data.totalCount > (this.props.pageSizeDefault || 5)
+                            ? true
+                            : false,
+                    onShowSizeChange: this.onShowSizeChange,
+                    pageSizeOptions: this.props.pageSizeDefault
+                        ? [5, 10, 20, 50, 100].includes(this.props.pageSizeDefault)
+                            ? [5, 10, 20, 50, 100]
+                            : [5, 10, 20, 50, 100, this.props.pageSizeDefault].sort(function (
+                                  a,
+                                  b
+                              ) {
+                                  return a - b
+                              })
+                        : [5, 10, 20, 50, 100]
                 }}
             />
         )
@@ -545,8 +565,12 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
     render() {
         return (
             <Card
+                title={this.props.name}
                 style={{ width: '100%', height: this.props.height }}
-                bodyStyle={{ height: '100%', overflowY: 'auto' }}
+                bodyStyle={{
+                    height: `${((this.props.height - 57.13) / this.props.height) * 100}%`, // 57.13 is the height of the title element
+                    overflowY: 'auto'
+                }}
                 hoverable={true}
             >
                 <>{this.compileTable()}</>

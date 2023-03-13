@@ -7,10 +7,15 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 ## Added
 
 - OIDC authentication ([#68](https://github.com/datajoint/sci-viz/issues/68)) PR [#91](https://github.com/datajoint/sci-viz/pull/91)
+- Option to set default table page size ([#94](https://github.com/datajoint/sci-viz/issues/94)) PR [#95](https://github.com/datajoint/sci-viz/pull/95)
 
 ### Removed
 
 - All deprecated files from source PR [#90](https://github.com/datajoint/sci-viz/pull/90)
+
+### Fixed
+
+- Bug with table page size not updating properly ([#94](https://github.com/datajoint/sci-viz/issues/94)) PR [#95](https://github.com/datajoint/sci-viz/pull/95)
 
 ## [2.0.0] - 02-17-23
 
