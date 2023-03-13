@@ -19,6 +19,7 @@ interface DjTableProps {
     channelList?: Array<string>
     store?: RestrictionStore
     databaseHost?: string
+    pageSizeDefault?: number
 }
 
 interface DjTableState {
@@ -74,7 +75,7 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                 attributeHeaders: [],
                 attributes: { primary: [], secondary: [] }
             },
-            numberOfTuples: 5, //limit
+            numberOfTuples: props.pageSizeDefault || 5, //limit
             offset: 1, //offset
             filter: {},
             sorter: [],
@@ -541,9 +542,21 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                     pageSize: this.state.numberOfTuples,
                     current: this.state.offset,
                     showTotal: (total: number) => `Total records: ${total}`,
-                    showSizeChanger: this.state.data.totalCount > 5 ? true : false,
+                    showSizeChanger:
+                        this.state.data.totalCount > (this.props.pageSizeDefault || 5)
+                            ? true
+                            : false,
                     onShowSizeChange: this.onShowSizeChange,
-                    pageSizeOptions: [5, 10, 20, 50, 100]
+                    pageSizeOptions: this.props.pageSizeDefault
+                        ? [5, 10, 20, 50, 100].includes(this.props.pageSizeDefault)
+                            ? [5, 10, 20, 50, 100]
+                            : [5, 10, 20, 50, 100, this.props.pageSizeDefault].sort(function (
+                                  a,
+                                  b
+                              ) {
+                                  return a - b
+                              })
+                        : [5, 10, 20, 50, 100]
                 }}
             />
         )
