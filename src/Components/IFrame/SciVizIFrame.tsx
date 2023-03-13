@@ -9,20 +9,31 @@ interface iFrameProps {
 }
 
 function SciVizIFrame(props: iFrameProps) {
-    const { componentContext } = useContext(ExternalContext)
+    const { iframeQueryParamMap } = useContext(ExternalContext)
     let url = props.url
+    let appendSymbol = '&'
+    let qParams: string | undefined
 
-    if (url.indexOf('?') !== -1) {
-        url += `${componentContext ? '&context=' + JSON.stringify(componentContext) : ''}`
-        url += `${props.databaseHost ? '&database_host=' + props.databaseHost : ''}`
-    } else {
-        url += `${componentContext ? '?context=' + JSON.stringify(componentContext) : ''}`
-        if (url.indexOf('?') !== -1) {
-            url += `${props.databaseHost ? '&database_host=' + props.databaseHost : ''}`
-        } else {
-            url += `${props.databaseHost ? '?database_host=' + props.databaseHost : ''}`
-        }
-    }
+    if (iframeQueryParamMap)
+        qParams =
+            Object.entries(iframeQueryParamMap)
+                .map(([key, value]) => {
+                    return `${key}=${JSON.stringify(value)}`
+                })
+                .join('&') +
+            `${props.databaseHost ? '&database_host=' + props.databaseHost : ''}`
+
+    if (url.indexOf('?') === -1) appendSymbol = '?'
+
+    url += `${
+        qParams
+            ? appendSymbol + qParams
+            : `${
+                  props.databaseHost
+                      ? `${appendSymbol}database_host=${props.databaseHost}`
+                      : ''
+              }`
+    }`
 
     return (
         <Card

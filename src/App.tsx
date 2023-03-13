@@ -47,7 +47,10 @@ function App() {
     document
         .getElementById('favicon')!
         .setAttribute('href', `${state.spec?.SciViz.favicon_name || '/favicon.ico'}`)
-    const componentContext = { context: 'hello' }
+    const iframeQueryParamMap = {
+        context: { someContext: 'hello' },
+        anotherParam: { someKey: 'someValue' }
+    }
 
     /**
      * A callback function to set jwt token and host name
@@ -137,7 +140,7 @@ function App() {
     } else {
         return (
             <React.StrictMode>
-                <ExternalContext.Provider value={{ componentContext }}>
+                <ExternalContext.Provider value={{ iframeQueryParamMap }}>
                     <Header
                         text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
                         imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}
