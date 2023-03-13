@@ -28,11 +28,9 @@ function SciVizIFrame(props: iFrameProps) {
     url += `${
         qParams
             ? appendSymbol + qParams
-            : `${
-                  props.databaseHost
-                      ? `${appendSymbol}database_host=${props.databaseHost}`
-                      : ''
-              }`
+            : props.databaseHost
+            ? `${appendSymbol}database_host=${props.databaseHost}`
+            : ''
     }`
 
     return (
