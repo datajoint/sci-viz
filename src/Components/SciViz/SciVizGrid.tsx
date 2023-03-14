@@ -20,14 +20,14 @@ interface GridProps {
     /** The name of the grid */
     name: string
 
-    /** The top level SciViz spec */
-    spec: SciVizSpec
-
     /** The data of the grid */
     grid: GridTypes
 
     /** A JWT token to perform queries */
     jwtToken?: string
+
+    /** The top level SciViz spec */
+    spec?: SciVizSpec
 
     /** A list of restrictions for grids with queried components */
     restrictionList?: string[]

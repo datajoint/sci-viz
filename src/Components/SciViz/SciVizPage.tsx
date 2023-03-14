@@ -5,14 +5,14 @@ import './Page.css'
 
 /** The interface for the SciVizPage props */
 interface PageProps {
-    /** The top level SciViz spec */
-    spec: SciVizSpec
-
     /** The data of the page */
     page: SciVizPageType
 
     /** A JWT token to perform queries */
     jwtToken?: string
+
+    /** The top level SciViz spec */
+    spec?: SciVizSpec
 
     /** A callback function for handling hidden pages */
     updateHiddenPage?: (route: string, queryParams: string) => void
