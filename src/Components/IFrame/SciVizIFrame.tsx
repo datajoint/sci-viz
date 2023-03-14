@@ -11,23 +11,18 @@ interface iFrameProps {
 function SciVizIFrame(props: iFrameProps) {
     const { iframeQueryParamMap } = useContext(ExternalContext)
     let url: URL | string = new URL(props.url)
-    let params: {
-        [k: string]: any
-    } = {}
+    let params = props.databaseHost
+        ? { ...iframeQueryParamMap, database_host: props.databaseHost }
+        : iframeQueryParamMap
 
-    if (iframeQueryParamMap)
-        params = Object.fromEntries(
-            Object.entries(iframeQueryParamMap).map(([k, v]) => [
-                k,
-                typeof v === 'object' ? JSON.stringify(v) : v
-            ])
-        )
+    if (params)
+        for (const [key, value] of Object.entries(params)) {
+            url.searchParams.append(
+                key,
+                typeof value === 'object' ? JSON.stringify(value) : value
+            )
+        }
 
-    params = props.databaseHost ? { ...params, database_host: props.databaseHost } : params
-
-    for (const [key, value] of Object.entries(params)) {
-        url.searchParams.append(key, value)
-    }
     url = url.toString()
 
     return (
