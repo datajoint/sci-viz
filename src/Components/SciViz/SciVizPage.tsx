@@ -24,6 +24,7 @@ interface PageProps {
  * @param {SciVizSpec} spec - The top level SciViz spec
  * @param {SciVizPageType} page - The data of the page
  * @param {string=} [jwtToken] - A JWT token to perform queries
+ * @param {string=} databaseHost - The authentication database for OIDC
  * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz page

@@ -52,6 +52,7 @@ interface GridProps {
  * @param {SciVizSpec} spec - The top level SciViz spec
  * @param {ComponentTypes} grid - The data of the grid
  * @param {string=} jwtToken - A JWT token to perform queries
+ * @param {string=} databaseHost - The authentication database for OIDC
  * @param {string[]=} restrictionList - A list of restrictions for grids with queried components
  * @param {RestrictionStore=} store - An information store for grids with linked components
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list

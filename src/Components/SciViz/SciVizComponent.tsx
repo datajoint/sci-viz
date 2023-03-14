@@ -72,6 +72,7 @@ interface ComponentProps {
  * @param {ComponentTypes} component - The data of the component
  * @param {number} height - The height of the component
  * @param {string=} jwtToken - A JWT token to perform queries
+ * @param {string=} databaseHost - The authentication database for OIDC
  * @param {string[]=} restrictionList - A list of restrictions for queried components
  * @param {RestrictionStore=} store - An information store for linked components
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
