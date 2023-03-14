@@ -11,8 +11,8 @@ interface PageProps {
     /** A JWT token to perform queries */
     jwtToken?: string
 
-    /** The top level SciViz spec */
-    spec?: SciVizSpec
+    /** The authentication database for OIDC */
+    databaseHost?: string
 
     /** A callback function for handling hidden pages */
     updateHiddenPage?: (route: string, queryParams: string) => void
@@ -67,7 +67,7 @@ function SciVizPage(props: PageProps) {
                         <SciVizGrid
                             key={JSON.stringify(grid)}
                             name={name}
-                            spec={props.spec}
+                            databaseHost={props.databaseHost}
                             grid={grid}
                             jwtToken={props.jwtToken}
                             restrictionList={[...restrictionList]}

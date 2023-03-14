@@ -45,8 +45,8 @@ interface ComponentProps {
     /** A JWT token to perform queries */
     jwtToken?: string
 
-    /** The top level SciViz spec */
-    spec?: SciVizSpec
+    /** The authentication database for OIDC */
+    databaseHost?: string
 
     /** A list of restrictions for queried components */
     restrictionList?: string[]
@@ -189,7 +189,7 @@ function SciVizComponent(props: ComponentProps) {
                 key={JSON.stringify(compData)}
                 height={calculatedHeight}
                 url={compData.url}
-                databaseHost={props.spec?.SciViz.auth?.database}
+                databaseHost={props.databaseHost}
             />
         )
     } else if (/^slider.*$/.test(type)) {
