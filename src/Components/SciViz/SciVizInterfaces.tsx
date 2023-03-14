@@ -1,7 +1,7 @@
 /** The interface for external SciViz context storage */
 export interface ExternalContextType {
     /** A mapping of query parameter keys to values to be appended to iframe URLs*/
-    iframeQueryParamMap: { [key: string]: any } | undefined
+    iframeParamMap: { [key: string]: any } | undefined
 }
 
 /** The interface for a SciViz page's restriction storage */

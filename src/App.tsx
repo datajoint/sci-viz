@@ -47,7 +47,7 @@ function App() {
     document
         .getElementById('favicon')!
         .setAttribute('href', `${state.spec?.SciViz.favicon_name || '/favicon.ico'}`)
-    const iframeQueryParamMap = {
+    const iframeParamMap = {
         context: { someContext: 'hello' },
         anotherParam: { someKey: 'someValue' },
         stringParam: 'a string'
@@ -141,7 +141,7 @@ function App() {
     } else {
         return (
             <React.StrictMode>
-                <ExternalContext.Provider value={{ iframeQueryParamMap }}>
+                <ExternalContext.Provider value={{ iframeParamMap }}>
                     <Header
                         text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
                         imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}

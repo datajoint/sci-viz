@@ -9,11 +9,11 @@ interface iFrameProps {
 }
 
 function SciVizIFrame(props: iFrameProps) {
-    const { iframeQueryParamMap } = useContext(ExternalContext)
+    const { iframeParamMap } = useContext(ExternalContext)
     let url: URL | string = new URL(props.url)
     let params = props.databaseHost
-        ? { ...iframeQueryParamMap, database_host: props.databaseHost }
-        : iframeQueryParamMap
+        ? { ...iframeParamMap, database_host: props.databaseHost }
+        : iframeParamMap
 
     if (params)
         for (const [key, value] of Object.entries(params)) {
