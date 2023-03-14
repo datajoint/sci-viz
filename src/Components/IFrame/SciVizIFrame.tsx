@@ -10,26 +10,26 @@ interface iFrameProps {
 
 function SciVizIFrame(props: iFrameProps) {
     const { iframeQueryParamMap } = useContext(ExternalContext)
-    let url = props.url
-    let appendSymbol = url.indexOf('?') === -1 ? '?' : '&'
-    let qParams: string | undefined
+    let url: URL | string = new URL(props.url)
+    let params: {
+        [k: string]: any
+    } = {}
 
     if (iframeQueryParamMap)
-        qParams =
-            Object.entries(iframeQueryParamMap)
-                .map(([key, value]) => {
-                    return `${key}=${JSON.stringify(value)}`
-                })
-                .join('&') +
-            `${props.databaseHost ? '&database_host=' + props.databaseHost : ''}`
+        params = {
+            ...Object.fromEntries(
+                Object.entries(iframeQueryParamMap).map(([k, v], i) => [
+                    k,
+                    typeof v === 'object' ? JSON.stringify(v) : v
+                ])
+            )
+        }
+    params = props.databaseHost ? { ...params, database_host: props.databaseHost } : params
 
-    url += `${
-        qParams
-            ? appendSymbol + qParams
-            : props.databaseHost
-            ? `${appendSymbol}database_host=${props.databaseHost}`
-            : ''
-    }`
+    for (const [key, value] of Object.entries(params)) {
+        url.searchParams.append(key, value)
+    }
+    url = url.toString()
 
     return (
         <Card

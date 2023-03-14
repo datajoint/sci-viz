@@ -49,7 +49,8 @@ function App() {
         .setAttribute('href', `${state.spec?.SciViz.favicon_name || '/favicon.ico'}`)
     const iframeQueryParamMap = {
         context: { someContext: 'hello' },
-        anotherParam: { someKey: 'someValue' }
+        anotherParam: { someKey: 'someValue' },
+        stringParam: 'a string'
     }
 
     /**
