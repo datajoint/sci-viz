@@ -16,14 +16,13 @@ function SciVizIFrame(props: iFrameProps) {
     } = {}
 
     if (iframeQueryParamMap)
-        params = {
-            ...Object.fromEntries(
-                Object.entries(iframeQueryParamMap).map(([k, v]) => [
-                    k,
-                    typeof v === 'object' ? JSON.stringify(v) : v
-                ])
-            )
-        }
+        params = Object.fromEntries(
+            Object.entries(iframeQueryParamMap).map(([k, v]) => [
+                k,
+                typeof v === 'object' ? JSON.stringify(v) : v
+            ])
+        )
+
     params = props.databaseHost ? { ...params, database_host: props.databaseHost } : params
 
     for (const [key, value] of Object.entries(params)) {
