@@ -18,7 +18,7 @@ function SciVizIFrame(props: iFrameProps) {
     if (iframeQueryParamMap)
         params = {
             ...Object.fromEntries(
-                Object.entries(iframeQueryParamMap).map(([k, v], i) => [
+                Object.entries(iframeQueryParamMap).map(([k, v]) => [
                     k,
                     typeof v === 'object' ? JSON.stringify(v) : v
                 ])
