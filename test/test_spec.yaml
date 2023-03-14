@@ -131,6 +131,7 @@ SciViz: # top level tab
                         _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "NULL")',
                         ))
                     return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}
+              page_size_default: 6
             example table 1 markdown:
               x: 1
               y: 0

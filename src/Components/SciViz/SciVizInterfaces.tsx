@@ -306,6 +306,9 @@ export interface TableComponent extends SciVizComponent, SciVizQueried {
 
     /** The list of channels to listen to */
     channels?: string[]
+
+    /** The default page size */
+    page_size_default?: number
 }
 
 /** An interface for SciViz components that get queried */

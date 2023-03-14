@@ -149,6 +149,7 @@ function SciVizComponent(props: ComponentProps) {
                 restrictionList={[...props.restrictionList!]}
                 updatePageStore={props.updateStore!}
                 updateHiddenPage={props.updateHiddenPage}
+                pageSizeDefault={compData.page_size_default}
             />
         )
     } else if (/^form.*$/.test(type)) {
