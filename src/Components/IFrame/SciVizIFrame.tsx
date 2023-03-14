@@ -11,7 +11,7 @@ interface iFrameProps {
 function SciVizIFrame(props: iFrameProps) {
     const { iframeQueryParamMap } = useContext(ExternalContext)
     let url = props.url
-    let appendSymbol = '&'
+    let appendSymbol = url.indexOf('?') === -1 ? '?' : '&'
     let qParams: string | undefined
 
     if (iframeQueryParamMap)
@@ -22,8 +22,6 @@ function SciVizIFrame(props: iFrameProps) {
                 })
                 .join('&') +
             `${props.databaseHost ? '&database_host=' + props.databaseHost : ''}`
-
-    if (url.indexOf('?') === -1) appendSymbol = '?'
 
     url += `${
         qParams
