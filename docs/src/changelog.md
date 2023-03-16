@@ -2,11 +2,20 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.0.1] - TBD
+## [2.1.0] - TBD
+
+## Added
+
+- OIDC authentication ([#68](https://github.com/datajoint/sci-viz/issues/68)) PR [#91](https://github.com/datajoint/sci-viz/pull/91)
+- Option to set default table page size ([#94](https://github.com/datajoint/sci-viz/issues/94)) PR [#95](https://github.com/datajoint/sci-viz/pull/95)
 
 ### Removed
 
-- All deprecated files from source
+- All deprecated files from source PR [#90](https://github.com/datajoint/sci-viz/pull/90)
+
+### Fixed
+
+- Bug with table page size not updating properly ([#94](https://github.com/datajoint/sci-viz/issues/94)) PR [#95](https://github.com/datajoint/sci-viz/pull/95)
 
 ## [2.0.0] - 02-17-23
 
@@ -82,6 +91,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Initial framework for jest testing (#27) PR #33
 - loginless mode PR #41
 
+[2.1.0]: https://github.com/datajoint/sci-viz/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/datajoint/sci-viz/compare/1.1.1...2.0.0
 [1.1.1]: https://github.com/datajoint/sci-viz/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/datajoint/sci-viz/compare/1.0.2...1.1.0

@@ -12,7 +12,16 @@ export interface SciVizSpec {
         pages: { [key: string]: SciVizPageType }
 
         /** A flag to set authentication */
-        auth: boolean
+        auth?: {
+            /** The authentication method to use */
+            mode: 'database' | 'oidc' | 'none'
+            /** The authentication endpoint for OIDC */
+            endpoint?: string
+            /** The authentication database for OIDC */
+            database?: string
+            /** The authentication client id for OIDC */
+            client_id?: string
+        }
 
         /** A SciViz deployment-specific key to set the host sub-route */
         route?: string
@@ -281,6 +290,9 @@ export interface TableComponent extends SciVizComponent, SciVizQueried {
 
     /** The list of channels to listen to */
     channels?: string[]
+
+    /** The default page size */
+    page_size_default?: number
 }
 
 /** An interface for SciViz components that get queried */

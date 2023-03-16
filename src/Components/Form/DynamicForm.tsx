@@ -384,7 +384,10 @@ function DynamicForm(props: formProps) {
                 )
             }
             style={{ width: '100%', height: props.height }}
-            bodyStyle={{ height: '100%' }}
+            bodyStyle={{
+                height: `${((props.height - 57.13) / props.height) * 100}%`, // 57.13 is the height of the title element
+                overflowY: 'auto'
+            }}
             hoverable={true}
         >
             <Form

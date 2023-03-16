@@ -59,13 +59,7 @@ function SciViz(props: SciVizProps) {
      * @returns The last route of the current URL
      */
     const getRoute = () => {
-        var URL = window.location.href
-        if (props.baseURL === URL) {
-            return menuItems[0].key
-        }
-        var RegexLastWord = /\/([\w-]+)(?=\?|$)/
-        var lastWord = URL.match(RegexLastWord)![0]
-        return lastWord
+        return `/${window.location.pathname.split('/').pop()}`
     }
 
     /**
