@@ -16,7 +16,6 @@ import {
 import { DownOutlined } from '@ant-design/icons'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { useState } from 'react'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 const { TextArea } = Input
@@ -229,7 +228,6 @@ function DynamicForm(props: formProps) {
         let menu = (
             <Menu onClick={(value) => form.setFieldsValue(presetPayload[value.key])}>
                 {Object.entries(presetPayload).map((value) => {
-                    console.log(value)
                     return (
                         <Menu.Item key={value[0]} title={value[0]}>
                             {value[0]}
