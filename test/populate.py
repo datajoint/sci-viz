@@ -385,6 +385,6 @@ class PresetTable(dj.Lookup):
     preset_dict: longblob
     """
     contents = [
-        ("preset 1", dict(b_id=2, b_number=12)),
-        ("preset 2", dict(b_id=123, b_number=193492)),
+        ("preset 1", dict(b_id=2, b_number=12, a_id="blabla")),
+        ("preset 2", dict(b_id=123, b_number=193492, some_junk_var=12332313144)),
     ]
