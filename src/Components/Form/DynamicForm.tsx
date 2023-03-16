@@ -27,7 +27,6 @@ interface RestrictionStore {
 
 interface formPresets {
     [presetName: string]: { [key: string]: number | string }
-    // [key: string]: string
 }
 
 interface formProps {
