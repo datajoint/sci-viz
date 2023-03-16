@@ -2,12 +2,13 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.1.0] - TBD
+## [2.1.0] - 03-17-23
 
 ## Added
 
 - OIDC authentication ([#68](https://github.com/datajoint/sci-viz/issues/68)) PR [#91](https://github.com/datajoint/sci-viz/pull/91)
 - Option to set default table page size ([#94](https://github.com/datajoint/sci-viz/issues/94)) PR [#95](https://github.com/datajoint/sci-viz/pull/95)
+- Option to add preset values to forms PR [#96](https://github.com/datajoint/sci-viz/pull/96/files)
 
 ### Removed
 
