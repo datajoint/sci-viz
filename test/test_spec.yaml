@@ -445,6 +445,10 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableB
+              preset_query: >
+                def preset_query(test_group1_simple):
+                    q = test_group1_simple.PresetTable
+                    return {'query': q, 'fetch_args': []}
             Table C:
               route: /insert3
               x: 0
