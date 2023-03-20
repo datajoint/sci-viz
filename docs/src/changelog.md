@@ -2,7 +2,7 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.1.0] - 03-17-23
+## [2.1.0] - 03-20-23
 
 ## Added
 

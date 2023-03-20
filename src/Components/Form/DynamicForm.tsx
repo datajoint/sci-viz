@@ -66,6 +66,9 @@ interface formPayloadData {
 function DynamicForm(props: formProps) {
     const queryClient = useQueryClient()
     const [form] = Form.useForm()
+    const [currentDropdownSelection, setCurrentDropdownSelection] = useState<
+        string | undefined
+    >(undefined)
     const openNotification = (
         type: 'success' | 'info' | 'warning' | 'error',
         title: string,
@@ -227,7 +230,12 @@ function DynamicForm(props: formProps) {
 
     const generateDropdown = (presetPayload: formPresets) => {
         let menu = (
-            <Menu onClick={(value) => form.setFieldsValue(presetPayload[value.key])}>
+            <Menu
+                onClick={(value) => {
+                    form.setFieldsValue(presetPayload[value.key])
+                    setCurrentDropdownSelection(value.key)
+                }}
+            >
                 {Object.entries(presetPayload).map((value) => {
                     console.log(value)
                     return (
@@ -241,7 +249,8 @@ function DynamicForm(props: formProps) {
         return (
             <Dropdown overlay={menu}>
                 <Button>
-                    Presets <DownOutlined />
+                    {currentDropdownSelection ? currentDropdownSelection : <>Presets</>}{' '}
+                    <DownOutlined />
                 </Button>
             </Dropdown>
         )
@@ -378,7 +387,7 @@ function DynamicForm(props: formProps) {
                 presets.status == 'loading' ? (
                     <Spin />
                 ) : presets.status == 'error' ? (
-                    <>No Presets</>
+                    <></>
                 ) : (
                     generateDropdown(presets.data!)
                 )

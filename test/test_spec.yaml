@@ -450,10 +450,9 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableB
-              preset_query: >
-                def preset_query(test_group1_simple):
-                    q = test_group1_simple.PresetTable
-                    return {'query': q, 'fetch_args': []}
+              preset_function: >
+                def preset_function():
+                    return {'preset 1': {'b_id': 14}}
             Table C:
               route: /insert3
               x: 0
@@ -473,10 +472,9 @@ SciViz: # top level tab
               tables:
                 - test_group1_simple.TableB
                 - test_group1_simple.TableC
-              preset_query: >
-                def preset_query(test_group1_simple):
-                    q = test_group1_simple.PresetTable
-                    return {'query': q, 'fetch_args': []}
+              preset_function: >
+                def preset_function(test_group1_simple):
+                    return {r['preset_name']: r['preset_dict'] for r in test_group1_simple.PresetTable}
               map:
                 - type: attribute
                   input: B Id
