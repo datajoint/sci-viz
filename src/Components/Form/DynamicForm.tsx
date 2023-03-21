@@ -9,16 +9,24 @@ import {
     Button,
     Alert,
     notification,
-    Spin
+    Spin,
+    Dropdown,
+    Menu
 } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useState } from 'react'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 const { TextArea } = Input
 
 interface RestrictionStore {
     [key: string]: Array<string>
+}
+
+interface formPresets {
+    [presetName: string]: { [key: string]: number | string }
 }
 
 interface formProps {
@@ -57,6 +65,10 @@ interface formPayloadData {
 
 function DynamicForm(props: formProps) {
     const queryClient = useQueryClient()
+    const [form] = Form.useForm()
+    const [currentDropdownSelection, setCurrentDropdownSelection] = useState<
+        string | undefined
+    >(undefined)
     const openNotification = (
         type: 'success' | 'info' | 'warning' | 'error',
         title: string,
@@ -155,9 +167,41 @@ function DynamicForm(props: formProps) {
             return result.json()
         })
     }
+
+    const getFormPresetData = async (): Promise<formPresets> => {
+        let apiUrl = `${
+            process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX
+        }${props.route!}/presets?${queryParamList.join('&')}`
+
+        if (props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
+        }
+
+        return fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + props.token
+            }
+        }).then((result) => {
+            return result.json()
+        })
+    }
+
     const { data: fieldData, status } = useQuery(
         `${props.route}_form${queryParamList.length ? `:${queryParamList}` : ''}`,
         getFormFieldData,
+        {
+            enabled: !(
+                props.store &&
+                props.channelList &&
+                !props.channelList.every((val) => Object.keys(props.store!).includes(val))
+            )
+        }
+    )
+
+    const presets = useQuery(
+        `${props.route}_presets${queryParamList.length ? `:${queryParamList}` : ''}`,
+        getFormPresetData,
         {
             enabled: !(
                 props.store &&
@@ -182,6 +226,33 @@ function DynamicForm(props: formProps) {
             submissions: [values]
         }
         insert(payload)
+    }
+
+    const generateDropdown = (presetPayload: formPresets) => {
+        let menu = (
+            <Menu
+                onClick={(value) => {
+                    form.setFieldsValue(presetPayload[value.key])
+                    setCurrentDropdownSelection(value.key)
+                }}
+            >
+                {Object.entries(presetPayload).map((value) => {
+                    return (
+                        <Menu.Item key={value[0]} title={value[0]}>
+                            {value[0]}
+                        </Menu.Item>
+                    )
+                })}
+            </Menu>
+        )
+        return (
+            <Dropdown overlay={menu}>
+                <Button>
+                    {currentDropdownSelection ? currentDropdownSelection : <>Presets</>}{' '}
+                    <DownOutlined />
+                </Button>
+            </Dropdown>
+        )
     }
 
     const convertDateTime = (value: string | number, type: string) => {
@@ -311,6 +382,15 @@ function DynamicForm(props: formProps) {
     return (
         <Card
             title={props.name}
+            extra={
+                presets.status == 'loading' ? (
+                    <Spin />
+                ) : presets.status == 'error' ? (
+                    <></>
+                ) : (
+                    generateDropdown(presets.data!)
+                )
+            }
             style={{ width: '100%', height: props.height }}
             bodyStyle={{
                 height: `${((props.height - 57.13) / props.height) * 100}%`, // 57.13 is the height of the title element
@@ -319,6 +399,7 @@ function DynamicForm(props: formProps) {
             hoverable={true}
         >
             <Form
+                form={form}
                 name='Multi-table Insert'
                 layout='vertical'
                 onFinish={handleSubmit}
