@@ -86,6 +86,7 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
 
         this.getRecords = this.getRecords.bind(this)
         this.getAttributes = this.getAttributes.bind(this)
+        this.getUniques = this.getUniques.bind(this)
         this.compileTable = this.compileTable.bind(this)
     }
 
@@ -288,6 +289,69 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             })
     }
 
+    getUniques(): Promise<djAttributes> {
+        let apiUrlUnqs =
+            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route + '/uniques'
+
+        let queryParamList = [...this.props.restrictionList]
+        let channelCheckArr = Array<boolean>()
+
+        this.props.channelList?.forEach((element) => {
+            if (this.props.store![element]) {
+                channelCheckArr.push(true)
+            } else {
+                channelCheckArr.push(false)
+            }
+        })
+
+        for (let i in this.props.channelList) {
+            if (typeof this.props.store![this.props.channelList[+i]] != undefined) {
+                queryParamList = queryParamList.concat(
+                    this.props.store![this.props.channelList[+i]]
+                )
+            }
+        }
+        if (queryParamList.indexOf('') !== -1) {
+            queryParamList.splice(queryParamList.indexOf(''), 1)
+        }
+
+        if (queryParamList.length) {
+            if (apiUrlUnqs.includes('?') == false) {
+                apiUrlUnqs = apiUrlUnqs + '?' + queryParamList.join('&')
+            } else {
+                apiUrlUnqs = apiUrlUnqs + '&' + queryParamList.join('&')
+            }
+        }
+
+        if (Object.keys(this.state.filter).length !== 0) {
+            for (const key of Object.keys(this.state.filter)) {
+                if (apiUrlUnqs.includes('?') == false) {
+                    apiUrlUnqs = apiUrlUnqs + '?' + this.state.filter[key].restriction
+                } else {
+                    apiUrlUnqs = apiUrlUnqs + '&' + this.state.filter[key].restriction
+                }
+            }
+        }
+
+        if (this.props.databaseHost) {
+            apiUrlUnqs = apiUrlUnqs.concat(`&database_host=${this.props.databaseHost}`)
+        }
+
+        return fetch(apiUrlUnqs, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + this.props.token
+            }
+        })
+            .then((result) => {
+                return result.json()
+            })
+            .then((result) => {
+                return result as Promise<djAttributes>
+            })
+    }
+
     componentDidMount() {
         let records: djRecords
         this.setState({ loading: true })
@@ -323,6 +387,11 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
 
                 this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
             })
+            .then(() => {
+                this.getUniques().then((result) => {
+                    this.setState({ dataAttributes: result })
+                })
+            })
     }
 
     componentDidUpdate(prevProps: DjTableProps, prevState: DjTableState): void {
@@ -348,6 +417,11 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                             data: result,
                             loading: false
                         })
+                    })
+                })
+                .then(() => {
+                    this.getUniques().then((result) => {
+                        this.setState({ dataAttributes: result })
                     })
                 })
         }
