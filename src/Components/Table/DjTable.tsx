@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Card, PaginationProps, Table, TablePaginationConfig } from 'antd'
 import type { FilterValue } from 'antd/es/table/interface'
 
@@ -66,35 +66,43 @@ interface djFilter {
 /**
  * DjTable component
  */
-export default class DjTable extends React.Component<DjTableProps, DjTableState> {
-    constructor(props: DjTableProps) {
-        super(props)
-        this.state = {
-            data: { recordHeader: [], records: [[]], totalCount: 0 },
-            dataAttributes: {
-                attributeHeaders: [],
-                attributes: { primary: [], secondary: [] }
-            },
-            numberOfTuples: props.pageSizeDefault || 5, //limit
-            offset: 1, //offset
-            filter: {},
-            sorter: [],
-            keys: undefined,
-            selectedRow: [0],
-            loading: false
-        }
+function DjTable(props: DjTableProps) {
+    const [state, setState] = useState<DjTableState>({
+        data: { recordHeader: [], records: [[]], totalCount: 0 },
+        dataAttributes: {
+            attributeHeaders: [],
+            attributes: { primary: [], secondary: [] }
+        },
+        numberOfTuples: props.pageSizeDefault || 5,
+        offset: 1,
+        filter: {},
+        sorter: [],
+        keys: undefined,
+        selectedRow: [0],
+        loading: false
+    })
+    const [prevState, setPrevState] = useState<DjTableState>({
+        data: { recordHeader: [], records: [[]], totalCount: 0 },
+        dataAttributes: {
+            attributeHeaders: [],
+            attributes: { primary: [], secondary: [] }
+        },
+        numberOfTuples: props.pageSizeDefault || 5,
+        offset: 1,
+        filter: {},
+        sorter: [],
+        keys: undefined,
+        selectedRow: [0],
+        loading: false
+    })
+    const isInitialMount = useRef(true)
+    const prevPropsRef = useRef<DjTableProps>()
 
-        this.getRecords = this.getRecords.bind(this)
-        this.getAttributes = this.getAttributes.bind(this)
-        this.getUniques = this.getUniques.bind(this)
-        this.compileTable = this.compileTable.bind(this)
-    }
-
-    handleChange(
+    const handleChange = (
         pagination: TablePaginationConfig,
         filters: Record<string, FilterValue | null>,
         sorter: any //must use any here due to antd callback design
-    ) {
+    ) => {
         let filter: { [key: string]: djFilter } = {}
         let isFilterNull = true
 
@@ -109,7 +117,7 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             }
         }
 
-        let sorterArr = []
+        let sorterArr: string[] = []
 
         let isSorterNull = true
 
@@ -127,31 +135,46 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
         let offset = pagination.current
 
         if (isFilterNull) {
-            this.setState({ offset: offset, filter: {} })
+            setState((prevState) => ({
+                ...prevState,
+                offset: offset,
+                filter: {}
+            }))
         } else {
-            this.setState({ offset: offset, filter: filter })
+            setState((prevState) => ({
+                ...prevState,
+                offset: offset,
+                filter: filter
+            }))
         }
 
         if (isSorterNull) {
-            this.setState({ offset: offset })
+            setState((prevState) => ({
+                ...prevState,
+                offset: offset
+            }))
         } else {
-            this.setState({ offset: offset, sorter: sorterArr })
+            setState((prevState) => ({
+                ...prevState,
+                offset: offset,
+                sorter: sorterArr
+            }))
         }
     }
 
-    getRecords(): Promise<djRecords> {
-        let queryParamList = [...this.props.restrictionList]
+    const getRecords = (): Promise<djRecords> => {
+        let queryParamList = [...props.restrictionList]
         let channelCheckArr = Array<boolean>()
 
-        this.props.channelList?.forEach((element) => {
-            if (this.props.store![element]) {
+        props.channelList?.forEach((element) => {
+            if (props.store![element]) {
                 channelCheckArr.push(true)
             } else {
                 channelCheckArr.push(false)
             }
         })
 
-        if (this.props.restrictionList.includes('') && channelCheckArr.includes(false)) {
+        if (props.restrictionList.includes('') && channelCheckArr.includes(false)) {
             let arr = Array<string>()
             let arrRec = Array<Array<number | null | bigint | boolean | string>>()
 
@@ -162,34 +185,32 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             })
         }
 
-        for (let i in this.props.channelList) {
-            if (typeof this.props.store![this.props.channelList[+i]] != undefined) {
-                queryParamList = queryParamList.concat(
-                    this.props.store![this.props.channelList[+i]]
-                )
+        for (let i in props.channelList) {
+            if (typeof props.store![props.channelList[+i]] != undefined) {
+                queryParamList = queryParamList.concat(props.store![props.channelList[+i]])
             }
         }
         if (queryParamList.indexOf('') !== -1) {
             queryParamList.splice(queryParamList.indexOf(''), 1)
         }
 
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
+        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + props.route
 
         if (
-            !this.state.sorter.join(',').includes('ASC') &&
-            !this.state.sorter.join(',').includes('DESC')
+            !state.sorter.join(',').includes('ASC') &&
+            !state.sorter.join(',').includes('DESC')
         ) {
             let params: Record<string, string> = {
-                page: String(this.state.offset),
-                limit: String(this.state.numberOfTuples)
+                page: String(state.offset),
+                limit: String(state.numberOfTuples)
             }
             let queryString = new URLSearchParams(params).toString()
             apiUrl = apiUrl + '?' + queryString
         } else {
             let params: Record<string, string> = {
-                page: String(this.state.offset),
-                limit: String(this.state.numberOfTuples),
-                order: this.state.sorter.join(',')
+                page: String(state.offset),
+                limit: String(state.numberOfTuples),
+                order: state.sorter.join(',')
             }
             let queryString = new URLSearchParams(params).toString()
             apiUrl = apiUrl + '?' + queryString
@@ -199,21 +220,21 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             apiUrl = apiUrl + '&' + queryParamList.join('&')
         }
 
-        if (Object.keys(this.state.filter).length !== 0) {
-            for (const key of Object.keys(this.state.filter)) {
-                apiUrl = apiUrl + '&' + this.state.filter[key].restriction
+        if (Object.keys(state.filter).length !== 0) {
+            for (const key of Object.keys(state.filter)) {
+                apiUrl = apiUrl + '&' + state.filter[key].restriction
             }
         }
 
-        if (this.props.databaseHost) {
-            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        if (props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
         }
 
         return fetch(apiUrl, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + this.props.token
+                Authorization: 'Bearer ' + props.token
             }
         })
             .then((result) => {
@@ -224,28 +245,24 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             })
     }
 
-    getAttributes(): Promise<djAttributes> {
+    const getAttributes = (): Promise<djAttributes> => {
         let apiUrlAttr =
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
-            this.props.route +
-            '/attributes'
+            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + props.route + '/attributes'
 
-        let queryParamList = [...this.props.restrictionList]
+        let queryParamList = [...props.restrictionList]
         let channelCheckArr = Array<boolean>()
 
-        this.props.channelList?.forEach((element) => {
-            if (this.props.store![element]) {
+        props.channelList?.forEach((element) => {
+            if (props.store![element]) {
                 channelCheckArr.push(true)
             } else {
                 channelCheckArr.push(false)
             }
         })
 
-        for (let i in this.props.channelList) {
-            if (typeof this.props.store![this.props.channelList[+i]] != undefined) {
-                queryParamList = queryParamList.concat(
-                    this.props.store![this.props.channelList[+i]]
-                )
+        for (let i in props.channelList) {
+            if (typeof props.store![props.channelList[+i]] != undefined) {
+                queryParamList = queryParamList.concat(props.store![props.channelList[+i]])
             }
         }
         if (queryParamList.indexOf('') !== -1) {
@@ -260,25 +277,25 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             }
         }
 
-        if (Object.keys(this.state.filter).length !== 0) {
-            for (const key of Object.keys(this.state.filter)) {
+        if (Object.keys(state.filter).length !== 0) {
+            for (const key of Object.keys(state.filter)) {
                 if (apiUrlAttr.includes('?') == false) {
-                    apiUrlAttr = apiUrlAttr + '?' + this.state.filter[key].restriction
+                    apiUrlAttr = apiUrlAttr + '?' + state.filter[key].restriction
                 } else {
-                    apiUrlAttr = apiUrlAttr + '&' + this.state.filter[key].restriction
+                    apiUrlAttr = apiUrlAttr + '&' + state.filter[key].restriction
                 }
             }
         }
 
-        if (this.props.databaseHost) {
-            apiUrlAttr = apiUrlAttr.concat(`&database_host=${this.props.databaseHost}`)
+        if (props.databaseHost) {
+            apiUrlAttr = apiUrlAttr.concat(`&database_host=${props.databaseHost}`)
         }
 
         return fetch(apiUrlAttr, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + this.props.token
+                Authorization: 'Bearer ' + props.token
             }
         })
             .then((result) => {
@@ -289,26 +306,24 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             })
     }
 
-    getUniques(): Promise<djAttributes> {
+    const getUniques = (): Promise<djAttributes> => {
         let apiUrlUnqs =
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route + '/uniques'
+            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + props.route + '/uniques'
 
-        let queryParamList = [...this.props.restrictionList]
+        let queryParamList = [...props.restrictionList]
         let channelCheckArr = Array<boolean>()
 
-        this.props.channelList?.forEach((element) => {
-            if (this.props.store![element]) {
+        props.channelList?.forEach((element) => {
+            if (props.store![element]) {
                 channelCheckArr.push(true)
             } else {
                 channelCheckArr.push(false)
             }
         })
 
-        for (let i in this.props.channelList) {
-            if (typeof this.props.store![this.props.channelList[+i]] != undefined) {
-                queryParamList = queryParamList.concat(
-                    this.props.store![this.props.channelList[+i]]
-                )
+        for (let i in props.channelList) {
+            if (typeof props.store![props.channelList[+i]] != undefined) {
+                queryParamList = queryParamList.concat(props.store![props.channelList[+i]])
             }
         }
         if (queryParamList.indexOf('') !== -1) {
@@ -323,25 +338,25 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             }
         }
 
-        if (Object.keys(this.state.filter).length !== 0) {
-            for (const key of Object.keys(this.state.filter)) {
+        if (Object.keys(state.filter).length !== 0) {
+            for (const key of Object.keys(state.filter)) {
                 if (apiUrlUnqs.includes('?') == false) {
-                    apiUrlUnqs = apiUrlUnqs + '?' + this.state.filter[key].restriction
+                    apiUrlUnqs = apiUrlUnqs + '?' + state.filter[key].restriction
                 } else {
-                    apiUrlUnqs = apiUrlUnqs + '&' + this.state.filter[key].restriction
+                    apiUrlUnqs = apiUrlUnqs + '&' + state.filter[key].restriction
                 }
             }
         }
 
-        if (this.props.databaseHost) {
-            apiUrlUnqs = apiUrlUnqs.concat(`&database_host=${this.props.databaseHost}`)
+        if (props.databaseHost) {
+            apiUrlUnqs = apiUrlUnqs.concat(`&database_host=${props.databaseHost}`)
         }
 
         return fetch(apiUrlUnqs, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + this.props.token
+                Authorization: 'Bearer ' + props.token
             }
         })
             .then((result) => {
@@ -352,22 +367,42 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             })
     }
 
-    componentDidMount() {
+    // Store previous state and props
+    useEffect(() => {
+        setPrevState(state)
+    }, [state])
+    useEffect(() => {
+        prevPropsRef.current = props
+    })
+    const getPreviousProps = () => {
+        return prevPropsRef.current
+    }
+
+    // On mount
+    useEffect(() => {
         let records: djRecords
-        this.setState({ loading: true })
-        this.getRecords()
+        setState((prevState) => ({
+            ...prevState,
+            loading: true
+        }))
+        getRecords()
             .then((result) => {
                 records = result
             })
             .then(() => {
-                return this.getAttributes()
+                return getAttributes()
             })
             .then((result) => {
-                this.setState({ dataAttributes: result, data: records, loading: false })
+                setState((prevState) => ({
+                    ...prevState,
+                    dataAttributes: result,
+                    data: records,
+                    loading: false
+                }))
 
                 let pks: string[] = []
 
-                this.state.dataAttributes.attributes.primary.map(
+                state.dataAttributes.attributes.primary.map(
                     (value: djAttributesArray, index: number) => {
                         pks.push(value[0])
                     }
@@ -375,113 +410,131 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
 
                 let record: string[] = []
 
-                for (const val in this.state.data.records) {
+                for (const val in state.data.records) {
                     pks.forEach((value: string, index: number) => {
-                        //this works because i assume the primary keys are the first ones in this.state.data.recordHeader
-                        if (this.state.data.recordHeader[index] === value) {
+                        //this works because i assume the primary keys are the first ones in state.data.recordHeader
+                        if (state.data.recordHeader[index] === value) {
                             //might need revision
-                            record.push(`${value}=${this.state.data.records[val][index]}`)
+                            record.push(`${value}=${state.data.records[val][index]}`)
                         }
                     })
                 }
 
-                this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
+                props.updatePageStore(props.channel!, record.slice(0, 2))
             })
             .then(() => {
-                this.getUniques().then((result) => {
-                    this.setState({ dataAttributes: result })
+                getUniques().then((result) => {
+                    setState((prevState) => ({
+                        ...prevState,
+                        dataAttributes: result
+                    }))
                 })
             })
-    }
+    }, [])
 
-    componentDidUpdate(prevProps: DjTableProps, prevState: DjTableState): void {
-        if (this.state.keys && this.props.link && this.props.updateHiddenPage) {
-            this.props.updateHiddenPage(this.props.link, this.state.keys.join('&'))
-            this.setState({ keys: undefined })
-        }
-        if (
-            prevState.offset !== this.state.offset ||
-            this.state.filter !== prevState.filter ||
-            this.state.sorter !== prevState.sorter
-        ) {
-            let attributes: djAttributes
-            this.setState({ loading: true })
-            this.getAttributes()
-                .then((attrs) => {
-                    attributes = attrs
-                })
-                .then(() => {
-                    this.getRecords().then((result) => {
-                        this.setState({
-                            dataAttributes: attributes,
-                            data: result,
-                            loading: false
+    // On update
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false
+        } else {
+            if (state.keys && props.link && props.updateHiddenPage) {
+                props.updateHiddenPage(props.link, state.keys.join('&'))
+                setState((prevState) => ({
+                    ...prevState,
+                    keys: undefined
+                }))
+            }
+            if (
+                state.offset !== prevState.offset ||
+                state.filter !== prevState.filter ||
+                state.sorter !== prevState.sorter
+            ) {
+                let attributes: djAttributes
+                setState((prevState) => ({
+                    ...prevState,
+                    loading: true
+                }))
+                getAttributes()
+                    .then((attrs) => {
+                        attributes = attrs
+                    })
+                    .then(() => {
+                        getRecords().then((result) => {
+                            setState((prevState) => ({
+                                ...prevState,
+                                dataAttributes: attributes,
+                                data: result,
+                                loading: false
+                            }))
                         })
                     })
+            }
+            let propsUpdate = false
+            if (props.store !== getPreviousProps()!.store) {
+                props.channelList?.forEach((element) => {
+                    if (
+                        JSON.stringify(props.store![element]) !==
+                        JSON.stringify(getPreviousProps()!.store![element])
+                    ) {
+                        console.log('PROPS UPDATED')
+                        propsUpdate = true
+                    }
                 })
-                .then(() => {
-                    this.getUniques().then((result) => {
-                        this.setState({ dataAttributes: result })
+            }
+            if (propsUpdate) {
+                let attributes: djAttributes
+                setState((prevState) => ({
+                    ...prevState,
+                    loading: true
+                }))
+                getAttributes()
+                    .then((attrs) => {
+                        attributes = attrs
                     })
-                })
-        }
-        let propsUpdate = false
-        if (this.props.store !== prevProps.store) {
-            this.props.channelList?.forEach((element) => {
-                if (
-                    JSON.stringify(this.props.store![element]) !==
-                    JSON.stringify(prevProps.store![element])
-                ) {
-                    propsUpdate = true
-                }
-            })
-        }
-        if (propsUpdate) {
-            let attributes: djAttributes
-            this.setState({ loading: true })
-            this.getAttributes()
-                .then((attrs) => {
-                    attributes = attrs
-                })
-                .then(() => {
-                    this.getRecords().then((payload) => {
-                        this.setState({
-                            dataAttributes: attributes,
-                            data: payload,
-                            loading: false
-                        })
-                        let pks: string[] = []
-                        this.state.dataAttributes.attributes.primary.map(
-                            (value: djAttributesArray, index: number) => {
-                                pks.push(value[0])
-                            }
-                        )
-
-                        let record: string[] = []
-
-                        for (const val in this.state.data.records) {
-                            pks.forEach((value: string, index: number) => {
-                                //this works because i assume the primary keys are the first ones in this.state.data.recordHeader
-                                if (this.state.data.recordHeader[index] === value) {
-                                    //might need revision
-                                    record.push(
-                                        `${value}=${this.state.data.records[val][index]}`
-                                    )
+                    .then(() => {
+                        getRecords().then((payload) => {
+                            setState((prevState) => ({
+                                ...prevState,
+                                dataAttributes: attributes,
+                                data: payload,
+                                loading: false
+                            }))
+                            let pks: string[] = []
+                            state.dataAttributes.attributes.primary.map(
+                                (value: djAttributesArray, index: number) => {
+                                    pks.push(value[0])
                                 }
-                            })
-                        }
+                            )
 
-                        this.props.updatePageStore(this.props.channel!, record.slice(0, 2))
+                            let record: string[] = []
+
+                            for (const val in state.data.records) {
+                                pks.forEach((value: string, index: number) => {
+                                    //this works because i assume the primary keys are the first ones in state.data.recordHeader
+                                    if (state.data.recordHeader[index] === value) {
+                                        //might need revision
+                                        record.push(
+                                            `${value}=${state.data.records[val][index]}`
+                                        )
+                                    }
+                                })
+                            }
+
+                            props.updatePageStore(props.channel!, record.slice(0, 2))
+                        })
                     })
-                })
+            }
         }
+    })
+
+    const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+        setState((prevState) => ({
+            ...prevState,
+            numberOfTuples: pageSize
+        }))
     }
 
-    onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
-        this.setState({ numberOfTuples: pageSize })
-    }
-
-    parseDate(dateTimeString: string) {
+    const parseDate = (dateTimeString: string) => {
         // Handle case with null
         let microseconds = ''
         if (dateTimeString === null) {
@@ -496,13 +549,13 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
             .replace(' GMT', '.' + date.getUTCMilliseconds() + microseconds + ' GMT')
     }
 
-    compileTable() {
+    const compileTable = () => {
         // could make an interface for these
         let columns: Array<{}> = []
         let data: Array<{}> = []
 
-        let fullAttr = this.state.dataAttributes.attributes.primary.concat(
-            this.state.dataAttributes.attributes.secondary
+        let fullAttr = state.dataAttributes.attributes.primary.concat(
+            state.dataAttributes.attributes.secondary
         )
 
         fullAttr.map((value: djAttributesArray, index: number) => {
@@ -516,14 +569,14 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                       filters: value[5],
                       filterMultiple: false,
                       sorter: {},
-                      filteredValue: this.state.filter[value[0]]
-                          ? this.state.filter[value[0]].filteredValue
+                      filteredValue: state.filter[value[0]]
+                          ? state.filter[value[0]].filteredValue
                           : null,
-                      filtered: this.state.filter[value[0]]
-                          ? this.state.filter[value[0]].filtered
+                      filtered: state.filter[value[0]]
+                          ? state.filter[value[0]].filtered
                           : false,
                       filterSearch: true,
-                      render: (date: string) => this.parseDate(date)
+                      render: (date: string) => parseDate(date)
                   })
                 : columns.push({
                       title: value[0],
@@ -531,21 +584,21 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                       filters: value[5],
                       filterMultiple: false,
                       sorter: {},
-                      filteredValue: this.state.filter[value[0]]
-                          ? this.state.filter[value[0]].filteredValue
+                      filteredValue: state.filter[value[0]]
+                          ? state.filter[value[0]].filteredValue
                           : null,
-                      filtered: this.state.filter[value[0]]
-                          ? this.state.filter[value[0]].filtered
+                      filtered: state.filter[value[0]]
+                          ? state.filter[value[0]].filtered
                           : false,
                       filterSearch: true
                   })
         })
-        this.state.data.records.map(
+        state.data.records.map(
             (value: (string | number | bigint | boolean | null)[], index: number) => {
                 let tmp: {} = { key: index }
                 value.map(
                     (value: string | number | bigint | boolean | null, index: number) => {
-                        Object.assign(tmp, { [this.state.data.recordHeader[index]]: value })
+                        Object.assign(tmp, { [state.data.recordHeader[index]]: value })
                     }
                 )
                 data.push(tmp)
@@ -554,11 +607,11 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
         return (
             <Table
                 columns={columns}
-                loading={this.state.loading}
+                loading={state.loading}
                 rowSelection={
-                    this.props.channel
+                    props.channel
                         ? {
-                              selectedRowKeys: this.state.selectedRow,
+                              selectedRowKeys: state.selectedRow,
                               type: 'radio',
                               onChange: (
                                   selectedRowKeys: React.Key[],
@@ -570,7 +623,7 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
 
                                   let pks: string[] = []
 
-                                  this.state.dataAttributes.attributes.primary.map(
+                                  state.dataAttributes.attributes.primary.map(
                                       (value: djAttributesArray, index: number) => {
                                           pks.push(value[0])
                                       }
@@ -586,45 +639,49 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
                                       })
                                   }
 
-                                  this.props.updatePageStore(this.props.channel!, record)
+                                  props.updatePageStore(props.channel!, record)
 
-                                  this.setState({ selectedRow: [...selectedRowKeys] })
+                                  setState((prevState) => ({
+                                      ...prevState,
+                                      selectedRow: [...selectedRowKeys]
+                                  }))
                               }
                           }
                         : undefined
                 }
                 dataSource={data}
                 key={data.toString() + columns.toString()}
-                onChange={this.handleChange.bind(this)}
+                onChange={handleChange}
                 // any is needed due to ant design return type
                 onRow={(record: any, rowIndex: number | undefined) => {
                     return {
                         onClick: (event) => {
                             event.stopPropagation()
                             let keysArr: string[] = []
-                            this.state.dataAttributes.attributes.primary.map(
+                            state.dataAttributes.attributes.primary.map(
                                 (value: djAttributesArray, index: number) => {
                                     keysArr.push(`${value[0]}=${record[value[0]]}`)
                                 }
                             )
-                            this.setState({ keys: keysArr })
+                            setState((prevState) => ({
+                                ...prevState,
+                                keys: keysArr
+                            }))
                         }
                     }
                 }}
                 pagination={{
-                    total: this.state.data.totalCount,
-                    pageSize: this.state.numberOfTuples,
-                    current: this.state.offset,
+                    total: state.data.totalCount,
+                    pageSize: state.numberOfTuples,
+                    current: state.offset,
                     showTotal: (total: number) => `Total records: ${total}`,
                     showSizeChanger:
-                        this.state.data.totalCount > (this.props.pageSizeDefault || 5)
-                            ? true
-                            : false,
-                    onShowSizeChange: this.onShowSizeChange,
-                    pageSizeOptions: this.props.pageSizeDefault
-                        ? [5, 10, 20, 50, 100].includes(this.props.pageSizeDefault)
+                        state.data.totalCount > (props.pageSizeDefault || 5) ? true : false,
+                    onShowSizeChange: onShowSizeChange,
+                    pageSizeOptions: props.pageSizeDefault
+                        ? [5, 10, 20, 50, 100].includes(props.pageSizeDefault)
                             ? [5, 10, 20, 50, 100]
-                            : [5, 10, 20, 50, 100, this.props.pageSizeDefault].sort(function (
+                            : [5, 10, 20, 50, 100, props.pageSizeDefault].sort(function (
                                   a,
                                   b
                               ) {
@@ -636,19 +693,19 @@ export default class DjTable extends React.Component<DjTableProps, DjTableState>
         )
     }
 
-    render() {
-        return (
-            <Card
-                title={this.props.name}
-                style={{ width: '100%', height: this.props.height }}
-                bodyStyle={{
-                    height: `${((this.props.height - 57.13) / this.props.height) * 100}%`, // 57.13 is the height of the title element
-                    overflowY: 'auto'
-                }}
-                hoverable={true}
-            >
-                <>{this.compileTable()}</>
-            </Card>
-        )
-    }
+    return (
+        <Card
+            title={props.name}
+            style={{ width: '100%', height: props.height }}
+            bodyStyle={{
+                height: `${((props.height - 57.13) / props.height) * 100}%`, // 57.13 is the height of the title element
+                overflowY: 'auto'
+            }}
+            hoverable={true}
+        >
+            <>{compileTable()}</>
+        </Card>
+    )
 }
+
+export default DjTable
