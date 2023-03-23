@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Card, PaginationProps, Table, TablePaginationConfig } from 'antd'
 import type { FilterValue } from 'antd/es/table/interface'
+import { useQuery } from 'react-query'
 
 interface RestrictionStore {
     [key: string]: Array<string>
@@ -23,9 +24,12 @@ interface DjTableProps {
 }
 
 interface DjTableState {
-    data: djRecords
-    dataAttributes: djAttributes
-    dataUniques: djUniques
+    columns: Array<{}>
+    data: Array<{}>
+    fullUnq: {
+        text: string
+        value: string | number
+    }[][]
     numberOfTuples: number
     offset: number | undefined
     filter: { [key: string]: djFilter }
@@ -74,17 +78,9 @@ interface djFilter {
  */
 function DjTable(props: DjTableProps) {
     const [state, setState] = useState<DjTableState>({
-        data: { recordHeader: [], records: [[]], totalCount: 0 },
-        dataAttributes: {
-            attributeHeaders: [],
-            attributes: { primary: [], secondary: [] }
-        },
-        dataUniques: {
-            unique_values: {
-                primary: [],
-                secondary: []
-            }
-        },
+        columns: [],
+        data: [],
+        fullUnq: [],
         numberOfTuples: props.pageSizeDefault || 5,
         offset: 1,
         filter: {},
@@ -93,28 +89,15 @@ function DjTable(props: DjTableProps) {
         selectedRow: [0],
         loading: false
     })
-    const [prevState, setPrevState] = useState<DjTableState>({
-        data: { recordHeader: [], records: [[]], totalCount: 0 },
-        dataAttributes: {
-            attributeHeaders: [],
-            attributes: { primary: [], secondary: [] }
-        },
-        dataUniques: {
-            unique_values: {
-                primary: [],
-                secondary: []
-            }
-        },
-        numberOfTuples: props.pageSizeDefault || 5,
-        offset: 1,
-        filter: {},
-        sorter: [],
-        keys: undefined,
-        selectedRow: [0],
-        loading: false
-    })
-    const isInitialMount = useRef(true)
     const prevPropsRef = useRef<DjTableProps>()
+
+    if (state.keys && props.link && props.updateHiddenPage) {
+        props.updateHiddenPage(props.link, state.keys.join('&'))
+        setState((prevState) => ({
+            ...prevState,
+            keys: undefined
+        }))
+    }
 
     const handleChange = (
         pagination: TablePaginationConfig,
@@ -180,7 +163,7 @@ function DjTable(props: DjTableProps) {
         }
     }
 
-    const getRecords = (): Promise<djRecords> => {
+    const constructRecordURL = (): string => {
         let queryParamList = [...props.restrictionList]
         let channelCheckArr = Array<boolean>()
 
@@ -191,17 +174,6 @@ function DjTable(props: DjTableProps) {
                 channelCheckArr.push(false)
             }
         })
-
-        if (props.restrictionList.includes('') && channelCheckArr.includes(false)) {
-            let arr = Array<string>()
-            let arrRec = Array<Array<number | null | bigint | boolean | string>>()
-
-            return Promise.resolve({
-                recordHeader: arr,
-                records: arrRec,
-                totalCount: 0
-            })
-        }
 
         for (let i in props.channelList) {
             if (typeof props.store![props.channelList[+i]] != undefined) {
@@ -248,7 +220,10 @@ function DjTable(props: DjTableProps) {
             apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
         }
 
-        return fetch(apiUrl, {
+        return apiUrl
+    }
+    const getRecords = (): Promise<djRecords> => {
+        return fetch(constructRecordURL(), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -262,48 +237,17 @@ function DjTable(props: DjTableProps) {
                 return result as Promise<djRecords>
             })
     }
+    const recordsQuery = useQuery(constructRecordURL(), getRecords, {
+        enabled: !(
+            props.store &&
+            props.channelList &&
+            !props.channelList.every((val) => Object.keys(props.store!).includes(val))
+        )
+    })
 
     const getAttributes = (): Promise<djAttributes> => {
         let apiUrlAttr =
             `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + props.route + '/attributes'
-
-        let queryParamList = [...props.restrictionList]
-        let channelCheckArr = Array<boolean>()
-
-        props.channelList?.forEach((element) => {
-            if (props.store![element]) {
-                channelCheckArr.push(true)
-            } else {
-                channelCheckArr.push(false)
-            }
-        })
-
-        for (let i in props.channelList) {
-            if (typeof props.store![props.channelList[+i]] != undefined) {
-                queryParamList = queryParamList.concat(props.store![props.channelList[+i]])
-            }
-        }
-        if (queryParamList.indexOf('') !== -1) {
-            queryParamList.splice(queryParamList.indexOf(''), 1)
-        }
-
-        if (queryParamList.length) {
-            if (apiUrlAttr.includes('?') == false) {
-                apiUrlAttr = apiUrlAttr + '?' + queryParamList.join('&')
-            } else {
-                apiUrlAttr = apiUrlAttr + '&' + queryParamList.join('&')
-            }
-        }
-
-        if (Object.keys(state.filter).length !== 0) {
-            for (const key of Object.keys(state.filter)) {
-                if (apiUrlAttr.includes('?') == false) {
-                    apiUrlAttr = apiUrlAttr + '?' + state.filter[key].restriction
-                } else {
-                    apiUrlAttr = apiUrlAttr + '&' + state.filter[key].restriction
-                }
-            }
-        }
 
         if (props.databaseHost) {
             apiUrlAttr = apiUrlAttr.concat(`&database_host=${props.databaseHost}`)
@@ -323,8 +267,19 @@ function DjTable(props: DjTableProps) {
                 return result as Promise<djAttributes>
             })
     }
+    const attributesQuery = useQuery(
+        `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${props.route}/attributes`,
+        getAttributes,
+        {
+            enabled: !(
+                props.store &&
+                props.channelList &&
+                !props.channelList.every((val) => Object.keys(props.store!).includes(val))
+            )
+        }
+    )
 
-    const getUniques = (): Promise<djUniques> => {
+    const constructUniquesURL = (): string => {
         let apiUrlUnqs =
             `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + props.route + '/uniques'
 
@@ -370,7 +325,10 @@ function DjTable(props: DjTableProps) {
             apiUrlUnqs = apiUrlUnqs.concat(`&database_host=${props.databaseHost}`)
         }
 
-        return fetch(apiUrlUnqs, {
+        return apiUrlUnqs
+    }
+    const getUniques = (): Promise<djUniques> => {
+        return fetch(constructUniquesURL(), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -384,181 +342,12 @@ function DjTable(props: DjTableProps) {
                 return result as Promise<djUniques>
             })
     }
-
-    // Store previous state and props
-    useEffect(() => {
-        setPrevState(state)
-    }, [state])
-    useEffect(() => {
-        prevPropsRef.current = props
-    })
-    const getPreviousProps = () => {
-        return prevPropsRef.current
-    }
-
-    // On mount
-    useEffect(() => {
-        let records: djRecords
-        setState((prevState) => ({
-            ...prevState,
-            loading: true
-        }))
-        getRecords()
-            .then((result) => {
-                records = result
-            })
-            .then(() => {
-                return getAttributes()
-            })
-            .then((result) => {
-                setState((prevState) => ({
-                    ...prevState,
-                    dataAttributes: result,
-                    data: records,
-                    loading: false
-                }))
-
-                let pks: string[] = []
-
-                state.dataAttributes.attributes.primary.map(
-                    (value: djAttributesArray, index: number) => {
-                        pks.push(value[0])
-                    }
-                )
-
-                let record: string[] = []
-
-                for (const val in state.data.records) {
-                    pks.forEach((value: string, index: number) => {
-                        //this works because i assume the primary keys are the first ones in state.data.recordHeader
-                        if (state.data.recordHeader[index] === value) {
-                            //might need revision
-                            record.push(`${value}=${state.data.records[val][index]}`)
-                        }
-                    })
-                }
-
-                props.updatePageStore(props.channel!, record.slice(0, 2))
-            })
-            .then(() => {
-                getUniques().then((result) => {
-                    setState((prevState) => ({
-                        ...prevState,
-                        dataUniques: result
-                    }))
-                })
-            })
-    }, [])
-
-    // On update
-    useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false
-        } else {
-            if (state.keys && props.link && props.updateHiddenPage) {
-                props.updateHiddenPage(props.link, state.keys.join('&'))
-                setState((prevState) => ({
-                    ...prevState,
-                    keys: undefined
-                }))
-            }
-            if (
-                state.offset !== prevState.offset ||
-                state.filter !== prevState.filter ||
-                state.sorter !== prevState.sorter
-            ) {
-                let attributes: djAttributes
-                setState((prevState) => ({
-                    ...prevState,
-                    loading: true
-                }))
-                getAttributes()
-                    .then((attrs) => {
-                        attributes = attrs
-                    })
-                    .then(() => {
-                        getRecords().then((result) => {
-                            setState((prevState) => ({
-                                ...prevState,
-                                dataAttributes: attributes,
-                                data: result,
-                                loading: false
-                            }))
-                        })
-                    })
-                    .then(() => {
-                        getUniques().then((result) => {
-                            setState((prevState) => ({
-                                ...prevState,
-                                dataUniques: result
-                            }))
-                        })
-                    })
-            }
-            let propsUpdate = false
-            if (props.store !== getPreviousProps()!.store) {
-                props.channelList?.forEach((element) => {
-                    if (
-                        JSON.stringify(props.store![element]) !==
-                        JSON.stringify(getPreviousProps()!.store![element])
-                    ) {
-                        console.log('PROPS UPDATED')
-                        propsUpdate = true
-                    }
-                })
-            }
-            if (propsUpdate) {
-                let attributes: djAttributes
-                setState((prevState) => ({
-                    ...prevState,
-                    loading: true
-                }))
-                getAttributes()
-                    .then((attrs) => {
-                        attributes = attrs
-                    })
-                    .then(() => {
-                        getRecords().then((payload) => {
-                            setState((prevState) => ({
-                                ...prevState,
-                                dataAttributes: attributes,
-                                data: payload,
-                                loading: false
-                            }))
-                            let pks: string[] = []
-                            state.dataAttributes.attributes.primary.map(
-                                (value: djAttributesArray, index: number) => {
-                                    pks.push(value[0])
-                                }
-                            )
-
-                            let record: string[] = []
-
-                            for (const val in state.data.records) {
-                                pks.forEach((value: string, index: number) => {
-                                    //this works because i assume the primary keys are the first ones in state.data.recordHeader
-                                    if (state.data.recordHeader[index] === value) {
-                                        //might need revision
-                                        record.push(
-                                            `${value}=${state.data.records[val][index]}`
-                                        )
-                                    }
-                                })
-                            }
-
-                            props.updatePageStore(props.channel!, record.slice(0, 2))
-                        })
-                    })
-                    .then(() => {
-                        getUniques().then((result) => {
-                            setState((prevState) => ({
-                                ...prevState,
-                                dataUniques: result
-                            }))
-                        })
-                    })
-            }
-        }
+    const uniquesQuery = useQuery(constructUniquesURL(), getUniques, {
+        enabled: !(
+            props.store &&
+            props.channelList &&
+            !props.channelList.every((val) => Object.keys(props.store!).includes(val))
+        )
     })
 
     const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
@@ -583,67 +372,146 @@ function DjTable(props: DjTableProps) {
             .replace(' GMT', '.' + date.getUTCMilliseconds() + microseconds + ' GMT')
     }
 
-    const compileTable = () => {
-        // could make an interface for these
-        let columns: Array<{}> = []
-        let data: Array<{}> = []
+    // Store previous props
+    useEffect(() => {
+        prevPropsRef.current = props
+    })
+    const getPreviousProps = () => {
+        return prevPropsRef.current
+    }
 
-        let fullAttr = state.dataAttributes.attributes.primary.concat(
-            state.dataAttributes.attributes.secondary
-        )
-        let fullUnq = state.dataUniques.unique_values.primary.concat(
-            state.dataUniques.unique_values.secondary
-        )
-        fullAttr.map((value: djAttributesArray, index: number) => {
-            value[1].includes('datetime') ||
-            value[1] === 'time' ||
-            value[1] === 'timestamp' ||
-            value[1] === 'date'
-                ? columns.push({
-                      title: value[0],
-                      dataIndex: value[0],
-                      filters: fullUnq[index],
-                      filterMultiple: false,
-                      sorter: {},
-                      filteredValue: state.filter[value[0]]
-                          ? state.filter[value[0]].filteredValue
-                          : null,
-                      filtered: state.filter[value[0]]
-                          ? state.filter[value[0]].filtered
-                          : false,
-                      filterSearch: true,
-                      render: (date: string) => parseDate(date)
-                  })
-                : columns.push({
-                      title: value[0],
-                      dataIndex: value[0],
-                      filters: fullUnq[index],
-                      filterMultiple: false,
-                      sorter: {},
-                      filteredValue: state.filter[value[0]]
-                          ? state.filter[value[0]].filteredValue
-                          : null,
-                      filtered: state.filter[value[0]]
-                          ? state.filter[value[0]].filtered
-                          : false,
-                      filterSearch: true
-                  })
-        })
-        state.data.records.map(
-            (value: (string | number | bigint | boolean | null)[], index: number) => {
-                let tmp: {} = { key: index }
-                value.map(
-                    (value: string | number | bigint | boolean | null, index: number) => {
-                        Object.assign(tmp, { [state.data.recordHeader[index]]: value })
+    useEffect(() => {
+        if (recordsQuery.isSuccess && attributesQuery.isSuccess) {
+            let propsUpdate = false
+            if (props.store !== getPreviousProps()!.store) {
+                props.channelList?.forEach((element) => {
+                    if (
+                        JSON.stringify(props.store![element]) !==
+                        JSON.stringify(getPreviousProps()!.store![element])
+                    ) {
+                        console.log('PROPS UPDATED')
+                        propsUpdate = true
+                    }
+                })
+            }
+            if (propsUpdate) {
+                let pks: string[] = []
+                attributesQuery.data.attributes.primary.map(
+                    (value: djAttributesArray, index: number) => {
+                        pks.push(value[0])
                     }
                 )
-                data.push(tmp)
+
+                let record: string[] = []
+
+                for (const val in recordsQuery.data.records) {
+                    pks.forEach((value: string, index: number) => {
+                        //this works because i assume the primary keys are the first ones in recordsQuery.data.recordHeader
+                        if (recordsQuery.data.recordHeader[index] === value) {
+                            //might need revision
+                            record.push(`${value}=${recordsQuery.data.records[val][index]}`)
+                        }
+                    })
+                }
+
+                props.updatePageStore(props.channel!, record.slice(0, 2))
             }
-        )
-        return (
+        }
+    })
+
+    useEffect(() => {
+        if (recordsQuery.isSuccess && attributesQuery.isSuccess) {
+            let tempCols: {}[] = []
+            let tempData: {}[] = []
+            let fullAttr = attributesQuery.data.attributes.primary.concat(
+                attributesQuery.data.attributes.secondary
+            )
+            fullAttr.map((value: djAttributesArray, index: number) => {
+                value[1].includes('datetime') ||
+                value[1] === 'time' ||
+                value[1] === 'timestamp' ||
+                value[1] === 'date'
+                    ? tempCols.push({
+                          title: value[0],
+                          dataIndex: value[0],
+                          filters: uniquesQuery.isSuccess
+                              ? state.fullUnq[index][0]
+                              : undefined,
+                          filterMultiple: false,
+                          sorter: {},
+                          filteredValue: state.filter[value[0]]
+                              ? state.filter[value[0]].filteredValue
+                              : null,
+                          filtered: state.filter[value[0]]
+                              ? state.filter[value[0]].filtered
+                              : false,
+                          filterSearch: true,
+                          render: (date: string) => parseDate(date)
+                      })
+                    : tempCols.push({
+                          title: value[0],
+                          dataIndex: value[0],
+                          filters: uniquesQuery.isSuccess
+                              ? state.fullUnq[index][0]
+                              : undefined,
+                          filterMultiple: false,
+                          sorter: {},
+                          filteredValue: state.filter[value[0]]
+                              ? state.filter[value[0]].filteredValue
+                              : null,
+                          filtered: state.filter[value[0]]
+                              ? state.filter[value[0]].filtered
+                              : false,
+                          filterSearch: true
+                      })
+            })
+            recordsQuery.data.records.map(
+                (value: (string | number | bigint | boolean | null)[], index: number) => {
+                    let tmp: {} = { key: index }
+                    value.map(
+                        (value: string | number | bigint | boolean | null, index: number) => {
+                            Object.assign(tmp, {
+                                [recordsQuery.data.recordHeader[index]]: value
+                            })
+                        }
+                    )
+                    tempData.push(tmp)
+                }
+            )
+            setState((prevState) => ({
+                ...prevState,
+                columns: tempCols,
+                data: tempData
+            }))
+        }
+    }, [recordsQuery.data, attributesQuery.data, state.fullUnq])
+
+    useEffect(() => {
+        if (uniquesQuery.isSuccess) {
+            let uniques = uniquesQuery.data.unique_values.primary.concat(
+                uniquesQuery.data.unique_values.secondary
+            )
+            if (JSON.stringify(state.fullUnq) !== JSON.stringify(uniques))
+                setState((prevState) => ({
+                    ...prevState,
+                    fullUnq: uniques
+                }))
+        }
+    }, [uniquesQuery.data])
+
+    return (
+        <Card
+            title={props.name}
+            style={{ width: '100%', height: props.height }}
+            bodyStyle={{
+                height: `${((props.height - 57.13) / props.height) * 100}%`, // 57.13 is the height of the title element
+                overflowY: 'auto'
+            }}
+            hoverable={true}
+        >
             <Table
-                columns={columns}
-                loading={state.loading}
+                columns={state.columns}
+                loading={recordsQuery.isLoading || attributesQuery.isLoading}
                 rowSelection={
                     props.channel
                         ? {
@@ -659,7 +527,7 @@ function DjTable(props: DjTableProps) {
 
                                   let pks: string[] = []
 
-                                  state.dataAttributes.attributes.primary.map(
+                                  attributesQuery.data?.attributes.primary.map(
                                       (value: djAttributesArray, index: number) => {
                                           pks.push(value[0])
                                       }
@@ -685,8 +553,8 @@ function DjTable(props: DjTableProps) {
                           }
                         : undefined
                 }
-                dataSource={data}
-                key={data.toString() + columns.toString()}
+                dataSource={state.data}
+                key={state.data.toString() + state.columns.toString()}
                 onChange={handleChange}
                 // any is needed due to ant design return type
                 onRow={(record: any, rowIndex: number | undefined) => {
@@ -694,7 +562,7 @@ function DjTable(props: DjTableProps) {
                         onClick: (event) => {
                             event.stopPropagation()
                             let keysArr: string[] = []
-                            state.dataAttributes.attributes.primary.map(
+                            attributesQuery.data?.attributes.primary.map(
                                 (value: djAttributesArray, index: number) => {
                                     keysArr.push(`${value[0]}=${record[value[0]]}`)
                                 }
@@ -707,12 +575,14 @@ function DjTable(props: DjTableProps) {
                     }
                 }}
                 pagination={{
-                    total: state.data.totalCount,
+                    total: recordsQuery.data?.totalCount || 0,
                     pageSize: state.numberOfTuples,
                     current: state.offset,
                     showTotal: (total: number) => `Total records: ${total}`,
                     showSizeChanger:
-                        state.data.totalCount > (props.pageSizeDefault || 5) ? true : false,
+                        (recordsQuery.data?.totalCount || 0) > (props.pageSizeDefault || 5)
+                            ? true
+                            : false,
                     onShowSizeChange: onShowSizeChange,
                     pageSizeOptions: props.pageSizeDefault
                         ? [5, 10, 20, 50, 100].includes(props.pageSizeDefault)
@@ -726,20 +596,6 @@ function DjTable(props: DjTableProps) {
                         : [5, 10, 20, 50, 100]
                 }}
             />
-        )
-    }
-
-    return (
-        <Card
-            title={props.name}
-            style={{ width: '100%', height: props.height }}
-            bodyStyle={{
-                height: `${((props.height - 57.13) / props.height) * 100}%`, // 57.13 is the height of the title element
-                overflowY: 'auto'
-            }}
-            hoverable={true}
-        >
-            <>{compileTable()}</>
         </Card>
     )
 }
