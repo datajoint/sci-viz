@@ -25,6 +25,7 @@ interface DjTableProps {
 interface DjTableState {
     data: djRecords
     dataAttributes: djAttributes
+    dataUniques: djUniques
     numberOfTuples: number
     offset: number | undefined
     filter: { [key: string]: djFilter }
@@ -41,13 +42,18 @@ interface djAttributesArray {
     nullable: boolean
     default: string
     autoincriment: boolean
-    filter: { text: string; value: string | number }[]
 }
 interface djAttributes {
     attributeHeaders: Array<string>
     attributes: {
         primary: Array<djAttributesArray>
         secondary: Array<djAttributesArray>
+    }
+}
+interface djUniques {
+    unique_values: {
+        primary: Array<{ text: string; value: string | number }[]>
+        secondary: Array<{ text: string; value: string | number }>
     }
 }
 
@@ -73,6 +79,12 @@ function DjTable(props: DjTableProps) {
             attributeHeaders: [],
             attributes: { primary: [], secondary: [] }
         },
+        dataUniques: {
+            unique_values: {
+                primary: [],
+                secondary: []
+            }
+        },
         numberOfTuples: props.pageSizeDefault || 5,
         offset: 1,
         filter: {},
@@ -86,6 +98,12 @@ function DjTable(props: DjTableProps) {
         dataAttributes: {
             attributeHeaders: [],
             attributes: { primary: [], secondary: [] }
+        },
+        dataUniques: {
+            unique_values: {
+                primary: [],
+                secondary: []
+            }
         },
         numberOfTuples: props.pageSizeDefault || 5,
         offset: 1,
@@ -306,7 +324,7 @@ function DjTable(props: DjTableProps) {
             })
     }
 
-    const getUniques = (): Promise<djAttributes> => {
+    const getUniques = (): Promise<djUniques> => {
         let apiUrlUnqs =
             `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + props.route + '/uniques'
 
@@ -363,7 +381,7 @@ function DjTable(props: DjTableProps) {
                 return result.json()
             })
             .then((result) => {
-                return result as Promise<djAttributes>
+                return result as Promise<djUniques>
             })
     }
 
@@ -426,7 +444,7 @@ function DjTable(props: DjTableProps) {
                 getUniques().then((result) => {
                     setState((prevState) => ({
                         ...prevState,
-                        dataAttributes: result
+                        dataUniques: result
                     }))
                 })
             })
@@ -465,6 +483,14 @@ function DjTable(props: DjTableProps) {
                                 dataAttributes: attributes,
                                 data: result,
                                 loading: false
+                            }))
+                        })
+                    })
+                    .then(() => {
+                        getUniques().then((result) => {
+                            setState((prevState) => ({
+                                ...prevState,
+                                dataUniques: result
                             }))
                         })
                     })
@@ -523,6 +549,14 @@ function DjTable(props: DjTableProps) {
                             props.updatePageStore(props.channel!, record.slice(0, 2))
                         })
                     })
+                    .then(() => {
+                        getUniques().then((result) => {
+                            setState((prevState) => ({
+                                ...prevState,
+                                dataUniques: result
+                            }))
+                        })
+                    })
             }
         }
     })
@@ -557,7 +591,9 @@ function DjTable(props: DjTableProps) {
         let fullAttr = state.dataAttributes.attributes.primary.concat(
             state.dataAttributes.attributes.secondary
         )
-
+        let fullUnq = state.dataUniques.unique_values.primary.concat(
+            state.dataUniques.unique_values.secondary
+        )
         fullAttr.map((value: djAttributesArray, index: number) => {
             value[1].includes('datetime') ||
             value[1] === 'time' ||
@@ -566,7 +602,7 @@ function DjTable(props: DjTableProps) {
                 ? columns.push({
                       title: value[0],
                       dataIndex: value[0],
-                      filters: value[5],
+                      filters: fullUnq[index],
                       filterMultiple: false,
                       sorter: {},
                       filteredValue: state.filter[value[0]]
@@ -581,7 +617,7 @@ function DjTable(props: DjTableProps) {
                 : columns.push({
                       title: value[0],
                       dataIndex: value[0],
-                      filters: value[5],
+                      filters: fullUnq[index],
                       filterMultiple: false,
                       sorter: {},
                       filteredValue: state.filter[value[0]]
