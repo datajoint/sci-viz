@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Card, PaginationProps, Table, TablePaginationConfig } from 'antd'
+import { Card, PaginationProps, Spin, Table, TablePaginationConfig } from 'antd'
 import type { FilterValue } from 'antd/es/table/interface'
 import { useQuery } from 'react-query'
 
@@ -380,6 +380,7 @@ function DjTable(props: DjTableProps) {
         return prevPropsRef.current
     }
 
+    // Effect for handling emitter updates
     useEffect(() => {
         if (recordsQuery.isSuccess && attributesQuery.isSuccess) {
             let propsUpdate = false
@@ -417,8 +418,9 @@ function DjTable(props: DjTableProps) {
                 props.updatePageStore(props.channel!, record.slice(0, 2))
             }
         }
-    })
+    }, [props.store, recordsQuery.data, attributesQuery.data])
 
+    // Effect for constructing the table
     useEffect(() => {
         if (recordsQuery.isSuccess && attributesQuery.isSuccess) {
             let tempCols: {}[] = []
@@ -434,6 +436,9 @@ function DjTable(props: DjTableProps) {
                     ? tempCols.push({
                           title: value[0],
                           dataIndex: value[0],
+                          filterDropdown: !state.fullUnq.length ? (
+                              <Spin size='small' />
+                          ) : undefined,
                           filters: state.fullUnq.length ? state.fullUnq[index][0] : undefined,
                           filterMultiple: false,
                           sorter: {},
@@ -449,6 +454,9 @@ function DjTable(props: DjTableProps) {
                     : tempCols.push({
                           title: value[0],
                           dataIndex: value[0],
+                          filterDropdown: !state.fullUnq.length ? (
+                              <Spin size='small' />
+                          ) : undefined,
                           filters: state.fullUnq.length ? state.fullUnq[index][0] : undefined,
                           filterMultiple: false,
                           sorter: {},
@@ -482,6 +490,7 @@ function DjTable(props: DjTableProps) {
         }
     }, [recordsQuery.data, attributesQuery.data, state.fullUnq])
 
+    // Effect for updating filters
     useEffect(() => {
         if (uniquesQuery.isSuccess) {
             let uniques = uniquesQuery.data.unique_values.primary.concat(
