@@ -434,9 +434,7 @@ function DjTable(props: DjTableProps) {
                     ? tempCols.push({
                           title: value[0],
                           dataIndex: value[0],
-                          filters: uniquesQuery.isSuccess
-                              ? state.fullUnq[index][0]
-                              : undefined,
+                          filters: state.fullUnq.length ? state.fullUnq[index][0] : undefined,
                           filterMultiple: false,
                           sorter: {},
                           filteredValue: state.filter[value[0]]
@@ -451,9 +449,7 @@ function DjTable(props: DjTableProps) {
                     : tempCols.push({
                           title: value[0],
                           dataIndex: value[0],
-                          filters: uniquesQuery.isSuccess
-                              ? state.fullUnq[index][0]
-                              : undefined,
+                          filters: state.fullUnq.length ? state.fullUnq[index][0] : undefined,
                           filterMultiple: false,
                           sorter: {},
                           filteredValue: state.filter[value[0]]
@@ -491,11 +487,10 @@ function DjTable(props: DjTableProps) {
             let uniques = uniquesQuery.data.unique_values.primary.concat(
                 uniquesQuery.data.unique_values.secondary
             )
-            if (JSON.stringify(state.fullUnq) !== JSON.stringify(uniques))
-                setState((prevState) => ({
-                    ...prevState,
-                    fullUnq: uniques
-                }))
+            setState((prevState) => ({
+                ...prevState,
+                fullUnq: uniques
+            }))
         }
     }, [uniquesQuery.data])
 
