@@ -238,7 +238,13 @@ function DynamicForm(props: formProps) {
             >
                 {Object.entries(presetPayload).map((value) => {
                     return (
-                        <Menu.Item key={value[0]} title={value[0]}>
+                        <Menu.Item
+                            key={value[0]}
+                            title={value[0]}
+                            onClick={() => {
+                                form.resetFields()
+                            }}
+                        >
                             {value[0]}
                         </Menu.Item>
                     )
