@@ -189,6 +189,7 @@ function DynamicForm(props: formProps) {
             })
             .then((result) => {
                 for (let key in result) {
+                    // Convert datetime types to antd-compatible `moment` objects
                     if (result.hasOwnProperty(key)) {
                         let nestedObj = result[key]
                         for (let nestedKey in nestedObj) {
