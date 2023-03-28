@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import moment from 'moment'
 import {
     Card,
     Form,
@@ -16,7 +18,6 @@ import {
 import { DownOutlined } from '@ant-design/icons'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { useState } from 'react'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 const { TextArea } = Input
@@ -182,9 +183,37 @@ function DynamicForm(props: formProps) {
             headers: {
                 Authorization: 'Bearer ' + props.token
             }
-        }).then((result) => {
-            return result.json()
         })
+            .then((result) => {
+                return result.json()
+            })
+            .then((result) => {
+                for (let key in result) {
+                    if (result.hasOwnProperty(key)) {
+                        let nestedObj = result[key]
+                        for (let nestedKey in nestedObj) {
+                            if (nestedObj.hasOwnProperty(nestedKey)) {
+                                let value = nestedObj[nestedKey]
+                                if (
+                                    typeof value === 'string' &&
+                                    moment(
+                                        value,
+                                        ['YYYY-MM-DD', 'YYYY-MM-DD HH:mm:ss', 'HH:mm:ss'],
+                                        true
+                                    ).isValid()
+                                ) {
+                                    nestedObj[nestedKey] = moment(value, [
+                                        'YYYY-MM-DD',
+                                        'YYYY-MM-DD HH:mm:ss',
+                                        'HH:mm:ss'
+                                    ])
+                                }
+                            }
+                        }
+                    }
+                }
+                return result
+            })
     }
 
     const { data: fieldData, status } = useQuery(
@@ -347,6 +376,7 @@ function DynamicForm(props: formProps) {
                     showTime
                     id={attrField.name}
                     style={{ width: '100%' }}
+                    format={'YYYY-MM-DD HH:mm:ss'}
                     onChange={(value, dateString) => (field.store = dateString)}
                 />
             )
@@ -355,6 +385,7 @@ function DynamicForm(props: formProps) {
                 <DatePicker
                     id={attrField.name}
                     style={{ width: '100%' }}
+                    format={'YYYY-MM-DD'}
                     onChange={(value, dateString) => (field.store = dateString)}
                 />
             )
@@ -363,6 +394,7 @@ function DynamicForm(props: formProps) {
                 <TimePicker
                     id={attrField.name}
                     style={{ width: '100%' }}
+                    format={'HH:mm:ss'}
                     onChange={(value, timeString) => (field.store = timeString)}
                 />
             )
