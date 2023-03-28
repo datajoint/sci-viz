@@ -236,7 +236,10 @@ function DynamicForm(props: formProps) {
                 props.store &&
                 props.channelList &&
                 !props.channelList.every((val) => Object.keys(props.store!).includes(val))
-            )
+            ),
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: false,
+            retry: false
         }
     )
 
