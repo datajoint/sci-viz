@@ -38,6 +38,7 @@ interface formProps {
     channelList?: Array<string>
     store?: RestrictionStore
     databaseHost?: string
+    presets?: boolean
 }
 
 interface attributeFieldData {
@@ -233,14 +234,13 @@ function DynamicForm(props: formProps) {
         `${props.route}_presets${queryParamList.length ? `:${queryParamList}` : ''}`,
         getFormPresetData,
         {
-            enabled: !(
-                props.store &&
-                props.channelList &&
-                !props.channelList.every((val) => Object.keys(props.store!).includes(val))
-            ),
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-            retry: false
+            enabled:
+                props.presets &&
+                !(
+                    props.store &&
+                    props.channelList &&
+                    !props.channelList.every((val) => Object.keys(props.store!).includes(val))
+                )
         }
     )
 
@@ -425,10 +425,10 @@ function DynamicForm(props: formProps) {
         <Card
             title={props.name}
             extra={
-                presets.status == 'loading' ? (
-                    <Spin />
-                ) : presets.status == 'error' ? (
+                presets.status == 'error' || !props.presets ? (
                     <></>
+                ) : presets.status == 'loading' ? (
+                    <Spin />
                 ) : (
                     generateDropdown(presets.data!)
                 )
