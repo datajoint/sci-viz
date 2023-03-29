@@ -46,7 +46,6 @@ interface attributeFieldData {
     datatype: string
     name: string
     default: string | null
-    store: string
 }
 
 interface tableFieldData {
@@ -54,7 +53,6 @@ interface tableFieldData {
     values: Array<string>
     name: string
     default: null
-    store: string
 }
 
 interface fieldsData {
@@ -62,7 +60,12 @@ interface fieldsData {
 }
 
 interface formPayloadData {
-    [key: string]: string | number | null | { [key: string]: string | number | null }
+    [key: string]:
+        | string
+        | number
+        | moment.Moment
+        | null
+        | { [key: string]: string | number | null }
 }
 
 function DynamicForm(props: formProps) {
@@ -146,7 +149,9 @@ function DynamicForm(props: formProps) {
     const { mutate: insert, isLoading: insertLoading } = useMutation(insertPayload, {
         onSuccess: () => {
             queryClient.refetchQueries({
-                predicate: (query) => query.queryKey.includes('_form') && query.isActive()
+                predicate: (query) =>
+                    (query.queryKey.includes('_form') || query.queryKey.includes('_table')) &&
+                    query.isActive()
             })
         }
     })
@@ -250,9 +255,8 @@ function DynamicForm(props: formProps) {
                 values = Object.assign(values, JSON.parse(values[field.name] as string))
                 delete values[field.name]
             } else if (/^date.*|time.*$/.test((field as attributeFieldData).datatype))
-                values[field.name] = convertDateTime(
-                    field.store,
-                    (field as attributeFieldData).datatype
+                values[field.name] = (values[field.name] as moment.Moment).format(
+                    'YYYY-MM-DD HH:mm:ss'
                 )
         })
         let payload = {
@@ -292,23 +296,6 @@ function DynamicForm(props: formProps) {
                 </Button>
             </Dropdown>
         )
-    }
-
-    const convertDateTime = (value: string | number, type: string) => {
-        if (!value) return value
-        else if (/^datetime.*|timestamp.*$/.test(type)) {
-            let datetime = new Date(value)
-            value = `${datetime.toISOString().split('T')[0]} ${
-                datetime.toISOString().split('T')[1].split('.')[0]
-            }`
-        } else if (/^date.*$/.test(type)) {
-            let date = new Date(value)
-            value = date.toISOString().split('T')[0]
-        } else if (/^time.*$/.test(type)) {
-            let time = new Date(`1970-01-01 ${value}`)
-            value = time.toISOString().split('T')[1].split('.')[0]
-        }
-        return value
     }
 
     const generateFieldItem = (field: attributeFieldData | tableFieldData) => {
@@ -381,7 +368,6 @@ function DynamicForm(props: formProps) {
                     id={attrField.name}
                     style={{ width: '100%' }}
                     format={'YYYY-MM-DD HH:mm:ss'}
-                    onChange={(value, dateString) => (field.store = dateString)}
                 />
             )
         else if (/^date.*$/.test(attrField.datatype))
@@ -390,7 +376,6 @@ function DynamicForm(props: formProps) {
                     id={attrField.name}
                     style={{ width: '100%' }}
                     format={'YYYY-MM-DD'}
-                    onChange={(value, dateString) => (field.store = dateString)}
                 />
             )
         else if (/^time.*$/.test(attrField.datatype))
@@ -399,7 +384,6 @@ function DynamicForm(props: formProps) {
                     id={attrField.name}
                     style={{ width: '100%' }}
                     format={'HH:mm:ss'}
-                    onChange={(value, timeString) => (field.store = timeString)}
                 />
             )
         else return <>Datatype not yet supported</>
