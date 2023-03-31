@@ -27,7 +27,7 @@ interface RestrictionStore {
 }
 
 interface formPresets {
-    [presetName: string]: { [key: string]: number | string }
+    [presetName: string]: { [key: string]: [number | string, string] }
 }
 
 interface formProps {
@@ -189,38 +189,9 @@ function DynamicForm(props: formProps) {
             headers: {
                 Authorization: 'Bearer ' + props.token
             }
+        }).then((result) => {
+            return result.json()
         })
-            .then((result) => {
-                return result.json()
-            })
-            .then((result) => {
-                for (let key in result) {
-                    // Convert datetime types to antd-compatible `moment` objects
-                    if (result.hasOwnProperty(key)) {
-                        let nestedObj = result[key]
-                        for (let nestedKey in nestedObj) {
-                            if (nestedObj.hasOwnProperty(nestedKey)) {
-                                let value = nestedObj[nestedKey]
-                                if (
-                                    typeof value === 'string' &&
-                                    moment(
-                                        value,
-                                        ['YYYY-MM-DD', 'YYYY-MM-DD HH:mm:ss', 'HH:mm:ss'],
-                                        true
-                                    ).isValid()
-                                ) {
-                                    nestedObj[nestedKey] = moment(value, [
-                                        'YYYY-MM-DD',
-                                        'YYYY-MM-DD HH:mm:ss',
-                                        'HH:mm:ss'
-                                    ])
-                                }
-                            }
-                        }
-                    }
-                }
-                return result
-            })
     }
 
     const { data: fieldData, status } = useQuery(
@@ -267,19 +238,43 @@ function DynamicForm(props: formProps) {
 
     const generateDropdown = (presetPayload: formPresets) => {
         let menu = (
-            <Menu
-                onClick={(value) => {
-                    form.setFieldsValue(presetPayload[value.key])
-                    setCurrentDropdownSelection(value.key)
-                }}
-            >
+            <Menu>
                 {Object.entries(presetPayload).map((value) => {
                     return (
                         <Menu.Item
                             key={value[0]}
                             title={value[0]}
-                            onClick={() => {
+                            onClick={(value) => {
+                                let preset: {
+                                    [key: string]: number | string | moment.Moment
+                                } = {}
+                                let invalidsArr: string[] = []
+                                let formatsArr = [
+                                    'YYYY-MM-DD',
+                                    'YYYY-MM-DD HH:mm:ss',
+                                    'HH:mm:ss'
+                                ]
+                                for (let key in presetPayload[value.key]) {
+                                    let attr = presetPayload[value.key][key]
+                                    if (/^date.*|time.*$/.test(attr[1])) {
+                                        if (moment(attr[0], formatsArr, true).isValid())
+                                            preset[key] = moment(attr[0], formatsArr)
+                                        else invalidsArr.push(key)
+                                    } else preset[key] = attr[0]
+                                }
+                                console.log(preset)
+                                if (invalidsArr.length)
+                                    openNotification(
+                                        'warning',
+                                        'Invalid date format detected',
+                                        `Omitting preset value(s) for: ${invalidsArr.join(
+                                            ', '
+                                        )}`,
+                                        5
+                                    )
                                 form.resetFields()
+                                form.setFieldsValue(preset)
+                                setCurrentDropdownSelection(value.key)
                             }}
                         >
                             {value[0]}
