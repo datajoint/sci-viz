@@ -156,6 +156,7 @@ function SciVizComponent(props: ComponentProps) {
                 height={calculatedHeight}
                 store={Object.assign({}, props.store)}
                 channelList={compData.channels}
+                presets={!!compData.presets}
             />
         )
     } else if (/^slideshow.*$/.test(type)) {
