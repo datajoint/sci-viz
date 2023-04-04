@@ -25,6 +25,25 @@ jobs:
           echo "BODY=${BODY}"
           echo "PRERELEASE=${PRERELEASE}"
           echo "DRAFT=${DRAFT}"
+  test-build:
+    environment: docker
+    needs: test-changelog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: get version
+        run: |
+          export DJSCIVIZ_VERSION=$(cat package.json | grep \"version\" | \
+            awk -F\" '{print $4}')
+          echo "DJSCIVIZ_VERSION=${DJSCIVIZ_VERSION}" >> $GITHUB_ENV
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          tags: datajoint/sci-viz:${{env.DJSCIVIZ_VERSION}}    
   test:
     needs: test-changelog
     strategy:
@@ -40,11 +59,17 @@ jobs:
       - run: yarn install
       - run: yarn test --coverage
   publish-docs:
-    needs: test
+    needs:
+      - test
+      - test-build
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'push' &&
-      startsWith(github.ref, 'refs/tags')
+      startsWith(github.ref, 'refs/tags') &&
+      (
+        github.repository_owner == 'datajoint' ||
+        github.repository_owner == 'datajoint-company'
+      )
     steps:
       - uses: actions/checkout@v2
       - name: Deploy docs
@@ -65,7 +90,8 @@ jobs:
         github.repository_owner == 'datajoint-company'
       )
     needs:
-      - publish-docs
+      - test
+      - test-build
     runs-on: ubuntu-latest
     outputs:
       release_upload_url: ${{steps.create_gh_release.outputs.upload_url}}
@@ -101,7 +127,9 @@ jobs:
         github.repository_owner == 'datajoint-company'
       )
     environment: docker
-    needs: publish-release
+    needs:
+      - test
+      - test-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
