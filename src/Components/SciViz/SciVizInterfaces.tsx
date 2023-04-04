@@ -11,7 +11,7 @@ export interface SciVizSpec {
         /** The dictionary of pages */
         pages: { [key: string]: SciVizPageType }
 
-        /** A flag to set authentication */
+        /** Authentication config values */
         auth?: {
             /** The authentication method to use */
             mode: 'database' | 'oidc' | 'none'
@@ -21,6 +21,16 @@ export interface SciVizSpec {
             database?: string
             /** The authentication client id for OIDC */
             client_id?: string
+        }
+
+        /** DataDog config values */
+        datadog?: {
+            /** The DataDog application ID */
+            applicationId: string
+            /** The DataDog client token */
+            clientToken: string
+            /** The DataDog service name */
+            service: string
         }
 
         /** A SciViz deployment-specific key to set the host sub-route */
