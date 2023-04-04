@@ -8,16 +8,11 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - Forms now clear previous values on preset selection ([#98](https://github.com/datajoint/sci-viz/issues/98)) PR [#99](https://github.com/datajoint/sci-viz/pull/99)
 - Inserting into a form will refresh all tables on the page PR [#99](https://github.com/datajoint/sci-viz/pull/99)
+- Optimized dockerfile and added build step PR[#100](https://github.com/datajoint/sci-viz/pull/100)
 
 ## Fixed
 
 - Date, Datetime, Time, and Timestamp type attribute presets for forms PR [#99](https://github.com/datajoint/sci-viz/pull/99)
-
-## [2.1.1] - 03-24-23
-
-## Changed
-
-- Optimized dockerfile and added build step PR[#100](https://github.com/datajoint/sci-viz/pull/100)
 
 ## [2.1.1] - 03-24-23
 
