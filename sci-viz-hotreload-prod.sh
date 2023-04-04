@@ -2,7 +2,7 @@
 rm -R /usr/share/nginx/html
 cp -R /home/node/build /usr/share/nginx/html
 sciviz_update() {
-	yq eval -o=json $DJSCIVIZ_SPEC_PATH | jq . > ./public/sciviz_spec.json
+	yq eval -o=json $DJSCIVIZ_SPEC_PATH | jq . > /usr/share/nginx/html/sciviz_spec.json
 }
 sciviz_update
 nginx -g "daemon off;"

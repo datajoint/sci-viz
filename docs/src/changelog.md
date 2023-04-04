@@ -4,6 +4,10 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ## [2.2.0] - 04-04-23
 
+## Added
+
+- DataDog real user monitoring (RUM) implementation PR [#101](https://github.com/datajoint/sci-viz/pull/101)
+
 ## Changed
 
 - Forms now clear previous values on preset selection ([#98](https://github.com/datajoint/sci-viz/issues/98)) PR [#99](https://github.com/datajoint/sci-viz/pull/99)
