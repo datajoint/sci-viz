@@ -3,7 +3,7 @@ version: '2.4'
 services:
   sci-viz:
     build: .
-    image: datajoint/sci-viz:2.1.2
+    image: datajoint/sci-viz:2.2.0
     environment:
       CHOKIDAR_USEPOLLING: 'true'
       REACT_APP_DJSCIVIZ_BACKEND_PREFIX: '/api'
@@ -15,7 +15,7 @@ services:
     networks:
       - main
     working_dir: /app
-    user: '${HOST_UID}:${HOST_GID}'
+    user: node
     # use sci-viz-hotreload-prod.sh for production nginx deploment
     command:
       - sh

@@ -1,27 +1,33 @@
 FROM node:16-alpine3.15
 
-WORKDIR /main
-COPY ./package.json /main
-# COPY ./yarn.lock /main
-RUN yarn install
-
 RUN apk update
 RUN apk add nginx
 RUN apk add jq
 RUN apk add yq
 
-ENV PYTHONUNBUFFERED=1
-RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
-RUN pip3 install pyyaml
+# Permissions needed to run nginx as a non root user
+RUN chown -R node:node /usr/share/nginx
+RUN chown -R node:node /var/lib/nginx
+RUN chmod 777 /var/log/nginx
+RUN chmod 777 /run/nginx    
+RUN chown -R node:node /run/nginx 
 
-COPY ./tsconfig.json /main
-COPY ./src /main/src
-COPY ./public /main/public
+USER node
+WORKDIR /home/node
+COPY ./package.json /home/node
+# COPY ./yarn.lock /home/node
+ARG REACT_APP_DJSCIVIZ_BACKEND_PREFIX=/api
+RUN yarn install
+
+
+COPY ./tsconfig.json /home/node
+COPY ./src /home/node/src
+COPY ./public /home/node/public
 COPY ./default.conf /etc/nginx/http.d/
 COPY ./default.conf /etc/nginx/conf.d/
 COPY ./sci-viz-hotreload-dev.sh .
 COPY ./sci-viz-hotreload-prod.sh .
 
+RUN yarn build
+RUN chmod -R 777 ./build
 CMD ["nginx", "-g", "daemon off;"]
