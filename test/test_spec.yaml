@@ -532,6 +532,9 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableD
+              presets: >
+                def presets(test_group1_simple):
+                    return {r['preset_name']: r['preset_dict'] for r in test_group1_simple.PresetTable}
             All Supported Input Types Table:
               route: /all_support_types_table
               x: 1
