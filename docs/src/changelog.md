@@ -2,7 +2,7 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.1.2] - 04-04-23
+## [2.2.0] - 04-04-23
 
 ## Changed
 
@@ -110,7 +110,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Initial framework for jest testing (#27) PR #33
 - loginless mode PR #41
 
-[2.1.2]: https://github.com/datajoint/sci-viz/compare/2.1.1...2.1.2
+[2.2.0]: https://github.com/datajoint/sci-viz/compare/2.1.1...2.2.0
 [2.1.1]: https://github.com/datajoint/sci-viz/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/datajoint/sci-viz/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/datajoint/sci-viz/compare/1.1.1...2.0.0
