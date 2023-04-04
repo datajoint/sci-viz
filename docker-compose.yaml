@@ -21,7 +21,7 @@ services:
       - sh
       - -lc
       - |
-        sh sci-viz-hotreload-prod.sh
+        sh sci-viz-hotreload-dev.sh
   localdb:
     image: datajoint/mysql:5.7
     environment:

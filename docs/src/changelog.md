@@ -6,6 +6,12 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ## Changed
 
+- Optimized dockerfile and added build step PR[#100](https://github.com/datajoint/sci-viz/pull/100)
+
+## [2.1.1] - 03-24-23
+
+## Changed
+
 - Optimized table component queries PR [#97](https://github.com/datajoint/sci-viz/pull/97)
 
 ## [2.1.0] - 03-21-23
