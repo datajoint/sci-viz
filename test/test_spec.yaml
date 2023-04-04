@@ -15,10 +15,10 @@ SciViz: # top level tab
     endpoint: https://keycloak.dev.datajoint.io/realms/master
     database: xtradb.dev.datajoint.io
     client_id: my-client
-  datadog:
-    applicationId: '6100ca31-db16-4f43-8755-9a2a49c8be33'
-    clientToken: 'pub11863f739ebe199b1c01788d7b9813ba'
-    service: 'sciviz-dev'
+  # datadog:
+  #   applicationId: Your app ID
+  #   clientToken: Your client token
+  #   service: 'sciviz-dev'
   pages: # individual pages
     # The first page in the list of pages is the splash page after login
     # By convention this should be a home page with a markdown component
