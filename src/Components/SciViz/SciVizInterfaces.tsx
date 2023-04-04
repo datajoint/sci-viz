@@ -248,6 +248,9 @@ export interface FormComponent extends SciVizComponent {
 
     /** The list of channels to listen to */
     channels?: string[]
+
+    /** The function for generating form presets*/
+    presets?: string
 }
 
 /**
