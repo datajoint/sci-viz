@@ -5,6 +5,7 @@ site_url: http://datajoint.com/docs/sci-viz
 repo_url: https://github.com/datajoint/sci-viz
 repo_name: datajoint/sci-viz
 nav:
+  - DataJoint SciViz: index.md
   - Getting Started: getting_started.md
   - Concepts:
       - Dynamic Spec Sheet: concepts/spec_sheet.md

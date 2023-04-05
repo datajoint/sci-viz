@@ -1,6 +1,6 @@
-# DataJoint Sci-Viz
+# DataJoint SciViz
 
-- DataJoint Sci-Viz (scientific visualization) is a generic visualization framework for building dashboards of DataJoint pipelines.
+- DataJoint SciViz (scientific visualization) is a generic visualization framework for building dashboards of DataJoint pipelines.
 
 ## Installation
 
