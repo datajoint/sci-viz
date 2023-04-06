@@ -99,7 +99,7 @@ function App() {
                 env: 'production',
                 version: packageJSON.version,
                 sessionSampleRate: 100,
-                sessionReplaySampleRate: 20,
+                sessionReplaySampleRate: 100,
                 trackUserInteractions: true,
                 trackResources: true,
                 trackLongTasks: true,
@@ -108,6 +108,17 @@ function App() {
             datadogRum.startSessionReplayRecording()
         }
     }, [state.spec])
+
+    useEffect(() => {
+        if (state.jwtToken) {
+            let token = JSON.parse(
+                Buffer.from(state.jwtToken.split('.')[1], 'base64').toString()
+            )
+            datadogRum.setUser({
+                id: token['username'] || token['preferred_username'] || 'loginless'
+            })
+        }
+    }, [state.jwtToken])
 
     if (!state.spec) return <Spin tip='Retrieving SciViz Spec' size='large' />
     else if (state.spec.SciViz.auth?.mode === 'oidc' && !state.code && !state.jwtToken) {
