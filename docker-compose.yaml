@@ -1,4 +1,4 @@
-#HOST_UID="$(id -u)" HOST_GID="$(id -g)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\" '{print $2}') docker-compose up --build
+#HOST_UID="$(id -u)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\" '{print $2}') docker compose up --build
 version: '2.4'
 services:
   sci-viz:

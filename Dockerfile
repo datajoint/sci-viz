@@ -27,7 +27,7 @@ COPY ./default.conf /etc/nginx/http.d/
 COPY ./default.conf /etc/nginx/conf.d/
 COPY ./sci-viz-hotreload-dev.sh .
 COPY ./sci-viz-hotreload-prod.sh .
-
-RUN yarn build --max_old_space_size=10000
+ENV NODE_OPTIONS --max-old-space-size=6000
+RUN yarn build
 RUN chmod -R 777 ./build
 CMD ["nginx", "-g", "daemon off;"]
