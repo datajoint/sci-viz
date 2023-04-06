@@ -7,3 +7,5 @@ DataJoint SciViz is a generic scientific visualization framework for building da
 + [Getting Started page](./getting_started.md) - Start building your dashboard
 
 + [Concepts section](./concepts/spec_sheet.md) - Detailed descriptions of the spec sheet, grids, and components
+
++ [Code repository](https://github.com/datajoint/sci-viz)
