@@ -4,9 +4,9 @@
 
 ## References
 
-- [DataJoint Documentation](https://datajoint.com/docs){:target="_blank"}
-- [DataJoint SciViz Documentation](https://datajoint.com/docs/core/sci-viz){:target="_blank"}
-- [Pharus (a DataJoint REST API backend)](https://github.com/datajoint/pharus){:target="_blank"}
+- [DataJoint Documentation](https://datajoint.com/docs)
+- [DataJoint SciViz Documentation](https://datajoint.com/docs/core/sci-viz)
+- [Pharus (a DataJoint REST API backend)](https://github.com/datajoint/pharus)
 
 ## Installation
 
