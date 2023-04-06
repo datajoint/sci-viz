@@ -2,6 +2,14 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## Unreleased - 04-05-23
+
+## Changed
+
+- Update logo
+- Update readme - Update reference and citation sections.
+- Update docs - Add index page. Update navigation. Remove Google Analytics environment variable.
+
 ## [2.2.0] - 04-04-23
 
 ## Added
