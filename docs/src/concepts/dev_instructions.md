@@ -7,7 +7,7 @@ There are a couple issues to address if you are collaborating on this project
 
 ## .env
 
-for running frontend_gen.py you need this variable in your .env file
+To specify the location of your spec sheet you need this variable in your .env file
 
 ```bash
 DJSCIVIZ_SPEC_PATH=test/test_spec.yaml
