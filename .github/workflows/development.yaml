@@ -63,13 +63,6 @@ jobs:
       - test
       - test-build
     runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'push' &&
-      startsWith(github.ref, 'refs/tags') &&
-      (
-        github.repository_owner == 'datajoint' ||
-        github.repository_owner == 'datajoint-company'
-      )
     steps:
       - uses: actions/checkout@v2
       - name: Deploy docs
