@@ -7,10 +7,10 @@ There are two types of grids **Fixed** and **Dynamic**
 A fixed grid object requires all components to explicitly give their position and size on the grid. It consists of five keys:
 
 - `Grid_Name` - A user-defined key for the name of the grid
-    - `type` - Indicates the type of grid, in this case `type: fixed`
-    - `columns` - The number of columns that the grid will have
-    - `row_height` - The height of each row in pixels
-    - `components` - A dictionary of component objects. View the [Components](./components.md) section for more information
+  - `type` - Indicates the type of grid, in this case `type: fixed`
+  - `columns` - The number of columns that the grid will have
+  - `row_height` - The height of each row in pixels
+  - `components` - A dictionary of component objects. View the [Components](./components.md) section for more information
 
 ## Dynamic grid
 
@@ -26,14 +26,14 @@ An example of this would be as follows:
 A dynamic grid object consists of nine keys:
 
 - `Grid_Name` - A user-defined key for the name of the grid
-    - `type` - Indicates the type of grid, in this case `type: dynamic`
-    - `columns` - The number of columns that the grid will have
-    - `row_height` - The height of each row in pixels
-    - `route` - The backend api route for the parent query
-    - `component_templates` - A dictionary of component objects that serve as a template. Currently only the `metadata` and `plot` components are supported in dynamic mode
-    - `restriction` - A restriction for the datajoint query
-    - `dj_query` - The parent datajoint query that will provide the restriction records
-    - `channels?` - A list of emitter components to be channeled with
+  - `type` - Indicates the type of grid, in this case `type: dynamic`
+  - `columns` - The number of columns that the grid will have
+  - `row_height` - The height of each row in pixels
+  - `route` - The backend api route for the parent query
+  - `component_templates` - A dictionary of component objects that serve as a template. Currently only the `metadata` and `plot` components are supported in dynamic mode
+  - `restriction` - A restriction for the datajoint query
+  - `dj_query` - The parent datajoint query that will provide the restriction records
+  - `channels?` - A list of emitter components to be channeled with
 
 Additionally any components in the dynamic grid do not need `x`, `y` , `height`, and `width` fields.
 
