@@ -9,15 +9,10 @@ If you have not done so already, please install the following dependencies:
 
 ## Running the application
 
-To start the application in dev mode, use the command:
+To start the application, use the command:
 
 ```bash
-MODE=DEV HOST_UID="$(id -u)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\" '{print $2}') docker compose up --build
-```
-
-To run the application in production mode, set the `MODE` variable to `PROD`:
-```bash
-MODE=PROD HOST_UID="$(id -u)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\" '{print $2}') docker compose up --build
+HOST_UID="$(id -u)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\" '{print $2}') docker compose up --build
 ```
 
 To stop the application, use the same command as before but with `down` in place of `up --build`
