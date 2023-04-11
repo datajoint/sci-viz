@@ -8,6 +8,12 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - Hidden pages bug PR [#107](https://github.com/datajoint/sci-viz/pull/107)
 
+## Changed
+
+- Update logo
+- Update readme - Update reference and citation sections.
+- Update docs - Add index page. Update navigation. Remove Google Analytics environment variable.
+
 ## [2.2.1] - 04-07-23
 
 ### Changed
