@@ -91,14 +91,6 @@ function DjTable(props: DjTableProps) {
     })
     const prevPropsRef = useRef<DjTableProps>()
 
-    if (state.keys && props.link && props.updateHiddenPage) {
-        props.updateHiddenPage(props.link, state.keys.join('&'))
-        setState((prevState) => ({
-            ...prevState,
-            keys: undefined
-        }))
-    }
-
     const handleChange = (
         pagination: TablePaginationConfig,
         filters: Record<string, FilterValue | null>,
@@ -502,6 +494,16 @@ function DjTable(props: DjTableProps) {
             }))
         }
     }, [uniquesQuery.data])
+
+    useEffect(() => {
+        if (state.keys && props.link && props.updateHiddenPage) {
+            props.updateHiddenPage(props.link, state.keys.join('&'))
+            setState((prevState) => ({
+                ...prevState,
+                keys: undefined
+            }))
+        }
+    }, [state.keys])
 
     return (
         <Card
