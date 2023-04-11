@@ -1,4 +1,4 @@
-# MODE="LIVE|QA|PUSH" GOOGLE_ANALYTICS_KEY= UPSTREAM_REPO=https://github.com/datajoint/sci-viz.git HOST_UID=$(id -u) docker compose -f docs/docker-compose.yaml up --build
+# MODE="LIVE|QA|PUSH" UPSTREAM_REPO=https://github.com/datajoint/sci-viz.git HOST_UID=$(id -u) docker compose -f docs/docker-compose.yaml up --build
 #
 # navigate to http://localhost/
 version: '2.4'
@@ -11,7 +11,6 @@ services:
     environment:
       - UPSTREAM_REPO
       - MODE
-      - GOOGLE_ANALYTICS_KEY
     volumes:
       - ../docs:/main/docs
       - ../package.json:/main/package.json

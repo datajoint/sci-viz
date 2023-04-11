@@ -51,7 +51,7 @@ export default class Footer extends React.Component<FooterProps, FooterState> {
         return (
             <footer>
                 <div className='footer-content'>
-                    <p>© 2021, DataJoint SciViz</p>
+                    <p>© 2023, DataJoint SciViz</p>
                 </div>
                 <div className='version-info-div'>
                     <div className='version-number'>
