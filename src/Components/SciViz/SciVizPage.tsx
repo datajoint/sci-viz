@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { SciVizPageType, RestrictionStore } from './SciVizInterfaces'
+import { SciVizPageType, RestrictionStore, TabItem } from './SciVizInterfaces'
 import SciVizGrid from './SciVizGrid'
 import './Page.css'
 
@@ -12,7 +12,14 @@ interface PageProps {
     jwtToken?: string
 
     /** A callback function for handling hidden pages */
-    updateHiddenPage?: (route: string, queryParams: string) => void
+    updateHiddenPage?: (
+        route: string,
+        queryParams: string,
+        currMenuItems: TabItem[],
+        currPageMap: {
+            [key: string]: TabItem
+        }
+    ) => void
 }
 
 /**
@@ -20,7 +27,14 @@ interface PageProps {
  *
  * @param {SciVizPageType} page - The data of the page
  * @param {string=} [jwtToken] - A JWT token to perform queries
- * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
+ * @param {(
+        route: string,
+        queryParams: string,
+        currMenuItems: TabItem[],
+        currPageMap: {
+            [key: string]: TabItem
+        }
+    ) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz page
  */

@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Card, PaginationProps, Spin, Table, TablePaginationConfig } from 'antd'
 import type { FilterValue } from 'antd/es/table/interface'
 import { useQuery } from 'react-query'
+import { MenuItemsContext } from '../SciViz/SciViz'
+import { TabItem } from '../SciViz/SciVizInterfaces'
 
 interface RestrictionStore {
     [key: string]: Array<string>
@@ -15,7 +17,14 @@ interface DjTableProps {
     restrictionList: Array<string>
     link?: string
     updatePageStore: (key: string, record: Array<string>) => void
-    updateHiddenPage?: (route: string, queryParams: string) => void
+    updateHiddenPage?: (
+        route: string,
+        queryParams: string,
+        currMenuItems: TabItem[],
+        currPageMap: {
+            [key: string]: TabItem
+        }
+    ) => void
     channel?: string
     channelList?: Array<string>
     store?: RestrictionStore
@@ -90,6 +99,7 @@ function DjTable(props: DjTableProps) {
         loading: false
     })
     const prevPropsRef = useRef<DjTableProps>()
+    const { menuItems, pageMap } = useContext(MenuItemsContext)
 
     const handleChange = (
         pagination: TablePaginationConfig,
@@ -497,7 +507,7 @@ function DjTable(props: DjTableProps) {
 
     useEffect(() => {
         if (state.keys && props.link && props.updateHiddenPage) {
-            props.updateHiddenPage(props.link, state.keys.join('&'))
+            props.updateHiddenPage(props.link, state.keys.join('&'), menuItems!, pageMap!)
             setState((prevState) => ({
                 ...prevState,
                 keys: undefined

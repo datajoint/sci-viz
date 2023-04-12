@@ -5,7 +5,8 @@ import {
     GridTypes,
     SciVizFixedGrid,
     SciVizDynamicGrid,
-    RestrictionStore
+    RestrictionStore,
+    TabItem
 } from './SciVizInterfaces'
 import './Page.css'
 
@@ -38,7 +39,14 @@ interface GridProps {
     updateStore?: (key: string, record: string[]) => void
 
     /** A callback function for handling hidden pages */
-    updateHiddenPage?: (route: string, queryParams: string) => void
+    updateHiddenPage?: (
+        route: string,
+        queryParams: string,
+        currMenuItems: TabItem[],
+        currPageMap: {
+            [key: string]: TabItem
+        }
+    ) => void
 }
 
 /**
@@ -51,7 +59,14 @@ interface GridProps {
  * @param {RestrictionStore=} store - An information store for grids with linked components
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
  * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
- * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
+ * @param {(
+        route: string,
+        queryParams: string,
+        currMenuItems: TabItem[],
+        currPageMap: {
+            [key: string]: TabItem
+        }
+    ) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz grid
  */
