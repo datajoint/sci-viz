@@ -23,7 +23,7 @@ user: root
 ## Public Folder
 
 Config values for images or icons must be relative to the public folder. To add your file, follow these steps in your compose file:
- 1. Mount the file into the container
- 2. Copy the file to `/home/node/public` before running `sci-viz-hotreload-dev.sh`
+1. Mount the file into the container
+2. Copy the file to `/home/node/public` before running `sci-viz-hotreload-dev.sh`
 
 In production environments, the file must instead be copied to `/home/node/build` before running `sci-viz-hotreload-prod.sh`
