@@ -162,6 +162,7 @@ function SciViz(props: SciVizProps) {
                 size='large'
                 items={menuItems}
                 defaultActiveKey={pageMemory ? undefined : getRoute()}
+                activeKey={pageMemory ? getRoute() : undefined}
                 onTabClick={(activeKey) => {
                     if (pageMemory && pageIndex) {
                         let tempMenuItems = menuItems.map((obj) => ({ ...obj }))
@@ -173,6 +174,7 @@ function SciViz(props: SciVizProps) {
                     setRoute(pageMap[activeKey].key)
                 }}
             />
+            {pageIndex ? menuItems[pageIndex].children : <></>}
         </MenuItemsContext.Provider>
     )
 }
