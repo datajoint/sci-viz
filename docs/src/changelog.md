@@ -2,13 +2,13 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.2.2] - 04-11-23
+## [2.2.2] - 04-14-23
 
 ### Fixed
 
 - Hidden pages bug PR [#107](https://github.com/datajoint/sci-viz/pull/107)
 
-## Changed
+### Changed
 
 - Update logo
 - Update readme - Update reference and citation sections.
