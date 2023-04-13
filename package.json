@@ -1,9 +1,10 @@
 {
     "name": "app",
-    "version": "2.1.0",
+    "version": "2.2.2",
     "private": true,
     "homepage": ".",
     "dependencies": {
+        "@datadog/browser-rum": "^4.37.0",
         "@fortawesome/fontawesome-svg-core": "1.2.36",
         "@fortawesome/free-solid-svg-icons": "^5.15.4",
         "@fortawesome/react-fontawesome": "^0.1.15",

@@ -375,3 +375,43 @@ class PlotlyTable(dj.Lookup):
     plot: longblob
     """
     contents = [(2, plot1)]
+
+
+@group1_simple
+class PresetTable(dj.Lookup):
+    definition = """
+    preset_name: varchar(30)
+    ---
+    preset_dict: longblob
+    """
+    contents = [
+        ("preset 1", dict(b_id=2, b_number=12, a_id="blabla")),
+        ("preset 2", dict(b_id=123, b_number=193492, some_junk_var=12332313144)),
+        (
+            "all datatypes",
+            dict(
+                a_tinyint=1,
+                a_tinyint_unsigned=2,
+                a_smallint=3,
+                a_smallint_unsigned=4,
+                a_mediumint=5,
+                a_mediumint_unsigned=6,
+                a_int=7,
+                a_int_unsigned=8,
+                a_char="a",
+                a_varchar="b",
+                a_date="2023-03-28",
+                a_time="11:23:29",
+                a_time_precision="11:23:31",
+                a_datetime="2023-03-28 11:23:33",
+                a_datetime_precision="2023-03-28 11:23:35",
+                a_timestamp="2023-03-28 11:23:38",
+                a_timestamp_precision="2023-03-28 11:23:39",
+                a_enum="option1",
+                a_float=1.1,
+                a_double=2.2,
+                a_decimal=3.3,
+                a_decimal_unsigned=4.4,
+            ),
+        ),
+    ]

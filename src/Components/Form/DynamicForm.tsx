@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import moment from 'moment'
 import {
     Card,
     Form,
@@ -9,8 +11,11 @@ import {
     Button,
     Alert,
     notification,
-    Spin
+    Spin,
+    Dropdown,
+    Menu
 } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 
@@ -21,6 +26,10 @@ interface RestrictionStore {
     [key: string]: Array<string>
 }
 
+interface formPresets {
+    [presetName: string]: { [key: string]: number | string }
+}
+
 interface formProps {
     token: string
     route: string
@@ -29,6 +38,7 @@ interface formProps {
     channelList?: Array<string>
     store?: RestrictionStore
     databaseHost?: string
+    presets?: boolean
 }
 
 interface attributeFieldData {
@@ -36,7 +46,6 @@ interface attributeFieldData {
     datatype: string
     name: string
     default: string | null
-    store: string
 }
 
 interface tableFieldData {
@@ -44,7 +53,6 @@ interface tableFieldData {
     values: Array<string>
     name: string
     default: null
-    store: string
 }
 
 interface fieldsData {
@@ -52,11 +60,20 @@ interface fieldsData {
 }
 
 interface formPayloadData {
-    [key: string]: string | number | null | { [key: string]: string | number | null }
+    [key: string]:
+        | string
+        | number
+        | moment.Moment
+        | null
+        | { [key: string]: string | number | null }
 }
 
 function DynamicForm(props: formProps) {
     const queryClient = useQueryClient()
+    const [form] = Form.useForm()
+    const [currentDropdownSelection, setCurrentDropdownSelection] = useState<
+        string | undefined
+    >(undefined)
     const openNotification = (
         type: 'success' | 'info' | 'warning' | 'error',
         title: string,
@@ -132,7 +149,9 @@ function DynamicForm(props: formProps) {
     const { mutate: insert, isLoading: insertLoading } = useMutation(insertPayload, {
         onSuccess: () => {
             queryClient.refetchQueries({
-                predicate: (query) => query.queryKey.includes('_form') && query.isActive()
+                predicate: (query) =>
+                    (query.queryKey.includes('_form') || query.queryKey.includes('_table')) &&
+                    query.isActive()
             })
         }
     })
@@ -155,6 +174,47 @@ function DynamicForm(props: formProps) {
             return result.json()
         })
     }
+
+    const getFormPresetData = async (): Promise<formPresets> => {
+        let apiUrl = `${
+            process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX
+        }${props.route!}/presets?${queryParamList.join('&')}`
+
+        if (props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
+        }
+
+        return fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + props.token
+            }
+        })
+            .then((result) => {
+                return result.json()
+            })
+            .then((result) => {
+                // Convert datetime types to antd-compatible `moment` objects
+                for (let key in result) {
+                    if (result.hasOwnProperty(key)) {
+                        let nestedObj = result[key]
+                        for (let nestedKey in nestedObj) {
+                            if (nestedObj.hasOwnProperty(nestedKey)) {
+                                let value = nestedObj[nestedKey]
+                                if (
+                                    typeof value === 'string' &&
+                                    moment(value, 'YYYY-MM-DD HH:mm:ss', true).isValid()
+                                ) {
+                                    nestedObj[nestedKey] = moment(value, 'YYYY-MM-DD HH:mm:ss')
+                                }
+                            }
+                        }
+                    }
+                }
+                return result
+            })
+    }
+
     const { data: fieldData, status } = useQuery(
         `${props.route}_form${queryParamList.length ? `:${queryParamList}` : ''}`,
         getFormFieldData,
@@ -167,15 +227,28 @@ function DynamicForm(props: formProps) {
         }
     )
 
+    const presets = useQuery(
+        `${props.route}_presets${queryParamList.length ? `:${queryParamList}` : ''}`,
+        getFormPresetData,
+        {
+            enabled:
+                props.presets &&
+                !(
+                    props.store &&
+                    props.channelList &&
+                    !props.channelList.every((val) => Object.keys(props.store!).includes(val))
+                )
+        }
+    )
+
     const handleSubmit = async (values: formPayloadData) => {
         fieldData!.fields.forEach((field) => {
             if (field.type === 'table') {
                 values = Object.assign(values, JSON.parse(values[field.name] as string))
                 delete values[field.name]
             } else if (/^date.*|time.*$/.test((field as attributeFieldData).datatype))
-                values[field.name] = convertDateTime(
-                    field.store,
-                    (field as attributeFieldData).datatype
+                values[field.name] = (values[field.name] as moment.Moment).format(
+                    'YYYY-MM-DD HH:mm:ss'
                 )
         })
         let payload = {
@@ -184,21 +257,34 @@ function DynamicForm(props: formProps) {
         insert(payload)
     }
 
-    const convertDateTime = (value: string | number, type: string) => {
-        if (!value) return value
-        else if (/^datetime.*|timestamp.*$/.test(type)) {
-            let datetime = new Date(value)
-            value = `${datetime.toISOString().split('T')[0]} ${
-                datetime.toISOString().split('T')[1].split('.')[0]
-            }`
-        } else if (/^date.*$/.test(type)) {
-            let date = new Date(value)
-            value = date.toISOString().split('T')[0]
-        } else if (/^time.*$/.test(type)) {
-            let time = new Date(`1970-01-01 ${value}`)
-            value = time.toISOString().split('T')[1].split('.')[0]
-        }
-        return value
+    const generateDropdown = (presetPayload: formPresets) => {
+        let menu = (
+            <Menu>
+                {Object.entries(presetPayload).map((value) => {
+                    return (
+                        <Menu.Item
+                            key={value[0]}
+                            title={value[0]}
+                            onClick={(value) => {
+                                form.resetFields()
+                                form.setFieldsValue(presetPayload[value.key])
+                                setCurrentDropdownSelection(value.key)
+                            }}
+                        >
+                            {value[0]}
+                        </Menu.Item>
+                    )
+                })}
+            </Menu>
+        )
+        return (
+            <Dropdown overlay={menu}>
+                <Button>
+                    {currentDropdownSelection ? currentDropdownSelection : <>Presets</>}{' '}
+                    <DownOutlined />
+                </Button>
+            </Dropdown>
+        )
     }
 
     const generateFieldItem = (field: attributeFieldData | tableFieldData) => {
@@ -270,7 +356,7 @@ function DynamicForm(props: formProps) {
                     showTime
                     id={attrField.name}
                     style={{ width: '100%' }}
-                    onChange={(value, dateString) => (field.store = dateString)}
+                    format={'YYYY-MM-DD HH:mm:ss'}
                 />
             )
         else if (/^date.*$/.test(attrField.datatype))
@@ -278,7 +364,7 @@ function DynamicForm(props: formProps) {
                 <DatePicker
                     id={attrField.name}
                     style={{ width: '100%' }}
-                    onChange={(value, dateString) => (field.store = dateString)}
+                    format={'YYYY-MM-DD'}
                 />
             )
         else if (/^time.*$/.test(attrField.datatype))
@@ -286,7 +372,7 @@ function DynamicForm(props: formProps) {
                 <TimePicker
                     id={attrField.name}
                     style={{ width: '100%' }}
-                    onChange={(value, timeString) => (field.store = timeString)}
+                    format={'HH:mm:ss'}
                 />
             )
         else return <>Datatype not yet supported</>
@@ -311,6 +397,17 @@ function DynamicForm(props: formProps) {
     return (
         <Card
             title={props.name}
+            extra={
+                !props.presets ? (
+                    <></>
+                ) : presets.status == 'error' ? (
+                    <Alert message='Preset Error' type='error' />
+                ) : presets.status == 'loading' ? (
+                    <Spin />
+                ) : (
+                    generateDropdown(presets.data!)
+                )
+            }
             style={{ width: '100%', height: props.height }}
             bodyStyle={{
                 height: `${((props.height - 57.13) / props.height) * 100}%`, // 57.13 is the height of the title element
@@ -319,6 +416,7 @@ function DynamicForm(props: formProps) {
             hoverable={true}
         >
             <Form
+                form={form}
                 name='Multi-table Insert'
                 layout='vertical'
                 onFinish={handleSubmit}

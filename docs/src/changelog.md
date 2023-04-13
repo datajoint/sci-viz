@@ -2,13 +2,54 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.1.0] - TBD
+## [2.2.2] - 04-11-23
 
-## Added
+### Fixed
+
+- Hidden pages bug PR [#107](https://github.com/datajoint/sci-viz/pull/107)
+
+## Changed
+
+- Update logo
+- Update readme - Update reference and citation sections.
+- Update docs - Add index page. Update navigation. Remove Google Analytics environment variable.
+
+## [2.2.1] - 04-07-23
+
+### Changed
+
+- Datadog replay sampling rate and set user ID PR [#106](https://github.com/datajoint/sci-viz/pull/106)
+
+## [2.2.0] - 04-04-23
+
+### Added
+
+- DataDog real user monitoring (RUM) implementation PR [#101](https://github.com/datajoint/sci-viz/pull/101)
+
+### Changed
+
+- Forms now clear previous values on preset selection ([#98](https://github.com/datajoint/sci-viz/issues/98)) PR [#99](https://github.com/datajoint/sci-viz/pull/99)
+- Inserting into a form will refresh all tables on the page PR [#99](https://github.com/datajoint/sci-viz/pull/99)
+- Optimized dockerfile and added build step PR[#100](https://github.com/datajoint/sci-viz/pull/100)
+
+### Fixed
+
+- Date, Datetime, Time, and Timestamp type attribute presets for forms PR [#99](https://github.com/datajoint/sci-viz/pull/99)
+
+## [2.1.1] - 03-24-23
+
+### Changed
+
+- Optimized table component queries PR [#97](https://github.com/datajoint/sci-viz/pull/97)
+
+## [2.1.0] - 03-21-23
+
+### Added
 
 - OIDC authentication ([#68](https://github.com/datajoint/sci-viz/issues/68)) PR [#91](https://github.com/datajoint/sci-viz/pull/91)
 - IFrame component ([#88](https://github.com/datajoint/sci-viz/issues/88)) PR [#92](https://github.com/datajoint/sci-viz/pull/92)
 - Option to set default table page size ([#94](https://github.com/datajoint/sci-viz/issues/94)) PR [#95](https://github.com/datajoint/sci-viz/pull/95)
+- Option to add preset values to forms PR [#96](https://github.com/datajoint/sci-viz/pull/96/files)
 
 ### Removed
 
@@ -92,6 +133,10 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Initial framework for jest testing (#27) PR #33
 - loginless mode PR #41
 
+[2.2.2]: https://github.com/datajoint/sci-viz/compare/2.2.1...2.2.2
+[2.2.1]: https://github.com/datajoint/sci-viz/compare/2.2.0...2.2.1
+[2.2.0]: https://github.com/datajoint/sci-viz/compare/2.1.1...2.2.0
+[2.1.1]: https://github.com/datajoint/sci-viz/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/datajoint/sci-viz/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/datajoint/sci-viz/compare/1.1.1...2.0.0
 [1.1.1]: https://github.com/datajoint/sci-viz/compare/1.1.0...1.1.1

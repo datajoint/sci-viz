@@ -1,17 +1,17 @@
 # ---------------------- PROJECT SPECIFIC ---------------------------
 
-site_name: SciViz
+site_name: DataJoint Documentation
 site_url: http://datajoint.com/docs/sci-viz
 repo_url: https://github.com/datajoint/sci-viz
 repo_name: datajoint/sci-viz
 nav:
+  - DataJoint SciViz: index.md
   - Getting Started: getting_started.md
   - Concepts:
       - Dynamic Spec Sheet: concepts/spec_sheet.md
       - Grids: concepts/grids.md
       - Components: concepts/components.md
       - Developer Instructions: concepts/dev_instructions.md
-  # - Tutorials: tutorials.md
   - Citation: citation.md
   - Changelog: changelog.md
 
@@ -45,10 +45,8 @@ nav:
 #     UPSTREAM_REPO=https://github.com/datajoint/sci-viz.git \
 #     HOST_UID=$(id -u) docker compose -f docs/docker-compose.yaml up --build
 #     ```
-# 02. Site analytics depend on a local environment variable GOOGLE_ANALYTICS_KEY
-#     You can find this in LastPass or declare with any string to suprress errors
-# 05. For redirecting options For redirect options, see 'redirects' below.
-# 06. To deploy this site on your fork,
+# 02. For redirect options, see 'redirects' below.
+# 03. To deploy this site on your fork,
 #     A. declare a branch called gh-pages
 #     B. go to the your fork > settings > pages
 #     C. direct pages to render from the gh-pages branch at root
@@ -84,9 +82,6 @@ theme:
 plugins:
   - markdownextradata: {}
   - search
-  - redirects: # OPTIONAL REDIRECTS
-      redirect_maps:
-        'index.md': 'getting_started.md'
   - literate-nav:
       nav_file: navigation.md
 
@@ -95,12 +90,11 @@ markdown_extensions:
   - toc:
       permalink: true
   - mdx_truly_sane_lists
-
+  - pymdownx.magiclink # Displays bare URLs as links
+  - pymdownx.tasklist: # Renders check boxes in tasks lists
+      custom_checkbox: true
 extra:
   generator: false # Disable watermark
-  analytics:
-    provider: google
-    property: !ENV GOOGLE_ANALYTICS_KEY
   version:
     provider: mike
   social:

@@ -15,6 +15,10 @@ SciViz: # top level tab
     endpoint: https://keycloak.dev.datajoint.io/realms/master
     database: xtradb.dev.datajoint.io
     client_id: my-client
+  # datadog:
+  #   applicationId: Your app ID
+  #   clientToken: Your client token
+  #   service: 'sciviz-dev'
   pages: # individual pages
     # The first page in the list of pages is the splash page after login
     # By convention this should be a home page with a markdown component
@@ -418,6 +422,9 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableB
+              presets: >
+                def presets():
+                    return {'preset 1': {'b_id': 14}}
             Table C:
               route: /insert3
               x: 0
@@ -437,6 +444,9 @@ SciViz: # top level tab
               tables:
                 - test_group1_simple.TableB
                 - test_group1_simple.TableC
+              presets: >
+                def presets(test_group1_simple):
+                    return {r['preset_name']: r['preset_dict'] for r in test_group1_simple.PresetTable}
               map:
                 - type: attribute
                   input: B Id
@@ -494,6 +504,9 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableD
+              presets: >
+                def presets(test_group1_simple):
+                    return {r['preset_name']: r['preset_dict'] for r in test_group1_simple.PresetTable}
             All Supported Input Types Table:
               route: /all_support_types_table
               x: 1

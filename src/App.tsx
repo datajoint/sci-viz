@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Alert, Spin } from 'antd'
 import { SciVizSpec } from './Components/SciViz/SciVizInterfaces'
 import { ExternalContext } from './Components/SciViz/SciVizContext'
+import { datadogRum } from '@datadog/browser-rum'
 import Login from './Components/Login/Login'
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
 import SciViz from './Components/SciViz/SciViz'
+import packageJSON from '../package.json'
 import './App.css'
 import '../node_modules/react-grid-layout/css/styles.css'
 import '../node_modules/react-resizable/css/styles.css'
@@ -31,6 +33,16 @@ interface DJGUIAppState {
 
     /** The error message if OIDC authentication fails */
     errorMsg: string | null
+
+    /** DataDog config values */
+    datadog?: {
+        /** The DataDog application ID */
+        applicationId: string
+        /** The DataDog client token */
+        clientToken: string
+        /** The DataDog service name */
+        service: string
+    }
 }
 
 function App() {
@@ -43,11 +55,7 @@ function App() {
         code: searchParams.get('code'),
         errorMsg: null
     })
-    document.title = state.spec?.SciViz.website_title || 'SciViz'
-    document
-        .getElementById('favicon')!
-        .setAttribute('href', `${state.spec?.SciViz.favicon_name || '/favicon.ico'}`)
-    const iframeParamMap = {
+    const exampleIframeParamMap = {
         context: { someContext: 'hello' },
         anotherParam: { someKey: 'someValue' },
         stringParam: 'a string'
@@ -68,13 +76,55 @@ function App() {
                 return response.json()
             })
             .then((data) => {
+                let spec = data as SciVizSpec
                 setState((prevState) => ({
                     ...prevState,
-                    spec: data as SciVizSpec,
-                    baseURL: `https://${window.location.hostname}${data?.SciViz.route || ''}/`
+                    spec: spec,
+                    baseURL: `https://${window.location.hostname}${spec.SciViz.route || ''}/`,
+                    datadog: spec.SciViz.datadog
                 }))
             })
     }, [])
+
+    useEffect(() => {
+        document.title = state.spec?.SciViz.website_title || 'SciViz'
+        document
+            .getElementById('favicon')!
+            .setAttribute('href', `${state.spec?.SciViz.favicon_name || '/favicon.ico'}`)
+
+        if (
+            state.spec?.SciViz.datadog?.applicationId &&
+            state.spec?.SciViz.datadog.clientToken &&
+            state.spec?.SciViz.datadog.service
+        ) {
+            datadogRum.init({
+                applicationId: state.spec?.SciViz.datadog.applicationId,
+                clientToken: state.spec?.SciViz.datadog.clientToken,
+                site: 'datadoghq.com',
+                service: state.spec?.SciViz.datadog.service,
+                env: 'production',
+                version: packageJSON.version,
+                sessionSampleRate: 100,
+                sessionReplaySampleRate: 100,
+                trackUserInteractions: true,
+                trackResources: true,
+                trackLongTasks: true,
+                defaultPrivacyLevel: 'mask-user-input'
+            })
+            datadogRum.startSessionReplayRecording()
+        }
+    }, [state.spec])
+
+    useEffect(() => {
+        if (state.jwtToken) {
+            let token = JSON.parse(
+                Buffer.from(state.jwtToken.split('.')[1], 'base64').toString()
+            )
+            datadogRum.setUser({
+                id: token['username'] || token['preferred_username'] || 'loginless'
+            })
+        }
+    }, [state.jwtToken])
 
     if (!state.spec) return <Spin tip='Retrieving SciViz Spec' size='large' />
     else if (state.spec.SciViz.auth?.mode === 'oidc' && !state.code && !state.jwtToken) {
