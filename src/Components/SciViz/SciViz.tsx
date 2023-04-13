@@ -17,6 +17,7 @@ interface SciVizProps {
 
 export const MenuItemsContext = createContext<{
     menuItems: TabItem[] | undefined
+    currIndex: number | undefined
     pageMap:
         | {
               [key: string]: TabItem
@@ -24,6 +25,7 @@ export const MenuItemsContext = createContext<{
         | undefined
 }>({
     menuItems: undefined,
+    currIndex: undefined,
     pageMap: undefined
 })
 
@@ -41,7 +43,7 @@ function SciViz(props: SciVizProps) {
         [key: string]: TabItem
     }>({})
     const [menuItems, setMenuItems] = useState<TabItem[]>([])
-    const [pageMemory, setPageMemory] = useState<TabItem | undefined>(undefined)
+    const [originalMenuItems, setOriginalMenuItems] = useState<TabItem[]>([])
     const [pageIndex, setPageIndex] = useState<number | undefined>(undefined)
 
     /**
@@ -73,6 +75,7 @@ function SciViz(props: SciVizProps) {
         route: string,
         queryParams: string,
         currMenuItems: TabItem[],
+        currIndex: number,
         currPageMap: {
             [key: string]: TabItem
         }
@@ -82,9 +85,11 @@ function SciViz(props: SciVizProps) {
         let tempPageMap = Object.assign({}, currPageMap)
         let index = tempMenuItems.findIndex((x) => x.key === currRoute)
 
+        // Handle nested hidden tables
+        if (index === -1) index = currIndex
+
         tempMenuItems[index].children = tempPageMap[route].children
         if (currRoute !== route) {
-            setPageMemory(tempPageMap[currRoute])
             setPageIndex(index)
             setMenuItems(tempMenuItems)
             setRoute(`${route}?${queryParams}`)
@@ -145,6 +150,7 @@ function SciViz(props: SciVizProps) {
         })
         setPageMap(tempPageMap)
         setMenuItems(tempMenuItems)
+        setOriginalMenuItems(tempMenuItems)
         var newURL = props.baseURL.replace(/\/$/, '') + tempMenuItems[0].key
         window.history.pushState(null, '', newURL)
     }, [])
@@ -153,6 +159,7 @@ function SciViz(props: SciVizProps) {
         <MenuItemsContext.Provider
             value={{
                 menuItems: menuItems.map((obj) => ({ ...obj })),
+                currIndex: pageIndex,
                 pageMap: Object.assign({}, pageMap)
             }}
         >
@@ -161,14 +168,11 @@ function SciViz(props: SciVizProps) {
                 type='line'
                 size='large'
                 items={menuItems}
-                defaultActiveKey={pageMemory ? undefined : getRoute()}
-                activeKey={pageMemory ? getRoute() : undefined}
+                defaultActiveKey={pageIndex ? undefined : getRoute()}
+                activeKey={pageIndex ? getRoute() : undefined}
                 onTabClick={(activeKey) => {
-                    if (pageMemory && pageIndex) {
-                        let tempMenuItems = menuItems.map((obj) => ({ ...obj }))
-                        tempMenuItems[pageIndex] = pageMemory
-                        setMenuItems(tempMenuItems)
-                        setPageMemory(undefined)
+                    if (pageIndex && pageIndex) {
+                        setMenuItems(originalMenuItems)
                         setPageIndex(undefined)
                     }
                     setRoute(pageMap[activeKey].key)

@@ -43,6 +43,7 @@ interface GridProps {
         route: string,
         queryParams: string,
         currMenuItems: TabItem[],
+        currIndex: number,
         currPageMap: {
             [key: string]: TabItem
         }
@@ -63,6 +64,7 @@ interface GridProps {
         route: string,
         queryParams: string,
         currMenuItems: TabItem[],
+        currIndex: number,
         currPageMap: {
             [key: string]: TabItem
         }

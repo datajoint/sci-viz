@@ -21,6 +21,7 @@ interface DjTableProps {
         route: string,
         queryParams: string,
         currMenuItems: TabItem[],
+        currIndex: number,
         currPageMap: {
             [key: string]: TabItem
         }
@@ -99,7 +100,7 @@ function DjTable(props: DjTableProps) {
         loading: false
     })
     const prevPropsRef = useRef<DjTableProps>()
-    const { menuItems, pageMap } = useContext(MenuItemsContext)
+    const { menuItems, currIndex, pageMap } = useContext(MenuItemsContext)
 
     const handleChange = (
         pagination: TablePaginationConfig,
@@ -507,7 +508,13 @@ function DjTable(props: DjTableProps) {
 
     useEffect(() => {
         if (state.keys && props.link && props.updateHiddenPage) {
-            props.updateHiddenPage(props.link, state.keys.join('&'), menuItems!, pageMap!)
+            props.updateHiddenPage(
+                props.link,
+                state.keys.join('&'),
+                menuItems!,
+                currIndex!,
+                pageMap!
+            )
             setState((prevState) => ({
                 ...prevState,
                 keys: undefined

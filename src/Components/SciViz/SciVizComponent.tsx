@@ -60,6 +60,7 @@ interface ComponentProps {
         route: string,
         queryParams: string,
         currMenuItems: TabItem[],
+        currIndex: number,
         currPageMap: {
             [key: string]: TabItem
         }
@@ -81,6 +82,7 @@ interface ComponentProps {
         route: string,
         queryParams: string,
         currMenuItems: TabItem[],
+        currIndex: number,
         currPageMap: {
             [key: string]: TabItem
         }
