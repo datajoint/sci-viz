@@ -26,6 +26,9 @@ interface GridProps {
     /** A JWT token to perform queries */
     jwtToken?: string
 
+    /** The authentication database for OIDC */
+    databaseHost?: string
+
     /** A list of restrictions for grids with queried components */
     restrictionList?: string[]
 
@@ -52,8 +55,10 @@ interface GridProps {
  * Dynamically creates a SciViz grid
  *
  * @param {string} name - The name of the grid
+ * @param {SciVizSpec} spec - The top level SciViz spec
  * @param {ComponentTypes} grid - The data of the grid
  * @param {string=} jwtToken - A JWT token to perform queries
+ * @param {string=} databaseHost - The authentication database for OIDC
  * @param {string[]=} restrictionList - A list of restrictions for grids with queried components
  * @param {RestrictionStore=} store - An information store for grids with linked components
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
@@ -91,6 +96,7 @@ function SciVizGrid(props: GridProps) {
                             <SciVizComponent
                                 key={JSON.stringify(component)}
                                 name={name}
+                                databaseHost={props.databaseHost}
                                 component={component}
                                 jwtToken={props.jwtToken}
                                 height={gridData.row_height}
