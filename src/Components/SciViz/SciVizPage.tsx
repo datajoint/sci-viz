@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { SciVizPageType, RestrictionStore } from './SciVizInterfaces'
+import { SciVizPageType, RestrictionStore, SciVizSpec } from './SciVizInterfaces'
 import SciVizGrid from './SciVizGrid'
 import './Page.css'
 
@@ -11,6 +11,9 @@ interface PageProps {
     /** A JWT token to perform queries */
     jwtToken?: string
 
+    /** The authentication database for OIDC */
+    databaseHost?: string
+
     /** A callback function for handling hidden pages */
     updateHiddenPage?: (route: string, queryParams: string) => void
 }
@@ -18,8 +21,10 @@ interface PageProps {
 /**
  * Dynamically creates a SciViz page
  *
+ * @param {SciVizSpec} spec - The top level SciViz spec
  * @param {SciVizPageType} page - The data of the page
  * @param {string=} [jwtToken] - A JWT token to perform queries
+ * @param {string=} databaseHost - The authentication database for OIDC
  * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz page
@@ -63,6 +68,7 @@ function SciVizPage(props: PageProps) {
                         <SciVizGrid
                             key={JSON.stringify(grid)}
                             name={name}
+                            databaseHost={props.databaseHost}
                             grid={grid}
                             jwtToken={props.jwtToken}
                             restrictionList={[...restrictionList]}
