@@ -12,7 +12,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - Hidden pages bug PR [#107](https://github.com/datajoint/sci-viz/pull/107)
 
-## Changed
+### Changed
 
 - Update logo
 - Update readme - Update reference and citation sections.
