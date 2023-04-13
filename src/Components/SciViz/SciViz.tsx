@@ -15,19 +15,9 @@ interface SciVizProps {
     jwtToken?: string
 }
 
-export const MenuItemsContext = createContext<{
-    menuItems: TabItem[] | undefined
-    currIndex: number | undefined
-    pageMap:
-        | {
-              [key: string]: TabItem
-          }
-        | undefined
-}>({
-    menuItems: undefined,
-    currIndex: undefined,
-    pageMap: undefined
-})
+export const MenuItemsContext = createContext<{ [key: string]: TabItem } | undefined>(
+    undefined
+)
 
 /**
  * Dynamically creates a SciViz app
@@ -43,8 +33,7 @@ function SciViz(props: SciVizProps) {
         [key: string]: TabItem
     }>({})
     const [menuItems, setMenuItems] = useState<TabItem[]>([])
-    const [originalMenuItems, setOriginalMenuItems] = useState<TabItem[]>([])
-    const [pageIndex, setPageIndex] = useState<number | undefined>(undefined)
+    const [hiddenPage, setHiddenPage] = useState<JSX.Element | undefined>(undefined)
 
     /**
      * A function to set the current SciViz page route
@@ -74,24 +63,12 @@ function SciViz(props: SciVizProps) {
     const updateHiddenPage = (
         route: string,
         queryParams: string,
-        currMenuItems: TabItem[],
-        currIndex: number,
         currPageMap: {
             [key: string]: TabItem
         }
     ) => {
-        let currRoute = getRoute()
-        let tempMenuItems = currMenuItems.map((obj) => ({ ...obj }))
-        let tempPageMap = Object.assign({}, currPageMap)
-        let index = tempMenuItems.findIndex((x) => x.key === currRoute)
-
-        // Handle nested hidden tables
-        if (index === -1) index = currIndex
-
-        tempMenuItems[index].children = tempPageMap[route].children
-        if (currRoute !== route) {
-            setPageIndex(index)
-            setMenuItems(tempMenuItems)
+        if (getRoute() !== route) {
+            setHiddenPage(currPageMap[route].children)
             setRoute(`${route}?${queryParams}`)
         }
     }
@@ -150,35 +127,27 @@ function SciViz(props: SciVizProps) {
         })
         setPageMap(tempPageMap)
         setMenuItems(tempMenuItems)
-        setOriginalMenuItems(tempMenuItems)
         var newURL = props.baseURL.replace(/\/$/, '') + tempMenuItems[0].key
         window.history.pushState(null, '', newURL)
     }, [])
 
     return (
-        <MenuItemsContext.Provider
-            value={{
-                menuItems: menuItems.map((obj) => ({ ...obj })),
-                currIndex: pageIndex,
-                pageMap: Object.assign({}, pageMap)
-            }}
-        >
+        <MenuItemsContext.Provider value={pageMap}>
             <Tabs
                 centered
                 type='line'
                 size='large'
                 items={menuItems}
-                defaultActiveKey={pageIndex ? undefined : getRoute()}
-                activeKey={pageIndex ? getRoute() : undefined}
+                defaultActiveKey={hiddenPage ? undefined : getRoute()}
+                activeKey={hiddenPage ? getRoute() : undefined}
                 onTabClick={(activeKey) => {
-                    if (pageIndex && pageIndex) {
-                        setMenuItems(originalMenuItems)
-                        setPageIndex(undefined)
+                    if (hiddenPage) {
+                        setHiddenPage(undefined)
                     }
                     setRoute(pageMap[activeKey].key)
                 }}
             />
-            {pageIndex ? menuItems[pageIndex].children : <></>}
+            {hiddenPage ? hiddenPage : <></>}
         </MenuItemsContext.Provider>
     )
 }
