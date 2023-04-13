@@ -55,11 +55,16 @@ function App() {
         code: searchParams.get('code'),
         errorMsg: null
     })
-    const exampleIframeParamMap = {
-        context: { someContext: 'hello' },
-        anotherParam: { someKey: 'someValue' },
-        stringParam: 'a string'
-    }
+
+    /**
+     * This snippet serves as an example of what a
+     * context object for an IFrame component might look like
+     */
+    // const exampleIframeParamMap = {
+    //     context: { someContext: 'hello' },
+    //     anotherParam: { someKey: 'someValue' },
+    //     stringParam: 'a string'
+    // }
 
     /**
      * A callback function to set jwt token and host name
@@ -191,7 +196,14 @@ function App() {
     } else {
         return (
             <React.StrictMode>
-                <ExternalContext.Provider value={{ iframeParamMap }}>
+                {/* Pass in the your iframe parameters to the context provider */}
+                <ExternalContext.Provider
+                    value={{
+                        iframeParamMap: {
+                            // ...exampleIframeParamMap
+                        }
+                    }}
+                >
                     <Header
                         text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
                         imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}
