@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Alert, Spin } from 'antd'
 import { SciVizSpec } from './Components/SciViz/SciVizInterfaces'
 import { datadogRum } from '@datadog/browser-rum'
+import { datadogLogs } from '@datadog/browser-logs'
 import Login from './Components/Login/Login'
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
@@ -91,6 +92,14 @@ function App() {
             state.spec?.SciViz.datadog.clientToken &&
             state.spec?.SciViz.datadog.service
         ) {
+            datadogLogs.init({
+                clientToken: state.spec?.SciViz.datadog.clientToken,
+                site: 'datadoghq.com',
+                service: state.spec?.SciViz.datadog.service,
+                forwardErrorsToLogs: true,
+                sessionSampleRate: 100,
+                forwardConsoleLogs: 'all'
+            })
             datadogRum.init({
                 applicationId: state.spec?.SciViz.datadog.applicationId,
                 clientToken: state.spec?.SciViz.datadog.clientToken,
