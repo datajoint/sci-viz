@@ -14,9 +14,10 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ### Changed
 
-- Update logo
-- Update readme - Update reference and citation sections.
-- Update docs - Add index page. Update navigation. Remove Google Analytics environment variable.
+- Update logo PR [#104](https://github.com/datajoint/sci-viz/pull/104)
+- Update readme - Update reference and citation sections PR [#104](https://github.com/datajoint/sci-viz/pull/104)
+- Update docs - Add index page. Update navigation. Remove Google Analytics environment variable PR [#104](https://github.com/datajoint/sci-viz/pull/104)
+- Update hidden page behavior to mimic pre 2.0 PR [#109](https://github.com/datajoint/sci-viz/pull/109)
 
 ## [2.2.1] - 04-07-23
 

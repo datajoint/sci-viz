@@ -10,6 +10,18 @@ export interface RestrictionStore {
     [key: string]: string[]
 }
 
+/** The interface for an antd Tab item */
+export interface TabItem {
+    /** The key of the tab */
+    key: string
+
+    /** The label of the tab */
+    label: JSX.Element
+
+    /** The content of the tab */
+    children: JSX.Element
+}
+
 /** The interface for the SciViz spec */
 export interface SciVizSpec {
     /** The SciViz spec */
