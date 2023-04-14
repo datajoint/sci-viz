@@ -12,9 +12,9 @@ import {
     TableComponent,
     SlideshowComponent,
     DateRangePickerComponent,
-    IFrameComponent,
     RestrictionStore,
-    SciVizSpec
+    IFrameComponent,
+    TabItem
 } from './SciVizInterfaces'
 import DjTable from '../Table/DjTable'
 import FullPlotly from '../Plots/FullPlotly'
@@ -61,7 +61,13 @@ interface ComponentProps {
     updateStore?: (key: string, record: string[]) => void
 
     /** A callback function for handling hidden pages */
-    updateHiddenPage?: (route: string, queryParams: string) => void
+    updateHiddenPage?: (
+        route: string,
+        queryParams: string,
+        currPageMap: {
+            [key: string]: TabItem
+        }
+    ) => void
 }
 
 /**
@@ -77,7 +83,7 @@ interface ComponentProps {
  * @param {RestrictionStore=} store - An information store for linked components
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
  * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
- * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
+ * @param {(route: string, queryParams: string, currPageMap: {[key: string]: TabItem}) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz component
  */
