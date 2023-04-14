@@ -60,8 +60,8 @@ jobs:
       - run: yarn test --coverage
   publish-docs:
     needs:
-      - test
-      - test-build
+    - test
+    - test-build
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'push' &&
@@ -74,7 +74,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Deploy docs
         env:
-          GOOGLE_ANALYTICS_KEY: ${{secrets.GOOGLE_ANALYTICS_KEY}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE: PUSH
         run: |

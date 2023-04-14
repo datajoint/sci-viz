@@ -6,7 +6,7 @@ exports[`Snapshot of Footer component 1`] = `
     className="footer-content"
   >
     <p>
-      © 2021, DataJoint SciViz
+      © 2023, DataJoint SciViz
     </p>
   </div>
   <div
@@ -19,7 +19,7 @@ exports[`Snapshot of Footer component 1`] = `
         Front End Version:
       </b>
        
-      2.2.1
+      2.3.0
        
       <b>
         Back End Version:

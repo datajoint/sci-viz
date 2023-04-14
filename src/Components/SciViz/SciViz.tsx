@@ -70,8 +70,10 @@ function SciViz(props: SciVizProps) {
      */
     const updateHiddenPage = (route: string, queryParams: string) => {
         var currRoute = getRoute()
-        setRoute(`${route}?${queryParams}`)
-        setHiddenItems((prevItems) => [[pageMap[currRoute], pageMap[route]], ...prevItems])
+        if (currRoute !== route) {
+            setHiddenItems((prevItems) => [[pageMap[currRoute], pageMap[route]], ...prevItems])
+            setRoute(`${route}?${queryParams}`)
+        }
     }
     Object.entries(props.spec.SciViz.pages).forEach(([name, page]) => {
         pageMap[page.route] = {
@@ -90,6 +92,7 @@ function SciViz(props: SciVizProps) {
                 <SciVizPage
                     key={JSON.stringify(page)}
                     jwtToken={props.jwtToken}
+                    databaseHost={props.spec.SciViz.auth?.database}
                     page={page}
                     updateHiddenPage={updateHiddenPage}
                 />
@@ -113,6 +116,7 @@ function SciViz(props: SciVizProps) {
                     <SciVizPage
                         key={JSON.stringify(page)}
                         jwtToken={props.jwtToken}
+                        databaseHost={props.spec.SciViz.auth?.database}
                         page={page}
                         updateHiddenPage={updateHiddenPage}
                     />

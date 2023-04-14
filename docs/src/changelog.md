@@ -2,6 +2,22 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [2.3.0] - 04-14-23
+
+### Added
+
+- IFrame component ([#88](https://github.com/datajoint/sci-viz/issues/88)) PR [#92](https://github.com/datajoint/sci-viz/pull/92)
+
+### Fixed
+
+- Hidden pages bug PR [#107](https://github.com/datajoint/sci-viz/pull/107)
+
+### Changed
+
+- Update logo
+- Update readme - Update reference and citation sections.
+- Update docs - Add index page. Update navigation. Remove Google Analytics environment variable.
+
 ## [2.2.1] - 04-07-23
 
 ### Changed
@@ -120,7 +136,8 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Initial framework for jest testing (#27) PR #33
 - loginless mode PR #41
 
-[2.2.0]: https://github.com/datajoint/sci-viz/compare/2.2.0...2.2.1
+[2.3.0]: https://github.com/datajoint/sci-viz/compare/2.2.1...2.3.0
+[2.2.1]: https://github.com/datajoint/sci-viz/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/datajoint/sci-viz/compare/2.1.1...2.2.0
 [2.1.1]: https://github.com/datajoint/sci-viz/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/datajoint/sci-viz/compare/2.0.0...2.1.0
