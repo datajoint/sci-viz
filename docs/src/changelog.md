@@ -8,6 +8,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - IFrame component ([#88](https://github.com/datajoint/sci-viz/issues/88)) PR [#92](https://github.com/datajoint/sci-viz/pull/92)
 - Extra optional Datadog Logging [#110](https://github.com/datajoint/sci-viz/pull/110)
+
 ### Fixed
 
 - Hidden pages bug PR [#107](https://github.com/datajoint/sci-viz/pull/107)
