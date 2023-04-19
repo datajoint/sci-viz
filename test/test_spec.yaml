@@ -454,7 +454,7 @@ SciViz: # top level tab
                 - type: attribute
                   input: B Number
                   destination: b_number
-                - type: antd-table
+                - type: table
                   input: Table A
                   destination: test_group1_simple.TableA
                   map:
@@ -481,7 +481,7 @@ SciViz: # top level tab
                 - type: attribute
                   input: B Number
                   destination: b_number
-                - type: antd-table
+                - type: table
                   input: Table A
                   destination: test_group1_simple.TableA
                 - type: attribute
