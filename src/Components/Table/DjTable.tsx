@@ -238,7 +238,7 @@ function DjTable(props: DjTableProps) {
                 return result as Promise<djRecords>
             })
     }
-    const recordsQuery = useQuery(constructRecordURL(), getRecords, {
+    const recordsQuery = useQuery(`${constructRecordURL()}_table`, getRecords, {
         enabled: !(
             props.store &&
             props.channelList &&
@@ -343,7 +343,7 @@ function DjTable(props: DjTableProps) {
                 return result as Promise<djUniques>
             })
     }
-    const uniquesQuery = useQuery(constructUniquesURL(), getUniques, {
+    const uniquesQuery = useQuery(`${constructUniquesURL()}_table`, getUniques, {
         enabled: !(
             props.store &&
             props.channelList &&

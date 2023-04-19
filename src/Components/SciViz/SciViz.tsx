@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from 'react'
 import { Tabs } from 'antd'
 import { SciVizSpec, TabItem } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
+import { useQueryClient } from 'react-query'
 
 /** The interface for the SciVizPage props */
 interface SciVizProps {
@@ -29,6 +30,7 @@ export const MenuItemsContext = createContext<{ [key: string]: TabItem } | undef
  * @returns A SciViz app
  */
 function SciViz(props: SciVizProps) {
+    const queryClient = useQueryClient()
     const [pageMap, setPageMap] = useState<{
         [key: string]: TabItem
     }>({})
@@ -146,6 +148,12 @@ function SciViz(props: SciVizProps) {
                         setHiddenPage(undefined)
                     }
                     setRoute(pageMap[activeKey].key)
+                    queryClient.refetchQueries({
+                        predicate: (query) =>
+                            (query.queryKey.includes('_form') ||
+                                query.queryKey.includes('_table')) &&
+                            query.isActive()
+                    })
                 }}
             />
             {hiddenPage ? hiddenPage : <></>}
