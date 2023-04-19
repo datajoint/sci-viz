@@ -4,9 +4,9 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ## [2.3.1] - 04-21-23
 
-### Changed
+### Fixed
 
-- Queries now refetch when selecting a tab ([#112](https://github.com/datajoint/sci-viz/issues/112)) PR [#113](https://github.com/datajoint/sci-viz/pull/113)
+- Queries now properly refetch tables on insert ([#112](https://github.com/datajoint/sci-viz/issues/112)) PR [#113](https://github.com/datajoint/sci-viz/pull/113)
 
 ## [2.3.0] - 04-14-23
 
