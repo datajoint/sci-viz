@@ -4,6 +4,10 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ## [2.3.1] - 04-21-23
 
+### Added
+
+- `booleans` key to form component spec to specify boolean attributes and make their inputs True/False ([#111](https://github.com/datajoint/sci-viz/issues/111)) PR [#114](https://github.com/datajoint/sci-viz/pull/114)
+
 ### Fixed
 
 - Queries now properly refetch tables on insert ([#112](https://github.com/datajoint/sci-viz/issues/112)) PR [#113](https://github.com/datajoint/sci-viz/pull/113)
