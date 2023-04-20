@@ -123,6 +123,8 @@ The Form can also take three optional keys:
 
   - `map` - A nested mapping of the same structure to change the displayed names of the table's primary key attributes
 
+- `booleans` - An array of attributes that were originally desribed as booleans but have been aliased to tinyint by datajoint
+  - Specified attributes will have their inputs converted to True/False dropdowns
 - `channels` - An array of channels to listen to for templated table name values
 - `presets` - A function to generate presets for the form
 
