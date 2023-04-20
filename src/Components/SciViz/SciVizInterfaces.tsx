@@ -274,6 +274,9 @@ export interface FormComponent extends SciVizComponent {
         }
     }
 
+    /** A list of attributes that were originally desribed as booleans but have been aliased to tinyint */
+    booleans?: string[]
+
     /** The list of channels to listen to */
     channels?: string[]
 
