@@ -49,7 +49,11 @@ export default class DjRadioButtons extends React.Component<
                 >
                     <Radio.Group onChange={this.onClick} value={this.state.currentSelection}>
                         {Object.entries(this.props.payload).map((value) => {
-                            return <Radio.Button value={value[1]}>{value[0]}</Radio.Button>
+                            return (
+                                <Radio.Button key={value[1]} value={value[1]}>
+                                    {value[0]}
+                                </Radio.Button>
+                            )
                         })}
                     </Radio.Group>
                 </Space>
