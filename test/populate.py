@@ -57,6 +57,13 @@ class TableA(dj.Lookup):
     ---
     a_name: varchar(30)
     """
+
+    class PartA(dj.Part):
+        definition = """
+        -> master
+        a_part: int
+        """
+
     contents = [
         (
             0,
