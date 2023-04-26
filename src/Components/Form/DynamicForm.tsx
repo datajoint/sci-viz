@@ -35,6 +35,7 @@ interface formProps {
     route: string
     name: string
     height: number
+    booleans?: string[]
     channelList?: Array<string>
     store?: RestrictionStore
     databaseHost?: string
@@ -291,7 +292,7 @@ function DynamicForm(props: formProps) {
         if (field.type === 'table') {
             let tableField = field as tableFieldData
             return (
-                <Select style={{ width: '100%' }}>
+                <Select key={tableField.name} style={{ width: '100%' }}>
                     {tableField.values.map((option) => (
                         <Select.Option value={option} key={`${tableField.name}_select_option`}>
                             {option}
@@ -302,23 +303,47 @@ function DynamicForm(props: formProps) {
         }
         let attrField = field as attributeFieldData
         if (/^.*int.*$/.test(attrField.datatype)) {
-            let range = intRangeMap[attrField.datatype]
+            if (
+                /tinyint/.test(attrField.datatype) &&
+                props.booleans?.includes(attrField.name)
+            ) {
+                return (
+                    <Select key={attrField.name} id={attrField.name} style={{ width: '100%' }}>
+                        <Select.Option value={1} key={`${attrField.name}_select_option_true`}>
+                            True
+                        </Select.Option>
+                        <Select.Option value={0} key={`${attrField.name}_select_option_false`}>
+                            False
+                        </Select.Option>
+                    </Select>
+                )
+            } else {
+                let range = intRangeMap[attrField.datatype]
+                return (
+                    <InputNumber
+                        key={attrField.name}
+                        id={attrField.name}
+                        min={range[0]}
+                        max={range[1]}
+                        precision={0}
+                        style={{ width: '100%' }}
+                    />
+                )
+            }
+        } else if (/^float.*|double.*|decimal.*$/.test(attrField.datatype)) {
             return (
                 <InputNumber
+                    key={attrField.name}
                     id={attrField.name}
-                    min={range[0]}
-                    max={range[1]}
-                    precision={0}
                     style={{ width: '100%' }}
                 />
             )
-        } else if (/^float.*|double.*|decimal.*$/.test(attrField.datatype)) {
-            return <InputNumber id={attrField.name} style={{ width: '100%' }} />
         } else if (/^char.*|varchar.*$/.test(attrField.datatype)) {
             let size = Number(attrField.datatype.split('(')[1].replace(')', ''))
             if (size >= 255) {
                 return (
                     <TextArea
+                        key={attrField.name}
                         id={attrField.name}
                         maxLength={size}
                         showCount
@@ -329,6 +354,7 @@ function DynamicForm(props: formProps) {
             }
             return (
                 <Input
+                    key={attrField.name}
                     id={attrField.name}
                     showCount
                     maxLength={size}
@@ -342,9 +368,12 @@ function DynamicForm(props: formProps) {
                 .replaceAll("'", '')
                 .split(',')
             return (
-                <Select id={attrField.name} style={{ width: '100%' }}>
+                <Select key={attrField.name} id={attrField.name} style={{ width: '100%' }}>
                     {options.map((option) => (
-                        <Select.Option value={option} key={`${attrField.name}_select_option`}>
+                        <Select.Option
+                            value={option}
+                            key={`${attrField.name}_select_option_${option}`}
+                        >
                             {option}
                         </Select.Option>
                     ))}
@@ -353,6 +382,7 @@ function DynamicForm(props: formProps) {
         } else if (/^datetime.*|timestamp.*$/.test(attrField.datatype))
             return (
                 <DatePicker
+                    key={attrField.name}
                     showTime
                     id={attrField.name}
                     style={{ width: '100%' }}
@@ -362,6 +392,7 @@ function DynamicForm(props: formProps) {
         else if (/^date.*$/.test(attrField.datatype))
             return (
                 <DatePicker
+                    key={attrField.name}
                     id={attrField.name}
                     style={{ width: '100%' }}
                     format={'YYYY-MM-DD'}
@@ -370,6 +401,7 @@ function DynamicForm(props: formProps) {
         else if (/^time.*$/.test(attrField.datatype))
             return (
                 <TimePicker
+                    key={attrField.name}
                     id={attrField.name}
                     style={{ width: '100%' }}
                     format={'HH:mm:ss'}

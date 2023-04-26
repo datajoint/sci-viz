@@ -188,6 +188,7 @@ class TableD(dj.Lookup):
     a_double: double
     a_decimal: decimal(5,3)
     a_decimal_unsigned: decimal(6,4) unsigned
+    a_bool: boolean
     """
 
 
@@ -412,6 +413,7 @@ class PresetTable(dj.Lookup):
                 a_double=2.2,
                 a_decimal=3.3,
                 a_decimal_unsigned=4.4,
+                a_bool=1,
             ),
         ),
     ]

@@ -168,6 +168,7 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 name={props.name}
                 height={calculatedHeight}
+                booleans={compData.booleans}
                 store={Object.assign({}, props.store)}
                 channelList={compData.channels}
                 presets={!!compData.presets}
