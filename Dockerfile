@@ -14,19 +14,19 @@ RUN chown -R node:node /run/nginx
 
 USER node
 WORKDIR /home/node
-COPY ./package.json /home/node
+COPY --chown=node:node ./package.json /home/node
 # COPY ./yarn.lock /home/node
 ARG REACT_APP_DJSCIVIZ_BACKEND_PREFIX=/api
 RUN yarn install
 
 
-COPY ./tsconfig.json /home/node
-COPY ./src /home/node/src
-COPY ./public /home/node/public
-COPY ./default.conf /etc/nginx/http.d/
-COPY ./default.conf /etc/nginx/conf.d/
-COPY ./sci-viz-hotreload-dev.sh .
-COPY ./sci-viz-hotreload-prod.sh .
+COPY --chown=node:node ./tsconfig.json /home/node
+COPY --chown=node:node ./src /home/node/src
+COPY --chown=node:node ./public /home/node/public
+COPY --chown=node:node ./default.conf /etc/nginx/http.d/
+COPY --chown=node:node ./default.conf /etc/nginx/conf.d/
+COPY --chown=node:node ./sci-viz-hotreload-dev.sh .
+COPY --chown=node:node ./sci-viz-hotreload-prod.sh .
 ENV NODE_OPTIONS --max-old-space-size=6000
 RUN yarn build
 RUN chmod -R 777 ./build
