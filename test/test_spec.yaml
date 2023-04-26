@@ -629,6 +629,19 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableU
+            Part A:
+              route: /insert12
+              x: 1
+              y: 11
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableA.PartA
+              map:
+                - type: table
+                  destination: test_group1_simple.TableA
+                  input: TableA
     Slideshow:
       route: /slideShow
       grids:
