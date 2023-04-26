@@ -2,6 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [2.3.2] - TBD
+
+### Fixed
+
+- Permissions of files in the `/home/node` directory PR [#116](https://github.com/datajoint/sci-viz/pull/116)
+
 ## [2.3.1] - 04-26-23
 
 ### Added
