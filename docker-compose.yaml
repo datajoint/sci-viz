@@ -77,13 +77,14 @@ services:
     volumes:
       - ./test:/tmp/test
       - ./test/test_spec.yaml:/main/specs/test_spec.yaml
+      - ./pharus-hotreload-dev.sh:/main/specs/pharus-hotreload-dev.sh
       # - ./test/test.avi:/main/specs/test.avi
     command:
       - sh
       - -lc
       - |
         python /tmp/test/populate.py
-        pharus
+        sh ./specs/pharus-hotreload-dev.sh
     networks:
       - main
 networks:
