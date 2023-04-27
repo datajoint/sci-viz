@@ -2,11 +2,16 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.3.2] - TBD
+## [2.3.2] - 04-27-23
 
 ### Fixed
 
 - Permissions of files in the `/home/node` directory PR [#116](https://github.com/datajoint/sci-viz/pull/116)
+- Small bugs with datetime picker and slideshow component [#117](https://github.com/datajoint/sci-viz/pull/117)
+
+### Added
+
+- Pharus hotreloading script to simplify dev workflow PR [#117](https://github.com/datajoint/sci-viz/pull/117)
 
 ## [2.3.1] - 04-26-23
 
@@ -154,6 +159,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Initial framework for jest testing (#27) PR #33
 - loginless mode PR #41
 
+[2.3.2]: https://github.com/datajoint/sci-viz/compare/2.3.1...2.3.2
 [2.3.1]: https://github.com/datajoint/sci-viz/compare/2.3.0...2.3.1
 [2.3.0]: https://github.com/datajoint/sci-viz/compare/2.2.1...2.3.0
 [2.2.1]: https://github.com/datajoint/sci-viz/compare/2.2.0...2.2.1
