@@ -126,9 +126,9 @@ function DjTable(props: DjTableProps) {
         if (sorter['order'] !== null && sorter['field'] !== null) {
             isSorterNull = false
             let sort = ''
-            if (sorter['order'] == 'ascend') {
+            if (sorter['order'] === 'ascend') {
                 sort = 'ASC'
-            } else if (sorter['order'] == 'descend') {
+            } else if (sorter['order'] === 'descend') {
                 sort = 'DESC'
             }
             sorterArr.push(`${sorter['field']} ${sort}`)
@@ -305,7 +305,7 @@ function DjTable(props: DjTableProps) {
         }
 
         if (queryParamList.length) {
-            if (apiUrlUnqs.includes('?') == false) {
+            if (apiUrlUnqs.includes('?') === false) {
                 apiUrlUnqs = apiUrlUnqs + '?' + queryParamList.join('&')
             } else {
                 apiUrlUnqs = apiUrlUnqs + '&' + queryParamList.join('&')
@@ -314,7 +314,7 @@ function DjTable(props: DjTableProps) {
 
         if (Object.keys(state.filter).length !== 0) {
             for (const key of Object.keys(state.filter)) {
-                if (apiUrlUnqs.includes('?') == false) {
+                if (apiUrlUnqs.includes('?') === false) {
                     apiUrlUnqs = apiUrlUnqs + '?' + state.filter[key].restriction
                 } else {
                     apiUrlUnqs = apiUrlUnqs + '&' + state.filter[key].restriction
@@ -398,7 +398,7 @@ function DjTable(props: DjTableProps) {
             }
             if (propsUpdate) {
                 let pks: string[] = []
-                attributesQuery.data.attributes.primary.map(
+                attributesQuery.data.attributes.primary.forEach(
                     (value: djAttributesArray, index: number) => {
                         pks.push(value[0])
                     }
@@ -429,7 +429,7 @@ function DjTable(props: DjTableProps) {
             let fullAttr = attributesQuery.data.attributes.primary.concat(
                 attributesQuery.data.attributes.secondary
             )
-            fullAttr.map((value: djAttributesArray, index: number) => {
+            fullAttr.forEach((value: djAttributesArray, index: number) => {
                 value[1].includes('datetime') ||
                 value[1] === 'time' ||
                 value[1] === 'timestamp' ||
@@ -470,10 +470,10 @@ function DjTable(props: DjTableProps) {
                           filterSearch: true
                       })
             })
-            recordsQuery.data.records.map(
+            recordsQuery.data.records.forEach(
                 (value: (string | number | bigint | boolean | null)[], index: number) => {
                     let tmp: {} = { key: index }
-                    value.map(
+                    value.forEach(
                         (value: string | number | bigint | boolean | null, index: number) => {
                             Object.assign(tmp, {
                                 [recordsQuery.data.recordHeader[index]]: value
@@ -542,7 +542,7 @@ function DjTable(props: DjTableProps) {
 
                                   let pks: string[] = []
 
-                                  attributesQuery.data?.attributes.primary.map(
+                                  attributesQuery.data?.attributes.primary.forEach(
                                       (value: djAttributesArray, index: number) => {
                                           pks.push(value[0])
                                       }
@@ -577,7 +577,7 @@ function DjTable(props: DjTableProps) {
                         onClick: (event) => {
                             event.stopPropagation()
                             let keysArr: string[] = []
-                            attributesQuery.data?.attributes.primary.map(
+                            attributesQuery.data?.attributes.primary.forEach(
                                 (value: djAttributesArray, index: number) => {
                                     keysArr.push(`${value[0]}=${record[value[0]]}`)
                                 }
