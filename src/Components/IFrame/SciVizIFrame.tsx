@@ -31,7 +31,7 @@ function SciVizIFrame(props: iFrameProps) {
             bodyStyle={{ height: '100%', padding: '5px' }}
             hoverable={true}
         >
-            <iframe width='100%' style={{ height: '100%' }} src={url} />
+            <iframe width='100%' style={{ height: '100%' }} title={props.url} src={url} />
         </Card>
     )
 }
