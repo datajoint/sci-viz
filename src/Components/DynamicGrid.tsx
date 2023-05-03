@@ -59,7 +59,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
             this.props.route +
             `?limit=${this.props.columns}` +
             `&page=${this.state.page}`
-        if (this.props.queryParams != undefined && !this.props.queryParams.includes('')) {
+        if (this.props.queryParams !== undefined && !this.props.queryParams.includes('')) {
             apiUrl = apiUrl + '&' + this.props.queryParams.join('&')
         }
 
@@ -114,7 +114,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
     }
 
     componentDidUpdate(prevProps: DynamicGridProps, prevState: DynamicGridState): void {
-        if (this.state.page != prevState.page || prevProps.store != this.props.store) {
+        if (this.state.page !== prevState.page || prevProps.store !== this.props.store) {
             this.query()
         }
     }
@@ -146,7 +146,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
                             }
                             // if restrictionList is empty that means that the data is empty/unfetched
                             // which means that we should not render anything
-                            if (restrictionList.length == 0) {
+                            if (restrictionList.length === 0) {
                                 return <div></div>
                             }
                             return (
@@ -225,6 +225,8 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
                                                             }
                                                         />
                                                     )
+                                                } else {
+                                                    return <></>
                                                 }
                                             }
                                         )}
