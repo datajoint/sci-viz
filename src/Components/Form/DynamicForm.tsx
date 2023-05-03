@@ -18,6 +18,7 @@ import {
 import { DownOutlined } from '@ant-design/icons'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
+import './DynamicForm.css'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 const { TextArea } = Input
@@ -311,8 +312,8 @@ function DynamicForm(props: formProps) {
                         id={attrField.name}
                         style={{ width: '100%' }}
                         options={[
-                            { label: 'True', value: 'True' },
-                            { label: 'False', value: 'False' }
+                            { label: 'True', value: 1 },
+                            { label: 'False', value: 0 }
                         ]}
                     />
                 )
