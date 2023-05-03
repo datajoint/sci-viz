@@ -432,9 +432,9 @@ function DynamicForm(props: formProps) {
             extra={
                 !props.presets ? (
                     <></>
-                ) : presets.status == 'error' ? (
+                ) : presets.status === 'error' ? (
                     <Alert message='Preset Error' type='error' />
-                ) : presets.status == 'loading' ? (
+                ) : presets.status === 'loading' ? (
                     <Spin />
                 ) : (
                     generateDropdown(presets.data!)
