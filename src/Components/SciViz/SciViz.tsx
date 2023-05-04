@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
 import { Tabs } from 'antd'
 import { SciVizSpec, TabItem } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
@@ -60,18 +60,21 @@ function SciViz(props: SciVizProps) {
      * @param route - The route of the hidden page
      * @param queryParams - The query params to restrict the components of the page by
      */
-    const updateHiddenPage = (
-        route: string,
-        queryParams: string,
-        currPageMap: {
-            [key: string]: TabItem
-        }
-    ) => {
-        if (getRoute() !== route) {
-            setHiddenPage(currPageMap[route].children)
-            setRoute(`${route}?${queryParams}`)
-        }
-    }
+    const updateHiddenPage = useCallback(
+        (
+            route: string,
+            queryParams: string,
+            currPageMap: {
+                [key: string]: TabItem
+            }
+        ) => {
+            if (getRoute() !== route) {
+                setHiddenPage(currPageMap[route].children)
+                setRoute(`${route}?${queryParams}`)
+            }
+        },
+        []
+    )
 
     useEffect(() => {
         let tempPageMap: {
@@ -130,7 +133,13 @@ function SciViz(props: SciVizProps) {
         setMenuItems(tempMenuItems)
         var newURL = props.baseURL.replace(/\/$/, '') + tempMenuItems[0].key
         window.history.pushState(null, '', newURL)
-    }, [])
+    }, [
+        props.baseURL,
+        props.jwtToken,
+        props.spec.SciViz.auth?.database,
+        props.spec.SciViz.pages,
+        updateHiddenPage
+    ])
 
     return (
         <MenuItemsContext.Provider value={pageMap}>
