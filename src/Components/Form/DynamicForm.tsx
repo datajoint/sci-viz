@@ -18,6 +18,7 @@ import {
 import { DownOutlined } from '@ant-design/icons'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
+import './DynamicForm.css'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 const { TextArea } = Input
@@ -292,13 +293,11 @@ function DynamicForm(props: formProps) {
         if (field.type === 'table') {
             let tableField = field as tableFieldData
             return (
-                <Select key={tableField.name} style={{ width: '100%' }}>
-                    {tableField.values.map((option) => (
-                        <Select.Option value={option} key={`${tableField.name}_select_option`}>
-                            {option}
-                        </Select.Option>
-                    ))}
-                </Select>
+                <Select
+                    key={tableField.name}
+                    style={{ width: '100%' }}
+                    options={tableField.values.map((item) => ({ label: item, value: item }))}
+                />
             )
         }
         let attrField = field as attributeFieldData
@@ -308,14 +307,15 @@ function DynamicForm(props: formProps) {
                 props.booleans?.includes(attrField.name)
             ) {
                 return (
-                    <Select key={attrField.name} id={attrField.name} style={{ width: '100%' }}>
-                        <Select.Option value={1} key={`${attrField.name}_select_option_true`}>
-                            True
-                        </Select.Option>
-                        <Select.Option value={0} key={`${attrField.name}_select_option_false`}>
-                            False
-                        </Select.Option>
-                    </Select>
+                    <Select
+                        key={attrField.name}
+                        id={attrField.name}
+                        style={{ width: '100%' }}
+                        options={[
+                            { label: 'True', value: 1 },
+                            { label: 'False', value: 0 }
+                        ]}
+                    />
                 )
             } else {
                 let range = intRangeMap[attrField.datatype]
@@ -368,16 +368,12 @@ function DynamicForm(props: formProps) {
                 .replaceAll("'", '')
                 .split(',')
             return (
-                <Select key={attrField.name} id={attrField.name} style={{ width: '100%' }}>
-                    {options.map((option) => (
-                        <Select.Option
-                            value={option}
-                            key={`${attrField.name}_select_option_${option}`}
-                        >
-                            {option}
-                        </Select.Option>
-                    ))}
-                </Select>
+                <Select
+                    key={attrField.name}
+                    id={attrField.name}
+                    style={{ width: '100%' }}
+                    options={options.map((item) => ({ label: item, value: item }))}
+                />
             )
         } else if (/^datetime.*|timestamp.*$/.test(attrField.datatype))
             return (

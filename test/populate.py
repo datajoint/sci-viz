@@ -173,7 +173,6 @@ class TableC(dj.Lookup):
 class TableD(dj.Lookup):
     definition = """
     a_tinyint: tinyint
-    ---
     a_tinyint_unsigned: tinyint unsigned
     a_smallint: smallint
     a_smallint_unsigned: smallint unsigned
@@ -183,6 +182,7 @@ class TableD(dj.Lookup):
     a_int: int
     a_char: char(10)
     a_varchar: varchar(516)
+    ---
     a_date: date
     a_time: time
     a_time_precision: time(6)
@@ -329,6 +329,14 @@ class TableU(dj.Lookup):
     u_int: int
     ---
     -> TableV
+    """
+
+
+@group1_simple
+class TableW(dj.Lookup):
+    definition = """
+    w_int: int
+    -> TableD
     """
 
 
