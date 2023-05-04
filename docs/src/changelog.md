@@ -2,6 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [2.3.3] - 05-05-23
+
+### Changed
+
+- Primary key dropdowns in forms now wrap to new lines ([#118](https://github.com/datajoint/sci-viz/issues/118)) PR [#119](https://github.com/datajoint/sci-viz/pull/119)
+
 ## [2.3.2] - 04-27-23
 
 ### Fixed
@@ -159,6 +165,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Initial framework for jest testing (#27) PR #33
 - loginless mode PR #41
 
+[2.3.3]: https://github.com/datajoint/sci-viz/compare/2.3.2...2.3.3
 [2.3.2]: https://github.com/datajoint/sci-viz/compare/2.3.1...2.3.2
 [2.3.1]: https://github.com/datajoint/sci-viz/compare/2.3.0...2.3.1
 [2.3.0]: https://github.com/datajoint/sci-viz/compare/2.2.1...2.3.0
