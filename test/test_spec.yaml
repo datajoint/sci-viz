@@ -642,6 +642,15 @@ SciViz: # top level tab
                 - type: table
                   destination: test_group1_simple.TableA
                   input: TableA
+            Big FK Dropdown:
+              route: /insert13
+              x: 0
+              y: 12
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableW
     Slideshow:
       route: /slideShow
       grids:
