@@ -13,7 +13,8 @@ import {
     notification,
     Spin,
     Dropdown,
-    Menu
+    Menu,
+    MenuProps
 } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { Responsive, WidthProvider } from 'react-grid-layout'
@@ -259,27 +260,19 @@ function DynamicForm(props: formProps) {
     }
 
     const generateDropdown = (presetPayload: formPresets) => {
-        let menu = (
-            <Menu>
-                {Object.entries(presetPayload).map((value) => {
-                    return (
-                        <Menu.Item
-                            key={value[0]}
-                            title={value[0]}
-                            onClick={(value) => {
-                                form.resetFields()
-                                form.setFieldsValue(presetPayload[value.key])
-                                setCurrentDropdownSelection(value.key)
-                            }}
-                        >
-                            {value[0]}
-                        </Menu.Item>
-                    )
-                })}
-            </Menu>
-        )
+        const items: MenuProps['items'] = Object.entries(presetPayload).map((value) => {
+            return {
+                label: value[0],
+                key: value[0],
+                onClick: (value) => {
+                    form.resetFields()
+                    form.setFieldsValue(presetPayload[value.key])
+                    setCurrentDropdownSelection(value.key)
+                }
+            }
+        })
         return (
-            <Dropdown overlay={menu}>
+            <Dropdown menu={{ items }}>
                 <Button>
                     {currentDropdownSelection ? currentDropdownSelection : <>Presets</>}{' '}
                     <DownOutlined />
