@@ -13,7 +13,6 @@ import {
     notification,
     Spin,
     Dropdown,
-    Menu,
     MenuProps
 } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
