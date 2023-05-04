@@ -243,7 +243,8 @@ function DjTable(props: DjTableProps) {
             props.store &&
             props.channelList &&
             !props.channelList.every((val) => Object.keys(props.store!).includes(val))
-        )
+        ),
+        refetchOnWindowFocus: false
     })
 
     const getAttributes = (): Promise<djAttributes> => {
@@ -276,7 +277,8 @@ function DjTable(props: DjTableProps) {
                 props.store &&
                 props.channelList &&
                 !props.channelList.every((val) => Object.keys(props.store!).includes(val))
-            )
+            ),
+            refetchOnWindowFocus: false
         }
     )
 

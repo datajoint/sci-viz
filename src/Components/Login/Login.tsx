@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 import './Login.css'
 
@@ -20,214 +20,144 @@ interface LoginState {
 /**
  * Component for handling authencation against the backend to connect to a mysql database
  */
-export default class Login extends Component<LoginProps, LoginState> {
-    constructor(props: LoginProps) {
-        super(props)
+function Login(props: LoginProps) {
+    const [databaseAddress, setDatabaseAddress] = useState(props.defaultAddress || '')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [rememberMe, setRememberMe] = useState(false)
+    const [returnMessage, setReturnMessage] = useState('')
 
-        // Default values
-        if (this.props.defaultAddress) {
-            this.state = {
-                databaseAddress: this.props.defaultAddress,
-                username: '',
-                password: '',
-                rememberMe: false,
-                returnMessage: ''
-            }
+    useEffect(() => {
+        const usernameCookie = Cookies.get('username')
+        if (props.defaultAddress) {
+            setUsername(usernameCookie || '')
         } else {
-            this.state = {
-                databaseAddress: '',
-                username: '',
-                password: '',
-                rememberMe: false,
-                returnMessage: ''
-            }
+            const databaseAddressCookie = Cookies.get('databaseAddress')
+            setDatabaseAddress(databaseAddressCookie || '')
+            setUsername(usernameCookie || '')
         }
+    }, [props.defaultAddress])
 
-        // Bind on change functions
-        this.onUsernameChange = this.onUsernameChange.bind(this)
-        this.onPasswordChange = this.onPasswordChange.bind(this)
-        this.onDatabaseAddressChange = this.onDatabaseAddressChange.bind(this)
-        this.onRememberMeChange = this.onRememberMeChange.bind(this)
-        this.onSubmit = this.onSubmit.bind(this)
+    function onDatabaseAddressChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setDatabaseAddress(event.target.value)
     }
 
-    /**
-     * On mount, check if there are cookies that stored the databaseAddress and username, if so load them
-     */
-    componentDidMount() {
-        // Load databaseAddress and usernameCookie from cookies
-        var usernameCookie = Cookies.get('username')
-        if (this.props.defaultAddress) {
-            this.setState({
-                username: usernameCookie === undefined ? '' : usernameCookie
-            })
-        } else {
-            var databaseAddressCookie = Cookies.get('databaseAddress')
+    function onUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setUsername(event.target.value)
+    }
 
-            this.setState({
-                databaseAddress:
-                    databaseAddressCookie === undefined ? '' : databaseAddressCookie,
-                username: usernameCookie === undefined ? '' : usernameCookie
-            })
+    function onPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setPassword(event.target.value)
+    }
+
+    function onRememberMeChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setRememberMe(event.target.checked)
+    }
+
+    async function onSubmit() {
+        if (rememberMe) {
+            Cookies.set('databaseAddress', databaseAddress)
+            Cookies.set('username', username)
         }
-    }
-
-    /**
-     * Call back for databaseAddress input field change
-     * @param event HTML Input OnChange event
-     */
-    onDatabaseAddressChange(event: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({ databaseAddress: event.target.value })
-    }
-
-    /**
-     * Call back for username input field change
-     * @param event HTML Input OnChange event
-     */
-    onUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({ username: event.target.value })
-    }
-
-    /**
-     * Call back for password input field change
-     * @param event HTML Input OnChange event
-     */
-    onPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({ password: event.target.value })
-    }
-
-    /**
-     * Call back for rememberMeChange
-     * @param event HTML Input OnChange event
-     */
-    onRememberMeChange(event: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({ rememberMe: event.target.checked })
-    }
-
-    selectDatabase() {
-        if (this.props.defaultAddress) {
-            return <b>Target DB: {this.state.databaseAddress}</b>
-        } else {
-            return (
-                <>
-                    <label className='login-input-label'>Host/Database Address</label>
-                    <input
-                        className='login-input'
-                        type='text'
-                        id='database-server'
-                        value={this.state.databaseAddress}
-                        onChange={this.onDatabaseAddressChange}
-                    ></input>
-                </>
-            )
-        }
-    }
-
-    /**
-     * Call back for form submission
-     * Attempts to login with the provided info, if failed then set the error message.
-     */
-    async onSubmit() {
-        if (this.state.rememberMe) {
-            Cookies.set('databaseAddress', this.state.databaseAddress)
-            Cookies.set('username', this.state.username)
-        }
-
         let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/login`
-        if (this.props.databaseHost) {
-            apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
+        if (props.databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
         }
-        // Attempt to authenticate
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                databaseAddress: this.state.databaseAddress,
-                username: this.state.username,
-                password: this.state.password
+                databaseAddress: databaseAddress,
+                username: username,
+                password: password
             })
         })
-
         if (response.status === 500) {
             const errorMessage = await response.text()
-            this.setState({ returnMessage: errorMessage.toString() })
+            setReturnMessage(errorMessage.toString())
             return
         }
-
         const jsonObject = await response.json()
-        this.props.setJWTTokenAndHostName(jsonObject.jwt, this.state.databaseAddress)
+        props.setJWTTokenAndHostName(jsonObject.jwt, databaseAddress)
     }
 
-    /**
-     * Checks if databaseAddress, username, and password is filled out. If so then returns true
-     * @returns boolean on whether the form is ready for submission or not
-     */
-    isFormReady() {
-        return this.state.databaseAddress && this.state.username && this.state.password
-            ? true
-            : false
+    function isFormReady() {
+        return databaseAddress && username && password
     }
 
-    render() {
-        return (
-            <div className='login-div'>
-                <div className='login-container'>
-                    <img
-                        className='login-top-logo'
-                        src={this.props.imageRoute}
-                        alt='datajoint gui logo'
-                    />
-                    <form className='login-form'>
-                        {this.selectDatabase()}
-                        <label className='login-input-label'>Username</label>
-                        <input
-                            className='login-input'
-                            type='text'
-                            id='username'
-                            value={this.state.username}
-                            onChange={this.onUsernameChange}
-                        ></input>
-                        <label className='login-input-label'>Password</label>
-                        <input
-                            className='login-input'
-                            type='password'
-                            id='password'
-                            value={this.state.password}
-                            onChange={this.onPasswordChange}
-                        ></input>
-                        <div className='login-interaction-div'>
-                            <div>
-                                <input
-                                    className='remember-me-checkbox'
-                                    type='checkbox'
-                                    id='remember-me-checkbox'
-                                    checked={this.state.rememberMe}
-                                    onChange={this.onRememberMeChange}
-                                ></input>
-                                <label
-                                    className='remember-me-checkbox-label'
-                                    htmlFor='remember-me-checkbox'
-                                >
-                                    Remember Me
-                                </label>
-                            </div>
-                            <button
-                                className={
-                                    this.isFormReady()
-                                        ? 'login-input-button ready'
-                                        : 'login-input-button'
-                                }
-                                disabled={!this.isFormReady()}
-                                onClick={this.onSubmit}
-                                type='button'
+    return (
+        <div className='login-div'>
+            <div className='login-container'>
+                <img
+                    className='login-top-logo'
+                    src={props.imageRoute}
+                    alt='datajoint gui logo'
+                />
+                <form className='login-form'>
+                    {props.defaultAddress ? (
+                        <b>Target DB: {databaseAddress}</b>
+                    ) : (
+                        <>
+                            <label className='login-input-label'>Host/Database Address</label>
+                            <input
+                                className='login-input'
+                                type='text'
+                                id='database-server'
+                                value={databaseAddress}
+                                onChange={onDatabaseAddressChange}
+                            ></input>
+                        </>
+                    )}
+                    <label className='login-input-label'>Username</label>
+                    <input
+                        className='login-input'
+                        type='text'
+                        id='username'
+                        value={username}
+                        onChange={onUsernameChange}
+                    ></input>
+                    <label className='login-input-label'>Password</label>
+                    <input
+                        className='login-input'
+                        type='password'
+                        id='password'
+                        value={password}
+                        onChange={onPasswordChange}
+                    ></input>
+                    <div className='login-interaction-div'>
+                        <div>
+                            <input
+                                className='remember-me-checkbox'
+                                type='checkbox'
+                                id='remember-me-checkbox'
+                                checked={rememberMe}
+                                onChange={onRememberMeChange}
+                            ></input>
+                            <label
+                                className='remember-me-checkbox-label'
+                                htmlFor='remember-me-checkbox'
                             >
-                                Connect
-                            </button>
+                                Remember Me
+                            </label>
                         </div>
-                        <p className='form-message'>{this.state.returnMessage}</p>
-                    </form>
-                </div>
+                        <button
+                            className={
+                                isFormReady()
+                                    ? 'login-input-button ready'
+                                    : 'login-input-button'
+                            }
+                            disabled={!isFormReady()}
+                            onClick={onSubmit}
+                            type='button'
+                        >
+                            Connect
+                        </button>
+                    </div>
+                    <p className='form-message'>{returnMessage}</p>
+                </form>
             </div>
-        )
-    }
+        </div>
+    )
 }
+
+export default Login
