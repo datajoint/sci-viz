@@ -147,6 +147,7 @@ function SciViz(props: SciVizProps) {
                     }
                     setRoute(pageMap[activeKey].key)
                 }}
+                destroyInactiveTabPane={true}
             />
             {hiddenPage ? hiddenPage : <></>}
         </MenuItemsContext.Provider>

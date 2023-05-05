@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Snapshot of Footer component 1`] = `
+exports[`snapshot_of_footer_component 1`] = `
 <footer>
   <div
     className="footer-content"

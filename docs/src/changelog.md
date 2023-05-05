@@ -7,6 +7,17 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 ### Changed
 
 - Primary key dropdowns in forms now wrap to new lines ([#118](https://github.com/datajoint/sci-viz/issues/118)) PR [#119](https://github.com/datajoint/sci-viz/pull/119)
+- Refactored several class components into functional components [#120](https://github.com/datajoint/sci-viz/pull/120)
+
+### Fixed
+
+- Bug with subdirectory hosting [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Bug with UseQuery recalling on tab switch [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Bug with Slideshow component [#120](https://github.com/datajoint/sci-viz/pull/120)
+
+### Added
+
+- Unit test for footer component [#120](https://github.com/datajoint/sci-viz/pull/120)
 
 ## [2.3.2] - 04-27-23
 
