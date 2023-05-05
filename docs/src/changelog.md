@@ -17,7 +17,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ### Added
 
-- Unit test for footer component
+- Unit test for footer component [#120](https://github.com/datajoint/sci-viz/pull/120)
 
 ## [2.3.2] - 04-27-23
 
