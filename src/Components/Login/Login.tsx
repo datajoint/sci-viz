@@ -9,14 +9,6 @@ interface LoginProps {
     databaseHost?: string
 }
 
-interface LoginState {
-    databaseAddress: string // Buffer object to store databaseAddress
-    username: string // Buffer object to store username
-    password: string // Buffer object to store password
-    rememberMe: boolean // For storing the state if the user wants to remeber login info or not
-    returnMessage: string // Buffer for error message from the server
-}
-
 /**
  * Component for handling authencation against the backend to connect to a mysql database
  */
