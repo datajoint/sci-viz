@@ -108,7 +108,7 @@ function Slideshow(props: SlideshowProps) {
     function storeReady(channelList: Array<string>, store: RestrictionStore): boolean {
         let channelCheckArr = Array<boolean>()
         channelList.forEach((element) => {
-            if (store[element].length) {
+            if (store[element] && store[element].length) {
                 channelCheckArr.push(true)
             } else {
                 channelCheckArr.push(false)

@@ -257,7 +257,8 @@ function DjTable({
             store &&
             channelList &&
             !channelList.every((val) => Object.keys(store!).includes(val))
-        )
+        ),
+        refetchOnWindowFocus: false
     })
 
     const getAttributes = (): Promise<djAttributes> => {
@@ -290,7 +291,8 @@ function DjTable({
                 store &&
                 channelList &&
                 !channelList.every((val) => Object.keys(store!).includes(val))
-            )
+            ),
+            refetchOnWindowFocus: false
         }
     )
 
