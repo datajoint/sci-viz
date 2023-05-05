@@ -1,4 +1,4 @@
-import { Menu, Dropdown, Button, Card, Space } from 'antd'
+import { Menu, Dropdown, Button, Card, Space, MenuProps } from 'antd'
 import React from 'react'
 import { DownOutlined } from '@ant-design/icons'
 
@@ -36,7 +36,7 @@ export default class DjDropdownQuery extends React.Component<
 
         this.getRecords = this.getRecords.bind(this)
         this.onClick = this.onClick.bind(this)
-        this.getMenu = this.getMenu.bind(this)
+        this.getItems = this.getItems.bind(this)
     }
     getRecords(): Promise<djRecords> {
         let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
@@ -76,21 +76,16 @@ export default class DjDropdownQuery extends React.Component<
         this.props.updatePageStore(this.props.channel, [key])
         this.setState({ currentSelection: key.split('=')[1] })
     }
-    getMenu() {
-        return (
-            <Menu onClick={this.onClick}>
-                {this.state.data.records.map((value) => {
-                    return (
-                        <Menu.Item
-                            key={this.state.data.recordHeader[0] + '=' + value[0]}
-                            title={this.state.data.recordHeader[0]}
-                        >
-                            {value[0]}
-                        </Menu.Item>
-                    )
-                })}
-            </Menu>
-        )
+    getItems = () => {
+        const items: MenuProps['items'] = this.state.data.records.map((value) => {
+            return {
+                label: value[0],
+                key: this.state.data.recordHeader[0] + '=' + value[0],
+                onClick: this.onClick
+            }
+        })
+
+        return { items }
     }
 
     render() {
@@ -106,7 +101,7 @@ export default class DjDropdownQuery extends React.Component<
                     align='center'
                     style={{ width: '100%', height: '100%', justifyContent: 'center' }}
                 >
-                    <Dropdown overlay={this.getMenu()}>
+                    <Dropdown menu={this.getItems()}>
                         <Button>
                             {this.state.currentSelection} <DownOutlined />
                         </Button>
