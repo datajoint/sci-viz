@@ -1,6 +1,5 @@
 import renderer from 'react-test-renderer'
-import { render, waitFor } from '@testing-library/react'
-import { screen, configure } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import packageJSON from '../../package.json'
 
