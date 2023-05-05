@@ -386,16 +386,6 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=(MousePlots), fetch_args=['plot'])
-            comp3:
-              route: /myTableD
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(test_group1_simple):
-                    MousePlots = test_group1_simple.MousePlots
-                    return dict(query=(MousePlots), fetch_args=[])
     Dynamic Form:
       route: /dynamicForm
       grids:
