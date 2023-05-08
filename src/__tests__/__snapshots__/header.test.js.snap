@@ -9,15 +9,13 @@ exports[`Snapshot of header component 1`] = `
   <div
     className="header-content"
   >
-    <text>
-      <i
-        style={
-          Object {
-            "paddingLeft": "20px",
-          }
+    <i
+      style={
+        Object {
+          "paddingLeft": "20px",
         }
-      />
-    </text>
+      }
+    />
   </div>
 </header>
 `;
