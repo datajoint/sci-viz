@@ -17,9 +17,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
             <header>
                 <img className='header-img' src={this.props.imageRoute} alt='Sci-viz logo' />
                 <div className='header-content'>
-                    <text>
-                        <i style={{ paddingLeft: '20px' }}>{this.props.text}</i>
-                    </text>
+                    <i style={{ paddingLeft: '20px' }}>{this.props.text}</i>
                 </div>
             </header>
         )

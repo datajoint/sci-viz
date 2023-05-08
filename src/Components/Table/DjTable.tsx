@@ -84,12 +84,26 @@ interface djFilter {
 /**
  * DjTable component
  */
-function DjTable(props: DjTableProps) {
+function DjTable({
+    token,
+    route,
+    name,
+    height,
+    restrictionList,
+    link,
+    updatePageStore,
+    updateHiddenPage,
+    channel,
+    channelList,
+    store,
+    databaseHost,
+    pageSizeDefault
+}: DjTableProps) {
     const [state, setState] = useState<DjTableState>({
         columns: [],
         data: [],
         fullUnq: [],
-        numberOfTuples: props.pageSizeDefault || 5,
+        numberOfTuples: pageSizeDefault || 5,
         offset: 1,
         filter: {},
         sorter: [],
@@ -97,7 +111,7 @@ function DjTable(props: DjTableProps) {
         selectedRow: [0],
         loading: false
     })
-    const prevPropsRef = useRef<DjTableProps>()
+    const prevPropsRef = useRef<RestrictionStore | undefined>()
     const pageMap = useContext(MenuItemsContext)
 
     const handleChange = (
@@ -126,9 +140,9 @@ function DjTable(props: DjTableProps) {
         if (sorter['order'] !== null && sorter['field'] !== null) {
             isSorterNull = false
             let sort = ''
-            if (sorter['order'] == 'ascend') {
+            if (sorter['order'] === 'ascend') {
                 sort = 'ASC'
-            } else if (sorter['order'] == 'descend') {
+            } else if (sorter['order'] === 'descend') {
                 sort = 'DESC'
             }
             sorterArr.push(`${sorter['field']} ${sort}`)
@@ -165,27 +179,27 @@ function DjTable(props: DjTableProps) {
     }
 
     const constructRecordURL = (): string => {
-        let queryParamList = [...props.restrictionList]
+        let queryParamList = [...restrictionList]
         let channelCheckArr = Array<boolean>()
 
-        props.channelList?.forEach((element) => {
-            if (props.store![element]) {
+        channelList?.forEach((element) => {
+            if (store![element]) {
                 channelCheckArr.push(true)
             } else {
                 channelCheckArr.push(false)
             }
         })
 
-        for (let i in props.channelList) {
-            if (typeof props.store![props.channelList[+i]] != undefined) {
-                queryParamList = queryParamList.concat(props.store![props.channelList[+i]])
+        for (let i in channelList) {
+            if (typeof store![channelList[+i]] != undefined) {
+                queryParamList = queryParamList.concat(store![channelList[+i]])
             }
         }
         if (queryParamList.indexOf('') !== -1) {
             queryParamList.splice(queryParamList.indexOf(''), 1)
         }
 
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + props.route
+        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + route
 
         if (
             !state.sorter.join(',').includes('ASC') &&
@@ -217,8 +231,8 @@ function DjTable(props: DjTableProps) {
             }
         }
 
-        if (props.databaseHost) {
-            apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
+        if (databaseHost) {
+            apiUrl = apiUrl.concat(`&database_host=${databaseHost}`)
         }
 
         return apiUrl
@@ -228,7 +242,7 @@ function DjTable(props: DjTableProps) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + props.token
+                Authorization: 'Bearer ' + token
             }
         })
             .then((result) => {
@@ -240,26 +254,26 @@ function DjTable(props: DjTableProps) {
     }
     const recordsQuery = useQuery(`${constructRecordURL()}_table`, getRecords, {
         enabled: !(
-            props.store &&
-            props.channelList &&
-            !props.channelList.every((val) => Object.keys(props.store!).includes(val))
+            store &&
+            channelList &&
+            !channelList.every((val) => Object.keys(store!).includes(val))
         ),
         refetchOnWindowFocus: false
     })
 
     const getAttributes = (): Promise<djAttributes> => {
         let apiUrlAttr =
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + props.route + '/attributes'
+            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + route + '/attributes'
 
-        if (props.databaseHost) {
-            apiUrlAttr = apiUrlAttr.concat(`&database_host=${props.databaseHost}`)
+        if (databaseHost) {
+            apiUrlAttr = apiUrlAttr.concat(`&database_host=${databaseHost}`)
         }
 
         return fetch(apiUrlAttr, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + props.token
+                Authorization: 'Bearer ' + token
             }
         })
             .then((result) => {
@@ -270,13 +284,13 @@ function DjTable(props: DjTableProps) {
             })
     }
     const attributesQuery = useQuery(
-        `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${props.route}/attributes`,
+        `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${route}/attributes`,
         getAttributes,
         {
             enabled: !(
-                props.store &&
-                props.channelList &&
-                !props.channelList.every((val) => Object.keys(props.store!).includes(val))
+                store &&
+                channelList &&
+                !channelList.every((val) => Object.keys(store!).includes(val))
             ),
             refetchOnWindowFocus: false
         }
@@ -284,22 +298,22 @@ function DjTable(props: DjTableProps) {
 
     const constructUniquesURL = (): string => {
         let apiUrlUnqs =
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + props.route + '/uniques'
+            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + route + '/uniques'
 
-        let queryParamList = [...props.restrictionList]
+        let queryParamList = [...restrictionList]
         let channelCheckArr = Array<boolean>()
 
-        props.channelList?.forEach((element) => {
-            if (props.store![element]) {
+        channelList?.forEach((element) => {
+            if (store![element]) {
                 channelCheckArr.push(true)
             } else {
                 channelCheckArr.push(false)
             }
         })
 
-        for (let i in props.channelList) {
-            if (typeof props.store![props.channelList[+i]] != undefined) {
-                queryParamList = queryParamList.concat(props.store![props.channelList[+i]])
+        for (let i in channelList) {
+            if (typeof store![channelList[+i]] != undefined) {
+                queryParamList = queryParamList.concat(store![channelList[+i]])
             }
         }
         if (queryParamList.indexOf('') !== -1) {
@@ -307,7 +321,7 @@ function DjTable(props: DjTableProps) {
         }
 
         if (queryParamList.length) {
-            if (apiUrlUnqs.includes('?') == false) {
+            if (apiUrlUnqs.includes('?') === false) {
                 apiUrlUnqs = apiUrlUnqs + '?' + queryParamList.join('&')
             } else {
                 apiUrlUnqs = apiUrlUnqs + '&' + queryParamList.join('&')
@@ -316,7 +330,7 @@ function DjTable(props: DjTableProps) {
 
         if (Object.keys(state.filter).length !== 0) {
             for (const key of Object.keys(state.filter)) {
-                if (apiUrlUnqs.includes('?') == false) {
+                if (apiUrlUnqs.includes('?') === false) {
                     apiUrlUnqs = apiUrlUnqs + '?' + state.filter[key].restriction
                 } else {
                     apiUrlUnqs = apiUrlUnqs + '&' + state.filter[key].restriction
@@ -324,8 +338,8 @@ function DjTable(props: DjTableProps) {
             }
         }
 
-        if (props.databaseHost) {
-            apiUrlUnqs = apiUrlUnqs.concat(`&database_host=${props.databaseHost}`)
+        if (databaseHost) {
+            apiUrlUnqs = apiUrlUnqs.concat(`&database_host=${databaseHost}`)
         }
 
         return apiUrlUnqs
@@ -335,7 +349,7 @@ function DjTable(props: DjTableProps) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + props.token
+                Authorization: 'Bearer ' + token
             }
         })
             .then((result) => {
@@ -347,9 +361,9 @@ function DjTable(props: DjTableProps) {
     }
     const uniquesQuery = useQuery(`${constructUniquesURL()}_table`, getUniques, {
         enabled: !(
-            props.store &&
-            props.channelList &&
-            !props.channelList.every((val) => Object.keys(props.store!).includes(val))
+            store &&
+            channelList &&
+            !channelList.every((val) => Object.keys(store!).includes(val))
         )
     })
 
@@ -377,7 +391,7 @@ function DjTable(props: DjTableProps) {
 
     // Store previous props
     useEffect(() => {
-        prevPropsRef.current = props
+        prevPropsRef.current = store
     })
     const getPreviousProps = () => {
         return prevPropsRef.current
@@ -387,11 +401,11 @@ function DjTable(props: DjTableProps) {
     useEffect(() => {
         if (recordsQuery.isSuccess && attributesQuery.isSuccess) {
             let propsUpdate = false
-            if (props.store !== getPreviousProps()!.store) {
-                props.channelList?.forEach((element) => {
+            if (store !== getPreviousProps()!) {
+                channelList?.forEach((element) => {
                     if (
-                        JSON.stringify(props.store![element]) !==
-                        JSON.stringify(getPreviousProps()!.store![element])
+                        JSON.stringify(store![element]) !==
+                        JSON.stringify(getPreviousProps()![element])
                     ) {
                         console.log('PROPS UPDATED')
                         propsUpdate = true
@@ -400,7 +414,7 @@ function DjTable(props: DjTableProps) {
             }
             if (propsUpdate) {
                 let pks: string[] = []
-                attributesQuery.data.attributes.primary.map(
+                attributesQuery.data.attributes.primary.forEach(
                     (value: djAttributesArray, index: number) => {
                         pks.push(value[0])
                     }
@@ -418,10 +432,19 @@ function DjTable(props: DjTableProps) {
                     })
                 }
 
-                props.updatePageStore(props.channel!, record.slice(0, 2))
+                updatePageStore(channel!, record.slice(0, 2))
             }
         }
-    }, [props.store, recordsQuery.data, attributesQuery.data])
+    }, [
+        store,
+        recordsQuery.data,
+        attributesQuery.data,
+        attributesQuery.isSuccess,
+        channel,
+        channelList,
+        recordsQuery.isSuccess,
+        updatePageStore
+    ])
 
     // Effect for constructing the table
     useEffect(() => {
@@ -431,7 +454,7 @@ function DjTable(props: DjTableProps) {
             let fullAttr = attributesQuery.data.attributes.primary.concat(
                 attributesQuery.data.attributes.secondary
             )
-            fullAttr.map((value: djAttributesArray, index: number) => {
+            fullAttr.forEach((value: djAttributesArray, index: number) => {
                 value[1].includes('datetime') ||
                 value[1] === 'time' ||
                 value[1] === 'timestamp' ||
@@ -472,10 +495,10 @@ function DjTable(props: DjTableProps) {
                           filterSearch: true
                       })
             })
-            recordsQuery.data.records.map(
+            recordsQuery.data.records.forEach(
                 (value: (string | number | bigint | boolean | null)[], index: number) => {
                     let tmp: {} = { key: index }
-                    value.map(
+                    value.forEach(
                         (value: string | number | bigint | boolean | null, index: number) => {
                             Object.assign(tmp, {
                                 [recordsQuery.data.recordHeader[index]]: value
@@ -491,7 +514,14 @@ function DjTable(props: DjTableProps) {
                 data: tempData
             }))
         }
-    }, [recordsQuery.data, attributesQuery.data, state.fullUnq])
+    }, [
+        recordsQuery.data,
+        attributesQuery.data,
+        state.fullUnq,
+        attributesQuery.isSuccess,
+        recordsQuery.isSuccess,
+        state.filter
+    ])
 
     // Effect for updating filters
     useEffect(() => {
@@ -504,24 +534,24 @@ function DjTable(props: DjTableProps) {
                 fullUnq: uniques
             }))
         }
-    }, [uniquesQuery.data])
+    }, [uniquesQuery.data, uniquesQuery.isSuccess])
 
     useEffect(() => {
-        if (state.keys && props.link && props.updateHiddenPage) {
-            props.updateHiddenPage(props.link, state.keys.join('&'), pageMap!)
+        if (state.keys && link && updateHiddenPage) {
+            updateHiddenPage(link, state.keys.join('&'), pageMap!)
             setState((prevState) => ({
                 ...prevState,
                 keys: undefined
             }))
         }
-    }, [state.keys])
+    }, [state.keys, link, pageMap, updateHiddenPage])
 
     return (
         <Card
-            title={props.name}
-            style={{ width: '100%', height: props.height }}
+            title={name}
+            style={{ width: '100%', height: height }}
             bodyStyle={{
-                height: `${((props.height - 57.13) / props.height) * 100}%`, // 57.13 is the height of the title element
+                height: `${((height - 57.13) / height) * 100}%`, // 57.13 is the height of the title element
                 overflowY: 'auto'
             }}
             hoverable={true}
@@ -530,7 +560,7 @@ function DjTable(props: DjTableProps) {
                 columns={state.columns}
                 loading={recordsQuery.isLoading || attributesQuery.isLoading}
                 rowSelection={
-                    props.channel
+                    channel
                         ? {
                               selectedRowKeys: state.selectedRow,
                               type: 'radio',
@@ -544,7 +574,7 @@ function DjTable(props: DjTableProps) {
 
                                   let pks: string[] = []
 
-                                  attributesQuery.data?.attributes.primary.map(
+                                  attributesQuery.data?.attributes.primary.forEach(
                                       (value: djAttributesArray, index: number) => {
                                           pks.push(value[0])
                                       }
@@ -560,7 +590,7 @@ function DjTable(props: DjTableProps) {
                                       })
                                   }
 
-                                  props.updatePageStore(props.channel!, record)
+                                  updatePageStore(channel!, record)
 
                                   setState((prevState) => ({
                                       ...prevState,
@@ -579,7 +609,7 @@ function DjTable(props: DjTableProps) {
                         onClick: (event) => {
                             event.stopPropagation()
                             let keysArr: string[] = []
-                            attributesQuery.data?.attributes.primary.map(
+                            attributesQuery.data?.attributes.primary.forEach(
                                 (value: djAttributesArray, index: number) => {
                                     keysArr.push(`${value[0]}=${record[value[0]]}`)
                                 }
@@ -597,17 +627,14 @@ function DjTable(props: DjTableProps) {
                     current: state.offset,
                     showTotal: (total: number) => `Total records: ${total}`,
                     showSizeChanger:
-                        (recordsQuery.data?.totalCount || 0) > (props.pageSizeDefault || 5)
+                        (recordsQuery.data?.totalCount || 0) > (pageSizeDefault || 5)
                             ? true
                             : false,
                     onShowSizeChange: onShowSizeChange,
-                    pageSizeOptions: props.pageSizeDefault
-                        ? [5, 10, 20, 50, 100].includes(props.pageSizeDefault)
+                    pageSizeOptions: pageSizeDefault
+                        ? [5, 10, 20, 50, 100].includes(pageSizeDefault)
                             ? [5, 10, 20, 50, 100]
-                            : [5, 10, 20, 50, 100, props.pageSizeDefault].sort(function (
-                                  a,
-                                  b
-                              ) {
+                            : [5, 10, 20, 50, 100, pageSizeDefault].sort(function (a, b) {
                                   return a - b
                               })
                         : [5, 10, 20, 50, 100]

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { SciVizPageType, RestrictionStore, TabItem } from './SciVizInterfaces'
 import SciVizGrid from './SciVizGrid'
 import './Page.css'
@@ -59,12 +59,12 @@ function SciVizPage(props: PageProps) {
      * @param {string} key - The key of the component that the store object belongs to
      * @param {string[]} record - The list of key-values as strings to add to the store
      */
-    const updateStore = (key: string, record: string[]) => {
+    const updateStore = useCallback((key: string, record: string[]) => {
         setStore((prevStore) => ({
             ...prevStore,
             [key]: record
         }))
-    }
+    }, [])
 
     return (
         <div>

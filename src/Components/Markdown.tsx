@@ -16,9 +16,6 @@ interface MarkdownProps {
  * Markdown component
  */
 export default class Markdown extends React.Component<MarkdownProps> {
-    constructor(props: MarkdownProps) {
-        super(props)
-    }
     render() {
         return (
             <Card

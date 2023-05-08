@@ -54,7 +54,7 @@ export default class FullPlotly extends React.Component<FullPlotlyProps, FullPlo
 
         // check if all the conditions are met to fetch the plot
         if (
-            this.props.needQueryParams == true &&
+            this.props.needQueryParams === true &&
             this.props.restrictionList.includes('') &&
             channelCheckArr.includes(false)
         ) {

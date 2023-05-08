@@ -220,7 +220,7 @@ SciViz: # top level tab
             Mouse table with linking:
               route: /dawdgargaefdaefa
               x: 0
-              y: 1
+              y: 2
               height: 1
               width: 1
               type: antd-table
@@ -251,13 +251,13 @@ SciViz: # top level tab
                 mouse 0: 'mouse_id=0'
                 mouse 1: 'mouse_id=1'
                 mouse 2: 'mouse_id=2'
-            mydropdown:
+            myslider:
               x: 1
               y: 0
               height: 1
               width: 1
               type: slider
-              channel: mydropdown
+              channel: myslider
               route: /testtest
               restriction: >
                 def restriction(**kwargs):
@@ -270,7 +270,7 @@ SciViz: # top level tab
             Example table (conditional row coloring): # yaml allows keys with spaces!
               route: /weuroiewjqroiew
               x: 0
-              y: 20
+              y: 2
               height: 6
               width: 1
               type: antd-table
@@ -286,11 +286,11 @@ SciViz: # top level tab
             tableplots:
               route: /plot1d
               type: plot:plotly:stored_json
-              x: 0
-              y: 14
+              x: 1
+              y: 2
               height: 6
               width: 1
-              channels: [myantd-table]
+              channels: [myslider]
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -386,16 +386,6 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=(MousePlots), fetch_args=['plot'])
-            comp3:
-              route: /myTableD
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(test_group1_simple):
-                    MousePlots = test_group1_simple.MousePlots
-                    return dict(query=(MousePlots), fetch_args=[])
     Dynamic Form:
       route: /dynamicForm
       grids:
