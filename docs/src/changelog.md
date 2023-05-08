@@ -2,29 +2,30 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.3.3] - 05-05-23
+## [2.3.3] - 05-08-23
 
 ### Changed
 
 - Primary key dropdowns in forms now wrap to new lines ([#118](https://github.com/datajoint/sci-viz/issues/118)) PR [#119](https://github.com/datajoint/sci-viz/pull/119)
-- Refactored several class components into functional components [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Refactored several class components into functional components PR [#120](https://github.com/datajoint/sci-viz/pull/120)
 
 ### Fixed
 
-- Bug with subdirectory hosting [#120](https://github.com/datajoint/sci-viz/pull/120)
-- Bug with UseQuery recalling on tab switch [#120](https://github.com/datajoint/sci-viz/pull/120)
-- Bug with Slideshow component [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Bug with subdirectory hosting PR [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Bug with UseQuery recalling on tab switch PR [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Bug with Slideshow component PR [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Several warnings in the dev environment PR [#121](https://github.com/datajoint/sci-viz/pull/121)
 
 ### Added
 
-- Unit test for footer component [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Unit test for footer component PR [#120](https://github.com/datajoint/sci-viz/pull/120)
 
 ## [2.3.2] - 04-27-23
 
 ### Fixed
 
 - Permissions of files in the `/home/node` directory PR [#116](https://github.com/datajoint/sci-viz/pull/116)
-- Small bugs with datetime picker and slideshow component [#117](https://github.com/datajoint/sci-viz/pull/117)
+- Small bugs with datetime picker and slideshow component PR [#117](https://github.com/datajoint/sci-viz/pull/117)
 
 ### Added
 
