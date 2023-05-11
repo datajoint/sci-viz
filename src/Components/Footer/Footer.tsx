@@ -7,8 +7,10 @@ function Footer() {
     const [backendVersion, setBackendVersion] = useState('')
 
     async function getVersionNumber() {
+        let basePath = window.location.href.split('/')
+        basePath.pop()
         const response = await fetch(
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/version`,
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/version`,
             {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }

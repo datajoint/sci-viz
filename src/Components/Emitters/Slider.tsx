@@ -56,7 +56,11 @@ export default class DjSlider extends React.Component<DjSliderProps, DjSliderSta
     }
 
     getRecords(): Promise<djRecords> {
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+        let apiUrl =
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            this.props.route
         let queryParamList = [...this.props.restrictionList]
         if (this.props.store !== undefined) {
             this.props.channelList!.forEach((element) => {

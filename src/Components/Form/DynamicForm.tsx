@@ -109,7 +109,9 @@ function DynamicForm(props: formProps) {
     }
 
     const insertPayload = async (payload: { submissions: formPayloadData[] }) => {
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+        let apiUrl = `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}${
             props.route
         }?${queryParamList.join('&')}`
 
@@ -159,7 +161,9 @@ function DynamicForm(props: formProps) {
     })
 
     const getFormFieldData = async (): Promise<fieldsData> => {
-        let apiUrl = `${
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+        let apiUrl = `${basePath.join('/')}${
             process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX
         }${props.route!}/fields?${queryParamList.join('&')}`
 
@@ -178,7 +182,9 @@ function DynamicForm(props: formProps) {
     }
 
     const getFormPresetData = async (): Promise<formPresets> => {
-        let apiUrl = `${
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+        let apiUrl = `${basePath.join('/')}${
             process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX
         }${props.route!}/presets?${queryParamList.join('&')}`
 

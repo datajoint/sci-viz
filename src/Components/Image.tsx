@@ -24,7 +24,12 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     }
 
     componentDidMount() {
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+
+        let apiUrl =
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            this.props.route
         if (this.props.restrictionList.length > 0) {
             apiUrl = apiUrl + '?'
             apiUrl = apiUrl + this.props.restrictionList.shift()

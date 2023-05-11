@@ -28,6 +28,7 @@ COPY --chown=node:node ./default.conf /etc/nginx/conf.d/
 COPY --chown=node:node ./sci-viz-hotreload-dev.sh .
 COPY --chown=node:node ./sci-viz-hotreload-prod.sh .
 ENV NODE_OPTIONS --max-old-space-size=6000
+ARG PUBLIC_URL=./
 RUN yarn build
 RUN chmod -R 777 ./build
 CMD ["nginx", "-g", "daemon off;"]

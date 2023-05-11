@@ -54,8 +54,10 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
         channelList: []
     }
     query() {
+        let basePath = window.location.href.split('/')
+        basePath.pop()
         let apiUrl =
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
             this.props.route +
             `?limit=${this.props.columns}` +
             `&page=${this.state.page}`
