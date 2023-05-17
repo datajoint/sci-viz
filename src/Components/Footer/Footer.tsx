@@ -44,7 +44,7 @@ function Footer() {
             <div className='version-info-div'>
                 <div className='version-number'>
                     <b>Front End Version:</b> {version} <b>Back End Version:</b>{' '}
-                    {backendVersion}
+                    <>{backendVersion}</>
                 </div>
             </div>
         </footer>
