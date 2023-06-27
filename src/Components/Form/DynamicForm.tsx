@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import {
     Card,
     Form,
@@ -65,7 +65,7 @@ interface formPayloadData {
     [key: string]:
         | string
         | number
-        | moment.Moment
+        | dayjs.Dayjs
         | null
         | { [key: string]: string | number | null }
 }
@@ -196,7 +196,7 @@ function DynamicForm(props: formProps) {
                 return result.json()
             })
             .then((result) => {
-                // Convert datetime types to antd-compatible `moment` objects
+                // Convert datetime types to antd-compatible dayjs objects
                 for (let key in result) {
                     if (result.hasOwnProperty(key)) {
                         let nestedObj = result[key]
@@ -205,9 +205,9 @@ function DynamicForm(props: formProps) {
                                 let value = nestedObj[nestedKey]
                                 if (
                                     typeof value === 'string' &&
-                                    moment(value, 'YYYY-MM-DD HH:mm:ss', true).isValid()
+                                    dayjs(value, 'YYYY-MM-DD HH:mm:ss', true).isValid()
                                 ) {
-                                    nestedObj[nestedKey] = moment(value, 'YYYY-MM-DD HH:mm:ss')
+                                    nestedObj[nestedKey] = dayjs(value, 'YYYY-MM-DD HH:mm:ss')
                                 }
                             }
                         }
@@ -251,7 +251,7 @@ function DynamicForm(props: formProps) {
                 values = Object.assign(values, JSON.parse(values[field.name] as string))
                 delete values[field.name]
             } else if (/^date.*|time.*$/.test((field as attributeFieldData).datatype))
-                values[field.name] = (values[field.name] as moment.Moment).format(
+                values[field.name] = (values[field.name] as dayjs.Dayjs).format(
                     'YYYY-MM-DD HH:mm:ss'
                 )
         })
