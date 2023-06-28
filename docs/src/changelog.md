@@ -2,6 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## Upcoming
+
+### Fixed
+
+- Fix home button in docs PR [#124](https://github.com/datajoint/sci-viz/pull/124)
+
 ## [2.3.3] - 05-08-23
 
 ### Changed
