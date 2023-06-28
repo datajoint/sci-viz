@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Spin } from 'antd'
 import { SciVizSpec } from './Components/SciViz/SciVizInterfaces'
+import { ExternalContext } from './Components/SciViz/SciVizContext'
 import { datadogRum } from '@datadog/browser-rum'
+import { datadogLogs } from '@datadog/browser-logs'
 import Login from './Components/Login/Login'
 import Footer from './Components/Footer/Footer'
 import Header from './Components/Header/Header'
@@ -56,6 +58,16 @@ function App() {
     })
 
     /**
+     * This snippet serves as an example of what a
+     * context object for an IFrame component might look like
+     */
+    // const exampleIframeParamMap = {
+    //     context: { someContext: 'hello' },
+    //     anotherParam: { someKey: 'someValue' },
+    //     stringParam: 'a string'
+    // }
+
+    /**
      * A callback function to set jwt token and host name
      * @param jwt JWT token obtain after logging sucessfully from the backend
      * @param hostname Hostname of the database that is being connected to
@@ -91,6 +103,14 @@ function App() {
             state.spec?.SciViz.datadog.clientToken &&
             state.spec?.SciViz.datadog.service
         ) {
+            datadogLogs.init({
+                clientToken: state.spec?.SciViz.datadog.clientToken,
+                site: 'datadoghq.com',
+                service: state.spec?.SciViz.datadog.service,
+                forwardErrorsToLogs: true,
+                sessionSampleRate: 100,
+                forwardConsoleLogs: 'all'
+            })
             datadogRum.init({
                 applicationId: state.spec?.SciViz.datadog.applicationId,
                 clientToken: state.spec?.SciViz.datadog.clientToken,
@@ -185,12 +205,25 @@ function App() {
     } else {
         return (
             <React.StrictMode>
-                <Header
-                    text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
-                    imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}
-                />
-                <SciViz spec={state.spec} baseURL={state.baseURL} jwtToken={state.jwtToken} />
-                <Footer />
+                {/* Pass in the your iframe parameters to the context provider */}
+                <ExternalContext.Provider
+                    value={{
+                        iframeParamMap: {
+                            // ...exampleIframeParamMap
+                        }
+                    }}
+                >
+                    <Header
+                        text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
+                        imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}
+                    />
+                    <SciViz
+                        spec={state.spec}
+                        baseURL={state.baseURL}
+                        jwtToken={state.jwtToken}
+                    />
+                    <Footer />
+                </ExternalContext.Provider>
             </React.StrictMode>
         )
     }

@@ -9,6 +9,7 @@ nav:
   - Getting Started: getting_started.md
   - Concepts:
       - Dynamic Spec Sheet: concepts/spec_sheet.md
+      - Pages: concepts/pages.md
       - Grids: concepts/grids.md
       - Components: concepts/components.md
       - Developer Instructions: concepts/dev_instructions.md

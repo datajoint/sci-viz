@@ -164,7 +164,10 @@ export default class Metadata extends React.Component<MetadataProps, MetadataSta
                 >
                     {this.state.data.records[0].map((record: any, index: number) => {
                         return (
-                            <Descriptions.Item label={this.state.data.recordHeader[index]}>
+                            <Descriptions.Item
+                                key={this.state.data.recordHeader[index]}
+                                label={this.state.data.recordHeader[index]}
+                            >
                                 {record}
                             </Descriptions.Item>
                         )

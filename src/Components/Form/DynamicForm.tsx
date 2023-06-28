@@ -13,11 +13,12 @@ import {
     notification,
     Spin,
     Dropdown,
-    Menu
+    MenuProps
 } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
+import './DynamicForm.css'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 const { TextArea } = Input
@@ -35,6 +36,7 @@ interface formProps {
     route: string
     name: string
     height: number
+    booleans?: string[]
     channelList?: Array<string>
     store?: RestrictionStore
     databaseHost?: string
@@ -223,7 +225,8 @@ function DynamicForm(props: formProps) {
                 props.store &&
                 props.channelList &&
                 !props.channelList.every((val) => Object.keys(props.store!).includes(val))
-            )
+            ),
+            refetchOnWindowFocus: false
         }
     )
 
@@ -237,7 +240,8 @@ function DynamicForm(props: formProps) {
                     props.store &&
                     props.channelList &&
                     !props.channelList.every((val) => Object.keys(props.store!).includes(val))
-                )
+                ),
+            refetchOnWindowFocus: false
         }
     )
 
@@ -258,27 +262,19 @@ function DynamicForm(props: formProps) {
     }
 
     const generateDropdown = (presetPayload: formPresets) => {
-        let menu = (
-            <Menu>
-                {Object.entries(presetPayload).map((value) => {
-                    return (
-                        <Menu.Item
-                            key={value[0]}
-                            title={value[0]}
-                            onClick={(value) => {
-                                form.resetFields()
-                                form.setFieldsValue(presetPayload[value.key])
-                                setCurrentDropdownSelection(value.key)
-                            }}
-                        >
-                            {value[0]}
-                        </Menu.Item>
-                    )
-                })}
-            </Menu>
-        )
+        const items: MenuProps['items'] = Object.entries(presetPayload).map((value) => {
+            return {
+                label: value[0],
+                key: value[0],
+                onClick: (value) => {
+                    form.resetFields()
+                    form.setFieldsValue(presetPayload[value.key])
+                    setCurrentDropdownSelection(value.key)
+                }
+            }
+        })
         return (
-            <Dropdown overlay={menu}>
+            <Dropdown menu={{ items }}>
                 <Button>
                     {currentDropdownSelection ? currentDropdownSelection : <>Presets</>}{' '}
                     <DownOutlined />
@@ -291,34 +287,57 @@ function DynamicForm(props: formProps) {
         if (field.type === 'table') {
             let tableField = field as tableFieldData
             return (
-                <Select style={{ width: '100%' }}>
-                    {tableField.values.map((option) => (
-                        <Select.Option value={option} key={`${tableField.name}_select_option`}>
-                            {option}
-                        </Select.Option>
-                    ))}
-                </Select>
+                <Select
+                    key={tableField.name}
+                    style={{ width: '100%' }}
+                    options={tableField.values.map((item) => ({ label: item, value: item }))}
+                />
             )
         }
         let attrField = field as attributeFieldData
         if (/^.*int.*$/.test(attrField.datatype)) {
-            let range = intRangeMap[attrField.datatype]
+            if (
+                /tinyint/.test(attrField.datatype) &&
+                props.booleans?.includes(attrField.name)
+            ) {
+                return (
+                    <Select
+                        key={attrField.name}
+                        id={attrField.name}
+                        style={{ width: '100%' }}
+                        options={[
+                            { label: 'True', value: 1 },
+                            { label: 'False', value: 0 }
+                        ]}
+                    />
+                )
+            } else {
+                let range = intRangeMap[attrField.datatype]
+                return (
+                    <InputNumber
+                        key={attrField.name}
+                        id={attrField.name}
+                        min={range[0]}
+                        max={range[1]}
+                        precision={0}
+                        style={{ width: '100%' }}
+                    />
+                )
+            }
+        } else if (/^float.*|double.*|decimal.*$/.test(attrField.datatype)) {
             return (
                 <InputNumber
+                    key={attrField.name}
                     id={attrField.name}
-                    min={range[0]}
-                    max={range[1]}
-                    precision={0}
                     style={{ width: '100%' }}
                 />
             )
-        } else if (/^float.*|double.*|decimal.*$/.test(attrField.datatype)) {
-            return <InputNumber id={attrField.name} style={{ width: '100%' }} />
         } else if (/^char.*|varchar.*$/.test(attrField.datatype)) {
             let size = Number(attrField.datatype.split('(')[1].replace(')', ''))
             if (size >= 255) {
                 return (
                     <TextArea
+                        key={attrField.name}
                         id={attrField.name}
                         maxLength={size}
                         showCount
@@ -329,6 +348,7 @@ function DynamicForm(props: formProps) {
             }
             return (
                 <Input
+                    key={attrField.name}
                     id={attrField.name}
                     showCount
                     maxLength={size}
@@ -342,17 +362,17 @@ function DynamicForm(props: formProps) {
                 .replaceAll("'", '')
                 .split(',')
             return (
-                <Select id={attrField.name} style={{ width: '100%' }}>
-                    {options.map((option) => (
-                        <Select.Option value={option} key={`${attrField.name}_select_option`}>
-                            {option}
-                        </Select.Option>
-                    ))}
-                </Select>
+                <Select
+                    key={attrField.name}
+                    id={attrField.name}
+                    style={{ width: '100%' }}
+                    options={options.map((item) => ({ label: item, value: item }))}
+                />
             )
         } else if (/^datetime.*|timestamp.*$/.test(attrField.datatype))
             return (
                 <DatePicker
+                    key={attrField.name}
                     showTime
                     id={attrField.name}
                     style={{ width: '100%' }}
@@ -362,6 +382,7 @@ function DynamicForm(props: formProps) {
         else if (/^date.*$/.test(attrField.datatype))
             return (
                 <DatePicker
+                    key={attrField.name}
                     id={attrField.name}
                     style={{ width: '100%' }}
                     format={'YYYY-MM-DD'}
@@ -370,6 +391,7 @@ function DynamicForm(props: formProps) {
         else if (/^time.*$/.test(attrField.datatype))
             return (
                 <TimePicker
+                    key={attrField.name}
                     id={attrField.name}
                     style={{ width: '100%' }}
                     format={'HH:mm:ss'}
@@ -400,9 +422,9 @@ function DynamicForm(props: formProps) {
             extra={
                 !props.presets ? (
                     <></>
-                ) : presets.status == 'error' ? (
+                ) : presets.status === 'error' ? (
                     <Alert message='Preset Error' type='error' />
-                ) : presets.status == 'loading' ? (
+                ) : presets.status === 'loading' ? (
                     <Spin />
                 ) : (
                     generateDropdown(presets.data!)

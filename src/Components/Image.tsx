@@ -52,6 +52,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     render() {
         return (
             <img
+                alt=''
                 src={this.state.imageLocation}
                 style={{ maxWidth: '100%', maxHeight: '100%' }}
             />

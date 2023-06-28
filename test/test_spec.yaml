@@ -11,7 +11,7 @@ SciViz: # top level tab
   login:
     image_route: /logo.svg # In /public dir
   auth: 
-    mode: 'database'
+    mode: 'database' # database | oidc | none
     endpoint: https://keycloak.dev.datajoint.io/realms/master
     database: xtradb.dev.datajoint.io
     client_id: my-client
@@ -55,38 +55,6 @@ SciViz: # top level tab
           columns: 2
           row_height: 680
           components:
-            mydatetime:
-              x: 1
-              y: 1
-              height: 1
-              width: 1
-              type: daterangepicker
-              channel: testtest
-            myslideshow:
-              x: 1
-              y: 0
-              height: 1
-              width: 1
-              type: slideshow
-              route: /slideshowtest
-              batch_size: 3
-              chunk_size: 50
-              buffer_size: 30
-              max_FPS: 50
-              channels: [testtest]
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(test_group1_simple):
-                    # SOME QUERY THAT RETURNS ONLY ONE RECORD ONE COLUMN THAT IS THE VIDEO NAME
-                    TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)
-                    q = ((TableA * TableB).proj(
-                        ...,
-                        #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
-                        _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "NULL")',
-                        ))
-                    return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}
             component1:
               x: 0
               y: 0
@@ -252,7 +220,7 @@ SciViz: # top level tab
             Mouse table with linking:
               route: /dawdgargaefdaefa
               x: 0
-              y: 1
+              y: 2
               height: 1
               width: 1
               type: antd-table
@@ -283,13 +251,13 @@ SciViz: # top level tab
                 mouse 0: 'mouse_id=0'
                 mouse 1: 'mouse_id=1'
                 mouse 2: 'mouse_id=2'
-            mydropdown:
+            myslider:
               x: 1
               y: 0
               height: 1
               width: 1
               type: slider
-              channel: mydropdown
+              channel: myslider
               route: /testtest
               restriction: >
                 def restriction(**kwargs):
@@ -302,7 +270,7 @@ SciViz: # top level tab
             Example table (conditional row coloring): # yaml allows keys with spaces!
               route: /weuroiewjqroiew
               x: 0
-              y: 20
+              y: 2
               height: 6
               width: 1
               type: antd-table
@@ -318,11 +286,11 @@ SciViz: # top level tab
             tableplots:
               route: /plot1d
               type: plot:plotly:stored_json
-              x: 0
-              y: 14
+              x: 1
+              y: 2
               height: 6
               width: 1
-              channels: [myantd-table]
+              channels: [myslider]
               restriction: >
                 def restriction(**kwargs):
                     return dict(**kwargs)
@@ -418,16 +386,6 @@ SciViz: # top level tab
                 def dj_query(test_group1_simple):
                     MousePlots = test_group1_simple.MousePlots
                     return dict(query=(MousePlots), fetch_args=['plot'])
-            comp3:
-              route: /myTableD
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(test_group1_simple):
-                    MousePlots = test_group1_simple.MousePlots
-                    return dict(query=(MousePlots), fetch_args=[])
     Dynamic Form:
       route: /dynamicForm
       grids:
@@ -486,7 +444,7 @@ SciViz: # top level tab
                 - type: attribute
                   input: B Number
                   destination: b_number
-                - type: antd-table
+                - type: table
                   input: Table A
                   destination: test_group1_simple.TableA
                   map:
@@ -513,7 +471,7 @@ SciViz: # top level tab
                 - type: attribute
                   input: B Number
                   destination: b_number
-                - type: antd-table
+                - type: table
                   input: Table A
                   destination: test_group1_simple.TableA
                 - type: attribute
@@ -536,6 +494,8 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableD
+              booleans:
+                - a_bool
               presets: >
                 def presets(test_group1_simple):
                     return {r['preset_name']: r['preset_dict'] for r in test_group1_simple.PresetTable}
@@ -659,6 +619,85 @@ SciViz: # top level tab
               type: form
               tables:
                 - test_group1_simple.TableU
+            Part A:
+              route: /insert12
+              x: 1
+              y: 11
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableA.PartA
+              map:
+                - type: table
+                  destination: test_group1_simple.TableA
+                  input: TableA
+            Big FK Dropdown:
+              route: /insert13
+              x: 0
+              y: 12
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - test_group1_simple.TableW
+    Slideshow:
+      route: /slideShow
+      grids:
+        grid1:
+          type: fixed
+          columns: 1
+          row_height: 680
+          components:
+            mydatetime:
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: daterangepicker
+              channel: testtest
+            myslideshow:
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: slideshow
+              route: /slideshowtest
+              batch_size: 3
+              chunk_size: 50
+              buffer_size: 30
+              max_FPS: 50
+              channels: [testtest]
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(test_group1_simple):
+                    # SOME QUERY THAT RETURNS ONLY ONE RECORD ONE COLUMN THAT IS THE VIDEO NAME
+                    TableA, TableB = (test_group1_simple.TableA, test_group1_simple.TableB)
+                    q = ((TableA * TableB).proj(
+                        ...,
+                        #_sciviz_font='IF(a_name = "Raphael", "rgb(255, 0, 0)", NULL)',
+                        _sciviz_background='IF(a_name = "Raphael", "rgba(50, 255, 0, 0.16)", "NULL")',
+                        ))
+                    return {'query': q, 'fetch_args': {'order_by': '_sciviz_background ASC'}}
+    IFrame:
+      route: /iFrame
+      grids:
+        grid1:
+          type: fixed
+          columns: 3
+          row_height: 500
+          components:
+            IFrame Example:
+              route: /iFrameExample
+              x: 1
+              y: 0
+              height: 1
+              width: 1
+              type: iframe
+              url: https://guzman-raphael-streamlit-examp-authenticated-appsapp1app-3jm4w7.streamlit.app/?embedded=true
+
     Hidden Page:
       route: /hiddenpage
       hidden: True

@@ -60,8 +60,8 @@ jobs:
       - run: yarn test --coverage
   publish-docs:
     needs:
-      - test
-      - test-build
+    - test
+    - test-build
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'push' &&

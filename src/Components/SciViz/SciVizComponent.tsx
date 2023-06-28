@@ -12,7 +12,9 @@ import {
     TableComponent,
     SlideshowComponent,
     DateRangePickerComponent,
-    RestrictionStore
+    RestrictionStore,
+    IFrameComponent,
+    TabItem
 } from './SciVizInterfaces'
 import DjTable from '../Table/DjTable'
 import FullPlotly from '../Plots/FullPlotly'
@@ -26,6 +28,7 @@ import DropdownQuery from '../Emitters/DropdownQuery'
 import RadioButtons from '../Emitters/RadioButtons'
 import Slideshow from '../Slideshow'
 import DateRangePicker from '../Emitters/DateRangePicker'
+import SciVizIFrame from '../IFrame/SciVizIFrame'
 import './Page.css'
 
 /** The interface for the SciVizComponent props */
@@ -42,6 +45,9 @@ interface ComponentProps {
     /** A JWT token to perform queries */
     jwtToken?: string
 
+    /** The authentication database for OIDC */
+    databaseHost?: string
+
     /** A list of restrictions for queried components */
     restrictionList?: string[]
 
@@ -55,21 +61,29 @@ interface ComponentProps {
     updateStore?: (key: string, record: string[]) => void
 
     /** A callback function for handling hidden pages */
-    updateHiddenPage?: (route: string, queryParams: string) => void
+    updateHiddenPage?: (
+        route: string,
+        queryParams: string,
+        currPageMap: {
+            [key: string]: TabItem
+        }
+    ) => void
 }
 
 /**
  * Dynamically creates a SciViz component
  *
  * @param {string} name - The name of the component
+ * @param {SciVizSpec} spec - The top level SciViz spec
  * @param {ComponentTypes} component - The data of the component
  * @param {number} height - The height of the component
  * @param {string=} jwtToken - A JWT token to perform queries
+ * @param {string=} databaseHost - The authentication database for OIDC
  * @param {string[]=} restrictionList - A list of restrictions for queried components
  * @param {RestrictionStore=} store - An information store for linked components
  * @param {(queryParams: string) => string=} updateRestrictionList - A callback function to refresh the restriction list
  * @param {(key: string, record: string[]) => void=} updateStore - A callback function to refresh the store
- * @param {(route: string, queryParams: string) => void=} [updateHiddenPage] - A callback function for handling hidden pages
+ * @param {(route: string, queryParams: string, currPageMap: {[key: string]: TabItem}) => void=} [updateHiddenPage] - A callback function for handling hidden pages
  *
  * @returns A SciViz component
  */
@@ -154,6 +168,7 @@ function SciVizComponent(props: ComponentProps) {
                 route={compData.route}
                 name={props.name}
                 height={calculatedHeight}
+                booleans={compData.booleans}
                 store={Object.assign({}, props.store)}
                 channelList={compData.channels}
                 presets={!!compData.presets}
@@ -174,6 +189,16 @@ function SciVizComponent(props: ComponentProps) {
                 restrictionList={[...props.restrictionList!]}
                 store={Object.assign({}, props.store)}
                 channelList={compData.channels}
+            />
+        )
+    } else if (/^iframe.*$/.test(type)) {
+        const compData = props.component as IFrameComponent
+        comp = (
+            <SciVizIFrame
+                key={JSON.stringify(compData)}
+                height={calculatedHeight}
+                url={compData.url}
+                databaseHost={props.databaseHost}
             />
         )
     } else if (/^slider.*$/.test(type)) {

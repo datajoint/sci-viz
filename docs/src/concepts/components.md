@@ -1,23 +1,30 @@
 # Components
 
-All components need minimally these fields:
+All component objects consist of these six keys:
 
-- `type:` indicates the type of component you are trying to generate
-- `route:` the backend route for the rest api query, must start with a `/`
+- `type` - The type of component to generate
+- `route` - The backend route for the rest api query, must start with a `/`
   - Note: the markdown component does not require a route
-- `x:` x position on the grid starting at 0
-- `y:` y position on the grid starting at 0
-- `height:` the amount of grid squares tall a component can be, minimum 1
-- `width:` the amount of grid square wide a compoentnt can be, minimum 1
+- `x` - The x position on the grid starting at 0
+- `y` - The y position on the grid starting at 0
+- `height` - The amount of grid cells tall a component can be, minimum 1
+- `width` - The amount of grid cells wide a component can be, minimum 1
 
 ## Table component
 
 `type:` table
 
-The Table component takes a two additional fields:
+The Table component takes two additional keys:
 
-- `restriction:` the restriction for the datajoint query
-- `dj_query:` the datajoint query for for the table data
+- `restriction` - The restriction for the datajoint query
+- `dj_query` - The datajoint query for the table data
+
+The Table component also has four optional keys:
+
+- `link?` - The route of the hidden page to link selected rows to
+- `channel?` - The name of the component's channel
+- `channels?` - The list of channels to listen to
+- `page_size_default?` - The default page size in number of rows
 
 If setup correctly the component will render the result of the query in a table that supports paging, sorting, and filtering.
 
@@ -46,23 +53,27 @@ In the example we do a join of two tables and then do a projection where we crea
 
 `type:` markdown
 
-The Markdown component takes one additional field:
+The Markdown component takes one additional key:
 
 - `text: |`
-  - underneath the `|` operator you can place any markdown text block that you want.
+  - underneath the `|` operator you can place any markdown text block that you want
+
+The Markdown component also has one optional key:
+
+- `image_route?` - The route to the image to use as a background
 
 ## Plot component from stored Plotly JSON
 
 `type:` plot:plotly:stored_json
 
-The Plot component takes two additional arguments:
+The Plot component takes two additional keys:
 
-- `restriction:` the restriction for the datajoint query
-- `dj_query:` the datajoint query for for the table data.
+- `restriction` - The restriction for the datajoint query
+- `dj_query` - The datajoint query for for the table data
 
-The Plot component also takes one optional argument:
+The Plot component also has one optional key:
 
-- `channels:` an array of channels to listen to for additional restrictions from other components (slider, dropdown, ect.)
+- `channels` - An array of channels to listen to for additional restrictions from other components (slider, dropdown, ect.)
 
 Additionally for the plot to render properly the result of your query must be a single entry with one element that is a plotly JSON.
 An easy way to do this is to set the `fetch_args=[]` in your `dj_query` to be only the column that contains a plotly JSON and additionaly set your restriction to be the index of the plot you are looking for
@@ -71,10 +82,10 @@ An easy way to do this is to set the `fetch_args=[]` in your `dj_query` to be on
 
 `type:` metadata
 
-The Metadata component takes two additional arguments:
+The Metadata component takes two additional keys:
 
-- `restriction:` the restriction for the datajoint query
-- `dj_query:` the datajoint query for for the table data.
+- `restriction` - The restriction for the datajoint query
+- `dj_query` - The datajoint query for for the table data.
 
 Additionally the metadata component only takes a single row from a table as its input so the `dj_query` and `restriction` need to be properly set to produce a single record. This component is not very useful by itself but when combined with other components as part of a template in a `Dynamic grid` it can provide useful information on what the other components are showing.
 
@@ -82,10 +93,10 @@ Additionally the metadata component only takes a single row from a table as its 
 
 `type:` file:image:attach
 
-The Image component takes two additional arguments:
+The Image component takes two additional keys:
 
-- `restriction:` the restriction for the datajoint query
-- `dj_query:` the datajoint query for for the table data.
+- `restriction` - The restriction for the datajoint query
+- `dj_query` - The datajoint query for for the table data.
 
 Additionally the image that you want to display needs to be stored as a datajoint [attach](https://docs.datajoint.org/python/definition/06.5-External-Data.html?highlight=attach) attribute type and your query should produce only one record with one column which is the column where the image is stored.
 
@@ -93,41 +104,44 @@ Additionally the image that you want to display needs to be stored as a datajoin
 
 `type:` form
 
-The Form component takes 1 additional argument:
+The Form component takes one additional key:
 
-- `tables:` the list of tables in "`schema.table`" format to insert into
+- `tables` - The list of tables in "`schema.table`" format to insert into
   - Table names can be templated, either fully or partially, using the `'{keyword}'` format. This keyword can then be assigned a value by an emitter component as a query parameter.
 
-The Form can also take 2 optional arguments:
+The Form can also take three optional keys:
 
-- `map:` a mapping to change the displayed names of the fields in the form
+- `map` - A mapping to change the displayed names of the fields in the form
 
-  A map takes a _list_ of 3 arguments:
+  A map takes a _list_ of three keys:
 
-  - `type:` attribute | table
-  - `input:` the new name of the field
-  - `destination:` the field to be renamed
+  - `type:` **attribute** | **table**
+  - `input` - The new name of the field
+  - `destination` - The field to be renamed
 
-  A map entry with a `table` type can also take 1 optional argument:
+  A map entry with a `table` type can also take one optional key:
 
-  - `map:` a nested mapping of the same structure to change the displayed names of the table's primary key attributes
+  - `map` - A nested mapping of the same structure to change the displayed names of the table's primary key attributes
 
-- `channels:` an array of channels to listen to for templated table name values.
+- `booleans` - An array of attributes that were originally desribed as booleans but have been aliased to tinyint by datajoint
+  - Specified attributes will have their inputs converted to True/False dropdowns
+- `channels` - An array of channels to listen to for templated table name values
+- `presets` - A function to generate presets for the form
 
 ## Slideshow component
 
 `type:` slideshow
 
-The Slideshow component takes 4 additional arguments:
+The Slideshow component takes four additional keys:
 
-- `batch_size:` The number of concurrent requests
-- `chunk_size:` The number of frames per request
-- `buffer_size:` The number of requests kept in memory
-- `max_FPS:` The max frames per second to display
+- `batch_size` - The number of concurrent requests
+- `chunk_size` - The number of frames per request
+- `buffer_size` - The number of requests kept in memory
+- `max_FPS` - The max frames per second to display
 
-The Slideshow can also take 1 optional argument:
+The Slideshow can also take one optional key:
 
-- `channels`: an array of channels to listen to for setting the date range
+- `channels` - An array of channels to listen to for setting the date range
 
 
 ## Slider component
@@ -136,15 +150,15 @@ The Slider is a component that takes a datajoint query and creates a slider base
 
 `type:` slider
 
-The Slider component takes three additional arguments:
+The Slider component takes three additional keys:
 
-- `restriction:` the restriction for the datajoint query.
-- `dj_query:` the datajoint query for for the table data.
-- `channel:` the name of the channel that the slider outputs its restriction on.
+- `restriction` - The restriction for the datajoint query.
+- `dj_query` - The datajoint query for for the table data.
+- `channel` - The name of the channel that the slider outputs its restriction on.
 
-The Slider component also takes one optional argument:
+The Slider component also has one optional key:
 
-- `channels:` an array of channels to listen to for restricting its own query.
+- `channels` - An array of channels to listen to for restricting its own query.
 
 ## Radiobutton/Dropdown-static component
 
@@ -152,11 +166,10 @@ Similar to the Slider, the Radiobutton and Dropdown-static components are compon
 
 `type:` radiobuttons | dropdown-static
 
-The Radiobutton/Dropdown-static components take two additional arguments:
+The Radiobutton/Dropdown-static components takes two additional keys:
 
-- `channel:` the name of the channel that the Radiobutton/dropdown-static outputs its restriction on.
-- `content:` dictionary of key value pairs, the key is what text is shown to the user while the value is the actual restriction.
-
+- `channel` - The name of the channel that the Radiobutton/dropdown-static outputs its restriction on.
+- `content` - A dictionary of key value pairs, the key is what text is shown to the user while the value is the actual restriction.
   - Example:
 
   ```
@@ -172,11 +185,11 @@ The Dropdown-query component is the same as the slider component except it only 
 
 `type:` dropdown-query
 
-The Dropdown-query component takes three additional arguments:
+The Dropdown-query component takes three additional keys:
 
-- `restriction:` the restriction for the datajoint query.
-- `dj_query:` the datajoint query for for the table data.
-- `channel:` the name of the channel that the slider outputs its restriction on.
+- `restriction` - The restriction for the datajoint query.
+- `dj_query` - The datajoint query for for the table data.
+- `channel` - The name of the channel that the slider outputs its restriction on.
 
 ## Date-Range-Picker component
 
@@ -184,6 +197,6 @@ The Date-Range-Picker component emits a `startTime` and `endTime` datetime value
 
 `type:` daterangepicker
 
-The Date-Range-Picker takes 1 additional argument:
+The Date-Range-Picker takes one additional key:
 
-- `channel:` the name of the channel that the date range picker outputs its restriction on.
+- `channel` - The name of the channel that the date range picker outputs its restriction on.

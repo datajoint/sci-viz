@@ -1,9 +1,9 @@
-#HOST_UID="$(id -u)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\" '{print $2}') docker compose up --build
+#MODE=DEV HOST_UID="$(id -u)" PY_VER=3.8 IMAGE=djbase DISTRO=alpine PHARUS_VERSION=$(cat pharus/pharus/version.py | tail -1 | awk -F\" '{print $2}') docker compose up --build
 version: '2.4'
 services:
   sci-viz:
     build: .
-    image: datajoint/sci-viz:2.2.2
+    image: datajoint/sci-viz:2.3.1
     environment:
       CHOKIDAR_USEPOLLING: 'true'
       REACT_APP_DJSCIVIZ_BACKEND_PREFIX: '/api'
@@ -21,7 +21,14 @@ services:
       - sh
       - -lc
       - |
-        sh sci-viz-hotreload-dev.sh
+        if echo "${MODE}" | grep -i DEV &>/dev/null; then
+          sh sci-viz-hotreload-dev.sh
+        elif echo "${MODE}" | grep -iE PROD &>/dev/null; then
+          sh sci-viz-hotreload-prod.sh
+        else
+            echo "Unexpected mode..."
+            exit 1
+        fi
   localdb:
     image: datajoint/mysql:5.7
     environment:
@@ -31,7 +38,7 @@ services:
     networks:
       - main
   fakeservices.datajoint.io:
-    image: datajoint/nginx:v0.2.4
+    image: datajoint/nginx:v0.2.5
     environment:
       - ADD_pharus_TYPE=REST
       - ADD_pharus_ENDPOINT=pharus:5000
@@ -70,13 +77,14 @@ services:
     volumes:
       - ./test:/tmp/test
       - ./test/test_spec.yaml:/main/specs/test_spec.yaml
+      - ./pharus-hotreload-dev.sh:/main/specs/pharus-hotreload-dev.sh
       # - ./test/test.avi:/main/specs/test.avi
     command:
       - sh
       - -lc
       - |
         python /tmp/test/populate.py
-        pharus
+        sh ./specs/pharus-hotreload-dev.sh
     networks:
       - main
 networks:

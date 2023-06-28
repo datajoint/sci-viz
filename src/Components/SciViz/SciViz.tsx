@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
 import { Tabs } from 'antd'
-import { SciVizSpec } from './SciVizInterfaces'
+import { SciVizSpec, TabItem } from './SciVizInterfaces'
 import SciVizPage from './SciVizPage'
 
 /** The interface for the SciVizPage props */
@@ -15,17 +15,9 @@ interface SciVizProps {
     jwtToken?: string
 }
 
-/** The interface for an antd Tab item */
-interface TabItem {
-    /** The key of the tab */
-    key: string
-
-    /** The label of the tab */
-    label: JSX.Element
-
-    /** The content of the tab */
-    children: JSX.Element
-}
+export const MenuItemsContext = createContext<{ [key: string]: TabItem } | undefined>(
+    undefined
+)
 
 /**
  * Dynamically creates a SciViz app
@@ -37,11 +29,11 @@ interface TabItem {
  * @returns A SciViz app
  */
 function SciViz(props: SciVizProps) {
-    const [hiddenItems, setHiddenItems] = useState<TabItem[][]>([])
-    let pageMap: {
+    const [pageMap, setPageMap] = useState<{
         [key: string]: TabItem
-    } = {}
-    let menuItems: TabItem[] = []
+    }>({})
+    const [menuItems, setMenuItems] = useState<TabItem[]>([])
+    const [hiddenPage, setHiddenPage] = useState<JSX.Element | undefined>(undefined)
 
     /**
      * A function to set the current SciViz page route
@@ -68,38 +60,30 @@ function SciViz(props: SciVizProps) {
      * @param route - The route of the hidden page
      * @param queryParams - The query params to restrict the components of the page by
      */
-    const updateHiddenPage = (route: string, queryParams: string) => {
-        var currRoute = getRoute()
-        if (currRoute !== route) {
-            setHiddenItems((prevItems) => [[pageMap[currRoute], pageMap[route]], ...prevItems])
-            setRoute(`${route}?${queryParams}`)
-        }
-    }
-    Object.entries(props.spec.SciViz.pages).forEach(([name, page]) => {
-        pageMap[page.route] = {
-            key: page.route,
-            label: (
-                <span
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center'
-                    }}
-                >
-                    <div>{name}</div>
-                </span>
-            ),
-            children: (
-                <SciVizPage
-                    key={JSON.stringify(page)}
-                    jwtToken={props.jwtToken}
-                    page={page}
-                    updateHiddenPage={updateHiddenPage}
-                />
-            )
-        }
+    const updateHiddenPage = useCallback(
+        (
+            route: string,
+            queryParams: string,
+            currPageMap: {
+                [key: string]: TabItem
+            }
+        ) => {
+            if (getRoute() !== route) {
+                setHiddenPage(currPageMap[route].children)
+                setRoute(`${route}?${queryParams}`)
+            }
+        },
+        []
+    )
 
-        if (!page.hidden)
-            menuItems.push({
+    useEffect(() => {
+        let tempPageMap: {
+            [key: string]: TabItem
+        } = {}
+        let tempMenuItems: TabItem[] = []
+
+        Object.entries(props.spec.SciViz.pages).forEach(([name, page]) => {
+            tempPageMap[page.route] = {
                 key: page.route,
                 label: (
                     <span
@@ -115,32 +99,67 @@ function SciViz(props: SciVizProps) {
                     <SciVizPage
                         key={JSON.stringify(page)}
                         jwtToken={props.jwtToken}
+                        databaseHost={props.spec.SciViz.auth?.database}
                         page={page}
                         updateHiddenPage={updateHiddenPage}
                     />
                 )
-            })
-    })
-    useEffect(() => {
-        var newURL = props.baseURL.replace(/\/$/, '') + menuItems[0].key
+            }
+
+            if (!page.hidden)
+                tempMenuItems.push({
+                    key: page.route,
+                    label: (
+                        <span
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <div>{name}</div>
+                        </span>
+                    ),
+                    children: (
+                        <SciVizPage
+                            key={JSON.stringify(page)}
+                            jwtToken={props.jwtToken}
+                            page={page}
+                            updateHiddenPage={updateHiddenPage}
+                        />
+                    )
+                })
+        })
+        setPageMap(tempPageMap)
+        setMenuItems(tempMenuItems)
+        var newURL = props.baseURL.replace(/\/$/, '') + tempMenuItems[0].key
         window.history.pushState(null, '', newURL)
-    }, [])
+    }, [
+        props.baseURL,
+        props.jwtToken,
+        props.spec.SciViz.auth?.database,
+        props.spec.SciViz.pages,
+        updateHiddenPage
+    ])
 
     return (
-        <Tabs
-            centered
-            type='line'
-            size='large'
-            items={hiddenItems.length ? hiddenItems[0] : menuItems}
-            defaultActiveKey={getRoute()}
-            activeKey={hiddenItems.length ? getRoute() : undefined}
-            onChange={(activeKey) => {
-                if (hiddenItems.length) {
-                    setHiddenItems(hiddenItems.slice(1))
-                }
-                setRoute(pageMap[activeKey].key)
-            }}
-        />
+        <MenuItemsContext.Provider value={pageMap}>
+            <Tabs
+                centered
+                type='line'
+                size='large'
+                items={menuItems}
+                defaultActiveKey={hiddenPage ? undefined : getRoute()}
+                activeKey={hiddenPage ? getRoute() : undefined}
+                onTabClick={(activeKey) => {
+                    if (hiddenPage) {
+                        setHiddenPage(undefined)
+                    }
+                    setRoute(pageMap[activeKey].key)
+                }}
+                destroyInactiveTabPane={true}
+            />
+            {hiddenPage ? hiddenPage : <></>}
+        </MenuItemsContext.Provider>
     )
 }
 

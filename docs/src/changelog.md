@@ -2,17 +2,62 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [2.2.2] - 04-11-23
+## [2.3.3] - 05-08-23
+
+### Changed
+
+- Primary key dropdowns in forms now wrap to new lines ([#118](https://github.com/datajoint/sci-viz/issues/118)) PR [#119](https://github.com/datajoint/sci-viz/pull/119)
+- Refactored several class components into functional components PR [#120](https://github.com/datajoint/sci-viz/pull/120)
+
+### Fixed
+
+- Bug with subdirectory hosting PR [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Bug with UseQuery recalling on tab switch PR [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Bug with Slideshow component PR [#120](https://github.com/datajoint/sci-viz/pull/120)
+- Several warnings in the dev environment PR [#121](https://github.com/datajoint/sci-viz/pull/121)
+
+### Added
+
+- Unit test for footer component PR [#120](https://github.com/datajoint/sci-viz/pull/120)
+
+## [2.3.2] - 04-27-23
+
+### Fixed
+
+- Permissions of files in the `/home/node` directory PR [#116](https://github.com/datajoint/sci-viz/pull/116)
+- Small bugs with datetime picker and slideshow component PR [#117](https://github.com/datajoint/sci-viz/pull/117)
+
+### Added
+
+- Pharus hotreloading script to simplify dev workflow PR [#117](https://github.com/datajoint/sci-viz/pull/117)
+
+## [2.3.1] - 04-26-23
+
+### Added
+
+- `booleans` key to form component spec to specify boolean attributes and make their inputs True/False ([#111](https://github.com/datajoint/sci-viz/issues/111)) PR [#114](https://github.com/datajoint/sci-viz/pull/114)
+
+### Fixed
+
+- Queries now properly refetch tables on insert ([#112](https://github.com/datajoint/sci-viz/issues/112)) PR [#113](https://github.com/datajoint/sci-viz/pull/113)
+
+## [2.3.0] - 04-14-23
+
+### Added
+
+- IFrame component ([#88](https://github.com/datajoint/sci-viz/issues/88)) PR [#92](https://github.com/datajoint/sci-viz/pull/92)
+- Extra optional Datadog Logging [#110](https://github.com/datajoint/sci-viz/pull/110)
 
 ### Fixed
 
 - Hidden pages bug PR [#107](https://github.com/datajoint/sci-viz/pull/107)
 
-## Changed
+### Changed
 
-- Update logo
-- Update readme - Update reference and citation sections.
-- Update docs - Add index page. Update navigation. Remove Google Analytics environment variable.
+- Update logo PR [#104](https://github.com/datajoint/sci-viz/pull/104)
+- Update readme - Update reference and citation sections PR [#104](https://github.com/datajoint/sci-viz/pull/104)
+- Update docs - Add index page. Update navigation. Remove Google Analytics environment variable PR [#104](https://github.com/datajoint/sci-viz/pull/104)
+- Update hidden page behavior to mimic pre 2.0 PR [#109](https://github.com/datajoint/sci-viz/pull/109)
 
 ## [2.2.1] - 04-07-23
 
@@ -132,7 +177,10 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - Initial framework for jest testing (#27) PR #33
 - loginless mode PR #41
 
-[2.2.2]: https://github.com/datajoint/sci-viz/compare/2.2.1...2.2.2
+[2.3.3]: https://github.com/datajoint/sci-viz/compare/2.3.2...2.3.3
+[2.3.2]: https://github.com/datajoint/sci-viz/compare/2.3.1...2.3.2
+[2.3.1]: https://github.com/datajoint/sci-viz/compare/2.3.0...2.3.1
+[2.3.0]: https://github.com/datajoint/sci-viz/compare/2.2.1...2.3.0
 [2.2.1]: https://github.com/datajoint/sci-viz/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/datajoint/sci-viz/compare/2.1.1...2.2.0
 [2.1.1]: https://github.com/datajoint/sci-viz/compare/2.1.0...2.1.1

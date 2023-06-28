@@ -59,7 +59,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
             this.props.route +
             `?limit=${this.props.columns}` +
             `&page=${this.state.page}`
-        if (this.props.queryParams != undefined && !this.props.queryParams.includes('')) {
+        if (this.props.queryParams !== undefined && !this.props.queryParams.includes('')) {
             apiUrl = apiUrl + '&' + this.props.queryParams.join('&')
         }
 
@@ -114,7 +114,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
     }
 
     componentDidUpdate(prevProps: DynamicGridProps, prevState: DynamicGridState): void {
-        if (this.state.page != prevState.page || prevProps.store != this.props.store) {
+        if (this.state.page !== prevState.page || prevProps.store !== this.props.store) {
             this.query()
         }
     }
@@ -123,6 +123,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
         return (
             <>
                 <ResponsiveGridLayout
+                    key={JSON.stringify(this.props)}
                     className='mygrid'
                     rowHeight={this.props.rowHeight}
                     measureBeforeMount={false}
@@ -146,8 +147,8 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
                             }
                             // if restrictionList is empty that means that the data is empty/unfetched
                             // which means that we should not render anything
-                            if (restrictionList.length == 0) {
-                                return <div></div>
+                            if (restrictionList.length === 0) {
+                                return <div key={record.toString()}></div>
                             }
                             return (
                                 <div
@@ -160,13 +161,17 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
                                         static: true
                                     }}
                                 >
-                                    <div className='plotContainer'>
+                                    <div
+                                        key={`${record.toString()}_div`}
+                                        className='plotContainer'
+                                    >
                                         {this.props.componentList.map(
                                             (componentType: string, compListIndex: number) => {
                                                 let restrictionListCopy = [...restrictionList]
                                                 if (componentType.match(/^plot.*$/)) {
                                                     return (
                                                         <FullPlotly
+                                                            key={`${record.toString()}_plot`}
                                                             route={
                                                                 this.props.routeList[
                                                                     compListIndex
@@ -186,6 +191,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
                                                 if (componentType.match(/^metadata.*$/)) {
                                                     return (
                                                         <Metadata
+                                                            key={`${record.toString()}_metadata`}
                                                             name='Metadata'
                                                             route={
                                                                 this.props.routeList[
@@ -210,6 +216,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
                                                 ) {
                                                     return (
                                                         <Image
+                                                            key={`${record.toString()}_image`}
                                                             route={
                                                                 this.props.routeList[
                                                                     compListIndex
@@ -225,6 +232,8 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
                                                             }
                                                         />
                                                     )
+                                                } else {
+                                                    return <></>
                                                 }
                                             }
                                         )}
@@ -240,7 +249,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
                     hideOnSinglePage={false}
                     style={{ textAlign: 'center' }}
                     onChange={this.onChange}
-                    key={String(this.state.data)}
+                    key={JSON.stringify(this.state.data)}
                 />
             </>
         )

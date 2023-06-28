@@ -1,7 +1,25 @@
+/** The interface for external SciViz context storage */
+export interface ExternalContextType {
+    /** A mapping of query parameter keys to values to be appended to iframe URLs*/
+    iframeParamMap: { [key: string]: any } | undefined
+}
+
 /** The interface for a SciViz page's restriction storage */
 export interface RestrictionStore {
     /** The `channel` to `restriction list` */
     [key: string]: string[]
+}
+
+/** The interface for an antd Tab item */
+export interface TabItem {
+    /** The key of the tab */
+    key: string
+
+    /** The label of the tab */
+    label: JSX.Element
+
+    /** The content of the tab */
+    children: JSX.Element
 }
 
 /** The interface for the SciViz spec */
@@ -132,6 +150,7 @@ export type ComponentTypes =
     | TableComponent
     | SlideshowComponent
     | DateRangePickerComponent
+    | IFrameComponent
 
 /** All SciViz components that are compatible with dynamic grids */
 export type DynamicGridComponentTypes = MetadataComponent | PlotComponent
@@ -193,6 +212,15 @@ export interface SliderComponent extends SciVizComponent, SciVizQueried {
 }
 
 /**
+ * The interface for IFrame components
+ * @extends {SciVizComponent} - The base interface
+ */
+export interface IFrameComponent extends SciVizComponent {
+    /** The URL to embed in the iframe */
+    url: string
+}
+
+/**
  * The interface for Slideshow components
  * @extends {SciVizComponent} - The base interface
  * @extends {SciVizQueried} - The queried interface
@@ -245,6 +273,9 @@ export interface FormComponent extends SciVizComponent {
             destination: string
         }
     }
+
+    /** A list of attributes that were originally desribed as booleans but have been aliased to tinyint */
+    booleans?: string[]
 
     /** The list of channels to listen to */
     channels?: string[]

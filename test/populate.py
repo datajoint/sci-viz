@@ -57,6 +57,13 @@ class TableA(dj.Lookup):
     ---
     a_name: varchar(30)
     """
+
+    class PartA(dj.Part):
+        definition = """
+        -> master
+        a_part: int
+        """
+
     contents = [
         (
             0,
@@ -166,7 +173,6 @@ class TableC(dj.Lookup):
 class TableD(dj.Lookup):
     definition = """
     a_tinyint: tinyint
-    ---
     a_tinyint_unsigned: tinyint unsigned
     a_smallint: smallint
     a_smallint_unsigned: smallint unsigned
@@ -176,6 +182,7 @@ class TableD(dj.Lookup):
     a_int: int
     a_char: char(10)
     a_varchar: varchar(516)
+    ---
     a_date: date
     a_time: time
     a_time_precision: time(6)
@@ -188,6 +195,7 @@ class TableD(dj.Lookup):
     a_double: double
     a_decimal: decimal(5,3)
     a_decimal_unsigned: decimal(6,4) unsigned
+    a_bool: boolean
     """
 
 
@@ -325,6 +333,14 @@ class TableU(dj.Lookup):
 
 
 @group1_simple
+class TableW(dj.Lookup):
+    definition = """
+    w_int: int
+    -> TableD
+    """
+
+
+@group1_simple
 class Mouse(dj.Lookup):
     definition = """
     mouse_id: int
@@ -412,6 +428,7 @@ class PresetTable(dj.Lookup):
                 a_double=2.2,
                 a_decimal=3.3,
                 a_decimal_unsigned=4.4,
+                a_bool=1,
             ),
         ),
     ]

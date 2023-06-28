@@ -1,65 +1,52 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { version } from '../../../package.json'
 
 import './Footer.css'
 
-interface FooterProps {}
+function Footer() {
+    const [backendVersion, setBackendVersion] = useState('')
 
-interface FooterState {
-    backendVersion: string
-}
+    async function getVersionNumber() {
+        const response = await fetch(
+            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/version`,
+            {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            }
+        )
 
-/**
- * Footer component
- */
-export default class Footer extends React.Component<FooterProps, FooterState> {
-    constructor(props: FooterProps) {
-        super(props)
-
-        this.state = {
-            backendVersion: ''
+        if (response.status === 500) {
+            throw new Error('Unable to get version number')
         }
+
+        return response.json()
     }
 
-    /**
-     * Get the version number upon being mounted.
-     */
-    componentDidMount() {
-        fetch(`${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/version`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then((result) => {
-                // Check for error mesage 500, if so throw and error
-                if (result.status === 500) {
-                    throw new Error('Unable to get version number')
-                }
-
-                return result.json()
-            })
+    useEffect(() => {
+        getVersionNumber()
             .then((result) => {
                 if (result.version) {
-                    this.setState({ backendVersion: result.version })
+                    setBackendVersion(result.version)
                 }
             })
             .catch((error) => {
-                this.setState({ backendVersion: 'Unable to get version number' })
+                setBackendVersion('Unable to get version number')
             })
-    }
+    }, [])
 
-    render() {
-        return (
-            <footer>
-                <div className='footer-content'>
-                    <p>© 2023, DataJoint SciViz</p>
+    return (
+        <footer>
+            <div className='footer-content'>
+                <p>© 2023, DataJoint SciViz</p>
+            </div>
+            <div className='version-info-div'>
+                <div className='version-number'>
+                    <b>Front End Version:</b> {version} <b>Back End Version:</b>{' '}
+                    {backendVersion}
                 </div>
-                <div className='version-info-div'>
-                    <div className='version-number'>
-                        <b>Front End Version:</b> {version} <b>Back End Version:</b>{' '}
-                        {this.state.backendVersion}
-                    </div>
-                </div>
-            </footer>
-        )
-    }
+            </div>
+        </footer>
+    )
 }
+
+export default Footer
