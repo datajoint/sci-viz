@@ -65,7 +65,7 @@ export default class FullPlotly extends React.Component<FullPlotlyProps, FullPlo
         let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
 
         for (let i in this.props.channelList) {
-            if (typeof this.props.store![this.props.channelList[+i]] != undefined) {
+            if (typeof this.props.store![this.props.channelList[+i]] != 'undefined') {
                 queryParamList = queryParamList.concat(
                     this.props.store![this.props.channelList[+i]]
                 )

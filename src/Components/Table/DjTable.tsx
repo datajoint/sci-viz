@@ -191,7 +191,7 @@ function DjTable({
         })
 
         for (let i in channelList) {
-            if (typeof store![channelList[+i]] != undefined) {
+            if (typeof store![channelList[+i]] != 'undefined') {
                 queryParamList = queryParamList.concat(store![channelList[+i]])
             }
         }
@@ -312,7 +312,7 @@ function DjTable({
         })
 
         for (let i in channelList) {
-            if (typeof store![channelList[+i]] != undefined) {
+            if (typeof store![channelList[+i]] != 'undefined') {
                 queryParamList = queryParamList.concat(store![channelList[+i]])
             }
         }
