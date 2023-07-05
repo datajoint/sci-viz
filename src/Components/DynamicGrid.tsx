@@ -67,7 +67,7 @@ export default class DynamicGrid extends React.Component<DynamicGridProps, Dynam
 
         // check if the data store is populated
         for (let i in this.props.channelList) {
-            if (typeof this.props.store![this.props.channelList[+i]] != undefined) {
+            if (typeof this.props.store![this.props.channelList[+i]] != 'undefined') {
                 storeParams = storeParams.concat(this.props.store![this.props.channelList[+i]])
             } else {
                 return

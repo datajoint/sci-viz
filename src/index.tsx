@@ -2,7 +2,6 @@ import ReactDOM from 'react-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import './index.css'
-import 'antd/dist/antd.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 

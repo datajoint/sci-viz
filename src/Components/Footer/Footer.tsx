@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { version } from '../../../package.json'
+import packageInfo from '../../../package.json'
 
 import './Footer.css'
 
@@ -41,7 +41,7 @@ function Footer() {
             </div>
             <div className='version-info-div'>
                 <div className='version-number'>
-                    <b>Front End Version:</b> {version} <b>Back End Version:</b>{' '}
+                    <b>Front End Version:</b> {packageInfo.version} <b>Back End Version:</b>{' '}
                     {backendVersion}
                 </div>
             </div>
