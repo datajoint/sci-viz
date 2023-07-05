@@ -439,7 +439,7 @@ function DynamicForm(props: formProps) {
         >
             <Form
                 form={form}
-                name='Multi-table Insert'
+                name={`${props.name}_table`}
                 layout='vertical'
                 onFinish={handleSubmit}
                 disabled={insertLoading}
