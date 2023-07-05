@@ -101,7 +101,7 @@ export default class DjDropdownQuery extends React.Component<
                     align='center'
                     style={{ width: '100%', height: '100%', justifyContent: 'center' }}
                 >
-                    <Dropdown menu={this.getItems()}>
+                    <Dropdown menu={this.getItems()} overlayStyle={{ width: '14%' }}>
                         <Button>
                             {this.state.currentSelection} <DownOutlined />
                         </Button>

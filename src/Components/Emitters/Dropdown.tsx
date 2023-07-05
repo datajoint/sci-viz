@@ -46,7 +46,7 @@ const DjDropdown = ({ channel, height, payload, updatePageStore }: DropdownProps
                 align='center'
                 style={{ width: '100%', height: '100%', justifyContent: 'center' }}
             >
-                <Dropdown menu={getItems()}>
+                <Dropdown menu={getItems()} overlayStyle={{ width: '14%' }}>
                     <Button>
                         {currentSelection} <DownOutlined />
                     </Button>

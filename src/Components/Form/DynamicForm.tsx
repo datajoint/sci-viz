@@ -274,7 +274,7 @@ function DynamicForm(props: formProps) {
             }
         })
         return (
-            <Dropdown menu={{ items }}>
+            <Dropdown menu={{ items }} overlayStyle={{ width: '14%' }}>
                 <Button>
                     {currentDropdownSelection ? currentDropdownSelection : <>Presets</>}{' '}
                     <DownOutlined />
