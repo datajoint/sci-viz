@@ -6,10 +6,10 @@
     "dependencies": {
         "@datadog/browser-logs": "^4.38.0",
         "@datadog/browser-rum": "^4.37.0",
-        "@fortawesome/fontawesome-svg-core": "1.2.36",
-        "@fortawesome/free-solid-svg-icons": "^5.15.4",
-        "@fortawesome/react-fontawesome": "^0.1.15",
-        "@types/node": "^16.10.2",
+        "@fortawesome/fontawesome-svg-core": "6.4.0",
+        "@fortawesome/free-solid-svg-icons": "^6.4.0",
+        "@fortawesome/react-fontawesome": "^0.2.0",
+        "@types/node": "^20.3.3",
         "@types/react": "^18.0.25",
         "@types/react-dom": "^18.0.9",
         "antd": "^5.6.3",
@@ -19,15 +19,15 @@
         "react-dom": "^18.2.0",
         "react-grid-layout": "^1.3.0",
         "react-icons": "^4.3.1",
-        "react-markdown": "^7.1.0",
+        "react-markdown": "^8.0.7",
         "react-plotly.js": "^2.5.1",
         "react-query": "^3.39.2",
-        "react-scripts": "4.0.3",
+        "react-scripts": "5.0.1",
         "react-syntax-highlighter": "^15.4.4",
         "rehype-raw": "^6.1.1",
         "remark-gfm": "^3.0.1",
-        "typescript": "^4.4.3",
-        "web-vitals": "^1.1.2"
+        "typescript": "^5.1.6",
+        "web-vitals": "^3.3.2"
     },
     "jest": {
         "modulePaths": [
@@ -71,19 +71,19 @@
         "@babel/preset-react": "^7.16.0",
         "@babel/preset-typescript": "^7.12.1",
         "@testing-library/jest-dom": "^5.14.1",
-        "@testing-library/react": "^11.2.7",
-        "@testing-library/user-event": "^12.8.3",
-        "@types/jest": "^27.0.3",
+        "@testing-library/react": "^14.0.0",
+        "@testing-library/user-event": "^14.4.3",
+        "@types/jest": "^29.5.2",
         "@types/js-cookie": "^3.0.0",
         "@types/react-grid-layout": "^1.1.2",
         "@types/react-plotly.js": "^2.5.0",
-        "@types/react-syntax-highlighter": "^13.5.2",
+        "@types/react-syntax-highlighter": "^15.5.7",
         "@types/react-test-renderer": "^18.0.0",
-        "jest": "26.6.0",
-        "prettier": "2.7.1",
+        "jest": "29.6.0",
+        "prettier": "3.0.0",
         "react-test-renderer": "^18.0.0",
-        "ts-jest": "^27.1.0",
+        "ts-jest": "^29.1.1",
         "ts-node": "^10.4.0",
-        "webpack-dev-server": "3.11.1"
+        "webpack-dev-server": "4.15.1"
     }
 }

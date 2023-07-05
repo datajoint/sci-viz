@@ -132,7 +132,9 @@ function App() {
     useEffect(() => {
         if (state.jwtToken) {
             let token = JSON.parse(
-                Buffer.from(state.jwtToken.split('.')[1], 'base64').toString()
+                new TextDecoder().decode(
+                    Uint8Array.from(atob(state.jwtToken.split('.')[1]), (c) => c.charCodeAt(0))
+                )
             )
             datadogRum.setUser({
                 id: token['username'] || token['preferred_username'] || 'loginless'

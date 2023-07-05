@@ -59,8 +59,8 @@ export default class DjDateRangePicker extends React.Component<
                         showTime={true}
                         onChange={(date, timeString) => {
                             this.props.updatePageStore(this.props.channel, [
-                                `startTime=${date?.[0]?.utc().unix()}`,
-                                `endTime=${date?.[1]?.utc().unix()}`
+                                `startTime=${date?.[0]?.unix()}`,
+                                `endTime=${date?.[1]?.unix()}`
                             ])
                         }}
                     />
