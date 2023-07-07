@@ -48,7 +48,7 @@ function Slideshow(props: SlideshowProps) {
         basePath.pop()
 
         let apiUrl =
-            `${basePath.join('')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
             props.route +
             `?chunk_size=${props.chunkSize}` +
             `&start_frame=${numFramesQueried}`
