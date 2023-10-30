@@ -288,8 +288,13 @@ function DynamicForm(props: formProps) {
             let tableField = field as tableFieldData
             return (
                 <Select
+                    showSearch={true}
                     key={tableField.name}
                     style={{ width: '100%' }}
+                    filterOption={(input: string, option?: { label: string; value: string }) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                    onSearch={(value: string) => {}}
+                    onChange={(value: string) => {}}
                     options={tableField.values.map((item) => ({ label: item, value: item }))}
                 />
             )
@@ -363,9 +368,14 @@ function DynamicForm(props: formProps) {
                 .split(',')
             return (
                 <Select
+                    showSearch={true}
                     key={attrField.name}
                     id={attrField.name}
                     style={{ width: '100%' }}
+                    filterOption={(input: string, option?: { label: string; value: string }) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                    onSearch={(value: string) => {}}
+                    onChange={(value: string) => {}}
                     options={options.map((item) => ({ label: item, value: item }))}
                 />
             )

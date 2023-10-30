@@ -43,7 +43,7 @@ interface DjTableState {
     filter: { [key: string]: djFilter }
     sorter: Array<string>
     keys: Array<string> | undefined
-    selectedRow: (string | number)[]
+    selectedRow: React.Key[]
     loading: boolean
 }
 
