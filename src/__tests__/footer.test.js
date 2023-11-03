@@ -31,3 +31,15 @@ it('test_set_backend_version_successfully', async () => {
 
     global.fetch.mockRestore()
 })
+
+// Tests that the function fails to fetch the version number from the backend but gracefully handles the error and sets an appropriate message in the state.
+it('test_get_version_number_failure', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValueOnce({
+        status: 500
+    })
+
+    const { findByText } = render(<Footer />)
+    const versionNumber = await findByText('Unable to get version number', { exact: false })
+
+    expect(versionNumber).toBeInTheDocument()
+})

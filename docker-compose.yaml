@@ -46,7 +46,7 @@ services:
       - ADD_sciviz_TYPE=REST
       - ADD_sciviz_ENDPOINT=sci-viz:3000
       - ADD_sciviz_PREFIX=/
-      - HTTPS_PASSTHRU=TRUE
+      # - HTTPS_PASSTHRU=TRUE
     ports:
       - '443:443'
       - '80:80'

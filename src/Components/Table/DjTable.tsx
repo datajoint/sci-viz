@@ -198,8 +198,10 @@ function DjTable({
         if (queryParamList.indexOf('') !== -1) {
             queryParamList.splice(queryParamList.indexOf(''), 1)
         }
-
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + route
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+        let apiUrl =
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + route
 
         if (
             !state.sorter.join(',').includes('ASC') &&
@@ -262,8 +264,13 @@ function DjTable({
     })
 
     const getAttributes = (): Promise<djAttributes> => {
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+
         let apiUrlAttr =
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + route + '/attributes'
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            route +
+            '/attributes'
 
         if (databaseHost) {
             apiUrlAttr = apiUrlAttr.concat(`&database_host=${databaseHost}`)
@@ -297,8 +304,12 @@ function DjTable({
     )
 
     const constructUniquesURL = (): string => {
+        let basePath = window.location.href.split('/')
+        basePath.pop()
         let apiUrlUnqs =
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + route + '/uniques'
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            route +
+            '/uniques'
 
         let queryParamList = [...restrictionList]
         let channelCheckArr = Array<boolean>()

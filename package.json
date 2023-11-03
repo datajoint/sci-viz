@@ -2,7 +2,6 @@
     "name": "app",
     "version": "2.3.4",
     "private": true,
-    "homepage": "",
     "dependencies": {
         "@datadog/browser-logs": "^4.38.0",
         "@datadog/browser-rum": "^4.37.0",
@@ -72,7 +71,7 @@
         "@babel/preset-typescript": "^7.12.1",
         "@testing-library/jest-dom": "^5.14.1",
         "@testing-library/react": "^11.2.7",
-        "@testing-library/user-event": "^12.8.3",
+        "@testing-library/user-event": "^14.4.3",
         "@types/jest": "^27.0.3",
         "@types/js-cookie": "^3.0.0",
         "@types/react-grid-layout": "^1.1.2",

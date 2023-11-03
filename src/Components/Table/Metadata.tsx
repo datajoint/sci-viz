@@ -55,7 +55,11 @@ export default class Metadata extends React.Component<MetadataProps, MetadataSta
         this.getAttributes = this.getAttributes.bind(this)
     }
     getRecords(): Promise<djRecords> {
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+        let apiUrl =
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            this.props.route
         if (this.props.restrictionList.length > 0) {
             apiUrl = apiUrl + '?'
             apiUrl = apiUrl + this.props.restrictionList.shift()
@@ -84,8 +88,10 @@ export default class Metadata extends React.Component<MetadataProps, MetadataSta
     }
 
     getAttributes(): Promise<djAttributes> {
+        let basePath = window.location.href.split('/')
+        basePath.pop()
         let apiUrlAttr =
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
             this.props.route +
             '/attributes'
 
