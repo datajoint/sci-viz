@@ -77,7 +77,7 @@ function App() {
     }
 
     useEffect(() => {
-        fetch(`/sciviz_spec.json`)
+        fetch(`${window.location.href}sciviz_spec.json`)
             .then((response) => {
                 return response.json()
             })
@@ -86,7 +86,9 @@ function App() {
                 setState((prevState) => ({
                     ...prevState,
                     spec: spec,
-                    baseURL: `https://${window.location.hostname}${spec.SciViz.route || ''}/`,
+                    baseURL: `${window.location.protocol}//${window.location.hostname}${
+                        spec.SciViz.route || ''
+                    }/`,
                     datadog: spec.SciViz.datadog
                 }))
             })
@@ -156,14 +158,20 @@ function App() {
             <React.StrictMode>
                 <Header
                     text={state.spec.SciViz.header?.text || 'Powered by datajoint'}
-                    imageRoute={state.spec.SciViz.header?.image_route || '/logo.svg'}
+                    imageRoute={
+                        state.spec.SciViz.header?.image_route ||
+                        `${state.spec.SciViz.route || ''}/logo.svg`
+                    }
                 />
                 <>
                     {window.history.pushState(null, '', `${state.baseURL}login`)}
                     <Login
                         setJWTTokenAndHostName={setJWTTokenAndHostName}
                         defaultAddress={state.spec.SciViz.hostname || state.hostname}
-                        imageRoute={state.spec.SciViz.login?.image_route || '/logo.svg'}
+                        imageRoute={
+                            state.spec.SciViz.login?.image_route ||
+                            `${state.spec.SciViz.route || ''}/logo.svg`
+                        }
                     ></Login>
                 </>
                 <Footer />

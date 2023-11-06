@@ -2,7 +2,7 @@ version: 'v0.0.0'
 LabBook: null
 SciViz: # top level tab
   website_title: SciViz Title
-  route: /some-route/another-route
+  # route: /some-route/another-route
   favicon_name: /favicon.ico # In /public dir
   header:
     image_route: /logo.svg # In /public dir

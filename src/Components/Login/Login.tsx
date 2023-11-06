@@ -51,7 +51,11 @@ function Login(props: LoginProps) {
             Cookies.set('databaseAddress', databaseAddress)
             Cookies.set('username', username)
         }
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}/login`
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+        let apiUrl = `${basePath.join('/')}${
+            process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX
+        }/login`
         if (props.databaseHost) {
             apiUrl = apiUrl.concat(`&database_host=${props.databaseHost}`)
         }

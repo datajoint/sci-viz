@@ -44,8 +44,11 @@ function Slideshow(props: SlideshowProps) {
 
     // Async functions
     const getFrames = async (): Promise<FrameChunk> => {
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+
         let apiUrl =
-            `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
             props.route +
             `?chunk_size=${props.chunkSize}` +
             `&start_frame=${numFramesQueried}`

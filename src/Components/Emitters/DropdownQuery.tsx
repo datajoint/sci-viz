@@ -39,7 +39,11 @@ export default class DjDropdownQuery extends React.Component<
         this.getItems = this.getItems.bind(this)
     }
     getRecords(): Promise<djRecords> {
-        let apiUrl = `${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` + this.props.route
+        let basePath = window.location.href.split('/')
+        basePath.pop()
+        let apiUrl =
+            `${basePath.join('/')}${process.env.REACT_APP_DJSCIVIZ_BACKEND_PREFIX}` +
+            this.props.route
 
         if (this.props.databaseHost) {
             apiUrl = apiUrl.concat(`&database_host=${this.props.databaseHost}`)
@@ -101,7 +105,7 @@ export default class DjDropdownQuery extends React.Component<
                     align='center'
                     style={{ width: '100%', height: '100%', justifyContent: 'center' }}
                 >
-                    <Dropdown menu={this.getItems()}>
+                    <Dropdown menu={this.getItems()} trigger={['click']}>
                         <Button>
                             {this.state.currentSelection} <DownOutlined />
                         </Button>
