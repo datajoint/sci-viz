@@ -1,3 +1,10 @@
+> [!WARNING]
+> **This repository is archived and no longer maintained** (November 2026).
+>
+> SciViz was built for DataJoint 0.13 and 0.14, through the [Pharus](https://github.com/datajoint/pharus) REST API, and has not been updated for DataJoint 2.x. The source, the releases, the [documentation site](https://datajoint.github.io/sci-viz/) and the `datajoint/sci-viz` Docker images remain available as they are, but they will receive no further changes, including security fixes.
+>
+> For dashboards on DataJoint 2.x pipelines, query them with [DataJoint for Python](https://github.com/datajoint/datajoint-python) from a general-purpose dashboard framework such as [Plotly Dash](https://dash.plotly.com/). See the [DataJoint documentation](https://docs.datajoint.com) for DataJoint 2.x.
+
 # DataJoint SciViz
 
 - DataJoint SciViz is a generic scientific visualization framework for building dashboards of DataJoint pipelines.
